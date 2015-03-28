@@ -1,0 +1,86 @@
+\documentclass[12pt]{article}
+\usepackage{url}
+\usepackage{tikz}
+
+\pagestyle{empty}
+\begin{document}
+
+\addtolength{\hoffset}{-3cm} \addtolength{\voffset}{-2cm}
+ {\Large Eugene Kurpilyansky}
+\smallskip \hrule
+\smallskip
+\smallskip
+\noindent
+
+\newcommand{\drawHeader}[2]{
+	\draw (0,#1) node {\textsc{#2}};
+}
+
+\newcommand{\drawInfo}[2]{
+	\draw #1 node[anchor=west] {#2};
+}
+
+\begin{tikzpicture}
+
+%Contact information
+\drawHeader{0}{Contact} 
+\drawHeader{-0.5}{Information}
+
+\drawInfo{(3,0)}{Ural Federal University}
+\drawInfo{(9,0)}{Cell phone: +7 912 229 1123}
+\drawInfo{(3,-0.5)}{620083 Yekaterinburg}
+\drawInfo{(9,-0.5)}{Email: dembelz@yandex.ru}
+\drawInfo{(3,-1)}{K-83, av. Lenina 51, Russia}
+
+%Objective
+%\drawHeader{-2}{Objective}
+%\drawInfo{(2,-2)}{To find a job position in RocketSoftware company}
+
+%Biographical Data
+\drawHeader{-2}{Biographical} 
+\drawHeader{-2.5}{Data}
+
+\drawInfo{(2.5, -2)}{Citizenship: Russia}
+\drawInfo{(2.5, -2.5)}{Data and place of birth: 4th February 1993, Novotroitsk, Orenburg region, Russia}
+
+%Reseach Interests
+\drawHeader{-3.5}{Reseach} 
+\drawHeader{-4}{Interests}
+
+\drawInfo{(2.5, -3.5)}{theory of algorithms, computational complexity, I/O-efficient algorithms, }
+\drawInfo{(2.5, -4)}{algorithms string compression, algorithms on compressed strings}
+
+%Reseach Interests
+\drawHeader{-5}{Education} 
+
+\drawInfo{(2.5, -5)}{\textbf{Ural Federal University, Yekaterinburg, Russia}}
+\drawInfo{(2.5, -5.5)}{B. Sc., Computer science, 2008 -- to present}
+%\drawInfo{(2.5, -6)}{Speciality: }
+\drawInfo{(2.5, -6)}{Thesis topic: ``Building straight-line program using Cartesian trees.''}
+\drawInfo{(2.5, -6.5)}{Advisor: Alexey A. Khvorost}
+
+%Conferences and Schools
+
+\drawHeader{-7.5}{Conferences}
+\drawHeader{-8}{and Schools}
+
+\drawInfo{(2.5, -7.5)}{\emph{Analysis of Images, Networks and Texts}, Yekaterinburg, 2012}
+
+\drawInfo{(2.5, -8.5)}{\emph{Russian Internet Technologies}, Moscow, 2012}
+
+\drawHeader{-9.5}{Industrial}
+\drawHeader{-10}{Experience}
+
+\drawInfo{(2.5, -9.5)}{\textbf{iCat MasterData} and \textbf{iCat EDI} projects, .net-developer, September 2011}
+\drawInfo{(2.5, -10)}{Developing high-loaded web-services with SOA.}
+
+%Other Skills
+\drawHeader{-11}{Other}
+\drawHeader{-11.5}{Skills}
+
+\drawInfo{(2.5, -11)}{Two bronze medals on \textbf{ACM ICPC World Final} at 2010 and 2011}
+
+
+\end{tikzpicture}
+
+\end{document}

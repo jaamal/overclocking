@@ -1,0 +1,66 @@
+\subsection{Google Guice}
+
+\subsubsection{Способы конфигурирования}
+
+Google Guice "--- контейнер, конфигурирование которого производится с помощью классов-конфигураторов и аннотаций. Создается контейнер с помощью следующего кода:
+
+\begin{lstlisting}[language=Java,caption={Создание контейнера}]
+Injector injector = Guice.createInjector(new Module());
+\end{lstlisting}
+
+Класс Module должен наследоваться от класса AbstractModule, который требует реализации одного метода "--- configure. В этом методе и будет описана конфигурация.
+В этом месте нужно явно прописать, какой класс будет реализовывать конкретную абстракцию, или какой конкретно объект вернуть при запросе, например:
+
+\begin{lstlisting}[language=Java,caption={Примеры конфигурирования в наследнике AbstractModule}]
+@Override
+protected void configure()
+{
+	bind(IAuthenticatorsProvider.class).to(AuthenticatorsProvider.class);
+	bind(IGmailAuthenticator.class).toInstance(new GmailAuthenticator());
+}
+\end{lstlisting}
+
+Для внедрения зависимости используется аннотация @Inject.
+
+В отличие от Spring IoC Container, Google Guice не позволяет столь же просто сделать инъекцию в конструктор с аргументом типа массив, но позволяет сделать это с аргументом типа Set.
+Для этого используется класс Multibinder.
+
+Реализация нашего примера с использованием данного контейнера имеет следующие ключевые моменты:
+
+\begin{lstlisting}[language=Java,caption={Конфигурирование}]
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
+
+public class Module extends AbstractModule
+{
+    @Override
+    protected void configure()
+    {
+        bind(IAuthenticatorsProvider.class).to(AuthenticatorsProvider.class);
+        Multibinder<IAuthenticator> multibinder = Multibinder.newSetBinder(binder(), IAuthenticator.class);
+        multibinder.addBinding().to(FacebookAuthenticator.class);
+        multibinder.addBinding().to(GmailAuthenticator.class);
+        multibinder.addBinding().to(LocalAuthenticator.class);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java,caption={Конструктор класса AuthenticatorsProvider}]
+@Inject
+public AuthenticatorsProvider(Set<IAuthenticator> authenticators)
+{
+    this.authenticators = authenticators.toArray(new IAuthenticator[authenticators.size()]);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java,caption={Место получения экземпляра}]
+IAuthenticatorsProvider provider = injector.getInstance(IAuthenticatorsProvider.class);
+\end{lstlisting}
+
+\subsubsection{Плюсы и минусы}
+
+Google Guice, в отличие от Spring IoC Container, сохраняет тип, соответственно не придется каждый раз явно использовать приведение типа при запросе getInstance к контейнеру.
+
+Однако проблема с необходимостью описания всех классов в конфигурации никуда не делась, просто вся рутина переместилась из XML-файла в класс-конфигуратор.
+Более того, при внедрении контейнера придется прописывать @Inject во всех местах, где потребуется вмешательство контейнера, то есть придется вносить достаточно 
+существенные изменения в изначальный код.

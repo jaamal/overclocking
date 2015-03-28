@@ -1,0 +1,218 @@
+\usepackage{graphs}
+
+\newcommand{\refToAllStats}{%
+рис.\,\ref{dna_time_stats}--\ref{bad_compressionByte_stats}%
+}
+\newcommand{\refToTimeStats}{%
+рис.\,\ref{dna_time_stats},~\ref{random_time_stats}~и~\ref{bad_time_stats}%
+}
+\newcommand{\refToConcurrentIterationStats}{%
+рис.\,\ref{dna_concurrentIteration_stats}~и~\ref{random_concurrentIteration_stats}%
+}
+\newcommand{\refToAvlRotationsStats}{%
+рис.\,\ref{dna_avlRotations_stats},~\ref{random_avlRotations_stats}~и~\ref{bad_avlRotations_stats}%
+}
+\newcommand{\refToHeightStats}{%
+рис.\,\ref{dna_height_stats},~\ref{random_height_stats}~и~\ref{bad_height_stats}%
+}
+\newcommand{\refToCompressionItemStats}{%
+	рис.\,\ref{dna_compressionItem_stats},~\ref{random_compressionItem_stats}~и~\ref{bad_compressionItem_stats}%
+}
+\newcommand{\refToCompressionByteStats}{%
+	рис.\,\ref{dna_compressionByte_stats},~\ref{random_compressionByte_stats}~и~\ref{bad_compressionByte_stats}%
+}
+
+\newcommand{\algorithmNotations}{\begin{tikzpicture}
+	\drawLz{0}{4.0};
+	\drawLzInf{0}{3.5};
+	\drawLzw{0}{3.0};
+	\drawRytter{0}{2.5};
+	\drawModernFirstRytter{0}{2.0};
+	\drawModernSecondRytter{0}{1.5};
+	\drawAvlConcurrentFour{0}{1.0};
+	\drawCartesian{0}{0.5};
+	\drawLcaOnline{0}{0};
+        
+	\node [right] at (0,4.0) {\scriptsize {\sf -- алгоритм Лемпеля-Зива с окном сжатия 32КБ;}};
+	\node [right] at (0,3.5) {\scriptsize {\sf -- алгоритм Лемпеля-Зива с бесконечным окном сжатия;}};
+	\node [right] at (0,3.0) {\scriptsize {\sf -- алгоритм Лемпеля-Зива-Велча;}};
+	\node [right] at (0,2.5) {\scriptsize {\sf -- алгоритм Риттера;}};
+	\node [right] at (0,2.0) {\scriptsize {\sf -- алгоритм Риттера с эвристикой по оптимизации порядка конкатенаций;}};
+	\node [right] at (0,1.5) {\scriptsize {\sf -- алгоритм Риттера с улучшенной эвристикой по оптимизации порядка конкатенаций;}};
+	\node [right] at (0,1.0) {\scriptsize {\sf -- многопоточный алгоритм построения ПП (четыре потока);}};
+	\node [right] at (0,0.5) {\scriptsize {\sf -- алгоритм построения рандомизированной ПП;}};
+	\node [right] at (0,0.0) {\scriptsize {\sf -- LCA-online алгоритм.}};
+\end{tikzpicture}}
+
+\newcommand{\drawAllCharts}{
+
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+			\buildingSlpTimesInMemoryForDna
+        \end{picture}
+    \end{center}
+    \caption{Время работы алгоритмов построения ПП на последовательностях ДНК}
+    \label{dna_time_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+			\buildingSlpTimesInMemoryForRandom
+        \end{picture}
+    \end{center}
+    \caption{Время работы алгоритмов построения ПП на случайных строках}
+    \label{random_time_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+			\buildingSlpTimesInMemoryForBad
+        \end{picture}
+    \end{center}
+    \caption{Время работы алгоритмов построения ПП на <<плохих>> строках}
+    \label{bad_time_stats}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+			\concurrentIterationCountForDna
+        \end{picture}
+    \end{center}
+    \caption{Количество итераций многопоточного алгоритма построения ПП на последовательностях ДНК}
+    \label{dna_concurrentIteration_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+			\concurrentIterationCountForRandom
+        \end{picture}
+    \end{center}
+    \caption{Количество итераций многопоточного алгоритма построения ПП на случайных строках}
+    \label{random_concurrentIteration_stats}
+\end{figure}
+%\begin{figure}[p]
+%    \begin{center}
+%        \begin{picture}(120,165)(0,0)
+%			\concurrentIterationCountForBad
+%        \end{picture}
+%    \end{center}
+%    \caption{Количество итераций многопоточного алгоритма построения ПП на <<плохих>> строках}
+%    \label{bad_concurrentIteration_stats}
+%\end{figure}
+
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \buildingSlpAvlRotationsForDna
+        \end{picture}
+    \end{center}
+    \caption{Количество поворотов AVL-дерева на последовательностях ДНК}
+    \label{dna_avlRotations_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \buildingSlpAvlRotationsForRandom
+        \end{picture}
+    \end{center}
+    \caption{Количество поворотов AVL-дерева на случайных строках}
+    \label{random_avlRotations_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \buildingSlpAvlRotationsForBad
+        \end{picture}
+    \end{center}
+    \caption{Количество поворотов AVL-дерева на <<плохих>> текстах}
+    \label{bad_avlRotations_stats}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \slpHeightForDna
+        \end{picture}
+    \end{center}
+    \caption{Высота построенной ПП на последовательностях ДНК}
+    \label{dna_height_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \slpHeightForRandom
+        \end{picture}
+    \end{center}
+    \caption{Высота построенной ПП на случайных строках}
+    \label{random_height_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \slpHeightForBad
+        \end{picture}
+    \end{center}
+    \caption{Высота построенной ПП на <<плохих>> текстах}
+    \label{bad_height_stats}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \compressionItemSizeForDna
+        \end{picture}
+    \end{center}
+    \caption{Отношение размера сжатого представления к длине текста на последовательностях ДНК}
+    \label{dna_compressionItem_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \compressionItemSizeForRandom
+        \end{picture}
+    \end{center}
+    \caption{Отношение размера сжатого представления к длине текста на случайных строках}
+    \label{random_compressionItem_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \compressionItemSizeForBad
+        \end{picture}
+    \end{center}
+    \caption{Отношение размера сжатого представления к длине текста на <<плохих>> текстах}
+    \label{bad_compressionItem_stats}
+\end{figure}
+
+
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \compressionByteSizeForDna
+        \end{picture}
+    \end{center}
+    \caption{Коэффициент сжатия на последовательностях ДНК}
+    \label{dna_compressionByte_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \compressionByteSizeForRandom
+        \end{picture}
+    \end{center}
+    \caption{Коэффициент сжатия на случайных строках}
+    \label{random_compressionByte_stats}
+\end{figure}
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(120,165)(0,0)
+            \compressionByteSizeForBad
+        \end{picture}
+    \end{center}
+    \caption{Коэффициент сжатия на <<плохих>> текстах}
+    \label{bad_compressionByte_stats}
+\end{figure}
+
+}

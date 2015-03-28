@@ -1,0 +1,13 @@
+﻿#TeXlipse project settings
+#Thu Apr 14 09:58:00 YEKST 2011
+builderNum=2
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=SLPsTest_CPP2011.tex
+outputFile=SLPsTest_CPP2011.pdf
+langSpell=en
+markDer=true
+srcDir=

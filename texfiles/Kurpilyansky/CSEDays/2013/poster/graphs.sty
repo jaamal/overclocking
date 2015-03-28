@@ -1,0 +1,321 @@
+\colorlet{shaded}{white!60!black}
+
+\newcommand{\drawLZNode}[2]{
+    \draw[fill=orange, orange] (#1,#2) rectangle +(0.1,0.1);
+}
+
+\newcommand{\drawLZinfNode}[2]{
+    \filldraw[fill=purple, purple] (#1,#2) rectangle +(0.1,0.1);
+}
+
+\newcommand{\drawSLPoldNode}[2]{
+    \draw[fill=green, green] (#1, #2) circle (1.5pt);
+}
+
+\newcommand{\drawSLPnewNode}[2]{
+    \filldraw[fill=red,red] (#1, #2) circle (1.5pt);
+}
+
+\newcommand{\drawAVLNode}[2]{
+    \filldraw[fill=black] #1 circle (2pt) node[anchor=south] {\scriptsize {#2}};
+}
+
+\newcommand{\drawTriangle}[3]{
+    \filldraw[fill=shaded] #1 -- #2 -- #3 -- #1; 
+}
+
+\newcommand{\drawLZWNode}[2]{
+    \filldraw[fill=shaded] (#1,#2) -- +(0.08, 0.15) -- +(0.16, 0) -- (#1,#2); 
+}
+
+\newcommand{\drawCartesianNode}[2]{
+    \filldraw[fill=yellow, yellow] (#1,#2) -- +(0.08, 0.15) -- +(0.16, 0) -- (#1,#2); 
+}
+
+\newcommand{\textline}[3]{
+    \draw (#1, #2) node[anchor=west] {#3};
+}
+
+%%abbreviations
+\newcommand{\mbabbr}[0]{Mb}
+\newcommand{\mlnabbr}[0]{M}
+\newcommand{\secabbr}[0]{sec}
+\newcommand{\minabbr}[0]{min}
+
+\newcounter{figures}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% pictures
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\algorithmNotations}{
+    \begin{tikzpicture}
+        \drawSLPoldNode{0.09}{0}
+        \drawSLPnewNode{0.09}{-0.5}
+        \drawCartesianNode{0}{-1}
+        \drawLZNode{0.02}{-1.5}
+        \drawLZinfNode{0.02}{-2}
+        
+        \draw (0.2, -1.5) node[anchor=west] {\scriptsize {\sf -- Lempel-Ziv algorithm with 32Kb search window (lz77);}}; 
+        \draw (0.2, -2) node[anchor=west] {\scriptsize {\sf -- Lempel-Ziv algorithm with infinite search window (lzma);}}; 
+        \draw (0.2,0) node[anchor=west] {\scriptsize {\sf -- Rytter's algorithm \cite{SLPConstruction};}}; 
+        \draw (0.2,-0.5) node[anchor=west] {\scriptsize {\sf -- modified version of Ritter's algorithm \cite{Springer};}}; 
+        \draw (0.2,-1) node[anchor=west] {\scriptsize {\sf -- cartesian SLP construction algorithm \cite{Springer}}};
+    \end{tikzpicture}
+}
+
+\newcommand{\DNARotations}{
+    \begin{tikzpicture}[scale=0.8]
+        \draw[step=1cm, gray, very thin] (0,0) grid (5.2,8.2);
+        \draw[->] (0,0) -- (0,8.5);
+        \draw[->] (0,0) -- (5.5,0);
+        
+        \foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+            \draw (\x cm,-1pt) -- (\x cm,1pt); 
+        \foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+            \draw (\x cm,-3pt) node[anchor=north] {\scriptsize{$\xtext$\mbabbr}}; 
+        \foreach \y / \ytext in {1/0.5, 2/1, 3/1.5, 4/2, 5/2.5, 6/3, 7/3.5, 8/4}
+            \draw (-1pt,\y cm) -- (1pt,\y cm);
+        \foreach \y / \ytext in {1/0.5, 2/1, 3/1.5, 4/2, 5/2.5, 6/3, 7/3.5, 8/4}
+            \draw (-3pt,\y cm) node[anchor=east] {\scriptsize{$\ytext$ \mlnabbr}};
+        
+        %SLPnew
+        \drawSLPnewNode{0.1}{0.01}
+        \drawSLPnewNode{0.15}{0.01}
+        \drawSLPnewNode{0.17}{0.02}
+        \drawSLPnewNode{0.2}{0.019}
+        \drawSLPnewNode{0.27}{0.025}
+        \drawSLPnewNode{0.32}{0.033}
+        \drawSLPnewNode{0.36}{0.043}
+        \drawSLPnewNode{0.42}{0.046}
+        \drawSLPnewNode{0.44}{0.052}
+        \drawSLPnewNode{0.5}{0.056}
+        \drawSLPnewNode{0.58}{0.067}
+        \drawSLPnewNode{0.6}{0.074}
+        \drawSLPnewNode{0.6}{0.08}
+        \drawSLPnewNode{0.7}{0.094}
+        \drawSLPnewNode{0.75}{0.098}
+        \drawSLPnewNode{0.8}{0.107}
+        \drawSLPnewNode{0.84}{0.112}
+        \drawSLPnewNode{0.92}{0.116}
+        \drawSLPnewNode{0.96}{0.126}
+        \drawSLPnewNode{1}{0.133}
+        \drawSLPnewNode{1.08}{0.137}
+        \drawSLPnewNode{1.16}{0.13}
+        \drawSLPnewNode{1.2}{0.132}
+        \drawSLPnewNode{1.34}{0.177}
+        \drawSLPnewNode{1.42}{0.187}
+        \drawSLPnewNode{1.54}{0.203}
+        \drawSLPnewNode{1.63}{0.213}
+        \drawSLPnewNode{1.72}{0.226}
+        \drawSLPnewNode{1.84}{0.242}
+        \drawSLPnewNode{1.95}{0.258}
+        \drawSLPnewNode{2.06}{0.27}
+        \drawSLPnewNode{2.1}{0.297}
+        \drawSLPnewNode{2.26}{0.284}
+        \drawSLPnewNode{2.48}{0.362}
+        \drawSLPnewNode{2.94}{0.383}
+        \drawSLPnewNode{3.28}{0.433}
+        \drawSLPnewNode{3.66}{0.475}
+        \drawSLPnewNode{4.22}{0.557}
+        \drawSLPnewNode{4.5}{0.553}
+                
+        %SLPclassic
+        \drawSLPoldNode{0.1}{0.126}
+        \drawSLPoldNode{0.15}{0.29}
+        \drawSLPoldNode{0.17}{0.227}
+        \drawSLPoldNode{0.2}{0.374}
+        \drawSLPoldNode{0.27}{0.487}
+        \drawSLPoldNode{0.32}{0.622}
+        \drawSLPoldNode{0.36}{0.675}
+        \drawSLPoldNode{0.42}{0.754}
+        \drawSLPoldNode{0.44}{0.764}
+        \drawSLPoldNode{0.5}{0.947}
+        \drawSLPoldNode{0.58}{1.013}
+        \drawSLPoldNode{0.6}{1.14}
+        \drawSLPoldNode{0.6}{1.32}
+        \drawSLPoldNode{0.7}{1.38}
+        \drawSLPoldNode{0.75}{1.5}
+        \drawSLPoldNode{0.8}{1.575}
+        \drawSLPoldNode{0.84}{1.6}
+        \drawSLPoldNode{0.92}{1.71}
+        \drawSLPoldNode{0.96}{1.8}
+        \drawSLPoldNode{1}{1.88}
+        \drawSLPoldNode{1.08}{1.757}
+        \drawSLPoldNode{1.16}{1.826}
+        \drawSLPoldNode{1.2}{2.39}
+        \drawSLPoldNode{1.34}{2.53}
+        \drawSLPoldNode{1.42}{2.78}
+        \drawSLPoldNode{1.54}{2.87}
+        \drawSLPoldNode{1.63}{3.07}
+        \drawSLPoldNode{1.72}{3.35}
+        \drawSLPoldNode{1.84}{3.48}
+        \drawSLPoldNode{1.95}{3.76}
+        \drawSLPoldNode{2.06}{3.81}
+        \drawSLPoldNode{2.1}{4.1}
+        \drawSLPoldNode{2.26}{3.88}
+        \drawSLPoldNode{2.48}{4.89}
+        \drawSLPoldNode{2.94}{5.2}
+        \drawSLPoldNode{3.28}{6.02}
+        \drawSLPoldNode{3.66}{6.52}
+        \drawSLPoldNode{4.22}{7.66}
+        \drawSLPoldNode{4.5}{7.35}
+    \end{tikzpicture}
+}
+
+\newcommand{\DNATimeStats}{
+    \begin{tikzpicture}[scale=0.75]
+        \draw[step=1cm, gray, very thin] (-2,0) grid (3.7,7.2);
+        \draw[->] (-2,0) -- (-2,7.5);
+        \draw[->] (-2,0) -- (4,0);
+        
+        \foreach \x / \xtext in {-1/4, 0/8, 1/12, 2/16, 3/20}
+            \draw (\x cm,-1pt) -- (\x cm,1pt);
+        \foreach \x / \xtext in {-1/4, 0/8, 1/12, 2/16, 3/20}
+            \draw (\x cm,-3pt) node[anchor=north] {\scriptsize{$\xtext$\mbabbr}};
+        \foreach \y / \ytext in {1/20, 2/40, 3/60, 4/80, 5/100, 6/120, 7/140}
+            \draw (-2cm-1pt,\y cm) -- (-2cm+1pt,\y cm);
+        \foreach \y / \ytext in {1/20, 2/40, 3/60, 4/80, 5/100, 6/120, 7/140}
+            \draw (-2cm-3pt,\y cm) node[anchor=east] {\scriptsize{$\ytext$ \secabbr}};
+
+        %avl classic time results in memory
+        \foreach \x / \y in {-1.88 / 0.07, -1.82 / 0.17, -1.79 / 0.13, -1.75 / 0.23, -1.66 / 0.32, -1.6 / 0.45, -1.58 /
+        0.47, -1.55 / 0.45, -1.48 / 0.53, -1.45 / 0.56, -1.38 / 0.67, -1.34 / 0.72, -1.28 / 0.76, -1.25 / 0.86, -1.13 /
+        1.01, -1.07 / 1.09, -0.99 / 1.17, -0.95 / 1.6, -0.91 / 1.29, -0.85 / 1.27, -0.8 / 1.34, -0.77 / 1.43, -0.74 /
+        1.45, -0.71 / 1.51, -0.65 / 1.48, -0.62 / 1.59, -0.56 / 1.39, -0.51 / 1.48, -0.32 / 1.97, -0.22 / 2.09, -0.13 /
+        2.16, -0.07 / 2.29, 0.15 / 2.56, 0.31 / 3.2, 0.45 / 2.99, 0.57 / 3.41, 0.63 / 3.35, 0.83 / 3.71, 1.09 / 3.42,
+        1.44 / 4.38, 1.69 / 4.67, 2.09 / 5.52, 2.58 / 6.14, 3.29 / 7.22, 3.62 / 6.93} 
+        	\draw[fill=green, green] (\x, \y) circle (1.5pt);
+            
+        %avl modern time results in memory
+        \foreach \x / \y in {-1.88 / 0.03, -1.82 / 0.07, -1.79 / 0.05, -1.75 / 0.09, -1.66 / 0.12, -1.6 / 0.15, -1.58 /
+        0.16, -1.55 / 0.16, -1.48 / 0.19, -1.45 / 0.19, -1.38 / 0.24, -1.34 / 0.25, -1.28 / 0.26, -1.25 / 0.29, -1.13 /
+        0.34, -1.07 / 0.35, -0.99 / 0.39, -0.95 / 0.54, -0.91 / 0.42, -0.85 / 0.45, -0.8 / 0.46, -0.77 / 0.48, -0.74 /
+        0.47, -0.71 / 0.5, -0.65 / 0.5, -0.62 / 0.52, -0.56 / 0.48, -0.51 / 0.5, -0.32 / 0.64, -0.22 / 0.67, -0.13 /
+        0.71, -0.07 / 0.75, 0.15 / 0.86, 0.31 / 0.99, 0.45 / 1.03, 0.57 / 1.11, 0.63 / 1.14, 0.83 / 1.22, 1.09 / 1.17,
+        1.44 / 1.42, 1.69 / 1.52, 2.09 / 1.79, 2.58 / 2, 3.29 / 2.31, 3.62 / 2.25}
+        	\filldraw[fill=red, red] (\x, \y) circle (1.5pt);
+        
+        %cartesian time results in memory
+        \foreach \x / \y in {-1.88 / 0.04, -1.82 / 0.09, -1.79 / 0.06, -1.75 / 0.11, -1.66 / 0.14, -1.6 / 0.18, -1.58 /
+        0.2, -1.55 / 0.21, -1.48 / 0.24, -1.45 / 0.24, -1.38 / 0.3, -1.34 / 0.32, -1.28 / 0.32, -1.25 / 0.36, -1.13 /
+        0.44, -1.07 / 0.45, -0.99 / 0.49, -0.95 / 0.72, -0.91 / 0.53, -0.85 / 0.53, -0.8 / 0.55, -0.77 / 0.61, -0.74 /
+        0.59, -0.71 / 0.63, -0.65 / 0.64, -0.62 / 0.64, -0.56 / 0.58, -0.51 / 0.64, -0.32 / 0.82, -0.22 / 0.87, -0.13 /
+        0.94, -0.07 / 0.99, 0.15 / 1.11, 0.31 / 1.25, 0.45 / 1.24, 0.57 / 1.39, 0.63 / 1.41, 0.83 / 1.58, 1.09 / 1.47,
+        1.44 / 1.95, 1.69 / 1.95, 2.09 / 2.44, 2.58 / 2.66, 3.29 / 3.1, 3.62 / 2.99}
+        	\filldraw[fill=yellow, yellow] (\x,\y) -- +(0.08, 0.15) -- +(0.16, 0) -- (\x,\y);
+    \end{tikzpicture}
+}
+
+\newcommand{\CompressionRatioOnDNAs}{
+    \begin{tikzpicture}[scale=0.55]
+        \draw[step=1cm, gray, very thin] (0,0) grid (9.2,14.2);
+        \draw[->] (0,0) -- (0,14.5);
+        \draw[->] (6,0) -- (9.5,0);
+        
+        \foreach \x / \xtext in {1/3, 2/6, 3/9, 4/12, 5/15, 6/18, 7/21, 8/24, 9/27}
+            \draw (\x cm,-1pt) -- (\x cm,1pt);
+        \foreach \x / \xtext in {1/3, 2/6, 3/9, 4/12, 5/15, 6/18, 7/21, 8/24, 9/27}
+            \draw (\x cm,-3pt) node[anchor=north] {\tiny{$\xtext$\mbabbr}}; 
+        \foreach \y / \ytext in {1/2, 2/4, 3/6, 4/8, 5/10, 6/12, 7/14, 8/16, 9/18, 10/20, 11/22, 12/24, 13/26, 14/28}
+            \draw (-1pt,\y cm) -- (1pt,\y cm);
+        \foreach \y / \ytext in {1/2, 2/4, 3/6, 4/8, 5/10, 6/12, 7/14, 8/16, 9/18, 10/20, 11/22, 12/24, 13/26, 14/28}
+            \draw (-3pt,\y cm) node[anchor=east] {\scriptsize{$\ytext$ \%}};
+        
+        %avl classic compression ratio statistics 
+        \foreach \x / \y in {0.16 / 7.11, 0.25 / 9.34, 0.28 / 6.98, 0.34 / 8.74, 0.46 / 8.31, 0.53 / 9.1, 0.56 / 9.04, 0.6 /
+        8.7, 0.7 / 8.35, 0.73 / 8.06, 0.82 / 8.87, 0.89 / 8.65, 0.96 / 8.19, 1.01 / 8.73, 1.17 / 8.72, 1.25 / 8.49, 1.34 /
+        8.5, 1.4 / 8.56, 1.45 / 8.39, 1.54 / 8.03, 1.6 / 8.08, 1.65 / 8.36, 1.68 / 8.11, 1.72 / 8.34, 1.8 / 7.87, 1.85 /
+        7.87, 1.93 / 7.04, 1.98 / 7.03, 2.23 / 8.05, 2.37 / 7.98, 2.49 / 7.91, 2.57 / 8.1, 2.87 / 8.01, 3.08 / 8.22, 3.26 /
+        8.05, 3.42 / 8.25, 3.5 / 8.15, 3.77 / 8.14, 4.13 / 7.1, 4.58 / 7.97, 4.91 / 7.9, 5.46 / 8.23, 6.11 / 7.98, 7.05 /
+        8.11, 7.5 / 7.38} 
+            \draw[green, fill=green] (\x, \y) circle (1.5pt);
+        
+        %avl modern compression ratio statistics 
+        \foreach \x / \y in {0.16 / 7.19, 0.25 / 9.4, 0.28 / 7.12, 0.34 / 8.89, 0.46 / 8.49, 0.53 / 9.19, 0.56 / 9.14, 0.6 /
+        8.85, 0.7 / 8.53, 0.73 / 8.23, 0.82 / 9.01, 0.89 / 8.77, 0.96 / 8.34, 1.01 / 8.85, 1.17 / 8.81, 1.25 / 8.55, 1.34 /
+        8.55, 1.4 / 8.62, 1.45 / 8.43, 1.54 / 8.14, 1.6 / 8.07, 1.65 / 8.4, 1.68 / 8.1, 1.72 / 8.39, 1.8 / 7.88, 1.85 / 7.89,
+        1.93 / 7.2, 1.98 / 7.2, 2.23 / 8.05, 2.37 / 7.97, 2.49 / 7.92, 2.57 / 8.12, 2.87 / 8, 3.08 / 8.27, 3.26 / 8.06, 3.42
+        / 8.35, 3.5 / 8.29, 3.77 / 8.24, 4.13 / 7.19, 4.58 / 7.98, 4.91 / 7.94, 5.46 / 8.31, 6.11 / 8.05, 7.05 / 8.15, 7.5 /
+        7.41} 
+            \filldraw[fill=red, red] (\x, \y) circle (1.5pt);
+            
+        %lzma compression ratio stats
+        \foreach \x / \y in {0.16 / 3.02, 0.25 / 4.82, 0.28 / 3.06, 0.34 / 4.55, 0.46 / 4.31, 0.53 / 4.73, 0.56 / 4.7, 0.6 /
+        4.59, 0.7 / 4.41, 0.73 / 4.14, 0.82 / 4.66, 0.89 / 4.56, 0.96 / 4.18, 1.01 / 4.6, 1.17 / 4.56, 1.25 / 4.41, 1.34 /
+        4.43, 1.4 / 4.46, 1.45 / 4.35, 1.54 / 4.17, 1.6 / 4.11, 1.65 / 4.33, 1.68 / 4.14, 1.72 / 4.34, 1.8 / 4.04, 1.85 /
+        4.04, 1.93 / 3.58, 1.98 / 3.65, 2.23 / 4.15, 2.37 / 4.11, 2.49 / 4.07, 2.57 / 4.2, 2.87 / 4.15, 3.08 / 4.31, 3.26 /
+        4.18, 3.42 / 4.38, 3.5 / 4.36, 3.77 / 4.33, 4.13 / 3.73, 4.58 / 4.17, 4.91 / 4.14, 5.46 / 4.4, 6.11 / 4.24, 7.05 /
+        4.31, 7.5 / 3.79}
+            \filldraw[fill=purple, purple] (\x,\y) rectangle +(0.1,0.1);
+                   
+        %lz77 compression ratio stats
+        \foreach \x / \y in {0.16 / 5.01, 0.25 / 6.09, 0.28 / 5.15, 0.34 / 6.34, 0.46 / 6.53, 0.53 / 6.28, 0.56 / 6.33, 0.6 /
+        6.43, 0.7 / 6.23, 0.73 / 5.81, 0.82 / 6.41, 0.89 / 6.49, 0.96 / 6.11, 1.01 / 6.5, 1.17 / 6.42, 1.25 / 6.31, 1.34 /
+        6.32, 1.4 / 6.38, 1.45 / 6.26, 1.54 / 6.26, 1.6 / 5.95, 1.65 / 6.32, 1.68 / 6.03, 1.72 / 6.37, 1.8 / 6.09, 1.85 /
+        6.1, 1.93 / 6.46, 1.98 / 6.39, 2.23 / 6.14, 2.37 / 6.14, 2.49 / 6.06, 2.57 / 6.28, 2.87 / 6.28, 3.08 / 6.51, 3.26 /
+        6.43, 3.42 / 6.71, 3.5 / 6.67, 3.77 / 6.69, 4.13 / 6.61, 4.58 / 6.49, 4.91 / 6.5, 5.46 / 6.86, 6.11 / 6.82, 7.05 /
+        6.83, 7.5 / 6.53}
+            \draw[fill=orange, orange] (\x,\y) rectangle +(0.1,0.1);
+            
+        %cartesian compression ratio stats
+        \foreach \x / \y in {0.16 / 10.35, 0.25 / 14.58, 0.28 / 10.41, 0.34 / 13.57, 0.46 / 12.95, 0.53 / 14.31, 0.56 / 14.24,
+        0.6 / 13.72, 0.7 / 13.17, 0.73 / 12.72, 0.82 / 14.04, 0.89 / 13.67, 0.96 / 12.93, 1.01 / 13.86, 1.17 / 13.84, 1.25 /
+        13.47, 1.34 / 13.54, 1.4 / 13.63, 1.45 / 13.39, 1.54 / 12.78, 1.6 / 12.97, 1.65 / 13.3, 1.68 / 12.96, 1.72 / 13.31,
+        1.8 / 12.61, 1.85 / 12.63, 1.93 / 11.15, 1.98 / 11.19, 2.23 / 12.9, 2.37 / 12.8, 2.49 / 12.66, 2.57 / 12.97, 2.87 /
+        12.79, 3.08 / 13.12, 3.26 / 12.81, 3.42 / 13.17, 3.5 / 13.03, 3.77 / 13, 4.13 / 11.3, 4.58 / 12.74, 4.91 / 12.64,
+        5.46 / 13.16, 6.11 / 12.74, 7.05 / 12.94, 7.5 / 11.72}
+            \filldraw[fill=yellow, yellow] (\x,\y) -- +(0.08, 0.15) -- +(0.16, 0) -- (\x,\y);
+    \end{tikzpicture}
+}
+
+\newcommand{\fibonacciwordslp}{
+    \begin{tikzpicture}[scale=0.7]
+        {\scriptsize
+            {\sf
+                \pgfsetlinewidth{0.7pt}
+
+                \foreach \x in {0, 1.4, 2.1, 3.5, 4.9, 5.6, 7, 7.7} {
+                    \draw (\x, 0) node[anchor=west] {$a$};
+                    \draw (\x-0.1, 0.75) node[anchor=west] {$\slp{F}_1$};
+                }
+                
+                \foreach \x in {0.7, 2.8, 4.2, 6.3, 8.4} {
+                    \draw (\x, 0) node[anchor=west] {$b$};
+                    \draw (\x-0.1, 0.75) node[anchor=west] {$\slp{F}_0$};
+                }
+    
+                   
+                \foreach \x in {0.1, 0.8, 1.5, 2.2, 2.9, 3.6, 4.3, 5, 5.7, 6.4, 7.1, 7.8, 8.5 }
+                    \draw (\x,0.2) -- (\x,0.6);
+                    
+                \foreach \x in {0.1, 2.2, 3.6, 5.7, 7.8} {
+                    \draw (\x, 1) -- (\x, 1.2);
+                    \draw (\x+0.7, 1) -- (\x+0.7, 1.2);
+                    \draw (\x, 1.2) -- (\x+0.35, 1.5);
+                    \draw (\x+0.7, 1.2) -- (\x+0.35, 1.5);
+                    \draw (\x+0.2, 1.65) node[anchor=west] {$\slp{F}_2$};
+                }
+                
+                \foreach \x in {0.45, 3.95, 6.05} {
+                    \draw (\x, 1.9) -- (\x+0.52, 2.3);
+                    \draw (\x+1.05, 1) -- (\x+1.05, 1.9);
+                    \draw (\x+1.05, 1.9) -- (\x+0.52, 2.3);
+                    \draw (\x+0.37, 2.45) node[anchor=west] {$\slp{F}_3$};
+                }
+                
+                \foreach \x in {0.97, 6.57} {
+                    \draw (\x, 2.65) -- (\x+0.79, 3.05);
+                    \draw (\x+1.58, 1.85) -- (\x+1.58, 2.65);
+                    \draw (\x+1.58, 2.65) -- (\x+0.79, 3.05);
+                    \draw (\x+0.64, 3.2) node[anchor=west] {$\slp{F}_4$};
+                }
+                
+                \draw (4.47,2.65) -- (4.47, 3.4); \draw (1.76,3.4) -- (3.11, 3.8); \draw (4.47, 3.4) -- (3.11, 3.8);
+                \textline{2.96}{3.95}{$\slp{F}_5$}
+    
+                \draw (7.36,3.4) -- (7.36, 4.15); \draw (3.11,4.15) -- (5.23, 4.75); \draw (7.36, 4.15) -- (5.23, 4.75);
+                \textline{5.08}{4.9}{$\slp{F}_6$}
+            }
+        }
+    \end{tikzpicture}       
+}

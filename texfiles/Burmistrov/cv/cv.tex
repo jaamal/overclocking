@@ -1,0 +1,106 @@
+\documentclass[12pt]{article}
+\usepackage{url}
+\usepackage{tikz}
+
+\pagestyle{empty}
+\begin{document}
+
+\addtolength{\hoffset}{-3cm} \addtolength{\voffset}{-2cm}
+ {\Large Ivan Burmistrov}
+\smallskip \hrule
+\smallskip
+\smallskip
+\noindent
+
+\newcommand{\drawHeader}[2]{
+	\draw (0,#1) node {\textsc{#2}};
+}
+
+\newcommand{\drawInfo}[2]{
+	\draw #1 node[anchor=west] {#2};
+}
+
+\begin{tikzpicture}
+
+%Contact information
+\drawHeader{0}{Contact} 
+\drawHeader{-0.5}{Information}
+
+\drawInfo{(3,0)}{Ural State University}
+\drawInfo{(9,0)}{Cell phone: +7 922 110 4052}
+\drawInfo{(3,-0.5)}{620083 Yekaterinburg}
+\drawInfo{(9,-0.5)}{Email: burmistrov.ivan@gmail.com}
+\drawInfo{(3,-1)}{K-83, av. Lenina 51, Russia}
+
+%Objective
+%\drawHeader{-2}{Objective}
+%\drawInfo{(2,-2)}{To find a job position in RocketSoftware company}
+
+%Biographical Data
+\drawHeader{-2}{Biographical} 
+\drawHeader{-2.5}{Data}
+
+\drawInfo{(2.5, -2)}{Citizenship: Russia}
+\drawInfo{(2.5, -2.5)}{Data and place of birth: 22th December 1987, Sverdlovsk, USSR}
+
+%Reseach Interests
+\drawHeader{-3.5}{Reseach} 
+\drawHeader{-4}{Interests}
+
+\drawInfo{(2.5, -3.5)}{algorithms on compressed strings, theory of algorithms, }
+\drawInfo{(2.5, -4)}{computational complexity, I/O-efficient algorithms, combinatorics on words}
+\drawInfo{(2.5, -4.5)}{software engineering, parallel programming and parallel algorithms}
+
+%Reseach Interests
+\drawHeader{-6}{Education} 
+
+\drawInfo{(2.5, -6)}{\textbf{Ural State University, Yekaterinburg, Russia}}
+\drawInfo{(2.5, -6.5)}{Postgraduate student of Mathematics and Mechanics Department, 2011 -- to present}
+\drawInfo{(2.5, -7)}{Advisor: professor Mikhail V. Volkov}
+
+\drawInfo{(2.5, -8)}{\textbf{Ural State University, Yekaterinburg, Russia}}
+\drawInfo{(2.5, -8.5)}{M. Sc., Mathematics (Algebra), 2005 -- 2011}
+\drawInfo{(2.5, -9)}{Speciality: discrete mathematics and cyberneticist}
+\drawInfo{(2.5, -9.5)}{Thesis topic: ``Stright-line programs: a practical test.''}
+\drawInfo{(2.5, -10)}{Advisor: professor Mikhail V. Volkov}
+
+%Conferences and Schools
+
+\drawHeader{-11}{Conferences} 
+\drawHeader{-11.5}{and Schools}
+
+\drawInfo{(2.5,-11)}{\emph{Software People}, Moscow, 2011}
+\drawInfo{(2.5,-12)}{\emph{Computer Science Ekaterinburg Days} (CSEDays), 2011}
+\drawInfo{(2.5,-13)}{\emph{Microsoft Data Structures and Algorithms School}, St. Petersburg, 2010}
+\drawInfo{(2.5,-14)}{\emph{Russian Summer School on Information Retrieval} (RuSSIR), Taganrog, 2008}
+
+\end{tikzpicture}
+
+\newpage
+
+\begin{tikzpicture}
+
+%Industrial Experience
+\drawHeader{-2}{Industrial} 
+\drawHeader{-2.5}{Experience}
+
+\drawInfo{(2.5, -2)}{\textbf{iCat} project, .NET-developer, team-leader, April 2011 -- to present}
+\drawInfo{(2.5, -2.5)}{Designing high-loaded web-service with SOA.}
+
+\drawInfo{(2.5, -3.5)}{\textbf{Kontur PF Report} project, .NET-developer, July 2009 -- April 2011}
+\drawInfo{(2.5, -4)}{(demo version: \url{http://demo.kontur-pf.ru/DemoLogin.htm})}
+\drawInfo{(2.5, -4.5)}{Developing high-loaded web-service with SOA.}
+
+\drawInfo{(2.5, -5.5)}{\textbf{UrbiTrac} project, Java-developer, June 2007 -- June 2009}
+\drawInfo{(2.5, -6)}{Designing algorithms for approximate path search in huge road graphs }
+\drawInfo{(2.5, -6.5)}{for a GPS-navigator.}
+
+%Other Skills
+\drawHeader{-7.5}{Other}
+\drawHeader{-8}{Achievements}
+
+\drawInfo{(2.5, -7.5)}{ACM ICPC World Championship bronze medalist (Harbin, China, February 2010)}
+
+\end{tikzpicture}
+
+\end{document}

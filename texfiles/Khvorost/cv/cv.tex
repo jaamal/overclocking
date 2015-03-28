@@ -1,0 +1,140 @@
+﻿\documentclass[12pt]{article}
+\usepackage{url}
+\usepackage{tikz}
+
+\pagestyle{empty}
+\begin{document}
+
+\addtolength{\hoffset}{-3cm} \addtolength{\voffset}{-2cm}
+ {\Large Lesha Khvorost}
+\smallskip \hrule
+\smallskip
+\smallskip
+\noindent
+
+\newcommand{\drawHeader}[2]{
+	\draw (0,#1) node {\textsc{#2}};
+}
+
+\newcommand{\drawInfo}[2]{
+	\draw #1 node[anchor=west] {#2};
+}
+
+\begin{tikzpicture}
+
+%Contact information
+\drawHeader{0}{Contact} 
+\drawHeader{-0.5}{Information}
+
+\drawInfo{(3,0)}{Ural Federal University}
+\drawInfo{(9,0)}{Cell phone: +7 902 269 7637}
+\drawInfo{(3,-0.5)}{620083 Yekaterinburg}
+\drawInfo{(9,-0.5)}{Email: jaamal@mail.ru}
+\drawInfo{(3,-1)}{K-83, av. Lenina 51, Russia}
+
+%Objective
+%\drawHeader{-2}{Objective}
+%\drawInfo{(2,-2)}{To find a job position in RocketSoftware company}
+
+%Biographical Data
+\drawHeader{-2}{Biographical} 
+\drawHeader{-2.5}{Data}
+
+\drawInfo{(2.5, -2)}{Citizenship: Russia}
+\drawInfo{(2.5, -2.5)}{Data and place of birth: 18th August 1985, Sverdlovsk, USSR}
+
+%Reseach Interests
+\drawHeader{-3.5}{Reseach} 
+\drawHeader{-4}{Interests}
+
+\drawInfo{(2.5, -3.5)}{compression algorithms, string algorithms, concurrency, }
+\drawInfo{(2.5, -4)}{I/O-efficient algorithms, computational complexity, combinatorics on words}
+
+%Reseach Interests
+\drawHeader{-5}{Education} 
+
+\drawInfo{(2.5, -5)}{\textbf{Ural State University, Yekaterinburg, Russia}}
+\drawInfo{(2.5, -5.5)}{M. Sc., Mathematics (Algebra), 2002 -- 2008}
+\drawInfo{(2.5, -6)}{Speciality: discrete mathematics and cyberneticist}
+\drawInfo{(2.5, -6.5)}{Thesis topic: ``Algorithmic Properties of Compressed Texts.''}
+\drawInfo{(2.5, -7)}{Advisor: professor Mikhail V. Volkov}
+
+\drawInfo{(2.5, -8)}{\textbf{Ural State University, Yekaterinburg, Russia}}
+\drawInfo{(2.5, -8.5)}{Postgraduate student of Mathematics and Mechanics Department, 2008 -- 2011}
+\drawInfo{(2.5, -9)}{Advisor: professor Mikhail V. Volkov}
+
+%Conferences and Schools
+
+\drawHeader{-10}{Conferences} 
+\drawHeader{-10.5}{and Schools}
+
+\drawInfo{(2.5, -10)}{\emph{Conference on Information Security}, Tomsk, 2006}
+\drawInfo{(2.5, -10.5)}{Topic: ``\textbf{Cryptosystems Based on Pattern-Matching Algorithms}''}
+
+\drawInfo{(2.5, -11.5)}{\emph{$2^{nd}$ International Symposium ``Computer Science in Russia''} Yekaterinburg, 2007}
+
+\drawInfo{(2.5,-12.5)}{\emph{Russian Summer School on Information Retrieval} (RuSSIR), Yekaterinburg, 2007}
+
+\drawInfo{(2.5, -13.5)}{\emph{Indo-Russian Workshop On Algebra, Combinatorics and Complexity}}
+\drawInfo{(2.5, -14)}{Topic: ``{\bf Classic String Problems on Compressed Texts}''}
+\drawInfo{(2.5, -14.5)}{Yekaterinburg, 2008}
+
+\drawInfo{(2.5, -15.5)}{\emph{Plenary Conference ``AutoMathA''} Liege, Belgium, 2009}
+\drawInfo{(2.5, -16)}{Topic: ``{\bf Computing All Pure Squares in Compressed Texts}''}
+
+\drawInfo{(2.5, -17)}{\emph{Computer Science Ekaterinburg Days} (CSEDays), Arakul, 2010}
+
+\end{tikzpicture}
+
+\newpage
+
+\begin{tikzpicture}
+
+\drawInfo{(2.5, 1)}{\emph{Microsoft Data Structures and Algorithms School}, St. Petersburg, 2010}
+
+\drawInfo{(2.5, 0)}{\emph{Software People}, Moscow, 2011}
+
+\drawInfo{(2.5, -1)}{\emph{1st International Conference on Data Compression, Communication and Processing}}
+\drawInfo{(2.5, -1.5)}{\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad
+Palinuro, Italy, 2011}
+
+\drawInfo{(2.5, -2.5)}{\emph{First Russian-Finnish Symposium on Discrete Mathematics}, St. Petersburg, 2011}
+
+%Community Service
+\drawHeader{-3.5}{Community}
+\drawHeader{-4}{Service}
+
+\drawInfo{(2.5, -3.5)}{Reviewing articles for \textbf{Software Seminar 2008}, \textbf{Software Seminar 2012}}
+\drawInfo{(2.5, -4)}{Local organizing of \textbf{CSR 2007} and \textbf{RuSSIR 2007}}
+
+\drawHeader{-5}{Industrial} 
+\drawHeader{-5.5}{Experience}
+
+\drawInfo{(2.5, -5)}{\textbf{UrbiTrac} project, Java-developer, June 2007 -- June 2008}
+\drawInfo{(2.5, -5.5)}{Designing algorithms for approximate path search in huge road graphs }
+\drawInfo{(2.5, -6)}{for a GPS-navigator.}
+
+\drawInfo{(2.5, -7)}{\textbf{Kontur Pension Fund Reports} project, .net-developer, June 2008 -- August 2010}
+\drawInfo{(2.5, -7.5)}{(demo version: \url{http://demo.kontur-pf.ru/DemoLogin.htm})}
+\drawInfo{(2.5, -8)}{Developing high-loaded web-service with service-oriented architecture.}
+
+\drawInfo{(2.5, -9)}{\textbf{Certifcate Assurance Office} project, .net-developer, team-leader, }
+\drawInfo{(2.5, -9.5)}{August 2010 -- Febrary 2012}
+\drawInfo{(2.5, -10)}{Designing and developing secure web-service with service-oriented architecture.}
+
+\drawInfo{(2.5, -11)}{\textbf{Billy} project, .net-developer, team-leader, from March 2012}
+\drawInfo{(2.5, -11.5)}{Designing and developing billing system with CRM and Internet advancement.}
+
+\drawHeader{-12.5}{Technical}
+
+\drawInfo{(2.5, -12.5)}{English language: upper intermediate}
+
+%Other Skills
+\drawHeader{-13.5}{Other}
+\drawHeader{-14}{Skills}
+
+\drawInfo{(2.5, -13.5)}{Candidate for the master of sports (badminton)}
+
+\end{tikzpicture}
+
+\end{document}

@@ -1,0 +1,752 @@
+\newcommand{\picExample}{
+\begin{center}
+\begin{pgfpicture}{0cm}{0cm}{8.5cm}{5cm}
+
+        \pgfputat{\pgfxy(0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(0.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(1.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(3.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(4.2,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(4.9,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(5.6,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(6.3,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(7.0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(7.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(8.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(10.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(11.2,0)}{\pgfbox[left,center]{$b$}}
+
+        \pgfxyline(0.1,0.2)(0.1, 0.6)
+        \pgfxyline(0.8,0.2)(0.8, 0.6)
+        \pgfxyline(1.5,0.2)(1.5, 0.6)
+        \pgfxyline(2.2,0.2)(2.2, 0.6)
+        \pgfxyline(2.9,0.2)(2.9, 0.6)
+        \pgfxyline(3.6,0.2)(3.6, 0.6)
+        \pgfxyline(4.3,0.2)(4.3, 0.6)
+        \pgfxyline(5,0.2)(5, 0.6)
+        \pgfxyline(5.7,0.2)(5.7, 0.6)
+        \pgfxyline(6.4,0.2)(6.4, 0.6)
+        \pgfxyline(7.1,0.2)(7.1, 0.6)
+        \pgfxyline(7.8,0.2)(7.8, 0.6)
+        \pgfxyline(8.5,0.2)(8.5, 0.6)
+        \pgfxyline(9.2,0.2)(9.2, 0.6)
+        \pgfxyline(9.9,0.2)(9.9, 0.6)
+        \pgfxyline(10.6,0.2)(10.6, 0.6)
+        \pgfxyline(11.3,0.2)(11.3, 0.6)
+
+        \pgfputat{\pgfxy(-0.1,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(0.6,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(1.3,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(2,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(2.7,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(3.4,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(4.1,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(4.8,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(5.5,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(6.2,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(6.9,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(7.6,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(8.3,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(9.0,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(9.7,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(10.4,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(11.1,0.75)}{\pgfbox[left,center]{$X_2$}}
+
+        \pgfxyline(0.1,1)(0.1, 1.2)
+        \pgfxyline(0.8,1)(0.8, 1.2)
+        \pgfxyline(0.1,1.2)(0.45, 1.5)
+        \pgfxyline(0.8,1.2)(0.45, 1.5)
+        \pgfputat{\pgfxy(0.3,1.65)}{\pgfbox[left,center]{$X_3$}}
+
+        \pgfxyline(1.5,1)(1.5, 1.2)
+        \pgfxyline(2.2,1)(2.2, 1.2)
+        \pgfxyline(1.5,1.2)(1.85,1.5)
+        \pgfxyline(2.2,1.2)(1.85,1.5)
+        \pgfputat{\pgfxy(1.7,1.65)}{\pgfbox[left,center]{$X_3$}}
+
+        \pgfxyline(3.6,1)(3.6, 1.2)
+        \pgfxyline(4.3,1)(4.3, 1.2)
+        \pgfxyline(3.6,1.2)(3.95, 1.5)
+        \pgfxyline(4.3,1.2)(3.95, 1.5)
+        \pgfputat{\pgfxy(3.8,1.65)}{\pgfbox[left,center]{$X_5$}}
+
+        \pgfxyline(5.0,1)(5.0, 1.2)
+        \pgfxyline(5.7,1)(5.7, 1.2)
+        \pgfxyline(5.0,1.2)(5.35, 1.5)
+        \pgfxyline(5.7,1.2)(5.35, 1.5)
+        \pgfputat{\pgfxy(5.2,1.65)}{\pgfbox[left,center]{$X_3$}}
+
+        \pgfxyline(6.4,1)(6.4, 1.2)
+        \pgfxyline(7.1,1)(7.1, 1.2)
+        \pgfxyline(6.4,1.2)(6.75, 1.5)
+        \pgfxyline(7.1,1.2)(6.75, 1.5)
+        \pgfputat{\pgfxy(6.6,1.65)}{\pgfbox[left,center]{$X_8$}}
+        
+        \pgfxyline(8.5,1)(8.5, 1.2)
+        \pgfxyline(9.2,1)(9.2, 1.2)
+        \pgfxyline(8.5,1.2)(8.85, 1.5)
+        \pgfxyline(9.2,1.2)(8.85, 1.5)
+        \pgfputat{\pgfxy(8.7,1.65)}{\pgfbox[left,center]{$X_3$}}
+        
+        \pgfxyline(10.6,1)(10.6, 1.2)
+        \pgfxyline(11.3,1)(11.3, 1.2)
+        \pgfxyline(10.6,1.2)(10.95, 1.5)
+        \pgfxyline(11.3,1.2)(10.95, 1.5)
+        \pgfputat{\pgfxy(10.8,1.65)}{\pgfbox[left,center]{$X_5$}}
+
+        \pgfxyline(0.45, 1.85)(1.15, 2.3)
+        \pgfxyline(1.8, 1.85)(1.15, 2.3)
+        \pgfputat{\pgfxy(1, 2.45)}{\pgfbox[left,center]{$X_4$}}
+
+        \pgfxyline(2.9, 1)(2.9, 1.85)
+        \pgfxyline(3.9, 1.85)(3.4, 2.3)
+        \pgfxyline(2.9, 1.85)(3.4, 2.3)
+        \pgfputat{\pgfxy(3.25, 2.45)}{\pgfbox[left,center]{$X_6$}}
+
+        \pgfxyline(5.35,1.85)(6.05, 2.3)
+        \pgfxyline(6.75, 1.85)(6.05, 2.3)
+        \pgfputat{\pgfxy(5.9,2.45)}{\pgfbox[left,center]{$X_9$}}
+        
+        \pgfxyline(7.8, 1)(7.8, 1.85)
+        \pgfxyline(7.8, 1.85)(8.3, 2.3)
+        \pgfxyline(8.8, 1.85)(8.3, 2.3)
+        \pgfputat{\pgfxy(8.15, 2.45)}{\pgfbox[left,center]{$X_{11}$}}
+        
+        \pgfxyline(9.9, 1)(9.9, 1.85)
+        \pgfxyline(10.9, 1.85)(10.4, 2.3)
+        \pgfxyline(9.9, 1.85)(10.4, 2.3)
+        \pgfputat{\pgfxy(10.25, 2.45)}{\pgfbox[left,center]{$X_6$}}
+
+        \pgfxyline(1.15, 2.66)(2.27, 3.05)
+        \pgfxyline(3.36, 2.65)(2.27, 3.05)
+        \pgfputat{\pgfxy(2.13, 3.2)}{\pgfbox[left,center]{$X_7$}}
+        
+        \pgfxyline(8.25, 2.66)(9.27, 3.05)
+        \pgfxyline(10.36, 2.66)(9.27, 3.05)
+        \pgfputat{\pgfxy(9.13, 3.21)}{\pgfbox[left,center]{$X_{12}$}}
+
+        \pgfxyline(2.25, 3.41)(4.15, 3.8)
+        \pgfxyline(6.12,2.68)(6.12, 3.42)
+        \pgfxyline(6.12,3.41)(4.15, 3.8)
+        \pgfputat{\pgfxy(4.03,3.97)}{\pgfbox[left,center]{$X_{10}$}}
+
+        \pgfxyline(9.35,3.4)(9.35, 4.17)
+        \pgfxyline(4.2,4.17)(6.78, 4.75)
+        \pgfxyline(9.35, 4.17)(6.78, 4.75)
+        \pgfputat{\pgfxy(6.68, 4.92)}{\pgfbox[left,center]{$X_{13}$}}
+
+  %      \pgfputat{\pgfxy(-2,-0.7)}{\pgfbox[left,center]{{\bf Рисунок 1.} Дерево вывода грамматики, порождающей <<$aaaababaabaaaabab$>>}}
+
+    \end{pgfpicture}
+\end{center}
+}
+
+\newcommand{\picRytter}{
+\begin{center}
+\begin{pgfpicture}{0cm}{0cm}{8.5cm}{6cm}
+
+        \pgfputat{\pgfxy(0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(0.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(1.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(3.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(4.2,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(4.9,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(5.6,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(6.3,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(7.0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(7.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(8.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(10.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(11.2,0)}{\pgfbox[left,center]{$b$}}
+
+        \pgfxyline(0.1,0.2)(0.1, 0.6)
+        \pgfxyline(0.8,0.2)(0.8, 0.6)
+        \pgfxyline(1.5,0.2)(1.5, 0.6)
+        \pgfxyline(2.2,0.2)(2.2, 0.6)
+        \pgfxyline(2.9,0.2)(2.9, 0.6)
+        \pgfxyline(3.6,0.2)(3.6, 0.6)
+        \pgfxyline(4.3,0.2)(4.3, 0.6)
+        \pgfxyline(5,0.2)(5, 0.6)
+        \pgfxyline(5.7,0.2)(5.7, 0.6)
+        \pgfxyline(6.4,0.2)(6.4, 0.6)
+        \pgfxyline(7.1,0.2)(7.1, 0.6)
+        \pgfxyline(7.8,0.2)(7.8, 0.6)
+        \pgfxyline(8.5,0.2)(8.5, 0.6)
+        \pgfxyline(9.2,0.2)(9.2, 0.6)
+        \pgfxyline(9.9,0.2)(9.9, 0.6)
+        \pgfxyline(10.6,0.2)(10.6, 0.6)
+        \pgfxyline(11.3,0.2)(11.3, 0.6)
+
+        \pgfputat{\pgfxy(-0.1,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(0.6,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(1.3,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(2,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(2.7,0.75)}{\pgfbox[left,center]{$X_4$}}
+        \pgfputat{\pgfxy(3.4,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(4.1,0.75)}{\pgfbox[left,center]{$X_4$}}
+        \pgfputat{\pgfxy(4.8,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(5.5,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(6.2,0.75)}{\pgfbox[left,center]{$X_4$}}
+        \pgfputat{\pgfxy(6.9,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(7.6,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(8.3,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(9.0,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(9.7,0.75)}{\pgfbox[left,center]{$X_4$}}
+        \pgfputat{\pgfxy(10.4,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(11.1,0.75)}{\pgfbox[left,center]{$X_4$}}
+
+        \pgfxyline(0.1,1)(0.1, 1.2)
+        \pgfxyline(0.8,1)(0.8, 1.2)
+        \pgfxyline(0.1,1.2)(0.45, 1.5)
+        \pgfxyline(0.8,1.2)(0.45, 1.5)
+        \pgfputat{\pgfxy(0.3,1.65)}{\pgfbox[left,center]{$X_2$}}
+
+        \pgfxyline(1.5,1)(1.5, 1.2)
+        \pgfxyline(2.2,1)(2.2, 1.2)
+        \pgfxyline(1.5,1.2)(1.85,1.5)
+        \pgfxyline(2.2,1.2)(1.85,1.5)
+        \pgfputat{\pgfxy(1.7,1.65)}{\pgfbox[left,center]{$X_2$}}
+
+        \pgfxyline(3.6,1)(3.6, 1.2)
+        \pgfxyline(4.3,1)(4.3, 1.2)
+        \pgfxyline(3.6,1.2)(3.95, 1.5)
+        \pgfxyline(4.3,1.2)(3.95, 1.5)
+        \pgfputat{\pgfxy(3.8,1.65)}{\pgfbox[left,center]{$X_6$}}
+
+        \pgfxyline(5.0,1)(5.0, 1.2)
+        \pgfxyline(5.7,1)(5.7, 1.2)
+        \pgfxyline(5.0,1.2)(5.35, 1.5)
+        \pgfxyline(5.7,1.2)(5.35, 1.5)
+        \pgfputat{\pgfxy(5.2,1.65)}{\pgfbox[left,center]{$X_2$}}
+        
+        \pgfxyline(8.5,1)(8.5, 1.2)
+        \pgfxyline(9.2,1)(9.2, 1.2)
+        \pgfxyline(8.5,1.2)(8.85, 1.5)
+        \pgfxyline(9.2,1.2)(8.85, 1.5)
+        \pgfputat{\pgfxy(8.7,1.65)}{\pgfbox[left,center]{$X_2$}}
+        
+        \pgfxyline(10.6,1)(10.6, 1.2)
+        \pgfxyline(11.3,1)(11.3, 1.2)
+        \pgfxyline(10.6,1.2)(10.95, 1.5)
+        \pgfxyline(11.3,1.2)(10.95, 1.5)
+        \pgfputat{\pgfxy(10.8,1.65)}{\pgfbox[left,center]{$X_6$}}
+
+        \pgfxyline(0.45, 1.85)(1.15, 2.3)
+        \pgfxyline(1.8, 1.85)(1.15, 2.3)
+        \pgfputat{\pgfxy(1, 2.45)}{\pgfbox[left,center]{$X_3$}}
+
+		\pgfxyline(6.4,1)(6.4, 1.85)
+        \pgfxyline(5.35,1.85)(5.83, 2.3)
+        \pgfxyline(6.4, 1.85)(5.83, 2.3)
+        \pgfputat{\pgfxy(5.68,2.45)}{\pgfbox[left,center]{$X_8$}}
+        
+        \pgfxyline(7.8, 1)(7.8, 1.85)
+        \pgfxyline(7.8, 1.85)(8.3, 2.3)
+        \pgfxyline(8.8, 1.85)(8.3, 2.3)
+        \pgfputat{\pgfxy(8.15, 2.45)}{\pgfbox[left,center]{$X_{11}$}}
+   
+		\pgfxyline(2.9, 1)(2.9, 2.66)
+        \pgfxyline(1.15, 2.66)(2.1, 3.05)
+        \pgfxyline(2.9, 2.66)(2.1, 3.05)
+        \pgfputat{\pgfxy(1.98, 3.2)}{\pgfbox[left,center]{$X_5$}}
+        
+        \pgfxyline(7.1, 1)(7.1, 2.66)
+        \pgfxyline(5.85, 2.66)(6.48, 3.05)
+        \pgfxyline(7.1, 2.66)(6.48, 3.05)
+        \pgfputat{\pgfxy(6.34, 3.21)}{\pgfbox[left,center]{$X_{9}$}}
+        
+        \pgfxyline(9.9, 1)(9.9, 2.66)
+        \pgfxyline(8.25, 2.66)(9.08, 3.05)
+        \pgfxyline(9.9, 2.66)(9.08, 3.05)
+        \pgfputat{\pgfxy(8.94, 3.21)}{\pgfbox[left,center]{$X_{12}$}}
+
+        \pgfxyline(2.15, 3.41)(3.13, 3.8)
+        \pgfxyline(4,1.85)(4, 3.42)
+        \pgfxyline(4,3.41)(3.13, 3.8)
+        \pgfputat{\pgfxy(3,3.97)}{\pgfbox[left,center]{$X_7$}}
+        
+        \pgfxyline(6.55,3.44)(6.55, 4.17)
+        \pgfxyline(3.15,4.17)(4.85, 4.75)
+        \pgfxyline(6.55, 4.17)(4.85, 4.75)
+        \pgfputat{\pgfxy(4.68, 4.92)}{\pgfbox[left,center]{$X_{13}$}}
+        
+        
+        \pgfxyline(11,1.85)(11, 3.42)
+        \pgfxyline(9.08,3.42)(10.12, 4)
+        \pgfxyline(11, 3.42)(10.12, 4)
+        \pgfputat{\pgfxy(9.98, 4.15)}{\pgfbox[left,center]{$X_{10}$}}
+                
+        \pgfxyline(10.18,4.4)(10.18, 5.14)
+        \pgfxyline(4.8,5.14)(7.49, 5.7)
+        \pgfxyline(10.18, 5.14)(7.49, 5.7)
+        \pgfputat{\pgfxy(7.34, 5.86)}{\pgfbox[left,center]{$X_{14}$}}
+
+  %      \pgfputat{\pgfxy(-2,-0.7)}{\pgfbox[left,center]{{\bf Рисунок 2.} Дерево
+  % вывода грамматики, порождающей <<$aaaababaabaaaabab$>> с помощью алгоритма
+  % Риттера без перебалансировок}}
+
+    \end{pgfpicture}
+\end{center}
+}
+
+\newcommand{\picLazyClassic}{
+\begin{center}
+\begin{pgfpicture}{0cm}{0cm}{8.5cm}{6cm}
+
+        \pgfputat{\pgfxy(0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(0.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(1.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(3.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(4.2,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(4.9,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(5.6,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(6.3,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(7.0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(7.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(8.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(10.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(11.2,0)}{\pgfbox[left,center]{$b$}}
+
+        \pgfxyline(0.1,0.2)(0.1, 0.6)
+        \pgfxyline(0.8,0.2)(0.8, 0.6)
+        \pgfxyline(1.5,0.2)(1.5, 0.6)
+        \pgfxyline(2.2,0.2)(2.2, 0.6)
+        \pgfxyline(2.9,0.2)(2.9, 0.6)
+        \pgfxyline(3.6,0.2)(3.6, 0.6)
+        \pgfxyline(4.3,0.2)(4.3, 0.6)
+        \pgfxyline(5,0.2)(5, 0.6)
+        \pgfxyline(5.7,0.2)(5.7, 0.6)
+        \pgfxyline(6.4,0.2)(6.4, 0.6)
+        \pgfxyline(7.1,0.2)(7.1, 0.6)
+        \pgfxyline(7.8,0.2)(7.8, 0.6)
+        \pgfxyline(8.5,0.2)(8.5, 0.6)
+        \pgfxyline(9.2,0.2)(9.2, 0.6)
+        \pgfxyline(9.9,0.2)(9.9, 0.6)
+        \pgfxyline(10.6,0.2)(10.6, 0.6)
+        \pgfxyline(11.3,0.2)(11.3, 0.6)
+
+        \pgfputat{\pgfxy(-0.1,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(0.6,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(1.3,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(2,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(2.7,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(3.4,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(4.1,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(4.8,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(5.5,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(6.2,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(6.9,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(7.6,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(8.3,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(9.0,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(9.7,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(10.4,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(11.1,0.75)}{\pgfbox[left,center]{$X_1$}}
+
+        \pgfxyline(0.1,1)(0.1, 1.2)
+        \pgfxyline(0.8,1)(0.8, 1.2)
+        \pgfxyline(0.1,1.2)(0.45, 1.5)
+        \pgfxyline(0.8,1.2)(0.45, 1.5)
+        \pgfputat{\pgfxy(0.3,1.65)}{\pgfbox[left,center]{$X_{10}$}}
+
+        \pgfxyline(1.5,1)(1.5, 1.2)
+        \pgfxyline(2.2,1)(2.2, 1.2)
+        \pgfxyline(1.5,1.2)(1.85,1.5)
+        \pgfxyline(2.2,1.2)(1.85,1.5)
+        \pgfputat{\pgfxy(1.7,1.65)}{\pgfbox[left,center]{$X_3$}}
+
+        \pgfxyline(3.6,1)(3.6, 1.2)
+        \pgfxyline(4.3,1)(4.3, 1.2)
+        \pgfxyline(3.6,1.2)(3.95, 1.5)
+        \pgfxyline(4.3,1.2)(3.95, 1.5)
+        \pgfputat{\pgfxy(3.8,1.65)}{\pgfbox[left,center]{$X_4$}}
+
+        \pgfxyline(5.0,1)(5.0, 1.2)
+        \pgfxyline(5.7,1)(5.7, 1.2)
+        \pgfxyline(5.0,1.2)(5.35, 1.5)
+        \pgfxyline(5.7,1.2)(5.35, 1.5)
+        \pgfputat{\pgfxy(5.2,1.65)}{\pgfbox[left,center]{$X_3$}}
+        
+        \pgfxyline(8.5,1)(8.5, 1.2)
+        \pgfxyline(9.2,1)(9.2, 1.2)
+        \pgfxyline(8.5,1.2)(8.85, 1.5)
+        \pgfxyline(9.2,1.2)(8.85, 1.5)
+        \pgfputat{\pgfxy(8.7,1.65)}{\pgfbox[left,center]{$X_3$}}
+        
+        \pgfxyline(10.6,1)(10.6, 1.2)
+        \pgfxyline(11.3,1)(11.3, 1.2)
+        \pgfxyline(10.6,1.2)(10.95, 1.5)
+        \pgfxyline(11.3,1.2)(10.95, 1.5)
+        \pgfputat{\pgfxy(10.8,1.65)}{\pgfbox[left,center]{$X_4$}}
+
+        \pgfxyline(0.45, 1.85)(1.15, 2.3)
+        \pgfxyline(1.8, 1.85)(1.15, 2.3)
+        \pgfputat{\pgfxy(1, 2.45)}{\pgfbox[left,center]{$X_{11}$}}
+
+		\pgfxyline(6.4,1)(6.4, 1.85)
+        \pgfxyline(5.35,1.85)(5.83, 2.3)
+        \pgfxyline(6.4, 1.85)(5.83, 2.3)
+        \pgfputat{\pgfxy(5.68,2.45)}{\pgfbox[left,center]{$X_5$}}
+        
+        \pgfxyline(7.8, 1)(7.8, 1.85)
+        \pgfxyline(7.8, 1.85)(8.3, 2.3)
+        \pgfxyline(8.8, 1.85)(8.3, 2.3)
+        \pgfputat{\pgfxy(8.15, 2.45)}{\pgfbox[left,center]{$X_7$}}
+   
+		\pgfxyline(2.9, 1)(2.9, 2.66)
+        \pgfxyline(1.15, 2.66)(2.1, 3.05)
+        \pgfxyline(2.9, 2.66)(2.1, 3.05)
+        \pgfputat{\pgfxy(1.98, 3.2)}{\pgfbox[left,center]{$X_{12}$}}
+        
+        \pgfxyline(7.1, 1)(7.1, 2.66)
+        \pgfxyline(5.85, 2.66)(6.48, 3.05)
+        \pgfxyline(7.1, 2.66)(6.48, 3.05)
+        \pgfputat{\pgfxy(6.34, 3.21)}{\pgfbox[left,center]{$X_6$}}
+        
+        \pgfxyline(9.9, 1)(9.9, 2.66)
+        \pgfxyline(8.25, 2.66)(9.08, 3.05)
+        \pgfxyline(9.9, 2.66)(9.08, 3.05)
+        \pgfputat{\pgfxy(8.94, 3.21)}{\pgfbox[left,center]{$X_8$}}
+
+        \pgfxyline(2.15, 3.41)(3.13, 3.8)
+        \pgfxyline(4,1.85)(4, 3.42)
+        \pgfxyline(4,3.41)(3.13, 3.8)
+        \pgfputat{\pgfxy(3,3.97)}{\pgfbox[left,center]{$X_{13}$}}
+        
+        \pgfxyline(6.55,3.44)(6.55, 4.17)
+        \pgfxyline(3.15,4.17)(4.85, 4.75)
+        \pgfxyline(6.55, 4.17)(4.85, 4.75)
+        \pgfputat{\pgfxy(4.68, 4.92)}{\pgfbox[left,center]{$X_{14}$}}
+        
+        
+        \pgfxyline(11,1.85)(11, 3.42)
+        \pgfxyline(9.08,3.42)(10.12, 4)
+        \pgfxyline(11, 3.42)(10.12, 4)
+        \pgfputat{\pgfxy(9.98, 4.15)}{\pgfbox[left,center]{$X_9$}}
+                
+        \pgfxyline(10.18,4.4)(10.18, 5.14)
+        \pgfxyline(4.8,5.14)(7.49, 5.7)
+        \pgfxyline(10.18, 5.14)(7.49, 5.7)
+        \pgfputat{\pgfxy(7.34, 5.86)}{\pgfbox[left,center]{$X_{15}$}}
+
+  %      \pgfputat{\pgfxy(-2,-0.7)}{\pgfbox[left,center]{{\bf Рисунок 2.} Дерево
+  % вывода грамматики, порождающей <<$aaaababaabaaaabab$>> с помощью алгоритма
+  % LazySLP Classic без перебалансировок}}
+
+    \end{pgfpicture}
+\end{center}
+}
+
+\newcommand{\picLazyHeuristic}{
+\begin{center}
+\begin{pgfpicture}{0cm}{0cm}{8.5cm}{6cm}
+
+        \pgfputat{\pgfxy(0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(0.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(1.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(3.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(4.2,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(4.9,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(5.6,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(6.3,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(7.0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(7.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(8.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(10.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(11.2,0)}{\pgfbox[left,center]{$b$}}
+
+        \pgfxyline(0.1,0.2)(0.1, 0.6)
+        \pgfxyline(0.8,0.2)(0.8, 0.6)
+        \pgfxyline(1.5,0.2)(1.5, 0.6)
+        \pgfxyline(2.2,0.2)(2.2, 0.6)
+        \pgfxyline(2.9,0.2)(2.9, 0.6)
+        \pgfxyline(3.6,0.2)(3.6, 0.6)
+        \pgfxyline(4.3,0.2)(4.3, 0.6)
+        \pgfxyline(5,0.2)(5, 0.6)
+        \pgfxyline(5.7,0.2)(5.7, 0.6)
+        \pgfxyline(6.4,0.2)(6.4, 0.6)
+        \pgfxyline(7.1,0.2)(7.1, 0.6)
+        \pgfxyline(7.8,0.2)(7.8, 0.6)
+        \pgfxyline(8.5,0.2)(8.5, 0.6)
+        \pgfxyline(9.2,0.2)(9.2, 0.6)
+        \pgfxyline(9.9,0.2)(9.9, 0.6)
+        \pgfxyline(10.6,0.2)(10.6, 0.6)
+        \pgfxyline(11.3,0.2)(11.3, 0.6)
+
+        \pgfputat{\pgfxy(-0.1,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(0.6,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(1.3,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(2,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(2.7,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(3.4,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(4.1,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(4.8,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(5.5,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(6.2,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(6.9,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(7.6,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(8.3,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(9.0,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(9.7,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(10.4,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(11.1,0.75)}{\pgfbox[left,center]{$X_1$}}
+
+        \pgfxyline(0.1,1)(0.1, 1.2)
+        \pgfxyline(0.8,1)(0.8, 1.2)
+        \pgfxyline(0.1,1.2)(0.45, 1.5)
+        \pgfxyline(0.8,1.2)(0.45, 1.5)
+        \pgfputat{\pgfxy(0.3,1.65)}{\pgfbox[left,center]{$X_3$}}
+
+        \pgfxyline(1.5,1)(1.5, 1.2)
+        \pgfxyline(2.2,1)(2.2, 1.2)
+        \pgfxyline(1.5,1.2)(1.85,1.5)
+        \pgfxyline(2.2,1.2)(1.85,1.5)
+        \pgfputat{\pgfxy(1.7,1.65)}{\pgfbox[left,center]{$X_3$}}
+
+        \pgfxyline(3.6,1)(3.6, 1.2)
+        \pgfxyline(4.3,1)(4.3, 1.2)
+        \pgfxyline(3.6,1.2)(3.95, 1.5)
+        \pgfxyline(4.3,1.2)(3.95, 1.5)
+        \pgfputat{\pgfxy(3.8,1.65)}{\pgfbox[left,center]{$X_4$}}
+
+        \pgfxyline(5.0,1)(5.0, 1.2)
+        \pgfxyline(5.7,1)(5.7, 1.2)
+        \pgfxyline(5.0,1.2)(5.35, 1.5)
+        \pgfxyline(5.7,1.2)(5.35, 1.5)
+        \pgfputat{\pgfxy(5.2,1.65)}{\pgfbox[left,center]{$X_3$}}
+        
+        \pgfxyline(8.5,1)(8.5, 1.2)
+        \pgfxyline(9.2,1)(9.2, 1.2)
+        \pgfxyline(8.5,1.2)(8.85, 1.5)
+        \pgfxyline(9.2,1.2)(8.85, 1.5)
+        \pgfputat{\pgfxy(8.7,1.65)}{\pgfbox[left,center]{$X_3$}}
+        
+        \pgfxyline(10.6,1)(10.6, 1.2)
+        \pgfxyline(11.3,1)(11.3, 1.2)
+        \pgfxyline(10.6,1.2)(10.95, 1.5)
+        \pgfxyline(11.3,1.2)(10.95, 1.5)
+        \pgfputat{\pgfxy(10.8,1.65)}{\pgfbox[left,center]{$X_4$}}
+
+		\pgfxyline(2.9, 1)(2.9, 1.85)
+        \pgfxyline(1.8, 1.85)(2.35, 2.3)
+        \pgfxyline(2.9, 1.85)(2.35, 2.3)
+        \pgfputat{\pgfxy(2.2, 2.45)}{\pgfbox[left,center]{$X_5$}}
+
+		\pgfxyline(6.4,1)(6.4, 1.85)
+        \pgfxyline(5.35,1.85)(5.83, 2.3)
+        \pgfxyline(6.4, 1.85)(5.83, 2.3)
+        \pgfputat{\pgfxy(5.68,2.45)}{\pgfbox[left,center]{$X_5$}}
+        
+        \pgfxyline(9.9, 1)(9.9, 1.85)
+        \pgfxyline(8.8, 1.85)(9.35, 2.3)
+        \pgfxyline(9.9, 1.85)(9.35, 2.3)
+        \pgfputat{\pgfxy(9.15, 2.45)}{\pgfbox[left,center]{$X_5$}}  
+        
+        \pgfxyline(2.3, 2.66)(3.15, 3.05)
+        \pgfxyline(4,1.85)(4, 2.66)
+        \pgfxyline(4,2.66)(3.15, 3.05)
+        \pgfputat{\pgfxy(3.02,3.2)}{\pgfbox[left,center]{$X_7$}}
+        
+        \pgfxyline(7.1, 1)(7.1, 2.66)
+        \pgfxyline(5.85, 2.66)(6.48, 3.05)
+        \pgfxyline(7.1, 2.66)(6.48, 3.05)
+        \pgfputat{\pgfxy(6.34, 3.21)}{\pgfbox[left,center]{$X_6$}}
+        
+        \pgfxyline(11,1.85)(11, 2.66)
+        \pgfxyline(9.3,2.66)(10.15, 3.05)
+        \pgfxyline(11, 2.66)(10.15, 3.05)
+        \pgfputat{\pgfxy(10.02, 3.21)}{\pgfbox[left,center]{$X_7$}}
+        
+        \pgfxyline(0.53,1.84)(0.53, 3.44)
+        \pgfxyline(3.15,3.44)(1.84, 4)
+        \pgfxyline(0.53, 3.44)(1.84, 4)
+        \pgfputat{\pgfxy(1.68, 4.15)}{\pgfbox[left,center]{$X_9$}}
+        
+        \pgfxyline(7.8,1)(7.8, 3.44)
+        \pgfxyline(10.15,3.44)(8.98, 4)
+        \pgfxyline(7.8, 3.44)(8.98, 4)
+        \pgfputat{\pgfxy(8.84, 4.15)}{\pgfbox[left,center]{$X_8$}}
+
+        
+        \pgfxyline(6.55,3.44)(6.55, 4.37)
+        \pgfxyline(1.78,4.37)(4.17, 4.85)
+        \pgfxyline(6.55, 4.37)(4.17, 4.85)
+        \pgfputat{\pgfxy(4, 5.02)}{\pgfbox[left,center]{$X_{10}$}}
+       
+        \pgfxyline(9.05,4.4)(9.05, 5.24)
+        \pgfxyline(4.1,5.24)(6.58, 5.7)
+        \pgfxyline(9.05, 5.24)(6.58, 5.7)
+        \pgfputat{\pgfxy(6.42, 5.88)}{\pgfbox[left,center]{$X_{11}$}}
+
+  %      \pgfputat{\pgfxy(-2,-0.7)}{\pgfbox[left,center]{{\bf Рисунок 2.} Дерево
+  % вывода грамматики, порождающей <<$aaaababaabaaaabab$>> с помощью алгоритма
+  % LazySLP Heuristic без перебалансировок}}
+
+    \end{pgfpicture}
+\end{center}
+}
+
+\newcommand{\picLCA}{
+\begin{center}
+\begin{pgfpicture}{0cm}{0cm}{12cm}{5cm}
+
+        \pgfputat{\pgfxy(0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(0.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(1.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(3.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(4.2,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(4.9,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(5.6,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(6.3,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(7.0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(7.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(8.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(9.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(10.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(11.2,0)}{\pgfbox[left,center]{$b$}}
+
+        \pgfxyline(0.1,0.2)(0.1, 0.6)
+        \pgfxyline(0.8,0.2)(0.8, 0.6)
+        \pgfxyline(1.5,0.2)(1.5, 0.6)
+        \pgfxyline(2.2,0.2)(2.2, 0.6)
+        \pgfxyline(2.9,0.2)(2.9, 0.6)
+        \pgfxyline(3.6,0.2)(3.6, 0.6)
+        \pgfxyline(4.3,0.2)(4.3, 0.6)
+        \pgfxyline(5,0.2)(5, 0.6)
+        \pgfxyline(5.7,0.2)(5.7, 0.6)
+        \pgfxyline(6.4,0.2)(6.4, 0.6)
+        \pgfxyline(7.1,0.2)(7.1, 0.6)
+        \pgfxyline(7.8,0.2)(7.8, 0.6)
+        \pgfxyline(8.5,0.2)(8.5, 0.6)
+        \pgfxyline(9.2,0.2)(9.2, 0.6)
+        \pgfxyline(9.9,0.2)(9.9, 0.6)
+        \pgfxyline(10.6,0.2)(10.6, 0.6)
+        \pgfxyline(11.3,0.2)(11.3, 0.6)
+
+        \pgfputat{\pgfxy(-0.1,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(0.6,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(1.3,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(2,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(2.7,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(3.4,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(4.1,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(4.8,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(5.5,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(6.2,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(6.9,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(7.6,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(8.3,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(9.0,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(9.7,0.75)}{\pgfbox[left,center]{$X_2$}}
+        \pgfputat{\pgfxy(10.4,0.75)}{\pgfbox[left,center]{$X_1$}}
+        \pgfputat{\pgfxy(11.1,0.75)}{\pgfbox[left,center]{$X_2$}}
+
+        \pgfxyline(0.1,1)(0.1, 1.2)
+        \pgfxyline(0.8,1)(0.8, 1.2)
+        \pgfxyline(0.1,1.2)(0.45, 1.5)
+        \pgfxyline(0.8,1.2)(0.45, 1.5)
+        \pgfputat{\pgfxy(0.3,1.65)}{\pgfbox[left,center]{$X_3$}}
+
+        \pgfxyline(1.5,1)(1.5, 1.2)
+        \pgfxyline(2.2,1)(2.2, 1.2)
+        \pgfxyline(1.5,1.2)(1.85,1.5)
+        \pgfxyline(2.2,1.2)(1.85,1.5)
+        \pgfputat{\pgfxy(1.7,1.65)}{\pgfbox[left,center]{$X_3$}}
+
+        \pgfxyline(3.6,1)(3.6, 1.2)
+        \pgfxyline(4.3,1)(4.3, 1.2)
+        \pgfxyline(3.6,1.2)(3.95, 1.5)
+        \pgfxyline(4.3,1.2)(3.95, 1.5)
+        \pgfputat{\pgfxy(3.8,1.65)}{\pgfbox[left,center]{$X_4$}}
+
+        \pgfxyline(5.0,1)(5.0, 1.2)
+        \pgfxyline(5.7,1)(5.7, 1.2)
+        \pgfxyline(5.0,1.2)(5.35, 1.5)
+        \pgfxyline(5.7,1.2)(5.35, 1.5)
+        \pgfputat{\pgfxy(5.2,1.65)}{\pgfbox[left,center]{$X_3$}}
+
+        \pgfxyline(7.1,1)(7.1, 1.2)
+        \pgfxyline(7.8,1)(7.8, 1.2)
+        \pgfxyline(7.1,1.2)(7.45, 1.5)
+        \pgfxyline(7.8,1.2)(7.45, 1.5)
+        \pgfputat{\pgfxy(7.3,1.65)}{\pgfbox[left,center]{$X_3$}}
+        
+        \pgfxyline(8.5,1)(8.5, 1.2)
+        \pgfxyline(9.2,1)(9.2, 1.2)
+        \pgfxyline(8.5,1.2)(8.85, 1.5)
+        \pgfxyline(9.2,1.2)(8.85, 1.5)
+        \pgfputat{\pgfxy(8.7,1.65)}{\pgfbox[left,center]{$X_3$}}
+        
+        \pgfxyline(10.6,1)(10.6, 1.2)
+        \pgfxyline(11.3,1)(11.3, 1.2)
+        \pgfxyline(10.6,1.2)(10.95, 1.5)
+        \pgfxyline(11.3,1.2)(10.95, 1.5)
+        \pgfputat{\pgfxy(10.8,1.65)}{\pgfbox[left,center]{$X_4$}}
+
+        \pgfxyline(0.45, 1.85)(1.15, 2.3)
+        \pgfxyline(1.8, 1.85)(1.15, 2.3)
+        \pgfputat{\pgfxy(1, 2.45)}{\pgfbox[left,center]{$X_5$}}
+
+        \pgfxyline(2.9, 1)(2.9, 1.85)
+        \pgfxyline(3.9, 1.85)(3.4, 2.3)
+        \pgfxyline(2.9, 1.85)(3.4, 2.3)
+        \pgfputat{\pgfxy(3.25, 2.45)}{\pgfbox[left,center]{$X_6$}}
+
+        \pgfxyline(6.4,1)(6.4, 1.85)
+        \pgfxyline(5.35,1.85)(5.87, 2.3)
+        \pgfxyline(6.4, 1.85)(5.87, 2.3)
+        \pgfputat{\pgfxy(5.72,2.45)}{\pgfbox[left,center]{$X_7$}}
+        
+        \pgfxyline(7.45, 1.85)(8.15, 2.3)
+        \pgfxyline(8.8, 1.85)(8.15, 2.3)
+        \pgfputat{\pgfxy(8, 2.45)}{\pgfbox[left,center]{$X_5$}}
+        
+        \pgfxyline(9.9, 1)(9.9, 1.85)
+        \pgfxyline(10.9, 1.85)(10.4, 2.3)
+        \pgfxyline(9.9, 1.85)(10.4, 2.3)
+        \pgfputat{\pgfxy(10.25, 2.45)}{\pgfbox[left,center]{$X_6$}}
+
+        \pgfxyline(1.15, 2.66)(2.27, 3.05)
+        \pgfxyline(3.36, 2.65)(2.27, 3.05)
+        \pgfputat{\pgfxy(2.13, 3.2)}{\pgfbox[left,center]{$X_8$}}
+        
+        \pgfxyline(8.15, 2.66)(9.27, 3.05)
+        \pgfxyline(10.36, 2.65)(9.27, 3.05)
+        \pgfputat{\pgfxy(9.13, 3.2)}{\pgfbox[left,center]{$X_8$}}
+
+        \pgfxyline(5.95,2.65)(5.95, 3.42)
+        \pgfxyline(5.95,3.42)(7.6, 3.8)
+        \pgfxyline(9.25, 3.42)(7.6, 3.8)
+        \pgfputat{\pgfxy(7.42,3.97)}{\pgfbox[left,center]{$X_9$}}
+
+        \pgfxyline(2.35,3.4)(2.35, 4.17)
+        \pgfxyline(2.35,4.17)(4.94, 4.75)
+        \pgfxyline(7.53, 4.17)(4.94, 4.75)
+        \pgfputat{\pgfxy(4.84, 4.9)}{\pgfbox[left,center]{$X_{10}$}}
+
+  %      \pgfputat{\pgfxy(-2,-0.7)}{\pgfbox[left,center]{{\bf Рисунок .} Дерево
+  % вывода грамматики, порождающей <<$aaaababaabaaaabab$>> используя Online
+  % LCA}}
+
+    \end{pgfpicture}
+\end{center}
+}

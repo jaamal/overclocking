@@ -1,0 +1,152 @@
+\colorlet{shaded}{white!60!black}
+\usepgflibrary{arrows}
+
+\newcommand{\textline}[3]{
+    \pgfputat{\pgfxy(#1,#2)}{\pgfbox[left,center]{\mbox{#3} }}
+}
+
+\newcommand{\fibonacciwordslp}{
+    \begin{tikzpicture}[scale=1.2]
+        {\scriptsize
+            {\sf
+                \pgfsetlinewidth{0.7pt}
+
+                \foreach \x in {0, 1.4, 2.1, 3.5, 4.9, 5.6, 7, 7.7} {
+                    \draw (\x, 0) node[anchor=west] {$a$};
+                    \draw (\x-0.1, 0.75) node[anchor=west] {$\slp{F}_1$};
+                }
+                
+                \foreach \x in {0.7, 2.8, 4.2, 6.3, 8.4} {
+                    \draw (\x, 0) node[anchor=west] {$b$};
+                    \draw (\x-0.1, 0.75) node[anchor=west] {$\slp{F}_0$};
+                }
+    
+                   
+                \foreach \x in {0.1, 0.8, 1.5, 2.2, 2.9, 3.6, 4.3, 5, 5.7, 6.4, 7.1, 7.8, 8.5 }
+                    \draw (\x,0.2) -- (\x,0.6);
+                    
+                \foreach \x in {0.1, 2.2, 3.6, 5.7, 7.8} {
+                    \draw (\x, 1) -- (\x, 1.2);
+                    \draw (\x+0.7, 1) -- (\x+0.7, 1.2);
+                    \draw (\x, 1.2) -- (\x+0.35, 1.5);
+                    \draw (\x+0.7, 1.2) -- (\x+0.35, 1.5);
+                    \draw (\x+0.2, 1.65) node[anchor=west] {$\slp{F}_2$};
+                }
+                
+                \foreach \x in {0.45, 3.95, 6.05} {
+                    \draw (\x, 1.9) -- (\x+0.52, 2.3);
+                    \draw (\x+1.05, 1) -- (\x+1.05, 1.9);
+                    \draw (\x+1.05, 1.9) -- (\x+0.52, 2.3);
+                    \draw (\x+0.37, 2.45) node[anchor=west] {$\slp{F}_3$};
+                }
+                
+                \foreach \x in {0.97, 6.57} {
+                    \draw (\x, 2.65) -- (\x+0.79, 3.05);
+                    \draw (\x+1.58, 1.85) -- (\x+1.58, 2.65);
+                    \draw (\x+1.58, 2.65) -- (\x+0.79, 3.05);
+                    \draw (\x+0.64, 3.2) node[anchor=west] {$\slp{F}_4$};
+                }
+                
+                \draw (4.47,2.65) -- (4.47, 3.4); \draw (1.76,3.4) -- (3.11, 3.8); \draw (4.47, 3.4) -- (3.11, 3.8);
+                \textline{3.65}{4.7}{$\slp{F}_5$}
+    
+                \draw (7.36,3.4) -- (7.36, 4.15); \draw (3.11,4.15) -- (5.23, 4.75); \draw (7.36, 4.15) -- (5.23, 4.75);
+                \textline{6.08}{6}{$\slp{F}_6$}
+            }
+        }
+    \end{tikzpicture}       
+}
+
+\newcommand{\LeechSLP}{
+    \pic{0}{-0.9}{10}{5}{
+        \textline{0}{0}{$a$}    \textline{0.7}{0}{$b$}  \textline{1.4}{0}{$c$}  \textline{2.1}{0}{$b$}
+        \textline{2.8}{0}{$a$}  \textline{3.5}{0}{$c$}  \textline{4.2}{0}{$b$}  \textline{4.9}{0}{$c$}
+        \textline{5.6}{0}{$a$}  \textline{6.3}{0}{$b$}  \textline{7}{0}{$c$}    \textline{7.7}{0}{$b$}
+        \textline{8.4}{0}{$a$}  \textline{9.1}{0}{$b$}  \textline{9.8}{0}{$c$}
+        
+        \textline{-0.35}{0}{$\cdot$} \textline{0.35}{0}{$\cdot$}    \textline{1.05}{0}{$\cdot$}
+        \textline{1.75}{0}{$\cdot$}  \textline{2.45}{0}{$\cdot$}    \textline{3.15}{0}{$\cdot$}
+        \textline{3.85}{0}{$\cdot$}  \textline{4.55}{0}{$\cdot$}    \textline{5.25}{0}{$\cdot$}
+        \textline{5.95}{0}{$\cdot$}  \textline{6.65}{0}{$\cdot$}    \textline{7.35}{0}{$\cdot$}
+        \textline{8.05}{0}{$\cdot$}  \textline{8.75}{0}{$\cdot$}    \textline{9.45}{0}{$\cdot$}
+        \textline{10.15}{0}{$\cdot$}
+
+        \pgfxyline(0.1,0.2)(0.1, 0.6)   \pgfxyline(0.8,0.2)(0.8, 0.6)   \pgfxyline(1.5,0.2)(1.5, 0.6)
+        \pgfxyline(2.2,0.2)(2.2, 0.6)   \pgfxyline(2.9,0.2)(2.9, 0.6)   \pgfxyline(3.6,0.2)(3.6, 0.6)
+        \pgfxyline(4.3,0.2)(4.3, 0.6)   \pgfxyline(5,0.2)(5, 0.6)       \pgfxyline(5.7,0.2)(5.7, 0.6)
+        \pgfxyline(6.4,0.2)(6.4, 0.6)   \pgfxyline(7.1,0.2)(7.1, 0.6)   \pgfxyline(7.8,0.2)(7.8, 0.6)
+        \pgfxyline(8.5,0.2)(8.5, 0.6)   \pgfxyline(9.2,0.2)(9.2, 0.6)   \pgfxyline(9.9,0.2)(9.9, 0.6)
+
+        \textline{-0.1}{0.75}{$\slp{L}_1$}  \textline{0.6}{0.75}{$\slp{L}_2$}   \textline{1.3}{0.75}{$\slp{L}_3$}
+        \textline{2}{0.75}{$\slp{L}_2$}     \textline{2.7}{0.75}{$\slp{L}_1$}   \textline{3.4}{0.75}{$\slp{L}_3$}
+        \textline{4.1}{0.75}{$\slp{L}_2$}   \textline{4.8}{0.75}{$\slp{L}_3$}   \textline{5.5}{0.75}{$\slp{L}_1$}
+        \textline{6.2}{0.75}{$\slp{L}_2$}   \textline{6.9}{0.75}{$\slp{L}_3$}   \textline{7.6}{0.75}{$\slp{L}_2$}
+        \textline{8.3}{0.75}{$\slp{L}_1$}   \textline{9}{0.75}{$\slp{L}_2$}     \textline{9.7}{0.75}{$\slp{L}_3$}
+        
+        \pgfxyline(0.8,1)(1.15, 1.3) \pgfxyline(1.5,1)(1.15, 1.3) \textline{1}{1.5}{$\slp{L}_4$}
+        
+        \pgfxyline(2.2,1)(2.55, 1.3) \pgfxyline(2.9,1)(2.55, 1.3) \textline{2.4}{1.5}{$\slp{L}_5$}
+        
+        \pgfxyline(4.3,1)(4.65, 1.3) \pgfxyline(5,1)(4.65, 1.3) \textline{4.5}{1.5}{$\slp{L}_4$}
+        
+        \pgfxyline(6.4,1)(6.75, 1.3) \pgfxyline(7.1,1)(6.75, 1.3) \textline{6.6}{1.5}{$\slp{L}_4$}
+        
+        \pgfxyline(7.8,1)(8.15, 1.3) \pgfxyline(8.5,1)(8.15, 1.3) \textline{8}{1.5}{$\slp{L}_5$}
+        
+        \pgfxyline(9.2,1)(9.55, 1.3) \pgfxyline(9.9,1)(9.55, 1.3) \textline{9.4}{1.5}{$\slp{L}_4$}
+        
+        
+        \pgfxyline(1.15,1.7)(0.6, 2) \pgfxyline(0.1,1.7)(0.6, 2) \pgfxyline(0.1,1)(0.1, 1.7)
+        \textline{0.45}{2.15}{$\slp{L}_6$}
+        
+        \pgfxyline(3.6,1.7)(4.1, 2) \pgfxyline(4.65,1.7)(4.1, 2) \pgfxyline(3.6,1)(3.6, 1.7)
+        \textline{3.95}{2.15}{$\slp{L}_7$}
+        
+        \pgfxyline(5.7,1.7)(6.2, 2) \pgfxyline(6.75,1.7)(6.2, 2) \pgfxyline(5.7,1)(5.7, 1.7)
+        \textline{6.05}{2.15}{$\slp{L}_6$}
+        
+        
+        \pgfxyline(0.6,2.4)(1.6, 2.8) \pgfxyline(2.55,2.4)(1.6, 2.8) \pgfxyline(2.55,1.7)(2.55, 2.4)
+        \textline{1.45}{2.95}{$\slp{L}_8$}
+        
+        \pgfxyline(6.2,2.4)(7.2, 2.8) \pgfxyline(8.15,2.4)(7.2, 2.8) \pgfxyline(8.15,1.7)(8.15, 2.4)
+        \textline{7.05}{2.95}{$\slp{L}_8$}
+        
+        \pgfxyline(7.2,3.2)(8.35, 3.6) \pgfxyline(9.55,3.2)(8.35, 3.6) \pgfxyline(9.55,1.7)(9.55, 3.2)
+        \textline{8.2}{3.75}{$\slp{L}_9$}
+        
+        \pgfxyline(1.6,3.2)(2.85, 3.6) \pgfxyline(4.1,3.2)(2.85, 3.6) \pgfxyline(4.1,2.4)(4.1, 3.2)
+        \textline{2.7}{3.75}{$\slp{L}_{10}$}
+        
+        \pgfxyline(2.85,4)(5.1, 4.7) \pgfxyline(8.35,4)(5.1, 4.7) \textline{4.95}{4.85}{$\slp{L}_{11}$}
+        
+        \textline{0}{-0.6}{\textbf{Figure \arabic{figures}.} The parse tree of $\slp{L}_{11}$ that generates
+        \emph{a~b~c~b~a~c~b~c~a~b~c~b~b~a~b~c}} }
+}
+
+\newcommand{\LocalSearch}{
+    \begin{tikzpicture}
+        \draw (0,0) rectangle (9.6,0.7);
+        \draw (1.2,0) -- (1.2,0.7);
+        \draw (2.4,0) -- (2.4,0.7);
+        \draw (3.6,0) -- (3.6,0.7);
+        \draw (4.8,0) -- (4.8,0.7);
+        \draw (6,0) -- (6,0.7);
+        \draw (7.2,0) -- (7.2,0.7);
+        \draw (8.4,0) -- (8.4,0.7);
+        \draw[fill = black!10] (2.4,0) rectangle (3.6,0.7);
+        \draw[fill = black!10] (5.2,0.7) rectangle (6,0);
+        \draw[fill = black!10] (6,0.7) rectangle (6.4,0);
+        \textline{5}{0.3}{$B_{k+1}$}
+        \textline{6.2}{0.3}{$B_{k+2}$}
+        \textline{7.4}{0.3}{$B_{k+1}$}
+        \textline{2.6}{0.3}{$B_{k-1}$}
+        \textline{4}{0.3}{$B_{k}$}
+        \draw (2.4,0.7) .. controls (3.4,1.1) and (4.2,1.1) .. (5.2,0.7);
+        \draw (3.6,0.7) .. controls (4.6,1.1) and (5.4,1.1) .. (6.4,0.7);
+        \draw (4,0) .. controls (5,-0.4) and (5.8,-0.4) .. (6.8,0);
+        \draw (4,0) .. controls (3,-0.4) and (2.2,-0.4) .. (1.2,0);
+        \textline{5.3}{-0.5}{$x$} \textline{2.4}{-0.5}{$x$} \textline{4}{-0.3}{$c$} 
+            
+    \end{tikzpicture}
+}

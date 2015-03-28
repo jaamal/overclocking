@@ -1,0 +1,13 @@
+﻿#TeXlipse project settings
+#Mon Apr 25 22:25:45 YEKST 2011
+builderNum=2
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=CV.tex
+outputFile=CV.pdf
+langSpell=en
+markDer=true
+srcDir=

@@ -1,0 +1,339 @@
+\documentclass[cp1251]{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+} 
+
+\usepackage[english,russian]{babel}
+\usepackage{amssymb}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{scalefnt}
+%\usepackage{commands}
+
+\usepackage{graphs}
+\usepackage{trees}
+
+\title{Построение прямолинейных программ с помощью декартовых деревьев}
+
+\author{Евгений Курпилянский}
+
+\date{20 июня 2012 года}
+
+\newcommand{\substr}[2]{[#1\dots#2]}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Введение}
+
+\begin{frame}
+
+\begin{block}{}
+С ростом размера входных данных для классических задач меняются алгоритмы,
+способные их эффективно решать.
+\end{block}
+Существует неcколько подходов, например:
+\pause
+\begin{itemize}
+  \item Алгоритмы эффективного ввода-вывода~-- алгоритмы, минимизирующие
+  чтение данных с жесткого диска. \pause  
+  \item Сокращение размера входа за счет предварительной обработки.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Способы сжатия}
+
+\begin{block}{}
+	Существует различные способы сжатия данных, например:
+	\begin{itemize}
+		\item прямолинейные программы (ПП);
+		\item антисловари;
+		\item коллаж-системы и др.
+	\end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{}
+	Если сжатое представление хорошо структурировано, то существуют алгоритмы, способные
+	решать классические задачи без распаковки данных.
+\end{block}
+
+\end{frame}
+
+\section{Прямолинейные программы}
+
+\begin{frame}
+\frametitle{Определение прямолинейной программы}
+
+\begin{block}{Определение}
+\textbf{Прямолинейная программа} (ПП) строки $S$ ~-- это
+контекстно-свободная грамматика в нормальной форме Хомского, выводящая в точности одно слово $S$.
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Пример}
+Рассмотрим ПП $X$, выводящую строку $\mbox{<<}abaababaabaab\mbox{>>}$.
+
+\begin{center}
+$X_1 = b$\\
+$X_2 = a$\\
+$X_3 = X_2 \cdot X_1$\\
+$X_4 = X_3 \cdot X_2$\\
+$X_5 = X_4 \cdot X_3$\\
+$X_6 = X_5 \cdot X_4$\\
+$X_7 = X_6 \cdot X_5$
+\end{center}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Пример}
+Графическое изображение ПП:
+
+\picFibonacciSLP
+\end{exampleblock}
+\end{frame}
+
+%\begin{frame}
+%\begin{block}{Обозначения}
+%	Введем несколько обозначений.
+%	\begin{itemize}
+%		\item Символ <<$\cdot$>>~-- операция конкатенации двух строк.
+%		\pause
+%		\item $\left|S\right|$~-- длина некоторой строки $S$.
+%		\pause
+%		\item $S(T)$~-- выводимая строка некоторого дерева вывода $T$.
+%	\end{itemize}
+%\end{block}
+%\end{frame}
+
+\section{Построение ПП}
+
+\begin{frame}
+\frametitle{Как строить ПП?}
+\begin{block}{Утверждение.}
+Задача построения минимальной ПП, выводящей заданную строку $S$~-- NP-трудная.
+\end{block}
+
+\pause
+
+\begin{center}
+$\Downarrow$
+\end{center}
+
+\begin{block}{}
+Для построения ПП требуется использовать приближенные алгоритмы.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Определение}
+\textbf{Факторизация} строки $S$~-- это набор строк $w_1$, $w_2$, \ldots, $w_k$ такой,
+что $S = w_1 \cdot w_2 \cdot \ldots \cdot w_k$.
+\end{block}
+\pause
+\begin{block}{Определение}
+\textbf{$LZ$-факторизация} строки $S$ ~--- это факторизация $S~=~w_1~\cdot~w_2~\cdots~w_k$ такая, что
+для любого $j \in 1..k$
+\begin{itemize}
+	\item $w_j$ состоит из одной буквы, не встречающейся в $w_1 \cdot w_2 \cdots w_{j-1}$; или
+	\item $w_j$ ~--- наибольший префикс $w_j \cdot w_{j+1} \cdots w_k$, встречающийся в $w_1 \cdot w_2 \cdots w_{j-1}$.
+\end{itemize}
+\end{block}
+\pause
+\begin{exampleblock}{Факторизации строки <<$abaababaabaab$>>}
+\begin{itemize}
+  \item $a \cdot b \cdot a \cdot a \cdot b \cdot a \cdot b \cdot a \cdot a
+  \cdot b \cdot a \cdot a \cdot b$;
+  \item $a \cdot b \cdot a \cdot aba \cdot baaba \cdot ab$;
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Постановка задачи}
+\textsc{Вход:} Строка $T$ и ее $LZ$-факторизация $F_1$, $F_2$, \ldots, $F_k$.
+
+\textsc{Выход:} ПП, выводящая строку $T$.
+\end{block}
+
+\pause
+
+\begin{block}{Алгоритм Риттера}
+    \begin{itemize}
+        \item Дерево вывода ПП представляется в виде $AVL$-дерева.
+        \pause
+        \item Предложены алгоритмы конкатенации двух AVL-деревьев и вырезания подстроки из AVL-дерева.
+		\pause
+		\item Размер полученной ПП всего в $O(\log{n})$ больше размера минимальной ПП
+    \end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Построение ПП с помощью декартовых деревьев}
+\begin{block}{Мысль}
+Почему бы для построения ПП не использовать другое сбалансированное двоичное дерево?
+\end{block}
+
+\pause
+\begin{block}{Декартово дерево}
+    \begin{itemize}
+        \item Декартово дерево~-- двоичное дерево поиска, в каждой вершине которого хранится ее приоритет.
+        При этом всегда выполняется свойство: приоритет в потомках меньше, чем приоритет самой вершины.
+        \pause
+        \item Доказано, что если приоритеты выбираются случайно, высота декартова дерева $O(\log{n})$.
+        \pause
+        \item Над декартовым деревом определены две стандартные операции: конкатенация и разрезание.
+    \end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Построение ПП с помощью декартовых деревьев}
+\begin{block}{Модификации декартовых деревьев}
+	Были исследованы следующие модификации:
+	\begin{itemize}
+		\item Рандомизированные двоичные деревья поиска \textbf{(C.\,Martinez, S.\,Roura, 1998)}
+		\pause
+		\item Декартовы деревья по неявному ключу \textbf{(Н.\,Дуров, А.\,Лопатин, 2002)}
+		\pause
+		\item Персистентные деревья
+	\end{itemize}
+\end{block}
+\pause
+\begin{block}{Новая модификация}
+	Основная структура данных алгоритма построения ПП~-- новая модификация декартовых деревьев,
+	которая совмещает в себе идеи всех трех перечисленных модификаций.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Рандомизированные ПП}
+\begin{block}{Определение}
+	Дерево вывода некоторой ПП будем называть \textbf{рандомизированным}, если оно удовлетворяет
+	одному из следующих условий:
+	\begin{itemize}
+		\item Это дерево состоит ровно из одного узла и в нем хранится, выводимый терминал.
+		\item Оба поддерева являются независимыми рандомизированными деревьями, и 
+		размер левого дерева может быть любым с равной вероятностью.
+	\end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{Результаты}
+    \begin{itemize}
+        \item Было доказано, что высота рандомизированного дерево вывода в среднем $O(\log{n})$.
+        \pause
+        \item Были модифицированы операции конкатенации и разрезания.
+    \end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Алгоритм построения рандомизированных ПП}
+        Идея алгоритма совпадает с идеей алгоритма Риттера.
+    \end{block}
+    \pause
+    \begin{block}{Результат}
+		Было доказано, что, если $n$ -- длина строки $S$, а $LZ$-факторизация содержит $k$ факторов, то:
+        \begin{itemize}
+			\pause
+            \item Размер полученной ПП в $O(\log n)$ раз больше минимальной.
+            \pause
+            \item Время работы алгоритма $O(k\log n)$ и требуемая память $O(k\log n)$.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\section{Практические результаты}
+\begin{frame}
+\frametitle{Практические результаты}
+
+Алгоритмы были протестированы на:
+\begin{itemize}
+	\item строках Фибоначчи;
+	\item случайных строках;
+	\item ДНК, взятых с сайта \url{http://www.ddbj.nig.ac.jp/}.	
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Скорость работы на строках ДНК}
+
+\begin{figure}[!ht]
+	\begin{center}
+	\resizebox{10cm}{5cm}{
+		\DNATimeStats
+	}
+	\end{center}
+	\begin{tikzpicture}
+		\drawSLPoldNode{0.09}{0.5}
+		\drawSLPnewNode{0.09}{0}
+		\drawCartesianNode{0}{-0.5}
+		\draw (0.2,0.5) node[anchor=west] {\scriptsize {\sf -- алгоритм Риттера;}}; 
+        \draw (0.2,0) node[anchor=west] {\scriptsize {\sf -- модернизированный алгоритм Риттера;}};
+        \draw (0.2,-0.5) node[anchor=west] {\scriptsize {\sf -- алгоритм построения рандомизированной ПП.}};
+	\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Коэффициенты сжатия на строках ДНК}
+
+\begin{figure}[!h]
+	%\begin{center}
+		\resizebox{6cm}{7cm}{
+			\CompressionRatioOnDNAs
+		}
+	%\end{center}
+	\begin{tikzpicture}
+		\drawLZinfNode{0.02}{5.5}
+		\drawSLPoldNode{0.09}{5.0}
+		\drawSLPnewNode{0.09}{4.5}
+		\drawCartesianNode{0.09}{4.0}
+		\draw (0.4,5.5) node[anchor=west] {\scriptsize {\sf -- lz;}}; 
+		\draw (0.4,5.0) node[anchor=west] {\scriptsize {\sf -- avl;}}; 
+		\draw (0.4,4.5) node[anchor=west] {\scriptsize {\sf -- modernAvl;}};
+		\draw (0.4,4.0) node[anchor=west] {\scriptsize {\sf -- randomizedSLP.}};
+	\end{tikzpicture}
+\end{figure}
+
+\end{frame}
+
+\section{Заключение}
+\begin{frame}
+\frametitle{Результаты и дальнейшие планы}
+
+\begin{block}{Результаты}
+	\begin{itemize}
+	  \item Новый алгоритм построения ПП. \pause
+	  \item Практические результаты сравнения алгоритмов по двум параметрам: скорость работы и степень сжатия.
+	\end{itemize}
+	Исходные коды алгоритмов можно посмотреть здесь: \url{http://code.google.com/p/overclocking}
+\end{block}
+
+\pause
+
+\begin{block}{Планы}
+	\begin{itemize}
+	  \item Применить эвристику оптимизации порядка конкатенаций в алгоритме построения рандомизированных ПП
+	\end{itemize}
+\end{block}
+
+\end{frame}
+
+\end{document}

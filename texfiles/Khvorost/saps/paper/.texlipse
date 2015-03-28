@@ -1,0 +1,13 @@
+﻿#TeXlipse project settings
+#Thu Jan 13 11:35:16 YEKT 2011
+builderNum=2
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=SAPS Journal.tex
+outputFile=SAPS Journal.pdf
+langSpell=en
+markDer=true
+srcDir=

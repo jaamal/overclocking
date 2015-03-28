@@ -1,0 +1,480 @@
+﻿\documentclass[10pt,pdf,hyperref={unicode}]{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+} 
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amssymb}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{scalefnt}
+\usepackage{color}
+
+\usepackage{graphs2}
+\usepackage{trees}
+
+\renewcommand{\drawLzw}[2]{
+}
+
+\newcommand{\slpAlgorithmsNotations}{
+	\begin{tikzpicture}
+		\drawRytter{-2}{1.0};
+		\drawModernFirstRytter{-2}{0.5};
+		\drawModernSecondRytter{-2}{0.0};
+		\drawCartesian{3}{1.0};
+		\drawAvlConcurrentFour{3}{0.5};
+		\drawLcaOnline{3}{0};
+        
+		\node [right] at (-2,1.0) {\scriptsize {\sf -- Риттер;}};
+		\node [right] at (-2,0.5) {\scriptsize {\sf -- Риттер с эвристикой;}};
+		\node [right] at (-2,0.0) {\scriptsize {\sf -- Риттер с эвристикой {\color{red} New!};}};
+
+		\node [right] at (3,1.0) {\scriptsize {\sf -- рандомизированные ПП;}};
+		\node [right] at (3,0.5) {\scriptsize {\sf -- многопоточный алгоритм {\color{red} New!};}};
+		\node [right] at (3,0.0) {\scriptsize {\sf -- LCA-online.}};
+	\end{tikzpicture}
+}
+
+\newcommand{\slpAndLzAlgorithmsNotations}{
+\scalebox{0.8}{
+	\begin{tikzpicture}
+		\drawLz{-2}{1.5};
+		\drawRytter{-2}{1.0};
+		\drawModernFirstRytter{-2}{0.5};
+		\drawModernSecondRytter{-2}{0.0};
+
+		\drawLzInf{3}{1.5};
+		\drawCartesian{3}{1.0};
+		\drawAvlConcurrentFour{3}{0.5};
+		\drawLcaOnline{3}{0};
+        
+		\node [right] at (-2,1.5) {\scriptsize {\sf -- LZ с окном сжатия 32КБ;}};
+		\node [right] at (-2,1.0) {\scriptsize {\sf -- Риттер;}};
+		\node [right] at (-2,0.5) {\scriptsize {\sf -- Риттер с эвристикой;}};
+		\node [right] at (-2,0.0) {\scriptsize {\sf -- Риттер с эвристикой {\color{red} New!};}};
+
+		\node [right] at (3,1.5) {\scriptsize {\sf -- LZ;}};
+		\node [right] at (3,1.0) {\scriptsize {\sf -- рандомизированные ПП;}};
+		\node [right] at (3,0.5) {\scriptsize {\sf -- многопоточный алгоритм {\color{red} New!};}};
+		\node [right] at (3,0.0) {\scriptsize {\sf -- LCA-online.}};
+	\end{tikzpicture}
+}
+}
+
+\title{Классификация алгоритмов построения прямолинейных программ}
+
+\author{Евгений Курпилянский}
+
+\date{11 июня 2014 года}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Введение}
+
+\begin{frame}{Способы сжатия}
+
+\begin{block}{}
+	Существует различные способы сжатия данных, например:
+	\begin{itemize}
+		\item прямолинейные программы;
+		\item антисловари;
+		\item коллаж-системы и др.
+	\end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{}
+	Если сжатое представление хорошо {\bf структурировано}, то существуют алгоритмы, способные
+	решать классические задачи\newline {\bf без распаковки} данных.
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Примеры таких задач}
+	\begin{itemize}
+		\item поиск подстроки в строке;
+		\item наибольшая общая подстрока;
+		\item и др.
+	\end{itemize}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}
+
+	\begin{block}{Вопросы}
+		\begin{enumerate}
+			\item Умеем ли мы эффективно строить маленькие ПП?
+			\pause
+			\item Насколько эффективно решение классических задач в терминах ПП?
+		\end{enumerate}
+	\end{block}
+
+	\pause
+
+		Данная работа посвящена первому вопросу.
+\end{frame}
+
+\section{Прямолинейные программы}
+
+\begin{frame}
+\frametitle{Определение прямолинейной программы}
+
+\begin{block}{Определение}
+\textbf{Прямолинейная программа} (ПП) строки $S$ ~-- это
+контекстно-свободная грамматика в нормальной форме Хомского, выводящая в точности одно слово $S$.
+\end{block}
+
+\pause
+
+\begin{exampleblock}{Пример}
+Рассмотрим ПП $X$, выводящую строку $\mbox{<<}abaababaabaab\mbox{>>}$.
+
+\begin{center}
+$X_1 \to a$\\
+$X_2 \to b$\\
+$X_3 \to X_1 \cdot X_2$\\
+$X_4 \to X_3 \cdot X_1$\\
+$X_5 \to X_4 \cdot X_3$\\
+$X_6 \to X_5 \cdot X_4$\\
+$X_7 \to X_6 \cdot X_5$
+\end{center}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Пример}
+Графическое изображение ПП:
+
+\picFibonacciSLP
+\end{exampleblock}
+\end{frame}
+
+\section{Построение ПП}
+
+\begin{frame}
+\frametitle{Как строить ПП?}
+\begin{block}{Утверждение.}
+Задача построения минимальной ПП, выводящей заданную строку $S$~-- NP-трудная.
+\end{block}
+
+\pause
+
+\begin{center}
+$\Downarrow$
+\end{center}
+
+\begin{block}{}
+Для построения ПП требуется использовать приближенные алгоритмы.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Определение}
+\textbf{Факторизация} строки $S$~-- это набор строк $w_1$, $w_2$, \ldots, $w_k$ такой,
+что $S = w_1 \cdot w_2 \cdot \ldots \cdot w_k$.
+\end{block}
+\pause
+\begin{block}{Определение}
+\textbf{$LZ$-факторизация} строки $S$ ~--- это факторизация $S~=~w_1~\cdot~w_2~\cdots~w_k$ такая, что
+для любого $j \in 1..k$
+\begin{itemize}
+	\item $w_j$ состоит из одной буквы, не встречающейся в $w_1 \cdot w_2 \cdots w_{j-1}$; или
+	\item $w_j$ ~--- наибольший префикс $w_j \cdot w_{j+1} \cdots w_k$, встречающийся в $w_1 \cdot w_2 \cdots w_{j-1}$.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Факторизации строки <<$abaababaabaab$>>}
+\begin{itemize}
+  \item $a \cdot b \cdot a \cdot a \cdot b \cdot a \cdot b \cdot a \cdot a
+  \cdot b \cdot a \cdot a \cdot b$;
+  \item $a \cdot b \cdot a \cdot aba \cdot baaba \cdot ab$ (LZ-факторизация);
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Нижняя оценка (Риттер, 2001)}
+	Размер минимальной ПП, выводящей данный текст, не меньше размера LZ-факторизации этого текста.
+\end{block}
+
+\pause
+
+\begin{block}{Постановка задачи}
+\textsc{Вход:} Строка $T$.
+
+\textsc{Выход:} ПП, выводящая строку $T$.
+\end{block}
+
+\pause
+
+\begin{block}{Постановка задачи 2}
+\textsc{Вход:} Строка $T$ {\bf и ее LZ-факторизация} $F_1$, $F_2$, \ldots, $F_k$.
+
+\textsc{Выход:} ПП, выводящая строку $T$.
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\only<1-6>{
+\begin{block}{Постановка задачи}
+\textsc{Вход:} Строка $T$ и ее $LZ$-факторизация $F_1$, $F_2$, \ldots, $F_k$.
+
+\textsc{Выход:} ПП, выводящая строку $T$.
+\end{block}
+}
+
+\begin{block}{Алгоритмы построения, основанные на сбалансированных бинарных деревьях:}
+	\begin{itemize}
+		\pause
+		\item Алгоритм Риттера {\bf (W.~Rytter, 2001)}
+		\pause
+		\item Эвристическая оптимизация {\bf (И.~Бурмистров, А.~Хворост, 2011)}
+		\pause
+		\item Небольшое обобщение эвристики {\color{red} New!}
+		\pause
+		\item Алгоритм построения рандомизированных ПП {\bf (Е.~Курпилянский, 2012)}
+		\pause
+		\item Многопоточный алгоритм {\color{red} New!}
+	\end{itemize}
+\end{block}
+
+\pause
+
+\only<7->{
+\begin{block}{Характеристики}
+	\pause
+	Все эти алгоритмы:
+	\begin{itemize}
+		\item строят $O(\log n)$-приближение к минимальной;
+		\item требуют на вход LZ-факторизацию текста.
+	\end{itemize}
+\end{block}
+}
+
+\end{frame}
+
+\begin{frame}
+	\only<1-3>{
+		\begin{block}{Постановка задачи}
+			\textsc{Вход:} Строка $T$.
+
+			\textsc{Выход:} ПП, выводящая строку $T$.
+		\end{block}
+	}
+
+	\begin{block}{Алгоритмы построения ПП, не требующие построения LZ-факторизации.}
+
+		\pause
+
+		\only<1-3>{Самый лучший алгоритм по качеству сжатия имеет оценку $O(\log^2 n)$.}
+
+		\pause
+
+		LCA-online алгоритм {\bf (S.~Maruyama, H.~Sakamoto, M.~Takeda, 2012)}
+	\end{block}
+
+	\pause
+
+	\only<4->{
+		\begin{block}{Характеристики}
+			\pause
+			Данный алгоритм:
+			\begin{itemize}
+				\item строит $O(\log^2 n)$-приближение к минимальной;
+				\item требует на вход только сам текст;
+				\pause
+				\item работает online.
+			\end{itemize}
+		\end{block}
+	}
+\end{frame}
+
+\section{Практические результаты}
+\begin{frame}
+\frametitle{Практические результаты}
+
+Алгоритмы были протестированы на:
+\begin{itemize}
+	\item последовательности строк с большой LZ-факторизацией ($\Omega(\frac{n}{\log n})$);
+	\item случайных строках над четырехбуквенным алфавитом;
+	\item ДНК, взятых с сайта \url{http://www.ddbj.nig.ac.jp/}.	
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Скорость работы на строках ДНК}
+
+\begin{figure}[!ht]
+	\begin{center}
+        \begin{picture}(260,165)(0,0)
+			\scalebox{0.65}{
+				\buildingSlpTimesInMemoryForDna
+			}
+		\end{picture}
+	\end{center}
+	\begin{center}
+		\slpAlgorithmsNotations
+	\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Скорость работы на случайных строках}
+
+\begin{figure}[!ht]
+	\begin{center}
+        \begin{picture}(260,165)(0,0)
+			\scalebox{0.65}{
+				\buildingSlpTimesInMemoryForRandom
+			}
+		\end{picture}
+	\end{center}
+	\begin{center}
+		\slpAlgorithmsNotations
+	\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Отношение размеров представлений на строках ДНК}
+
+\begin{figure}[!ht]
+	\begin{center}
+        \begin{picture}(260,165)(0,0)
+			\scalebox{0.65}{
+				\compressionItemSizeForDna
+			}
+		\end{picture}
+	\end{center}
+	\begin{center}
+		\slpAndLzAlgorithmsNotations
+	\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Отношение размеров представлений на случайных стр.}
+
+\begin{figure}[!ht]
+	\begin{center}
+        \begin{picture}(260,165)(0,0)
+			\scalebox{0.65}{
+				\compressionItemSizeForRandom
+			}
+		\end{picture}
+	\end{center}
+	\begin{center}
+		\slpAndLzAlgorithmsNotations
+	\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Коэффициент сжатия на строках ДНК}
+
+\begin{figure}[!ht]
+	\begin{center}
+        \begin{picture}(260,165)(0,0)
+			\scalebox{0.65}{
+				\compressionByteSizeForDna
+			}
+		\end{picture}
+	\end{center}
+	\begin{center}
+		\slpAndLzAlgorithmsNotations
+	\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Коэффициент сжатия на случайных строках}
+
+\begin{figure}[!ht]
+	\begin{center}
+        \begin{picture}(260,165)(0,0)
+			\scalebox{0.65}{
+				\compressionByteSizeForRandom
+			}
+		\end{picture}
+	\end{center}
+	\begin{center}
+		\slpAndLzAlgorithmsNotations
+	\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Количеств групп факторов в многопоточном алгоритме на строках ДНК}
+
+\begin{figure}[!ht]
+	\begin{center}
+        \begin{picture}(260,180)(0,0)
+			\scalebox{0.75}{
+				\concurrentIterationCountForDna
+			}
+		\end{picture}
+	\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Количеств групп факторов в многопоточном алгоритме на случайных строках}
+
+\begin{figure}[!ht]
+	\begin{center}
+        \begin{picture}(260,180)(0,0)
+			\scalebox{0.75}{
+				\concurrentIterationCountForRandom
+			}
+		\end{picture}
+	\end{center}
+\end{figure}
+\end{frame}
+
+
+\section{Заключение}
+\begin{frame}
+\frametitle{Результаты и дальнейшие планы}
+
+\begin{block}{Результаты}
+	\begin{itemize}
+	  \item Обобщение эвристики оптимизации порядка конкатенаций.
+	  \pause
+	  \item Многопоточный алгоритм построения ПП.
+	  \pause
+	  \item Практические результаты сравнения алгоритмов по двум параметрам: скорость работы и качество сжатия.
+	  \pause
+	  \item LCA-online лучше всех?
+	\end{itemize}
+	Исходные коды алгоритмов можно посмотреть здесь: \url{http://code.google.com/p/overclocking}
+\end{block}
+
+\pause
+
+\begin{block}{Планы}
+	\begin{itemize}
+	  \item Исследовать оценку качества сжатия LCA-online алгоритма.
+	  \pause
+	  \item Доделать реализацию многопоточного алгоритма.
+	\end{itemize}
+\end{block}
+
+\end{frame}
+
+\end{document}

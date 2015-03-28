@@ -1,0 +1,536 @@
+﻿\documentclass[10pt, conference, compsocconf]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{pgf}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{common}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+
+\title{Straight-line Programs: A Practical Test\thanks{The authors acknowledge support
+from the Ministry for Education and Science of Russia, grant 2.1.1/13995, and
+from the Russian Foundation for Basic Research, grant 10-01-00524.}}
+
+\author{\IEEEauthorblockN{Ivan Burmistrov}
+\IEEEauthorblockA{Faculty of Mathematics and Mechanics \\
+Ural State University\\
+Ekaterinburg, Russia\\
+burmistrov.ivan@gmail.com}
+\and
+\IEEEauthorblockN{Lesha Khvorost}
+\IEEEauthorblockA{Faculty of Mathematics and Mechanics \\
+Ural State University\\
+Ekaterinburg, Russia\\
+jaamal@mail.ru}
+}
+
+\maketitle
+
+\begin{abstract}
+We present an improvement of Rytter's algorithm that constructs a straight-line program for a given text and show that
+the improved algorithm is optimal in the worst case with respect to the number of AVL-tree rotations. Also we compare
+Rytter's and ours algorithms on various data sets and provide a comparative analysis of compression ratio achieved by
+these algorithms, by LZ77 and by LZW.
+\end{abstract}
+
+\begin{IEEEkeywords}
+straight-line program; LZ-compression; AVL-tree;
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+
+Nowadays searching algorithms on huge data sets attract much attention. To reduce the input size one needs algorithms
+that can work directly with a compressed representation of input data.
+
+Various compressed representations of strings are known: straight-line programs (SLPs)~\cite{SLPConstruction},
+collage-systems \cite{collages}, string representations using antidictionaries \cite{antidictionaries}, etc. Nowadays
+text compression based on context-free grammars such as SLPs has become a popular research direction. The reason for
+this is not only that grammars provide well-structured compression but also that the SLP-based compression is,
+in a sense, polynomially equivalent to the compression achieved by the Lempel-Ziv algorithm that is widely used in
+practice. It means that, given a text $S$, there is a polynomial relation between the size of an SLP that
+derives $S$ and the size of the dictionary stored by the Lempel-Ziv algorithm, see \cite{SLPConstruction}. It should
+also be noted that classical LZ78 \cite{LZ78} and LZW \cite{LZW} algorithms can be considered as special cases of grammar
+compression. (At the same time other compression algorithms from the Lempel-Ziv family---such as LZ77 \cite{LZ77} and
+run-length compression---do not fit directly into grammar compression model.)
+
+Using the fact that SLPs are nicely structured, several researchers keep developing analogues of classical string
+algorithms that (at least theoretically) perform quite well on SLP-compressed representations: \textbf{Pattern matching}
+\cite{PM_and_HD}, \textbf{Longest common substring} \cite{LCSubstring}, \textbf{Computing all palindromes} \cite{LCSubstring}, some
+versions of \textbf{Longest common subsequence} \cite{LCS_P}. At the same time, constants hidden in big-O notation for
+algorithms on SLPs are often very big. Also the aforementioned polynomial relation between the size of an SLP for a
+given text and the size of the LZ77-dictionary for the same text does not yet guarantee that SLPs provide good
+compression ratio in practice. Thus, a major questions is whether or not there exist SLP-based compression models suitable
+to practical usage? This question splits into two sub-questions addressed in the present paper: How difficult is it to
+compress data to an SLP-representation? How large compression ratio do SLPs provide as compared to
+classic algorithms used in practice?
+
+Let us describe in more detail the content of the paper and its structure. Section 2 gathers some preliminaries about
+SLPs. In Section 3 we present an improved version of Rytter's algorithm~\cite{SLPConstruction} for constructing
+an SLP-presentation of a given text. In Section 4 we compare the improved algorithm vs. the original algorithm
+from~\cite{SLPConstruction} and also present results of a comparison of compression ratio between the two SLP-based
+algorithms and LZ77. In Section 5 we summarize our results.
+
+\section{Preliminaries}
+
+We consider strings of characters from a fixed finite alphabet $\Sigma$. The \emph{length} of a string
+$S$ is the number of its characters and is denoted by $|S|$. The \emph{concatenation} of strings $S_1$ and $S_2$
+is denoted by $S_1 \cdot S_2$. A \emph{position} in a string $S$ is a point between consecutive characters. We number
+positions from left to right by $1,2,\dots,|S|-1$. It is convenient to consider also the position 0 preceding the text
+and the position $|S|$ following it. For a string $S$ and an integer $0 \leq i \leq |S|$ we define $S[i]$ as character
+between positions $i$ and $i+1$ of $S$. For example $S[0]$ is a first character of $S$. A \emph{substring} of $S$
+starting at a position $\ell$ and ending at a position $r$, $0\leq \ell < r \leq |S|$, is denoted by $S[\ell \dots r]$ (in other
+words $S[\ell \dots r] = S[\ell] \cdot S[\ell + 1] \cdot \mbox{\dots} \cdot S[r-1]$).
+
+A \emph{straight-line program} (SLP) $\slp{S}$ is a sequence of assignments of
+the form: $$\slp{S}_1 = expr_1,\ \slp{S}_2 = expr_2, \dots, \slp{S}_n =
+expr_n,$$ where $\slp{S}_i$ are \emph{rules} and $expr_i$ are expressions of
+the form:
+\begin{itemize}
+\item $expr_i$ is a character of $\Sigma$ (we call such rules \emph{terminal}), or
+\item $expr_i = \slp{S}_\ell\cdot \slp{S}_r \ (\ell, r < i)$ (we call such rules \emph{nonterminal}).
+\end{itemize}
+
+Thus, an SLP is a context-free grammar in Chomsky normal form. Obviously every SLP generates exactly one string over
+$\Sigma^+$. This string is referred to as the \emph{text} generated by an SLP. For a grammar $\slp{S}$ generating a text
+$S$, we define \emph{parse-tree} of $S$ as a derivation tree of $S$ in $\slp{S}$. We identify terminal symbols with
+their parents in this tree; after this identification every internal node has exactly two sons. We accept the
+following conventions in the paper: every SLP is denoted by a capital blackboard bold letter, for example, $\slp{S}$.
+Every rule of this SLP (and every internal node in its parse-tree) is denoted by the same letter with indices, for
+example, $\slp{S}_1,\slp{S}_2,\dots$. The \emph{size} of an SLP $\slp{S}$ is the number of its rules and is denoted by
+$|\slp{S}|$. The \emph{concatenation} of SLPs $\slp{S}_1$ and $\slp{S}_2$ is an SLP that derives
+$S_1 \cdot S_2$ and denoted by $\slp{S}_1 \cdot \slp{S}_2$.
+
+The \emph{height} of a node in a binary tree is defined as follows. The height
+of terminal node (leaf) is equal to 0 by definition. The height of a
+nonterminal node is equal to 1 + the maximum of the heights of its children. An
+\emph{AVL-tree} $\slp{T}$ is a binary tree such as for every non-terminal node
+the heights of its children can differ at most by 1. In the paper we consider
+only SLPs whose parse-trees are AVL-trees. We denote the height of the rule
+$\slp{S}_i$ by $h(\slp{S}_i)$.
+
+\section{Algorithms for constructing SLPs}
+
+\subsection{Rytter's algorithm and its bottleneck}
+
+The problem of constructing a minimal size grammar generating a given text is
+known to be NP-hard. Hence we should look for polynomial-time approximation
+algorithms. One of the key approaches of such algorithms is to construct a
+factorization of a given text and to build some binary search tree using the
+factorization. It is obvious that the size of the resulting grammar depends on
+factorization. In \cite{SLPConstruction} Rytter considered factorizations
+defined by the LZ77 encoding algorithm.
+
+\begin{definition}
+The LZ-factorization of a text $S$ is given by a decomposition: $S = F_1 \cdot F_2 \cdot \mbox{\dots} \cdot F_k$, where
+$F_1 = S[0]$ and $F_i$ is the longest prefix of $S\substr{|F_1\cdot \mbox{\dots} \cdot F_{i-1}|}{|S|}$ which occurs as
+substring in $F_1 \cdot \mbox{\dots} \cdot F_{i-1}$ or $S[|F_1\cdot \mbox{\dots} \cdot F_{i-1}|]$ in case this prefix is
+empty.
+\end{definition}
+
+The following theorem gives an estimation of the size of an SLP constructed on
+the basis on a LZ-factorization.
+
+\begin{thm}[\rm{\cite{SLPConstruction}}]
+Given a string $S$ of length $n$ and its LZ-factorization of length $k$, one
+can construct an SLP for $S$ of size $O(k \log n)$ in time $O(k \log n)$.
+\end{thm}
+
+The proof of the above theorem contains an algorithm for constructing SLPs. We
+remind here some key ideas of the algorithm as they are important for the
+further discussion. For efficient concatenation of grammars the algorithm uses
+the following lemma:
+
+\begin{lem}[{\rm\cite{SLPConstruction}}]
+Assume $\slp{S}_1, \slp{S}_2$ are two nonterminals of AVL-balanced grammars.
+Then we can construct in $O(|h(\slp{S}_1) - h(\slp{S}_2)|)$ time an
+AVL-balanced grammar $\slp{S} = \slp{S}_1 \cdot \slp{S}_2$ that derives the
+text $S_1\cdot S_2$ by adding only $O(|h(\slp{S}_1) - h(\slp{S}_2)|)$
+nonterminals.
+\end{lem}
+
+
+\noindent \textsc{Problem:} \textbf{SLP Construction}
+
+\noindent \textsc{Input:} a string $S$ and its LZ-factorization $F_1, F_2,
+\dots, F_k$.
+
+\noindent \textsc{Output:} an SLP $\slp{S}$ that derives $S$.
+
+\noindent \textsc{Algorithm:} The algorithm constructs an SLP by induction on
+$k$.
+
+\textbf{Base:} Initially $\slp{S}$ is equal to the terminal rule that derives
+$S[0]$.
+
+\textbf{Step:} Let $i > 1$ be an integer and an SLP $\slp{S}$ that derives
+$F_1\cdot F_2 \cdots F_i$ has already been constructed. Since a
+LZ-factorization of $S$ is fixed, an occurrence of $F_{i+1}$ in $F_1\cdot F_2
+\cdots F_i$ is known. From this, the algorithm extracts rules $\slp{S}_1,
+\dots, \slp{S}_\ell$ such that $F_{i+1} = S_1 \cdot S_2 \cdots S_\ell$. Since
+$\slp{S}$ is balanced, we have $\ell = O(\log |S|)$. Then, using Lemma III.2,
+the algorithm concatenates rules in some specific order (see
+\cite{SLPConstruction} for details) and sets the next value of $\slp{S}$ to be
+equal to the result of concatenating the previous value of $\slp{S}$ with
+$\slp{S}_1 \cdots \slp{S}_\ell$.
+
+\begin{figure}[th]
+\AVLrotations
+\end{figure}
+
+It is well-known that adding a new rule to an AVL-tree is quite a complex
+operation. Every adding operation generates a sequence of rotations of the
+tree. There are two types of rotations symbolically presented in Figure 1, see
+\cite{SLPConstruction} for more details. Every rotation may generate at most
+three new rules. Also every rotation may generate three unused rules. There are
+two possible directions for an optimization of the algorithm: to construct more
+compact grammar and to minimize the number of queries to AVL-trees. Minimizing
+of the number of queries to AVL-trees becomes important when the size of input
+text becomes huge and we cannot store an AVL-tree in the memory. Formally it
+means that costs of a query to an AVL-tree are greater than costs of
+calculations in memory.
+
+The following example illustrates a bottleneck of the algorithm
+from~\cite{SLPConstruction}:
+
+\noindent \textbf{Example 1:} Let $n$ be an integer and $S$ be a text of length
+$2^n$. Suppose the algorithm has already built an SLP $\slp{S}$ that derives
+$S\substr{0}{2^{n-1}}$. Let $F_1 \cdot F_2 \cdots F_{n-1}$ be LZ-factorization
+of $S\substr{2^{n-1}}{2^n}$ such that $|F_i| = 2^{n-i-1}$, where $i \in
+\overline{1\dots n-1}$.
+
+Let us estimate the number of rotations that may be generated in the course of
+the sequence of concatenations $(((\slp{S} \cdot \slp{F}_1)\cdot
+\slp{F}_2)\dots) \cdot \slp{F}_{n-1}$ in the worst case. In order to get an
+upper bound, we suppose that the resulting tree grows after every
+concatenation. So we get the following estimation: \begin{multline*}
+\sum_{i=1}^{n-1} (\log{2^{n-1}} + (i-1) - \log{2^{n-i-1}}) = \\
+\frac{(n-1)(n-2)}{2}(1 + \log{2}) - (n-2) = \Theta(n^2).
+\end{multline*}
+
+Notice that if the algorithm could choose another order of concatenations, then
+the number of rotations generated by the algorithm could be essentially
+smaller, namely,close to $O(n)$. For instance, in the case of concatenating in
+the reverse order $\slp{S} \cdot (\slp{F}_1 \dots (\slp{F}_{n-2} \cdot
+\slp{F}_{n-1}))$, we get the following estimation:
+$$\sum_{i=1}^{n-1} (\log{2^{n-i}} - \log{2^{n-i-1}}) = (n-1)\log{2} =
+\Theta(n).$$
+
+Our next example shows that several factors can be processed together if they
+occur in a single SLP.
+
+\noindent \textbf{Example 2:} Let $n > 0$ be an integer and $S = b\cdot
+a^{2^{n-1}}\cdot b \cdot a^{2^{n-2}} \cdots b \cdot a$. So the length of $S$ is
+equal to $2^n + n - 2$. Consider the LZ-factorization of $S$: $$ b \cdot a
+\cdot a \cdot a^2 \cdot a^4 \cdots a^{2^{n-2} - 1} \cdot ba^{2^{n-2}} \cdot
+ba^{2^{n-3}} \cdots ba.$$ Let $\slp{S}_1$ be an SLP that derives $b \cdot
+a^{2^{n-1}}$. It is obvious that all other factors starting with $b \cdot
+a^{2^{n-2}}$ occur in $S_1$, therefore the algorithm may process them together.
+So the algorithm may construct SLPs $\slp{S}_2$ that derives $b \cdot
+a^{2^{n-2}}$, $\slp{S}_3$ that derives $b \cdot a^{2^{n-3}}$, etc. Finally the
+algorithm concatenates the SLPs in the following order:
+$\slp{S}_1\cdot(\dots(\slp{S}_{n-3}\cdot(\slp{S}_{n-2} \cdot \slp{S}_{n-1})))$.
+
+The main ideas of our improved  algorithm are to process several factors
+together and to concatenate each group of factors choosing an optimal order.
+The intuition behind the algorithm is very simple: if the algorithm has already
+constructed a huge SLP, then most factors occur in the text generated by this
+SLP and may be processed together.
+
+\subsection{An improved algorithm}
+
+\noindent \textsc{Input:} a text $S$ and its LZ-factorization $F_1, F_2, \dots,
+F_k$.
+
+\noindent \textsc{Output:} an SLP $\slp{S}$ that derives $S$.
+
+\noindent \textsc{Algorithm:} The algorithm constructs an SLP by induction on
+$k$.
+
+\textbf{Base:} Initially $\slp{S}$ is equal to the terminal rule that derives
+$S[0]$.
+
+\textbf{Step:} Let $i$ be an integer and $\slp{S}$ be an SLP that derives
+$F_1\cdot F_2 \cdots F_i$. Let $\ell \geq 1$ be a maximal integer such that
+$F_{i+\ell}$ occurs in $F_1 \cdots F_i$. Since the LZ-factorization of $S$ is
+fixed, the value of $\ell$ can be found by using a linear time search on
+factors. Let $\slp{F}_1$ be an SLP that derives $F_{i+1}$, let $\slp{F}_2$ be
+an SLP that derives $F_{i+2}$, etc.
+
+Initially the algorithm concatenates $\slp{F}_{i+1}, \dots, \slp{F}_{i+k}$
+using dynamic programming. Let $\varphi(p, q)$ be the function that calculates
+an upper bound of the number of rotations of a grammar tree that are performed
+during the process of concatenation of $\slp{F}_p, \slp{F}_{p+1}, \dots,
+\slp{F}_q$. The algorithm uses the following recurrent formula to calculate
+$\varphi(p,q)$:
+$$\varphi(p, q) = \begin{cases}
+0 &\text{if } p=q, \\
+\min_{r = p}^q(\varphi(p, r) + \varphi(r+1, q) +&\\
+|\log(|f_{i+p}|+\dots+|f_{i+r}|) -& \\
+\log(|f_{i+r+1}|+\dots+|f_{i+q}|)|) &\mbox{otherwise}.
+\end{cases}$$
+The formula is correct since the concatenation of $\slp{F}_p$ and $\slp{F}_q$
+generates at most. $2\cdot|h(\slp{F}_p) - h(\slp{F}_q)|$ rotations  In the
+formula we omit the constant factor 2 since, otherwise, all values of $\varphi$
+will be proportional to the factor.
+
+The algorithm calculates the values of $\varphi(p, q)$ using a $\varphi$-table.
+The $\varphi$-table is a $((k-1) \times (k-1))$-table that stores information
+about the value of $\varphi(p,q)$ and about the optimal value of index $r$. The
+cell in the $p$-th row and the $q$-th column where $p \leq q$ always contains
+zero values. Initially the algorithm fills out cells such that $q - p = 1$,
+next it fills out cells such that $q - p = 2$, etc. Thus, the algorithm does
+not recompute recursively the values of $\varphi(p, r)$ and $\varphi(r+1, q)$
+since they already exist in the $\varphi$-table.
+
+Every single value of $\varphi(p, q)$ can be calculated using $O(k)$ time (the
+pseudo-code of the corresponding procedure is presented in Figure 2). Thus, the
+algorithm fills out the $\varphi$-table using $O(k^3)$ time and $O(k^2)$ space.
+
+\begin{figure}[th]
+\ComputingFiValue
+\end{figure}
+
+Notice that $\varphi(1, k)$ is equal to the optimal number of rotations of the
+grammar tree in the worst case (i.e.\ in the case when each concatenation of
+$\slp{F}_p$ and $\slp{F}_q$ generates $O(|h(\slp{F}_p) - h(\slp{F}_q)|)$
+rotations). Since the $\varphi$-table contains information about the optimal
+value of index $r$ in every cell, the algorithm can determine an optimal order
+of concatenations for $\slp{F}_{i+1}, \dots, \slp{F}_{i+k}$. Using the optimal
+order, the algorithm constructs an SLP $\slp{F}$ that derives $F_{i+1},
+F_{i+2}, \dots, F_{i+l}$. Finally the algorithm concatenates $\slp{S}$ and
+$\slp{F}$ and sets $\slp{S}$ to be equal to $\slp{S} \cdot \slp{F}$.
+
+\begin{thm}
+Let $f_1, f_2, \cdots, f_k$ be the LZ-factorization of a text $w$. The above
+algorithm constructs an SLP for $w$ of size $O(k\log n)$.
+\end{thm}
+\proof{} The LZ-factorization can be divided into independent groups of
+factors. Let $\ell$ be the number of the groups and let $k_1, k_2, \dots,
+k_\ell$ be the sizes of the corresponding groups. The number of new rules
+generated during concatenation of all factors in the $i$-th group is upper
+bounded by $2\cdot(\log (|f_{k_i}| + |f_{k_i + 1}| + \dots +
+|f_{k_{i+1}-1}|)\cdot(k_{i+1} - k_i))$. So the number of new rules generated
+during a single step of the algorithm is upper bounded by
+$2\cdot(\log(|f_{k_1}| + |f_{k_1 + 1}| + \dots + |f_{k_i -1}|) + (k_{i+1} - k_i
+- 1)\cdot(\log (|f_{k_i}| + \dots + |f_{k_{i+1}-1}|))$. Finally the number of
+rotations is upper bounded by $2\cdot(k_{i+1} - k_i)\cdot \log n$.
+
+Totally the algorithm generates at most $O(k\log n)$ new rules.
+
+Since concatenation of groups of factors is optimal in the worst case, it is
+difficult to determine the precise time complexity of the improved algorithm as
+a function of input size. Notice that if the size of every group of factors is
+equal to 1, then we have the algorithm from \cite{SLPConstruction}. Otherwise
+the new algorithm generates less rotations than the standard algorithm but the
+new algorithm spends some extra time for calculating order of concatenation. So
+in the next section we propose a practical comparison between the two
+algorithms.
+
+\section{Practical results}
+
+\subsection{Setup of experiments}
+Obviously, the nature of input strings highly affects compression
+time and compression ratio. In this paper we consider three types of strings:
+
+\begin{itemize}
+  \item DNA sequences (downloaded from DNA Data Bank of Japan, \url{http://www.ddbj.nig.ac.jp/});
+  \item Fibonacci strings;
+  \item random strings over four letters alphabet.
+\end{itemize}
+
+These types of strings have been chosen for the following reasons. Fibonacci
+strings are one of the best inputs to the SLP Construction problem. So we can
+estimate potential of SLPs as compression model. Random strings are considered
+to be incompressible and, potentially, they are the worst input for the SLP
+Construction problem. DNA sequences are real data used in practice.
+
+Let us introduce algorithms that have been tested. Our test suite contains a
+classic version of the Lempel-Ziv algorithm proposed in \cite{LZ77}. We use the
+following brief notation for it: \textbf{lz77}. The size of scanning window is
+equal to 32Kb. The reader may think that 32Kb is too short but we choose this
+value to study how the window size influences compression ratio.
+
+Notice that the size of scanning window affects the length of factors and the
+total size of a LZ-factorization. So if we want to compress longer factors,
+then we need to spend more space. In other words, the size of scanning window
+directly affects the size of compressed presentation. In the same time there is
+no direct relation between the structure of an SLP and the size of the text
+derived from it. Therefore using shorter LZ-factorizations leads to
+constructing more compact SLPs. From this argument it follows that there is a
+reason to consider a version of the Lempel-Ziv algorithm with an infinite
+scanning window. We use the following brief notation for it: \textbf{lz77inf}.
+
+Additionally we test yet another classic algorithm from the Lempel-Ziv family:
+the Lempel-Ziv-Welch algorithm (briefly \textbf{lzw}). Finally our test suite
+contains the classic algorithm for SLP Construction problem (briefly
+\textbf{SLPclassic}) proposed in \cite{SLPConstruction} and the algorithm
+presented in Section~3 (briefly \textbf{SLPnew}).
+
+For convenience, we accept the following common notation for the tested
+algorithms in all following graphs:
+
+\algorithmNotations
+
+We estimate the performance of a compression algorithm in terms of compression
+ratio and execution time. For SLP compression algorithms we additionally
+calculate the number of rotations. We calculate compression ratio as the ratio
+between the size of compressed presentation and the size of input string. We
+measure compression ratio in percents. For example, the formula for SLP
+compression ratio looks like $\frac{|\slp{S}|}{|S|} \cdot 100$. Since ratio
+between serialized SLP rule representation and serialized LZ-factor
+representation is greater than 1 (but constant) we may encounter the following
+situation: SLP compression ratio is less than LZ compression ratio but the file
+containing an SLP is larger than the file containing the corresponding
+LZ-dictionary. We should note that the situation changes with input growing.
+
+All algorithms have been implemented using Java SE and tested on Intel Core
+i-5(661), 4Gb RAM (Microsoft Windows 7 x64 OS).
+
+\DNARotations
+
+\subsection{SLP construction results}
+
+In this subsection we discuss performance of both SLP construction algorithms.
+
+As expected, both algorithms work infinitely fast on Fibonacci strings and
+construct extremely compact representations. For example, on the 36-th
+Fibonacci word of size 36.9Mb both algorithms work within 1ms and build SLPs of
+size 100. This fact shows that there is a class of strings whereon the SLP
+compression model is very efficient.
+
+\DNASpeedTestInMemory
+
+A diagram at Figure 3 shows how the suggested optimization of concatenation
+affects the number of rotations of AVL trees on DNA sequences.
+
+\DNASpeedTestInFile
+
+To illustrate how the optimization affects  construction time we present two
+tests. In the first one, the algorithms have stored all SLPs being constructed
+in operational memory, while in the second one, the SLPs have been stored in an
+external file so that every rotation of an AVL-tree forces I/O operations with
+the file. We expect that there is no big difference between the algorithms in
+the first setting since the new algorithm spends extra time when computing the
+most efficient order of concatenation. But what happens when costs of accessing
+AVL-trees are greater than costs of computing the order? This situation
+naturally appear when the size of input is huge and we cannot store all the
+trees in operational memory. So at figures 4 and 5 presented the execution time statistic for both ways of SLPs
+storing.
+
+\RandomRotations
+
+\RandomSpeedTestInMemory
+
+\RandomSpeedTestInFile
+
+At Figures 6, 7 and 8 presented the results of testing both algorithms on random strings. 
+
+The Figures 3-8 shows that the new algorithm is more stable since it is on
+average as fast as the classic algorithm in operational memory and on average
+two times faster when a file system is used.
+
+\subsection{Compression ratio results}
+
+Here we present a comparative analysis of compression ratios for DNA sequences
+and random strings:
+
+Figures 9 and 10 shows that compression ratio provided by the new algorithm is
+close to compression ratio provided by the classic algorithm. In case of DNA
+sequences the new algorithm generates many rotations of small AVL trees and as
+a result it constructs a wider SLP than the classic algorithm. Also tests shows
+that SLP compression ratio directly depends on the size of LZ-factorization
+(fluctuations in the results obtained by both classic and new algorithms are
+similar to fluctuations in the results obtained by \textbf{lz77inf} and the
+size of compressed presentation obtained by \textbf{lz77inf} is equal to the
+LZ-factorization size).
+
+\DNACompression
+
+\section{Conclusion}
+
+In this paper we present an improved algorithm for SLP construction. The
+algorithm is similar to Rytter's algorithm proposed in \cite{SLPConstruction}
+but it seems to be more efficient on large inputs. However, there is an open
+issue related to the new algorithm: how to manage groups of factors optimally?
+For example, suppose that we already have built an SLP $\slp{L}$ of height $h$
+and suppose that the next group of factors generates an SLP $\slp{R}$ of height
+$2h$. It looks inefficient to construct the whole $\slp{R}$ and then
+concatenate it with $\slp{L}$. A possible solution is to let the allowed size
+of the group gradually grow as the algorithm progresses on the input string.
+
+In the paper we also present practical tests of SLPs as compression model. As a
+result we should conclude that the existing ways of SLP construction are quite
+slow. On the other hand, the tests confirm that compression ratio provided by
+SLPs is close to compression ratio provided by the family of Lempel-Ziv
+algorithms (and may be even closer than we initially expected).
+
+\RandomCompression
+
+\section*{Acknowledgment}
+
+The authors would like to thank \emph{Mikhail V. Volkov} for his encouragement
+and critical notes and \emph{Anna Kozlova} for her help in gathering
+statistics. The authors would like to thank anonymous referees for their reviews.
+
+\begin{thebibliography}{1}
+\bibitem{LCSubstring}
+A.~Ishino, A. Shinohara, T.~Nakamura, W.~Matsubara, S.~Inenaga, and
+K.~Hashimoto.
+\newblock Computing longest common substring and all palindromes from
+  compressed strings.
+\newblock In {\em SOFSEM}, volume 4910 of {\em Lecture Notes in Computer
+  Science}, pages 364--375. Springer, 2008.
+
+\bibitem{PM_and_HD}
+Y.~Lifshits.
+\newblock Processing compressed texts: A tractability border.
+\newblock In {\em CPM}, volume 4580 of {\em Lecture Notes in Computer Science},
+  pages 228--240. Springer, 2007.
+
+\bibitem{SLPConstruction}
+W.~Rytter.
+\newblock Application of Lempel-Ziv factorization to the approximation of
+  grammar-based compression.
+\newblock {\em Theor. Comput. Sci.}, 302(1-3):211--222, 2003.
+
+\bibitem{collages}
+Y.~Shibata, M. Takeda, A.~Shinohara, T.~Kida, T.~Matsumoto, and S.~Arikawa.
+\newblock Collage system: a unifying framework for compressed pattern matching.
+\newblock {\em Theor. Comput. Sci.}, 1(298):253--272, 2003.
+
+\bibitem{antidictionaries}
+A.~Shinohara, Y.~Shibata, M.~Takeda, and S.~Arikawa.
+\newblock Pattern matching in text compressed by using antidictionaries.
+\newblock In {\em CPM}, volume 1645 of {\em Lecture Notes in Computer Science},
+  pages 37--49. Springer, 1999.
+
+\bibitem{LCS_P}
+A. Tiskin.
+\newblock Faster subsequence recognition in compressed strings.
+\newblock {\em CoRR}, abs/0707.3407, 2007.
+
+\bibitem{LZW}
+T.~A. Welch.
+\newblock A technique for high-performance data compression.
+\newblock {\em IEEE Computer}, 17(6):8--19, 1984.
+
+\bibitem{LZ77}
+J.~Ziv and A.~Lempel.
+\newblock A universal algorithm for sequential data compression.
+\newblock {\em IEEE Transactions on Information Theory}, 23(3):337--343, 1977.
+
+\bibitem{LZ78}
+J.~Ziv and A.~Lempel.
+\newblock Compression of individual sequences via variable-rate coding.
+\newblock {\em IEEE Transactions on Information Theory}, 24(5):530--536, 1978.
+\end{thebibliography}
+\end{document}

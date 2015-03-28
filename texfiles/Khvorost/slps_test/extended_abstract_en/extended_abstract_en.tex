@@ -1,0 +1,824 @@
+﻿\documentclass[11pt]{article}
+\usepackage{cite}
+\usepackage{a4}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+
+\usepackage{url}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{pictures}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% layout commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{notation}[thm]{Notation}
+
+\theoremstyle{remark}
+\newtheorem{definition}{Definition}[section]
+
+\newcommand{\hm}[1]{#1\nobreak\discretionary{}{\hbox{\ensuremath{#1}}}{}}
+\newcommand{\qqed}{\hfill$\Box$}
+
+\renewenvironment{proof}{\trivlist\item[\hskip\labelsep{\bf Proof}.] }{\qqed\endtrivlist}
+\newenvironment{proof1}{\trivlist\item[\hskip\labelsep{\bf Proof}] }{\qqed\endtrivlist}
+
+\newcounter{examples}
+
+\newenvironment{example}{\addtocounter{examples}{1}\trivlist\item[\hskip\labelsep{\bf
+Example \arabic{examples}.}] }{\endtrivlist}
+
+\newcommand{\sectionnew}[1]{
+    %TODO: eclipse hints that is better to use \centering command
+    \addtocounter{section}{1}
+    \setcounter{subsection}{0}
+    \section*{{\centerline{\large\bf \S\arabic{section}. #1}}}
+}
+
+\newcommand{\subsectionnew}[1]{
+    \addtocounter{subsection}{1}
+    \paragraph*{\arabic{section}.\arabic{subsection}. #1}
+}
+
+\newcommand{\header}[1]{
+    \noindent \textsc{#1}
+}
+
+\newcommand{\problem}[3]{\par\smallskip
+    \header{Problem:} \textbf{#1} \newline
+    \header{Input:} #2 \newline
+    \header{Output:} #3
+\smallskip}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% math commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\substr}[2]{[#1\dots#2]}
+
+\newcommand{\slp}[1]{\mathbb{#1}}
+
+\newcommand{\tuple}[4]{
+    #1_{#2}, #1_{#3}, \dots, #1_{#4}
+}
+\newcommand{\concat}[4]{
+    #1_{#2} \cdot #1_{#3} \cdot \mbox{\dots} \cdot #1_{#4}
+}
+
+\DeclareMathOperator{\cnt}{count} \DeclareMathOperator{\splt}{\emph{split}}
+
+\begin{document}
+
+\title{Straight-line Programs: A Practical Test \newline (Extended Abstract)\thanks{The authors acknowledge support from
+the Russian Foundation for Basic Research, grant 10-01-00793.}}
+\author{I. Burmistrov \and L. Khvorost \and A. Kozlova \and E. Kurpilyansky}
+\date{}
+\maketitle
+
+\begin{abstract}
+We present two algorithms that construct a context-free grammar for a given text. The first one is an improvement of
+Rytter's algorithm that constructs grammars using AVL-trees. The second one is a new approach that constructs grammars
+using Cartesian trees. Also we compare both algorithms and Rytter's algorithm on various data sets and provide a comparative
+analysis of compression ratio achieved by these algorithms, by LZ77, and by LZW.
+\end{abstract}
+
+\sectionnew{Introduction}
+
+Nowadays searching algorithms on huge data sets attract much attention. Since compressed representations are convenient
+for storing and handling huge data sets, one of possible ways to process huge volume of data is to work directly with
+ compressed representations.
+
+Obviously algorithms that process compressed representations depend on the way of compression. There are various compressed
+representations: collage-systems \cite{collages}, string representations using antidictionaries \cite{antidictionaries},
+straight-line programs (SLPs)~\cite{SLPConstruction}, run-length encoding~\cite{RunLengthEncoding}, etc. Text
+compression based on context-free grammars such as SLPs has become a popular research direction by the following
+reasons. The first one is that grammars provide well-structured compressed representation that is suitable for data
+searching. The second one is that the SLP-based compression is polynomially equivalent to the compression achieved by
+the Lempel-Ziv algorithm that is widely used in practice. It means that, given a text $S$, there is a polynomial
+relation between the size of an SLP that derives $S$ and the size of the dictionary stored by the Lempel-Ziv algorithm,
+see \cite{SLPConstruction}. It should also be noted that classical LZ78 \cite{LZ78} and LZW \cite{LZW} algorithms can
+be considered as special cases of grammar compression. (At the same time other compression algorithms from the
+Lempel-Ziv family---such as LZ77 \cite{LZ77} and run-length encoding---do not fit directly into the grammar compression
+model.)
+
+There is a wide class of string problems that can be solved in terms of SLPs. It means that the execution time of such
+an algorithm polynomially depends on size of SLP. For example, the class contains the following
+problems: \textbf{Pattern matching}~\cite{PM_and_HD}, \textbf{Longest common substring}~\cite{LCSubstring},
+\textbf{Counting all palindromes}~\cite{LCSubstring}, some versions of the problem \textbf{Longest common
+subsequence}~\cite{LCS_P}. At the same time, constants hidden in big-O notation for algorithms on SLPs are often very
+big. Also the aforementioned polynomial relation between the size of an SLP for a given text and the size of the
+LZ77-dictionary for the same text does not yet guarantee that SLPs provide good compression ratio in practice. Thus, a
+major question is whether or not there exist SLP-based compression models suitable to practical usage? This question
+splits into two sub-questions addressed in the present paper: How difficult is it to compress data to an
+SLP-representation? How large compression ratio do SLPs provide as compared to classic algorithms used in practice?
+
+Let us describe in more detail the content of the paper and its structure. Section 2 gathers some preliminaries about
+strings and SLPs. In Section 3 we present two SLP construction algorithms. The first one is an improved version of
+Rytter's algorithm~\cite{SLPConstruction}. The second one is a new algorithm that constructs SLP using Cartesian
+trees. In Section 4 we compare efficiency of SLP construction algorithms and also present results of a comparison of
+compression ratio between all SLP-based algorithms and some classic compression algorithms. In Section 5 we summarize
+our results.
+
+A part of the results of the present paper related to an improve version of Rytter's algorithm was presented at 
+the 1st International Conference on Data Compression, Communication and Processing held in Palinuro, Italy in 2011
+(\url{http://ccp2011.dia.unisa.it/CCP_2011/Home.html}) and was announced in \cite{BKh11}.
+
+\sectionnew{Preliminaries}
+
+We consider strings of characters from a fixed finite alphabet $\Sigma$. The \emph{length} of a string
+$S$ is the number of its characters and is denoted by $|S|$. The \emph{concatenation} of strings $S_1$ and $S_2$
+is denoted by $S_1 \cdot S_2$. A \emph{position} in a string $S$ is a point between consecutive characters. We number
+positions from left to right by $1,2,\dots,|S|-1$. It is convenient to consider also the position 0 preceding the text
+and the position $|S|$ following it. For a string $S$ and an integer $0 \leq i \leq |S|$ we define $S[i]$ as the character
+between the positions $i$ and $i+1$ of $S$. For example $S[0]$ is the first character of $S$. A \emph{substring} of $S$
+starting at the position $\ell$ and ending at the position $r$, $0\leq \ell < r \leq |S|$, is denoted by $S[\ell \dots r]$ (in other
+words $S[\ell \dots r] = S[\ell] \cdot S[\ell + 1] \cdot \mbox{\dots} \cdot S[r-1]$).
+
+A \emph{straight-line program} (SLP) $\slp{S}$ is a sequence of assignments of
+the form: $$\slp{S}_1 = expr_1,\ \slp{S}_2 = expr_2, \dots, \slp{S}_n =
+expr_n,$$ where $\slp{S}_i$ are \emph{rules} and $expr_i$ are expressions of
+the form:
+\begin{itemize}
+\item $expr_i$ is a character of $\Sigma$ (we call such rules \emph{terminal}), or
+\item $expr_i = \slp{S}_\ell\cdot \slp{S}_r \ (\ell, r < i)$ (we call such rules \emph{nonterminal}).
+\end{itemize}
+
+Thus, an SLP is a context-free grammar in Chomsky normal form. Obviously every SLP generates exactly one string over
+$\Sigma^+$. This string is referred to as the \emph{text} generated by the SLP. For a grammar $\slp{S}$ generating a text
+$S$, we define the \emph{parse-tree} of $S$ as the derivation tree of $S$ in $\slp{S}$. We identify terminal symbols with
+their parents in this tree; after this identification every internal node has exactly two children.
+Figure~\,\ref{fibonacci_word_slp} presents the parse-tree of the following SLP $$ \slp{F}_0{\to} b,\ \slp{F}_1{\to} a,\
+\slp{F}_2{\to} \slp{F}_1\cdot\slp{F}_0,\ \slp{F}_3{\to} \slp{F}_2\cdot\slp{F}_1,\ \slp{F}_4{\to}
+\slp{F}_3\cdot\slp{F}_2,\ \ \slp{F}_5{\to} \slp{F}_4\cdot\slp{F}_3,\ \ \slp{F}_6{\to} \slp{F}_5\cdot\slp{F}_4,$$ that
+derives the 6th Fibonacci word $abaababaabaab$.
+\begin{figure}[hb]
+    \begin{center}
+        \begin{picture}(100,175)(120,10)
+            \fibonacciwordslp
+        \end{picture}
+    \end{center}
+    \caption{An SLP that derives $abaababaabaab$}
+    \label{fibonacci_word_slp}
+\end{figure}
+
+In the example the SLP derives a text of length 13 and contains 7 rules. In general case the $n$th Fibonacci word can be derived
+from the following SLP with $n+1$ rules: $$\slp{F}_0\to b,\ \slp{F}_1\to a,\ \slp{F}_2\to \slp{F}_1\cdot\slp{F}_0,\ \slp{F}_3\to
+\slp{F}_2\cdot\slp{F}_1,\ \dots,\ \slp{F}_n\to \slp{F}_{n-1}\cdot\slp{F}_{n-2}.$$ Recall that the length of the $n$th Fibonacci
+word is equal to the $(n+1)$th Fibonacci number, i.e. the nearest integer to  $\frac{\varphi^{n+1}}{\sqrt{5}}$ where
+$\varphi=\frac{1+\sqrt{5}}2$ (the golden ratio). So for some texts its compressed representation using SLPs may be
+exponentially smaller than the intial text.
+
+We adopt the following conventions in the paper: every SLP is denoted by a capital blackboard bold letter, for example,
+$\slp{S}$. Every rule of this SLP (and every internal node in its parse-tree) is denoted by the same letter with
+indices, for example, $\slp{S}_1,\slp{S}_2,\dots$. The \emph{size} of an SLP $\slp{S}$ is the number of its rules and
+is denoted by $|\slp{S}|$. The \emph{height} of a node in a binary tree is defined as follows. The height of a terminal
+node (leaf) is equal to 0 by definition. The height of a nonterminal node is equal to 1 + the maximum of the heights of
+its children. We denote the height of the rule $\slp{S}_i$ by $h(\slp{S}_i)$.
+
+The \emph{concatenation} of SLPs $\slp{S}$ and $\slp{S}'$ is an SLP that derives $S \cdot S'$ and is denoted by
+$\slp{S} \cdot \slp{S}'$. We would like to emphasize that the concatenation of SLPs is not a rigidly defined operation 
+(unlike concatenation of strings) since there are various ways to construct an SLP that derives $S\cdot S'$ 
+from the SLPs $\slp{S}$ and $\slp{S}'$. So a particular way of concatenation of SLPs depends on the context of the problem under consideration.
+
+\sectionnew{SLP construction algorithms}
+
+\subsectionnew{SLPs, factorizations and trees.} The SLP construction problem can be stated as follows:
+
+\noindent \textsc{Problem:} \textbf{SLP construction}
+
+\noindent \textsc{Input:} a text $S$.
+
+\noindent \textsc{Output:} an SLP $\slp{S}$ that derives $S$.
+
+The problem of constructing a minimal size grammar generating a given text is known to be NP-hard \cite{SmallestCFG}. Hence we
+should look for polynomial-time approximation algorithms. One of the key approaches to such algorithms is to construct a
+factorization of a given text and to build some binary search tree using the factorization. If we fix some
+factorization, then at each step an SLP construction algorithm can construct an SLP that derives a particular factor.
+Next the algorithm concatenates the SLP that was built at previous steps with the SLP that derives the particular factor. It
+is obvious that such an algorithm depends on both size of the text and size of the factorization. Hence the SLP construction problem
+can be reformulated in the following way:
+
+\noindent \textsc{Problem:} \textbf{SLP construction using factorization}
+
+\noindent \textsc{Input:} a text $S$ and its LZ-factorization $F_1, F_2, \dots, F_k$.
+
+\noindent \textsc{Output:} an SLP $\slp{S}$ that derives $S$.
+
+Rytter in \cite{SLPConstruction} uses a natural factorization generated by LZ77 compression algorithm as the main
+factorization. This choice ensures a polynomial relation between size of an SLP deriving text $S$ and size of the LZ77
+dictionary for $S$. Using LZ-factorization properties we get the following relation: the SLP constructed for a particular
+factor is contained in the SLP that was built at previous steps. This relation essentially increases construction efficiency. 
+
+\begin{definition}
+The LZ-factorization of a text $S$ is given by a decomposition: $S = F_1 \cdot F_2 \cdot \mbox{\dots} \cdot F_k$, where
+$F_1 = S[0]$ and $F_i$ is the longest prefix of $S\substr{|F_1\cdot \mbox{\dots} \cdot F_{i-1}|}{|S|}$ which occurs as a
+substring in $F_1 \cdot \mbox{\dots} \cdot F_{i-1}$ or $S[|F_1\cdot \mbox{\dots} \cdot F_{i-1}|]$ in case this prefix is
+empty. The number $k$ is \emph{size of factorization}.
+\end{definition}
+
+There is only one condition on the structure of SLPs parse-tree: it is a maximal binary tree. It means that every internal
+node of an SLP has exactly two children (the term is taken from the coding theory: it is clear that a binary prefix code
+is a maximal with respect to inclusion if and only if its binary tree is maximal in the above sense). There exist several types
+of binary trees. Which type is more suitable for the SLP construction problem? The algorithm proposed in
+\cite{SLPConstruction} uses balanced trees, namely AVL-trees.
+
+\begin{definition}
+An \emph{AVL-tree} is a binary tree such that for every non-terminal node the heights of its children
+can differ at most by 1.
+\end{definition}
+
+There is a logarithmic bound on the height of an AVL tree depending on number of its nodes, see~\cite{Knuth}. It is the main
+reason why this type of trees is used in Rytter's algorithm. At the same time the algorithm is nontrivial and
+resource-intensive. As alternative we consider the algorithm that constructs SLPs using Cartesian trees in Section
+3.4.
+
+\begin{definition}
+\emph{Binary search tree} is a binary tree such that each node holds a number named a \emph{key} and the keys have the following
+properties:
+
+\begin{itemize}
+  \item the left subtree of a node contains only nodes with keys less than the node's key.
+  \item the right subtree of a node contains only nodes with keys greater than the node's key.
+  \item both the left and the right subtrees must also be binary search trees.
+\end{itemize}
+  
+A \emph{heap} is a binary tree in which each node holds a number named a \emph{priority} and for every node its
+priority is greater than priorities of its children.
+
+A \emph{Cartesian tree} is a binary tree in which each node holds a pair of numbers (key, priority). So a Cartesian tree is a binary search
+tree with respect to keys and a heap with respect to priorities.
+\end{definition}
+
+There is a probabilistic logarithmic estimation on the height of a Cartesian tree depending on the number of its nodes
+(\!\!\cite{Seidel&Aragon:1996}, see Section \,3.4). At the same time a Cartesian tree construction algorithm spends
+essentially less time on balancing of nodes. It is interesting to compare how the choice of maintaining the underlying data structure
+affects properties of the SLP returned by the algorithm.
+
+\subsection{Rytter's algorithm and its bottleneck} Rytter~\cite{SLPConstruction} proved the following theorem:
+
+\begin{thm}
+\label{thm:rytter}
+Given a string $S$ of length $n$ and its LZ-factorization of length $k$, one can construct an SLP for $S$ of size $O(k
+\log n)$ in time $O(k \log n)$.
+\end{thm}
+
+The proof of Theorem~\ref{thm:rytter} contains an algorithm of SLP construction. We remind here some key ideas of the
+algorithm as they are important for the further discussion. 
+
+An \emph{AVL-grammar} is an SLP whose parse tree is an AVL tree. The key operation of the algorithm is concatenation of
+AVL-grammars. The following lemma provides an upper bound for the operation:
+
+\begin{lem}
+\label{avl-lemma}
+Assume $\slp{S}_1, \slp{S}_2$ are two nonterminals of AVL-grammars. Then we can construct in $O(|h(\slp{S}_1)
+- h(\slp{S}_2)|)$ time an AVL-grammar $\slp{S} = \slp{S}_1 \cdot \slp{S}_2$ that derives the text $S_1\cdot
+S_2$ by adding only $O(|h(\slp{S}_1) - h(\slp{S}_2)|)$ nonterminals.
+\end{lem}
+
+\noindent \textsc{Problem:} \textbf{SLP construction using factorization}
+
+\noindent \textsc{Input:} a text $S$ and its LZ-factorization $F_1, F_2, \dots, F_k$.
+
+\noindent \textsc{Output:} an SLP $\slp{S}$ that derives $S$.
+
+\noindent \textsc{Algorithm:} The algorithm constructs an SLP by induction on $k$.
+
+\textbf{Base:} Initially $\slp{S}$ is equal to the terminal rule that derives $S[0]$.
+
+\textbf{Main loop:} Let $i > 1$ be an integer and the SLP $\slp{S}$ that derives $F_1\cdot F_2 \cdot \mbox{\dots} \cdot
+F_i$ has already been constructed. Since the LZ-factorization of $S$ is fixed, an occurrence of $F_{i+1}$ in $F_1\cdot
+F_2 \cdot \mbox{\dots} \cdot F_i$ is known. The algorithm takes a subgrammar of $\slp{S}$ that derives $F_{i+1}$ and
+obtains rules $\slp{S}_1, \dots, \slp{S}_\ell$ such that $F_{i+1} = S_1 \cdot S_2 \cdots S_\ell$. Since $\slp{S}$ is
+balanced, we have $\ell = O(\log |S|)$. Using Lemma~\ref{avl-lemma} the algorithm concatenates the rules in some specific order
+(see \cite{SLPConstruction} for details) and sets the next value of $\slp{S}$ to be equal to the result of
+concatenating the previous value of $\slp{S}$ with $\slp{S}_1 \cdot \mbox{\dots} \cdot \slp{S}_\ell$.
+
+It is well-known that maintaining balance of an AVL tree is quite a complex operation. After adding a new node
+that breaks balance of an AVL-tree the modified tree should be rebalanced using local transformation named
+\emph{rotation}. There are two types of rotations. Both are presented in Figure\,\ref{avl_rotations}. Each rotation may
+generate at most three new nodes (nodes marked by dashes in Figure\,\ref{avl_rotations}). Also every rotation may
+generate at most three unused rules.
+
+\begin{figure}[th]
+    \begin{center}
+        \begin{picture}(100,175)(120,10)
+            \AVLrotations
+        \end{picture}
+    \end{center}
+    \caption{Types of rotations of an AVL-tree}
+    \label{avl_rotations}
+\end{figure}
+
+It follows from Lemma~\ref{avl-lemma} that concatenation of two AVL-grammars with drastically different heights generates a
+lot of new nodes. Adding a big number of new nodes to an AVL-grammar generates many rotations. In the main loop of
+Rytter's algorithm height of current AVL-grammar $\slp{S}$ grows permanently. In the same time at each iteration
+$\slp{S}$ concatenates with AVL-grammars of relatively small height. The following example shows that the total number of
+rotations in Rytter's algorithm may be essentially greater than optimal.
+
+\begin{example}
+Let $S = a^{2^n}bc^{2^n}$ where $n$ is a fixed integer. Consider the LZ-factorization of $S$:
+$$S=a \cdot a \cdot a^2 \cdot a^4 \cdot \mbox{\dots} \cdot a^{2^{n-1} - 1} \cdot b \cdot c \cdot c \cdot c^2 \cdot c^4
+\cdot \mbox{\dots} \cdot c^{2^{n-1} - 1}.$$ Let us denote the factors by $F_1,F_2,\dots,F_{2n+3}$ in order of their
+occurrence in the LZ-factorization. Let $\slp{F}_1,\slp{F}_2,\dots,\slp{F}_{2n+3}$ be SLPs that correspond to the
+factors.
+
+Let us estimate the number of rotations that may be generated in the course of the sequence of concatenations
+$(\dots((\slp{F}_1 \cdot \slp{F}_2)\cdot \slp{F}_3)\dots) \cdot \slp{F}_{2n+3}$. No rotations are needed to concatenate 
+$\tuple{\slp{F}}{1}{2}{n+1}$ since at each step we concatenate full binary trees of equal height. So the parse tree of
+$\concat{\slp{F}}{1}{2}{n+1}$ is a full binary tree of height $n$ and the next concatenation
+$(\concat{\slp{F}}{1}{2}{n+1})\cdot\slp{F}_{n+1}$ generates the AVL-tree of height $n+1$. Obviously each following
+concatenation breaks balance of the current AVL-tree and generates at least one rotation. So total concatenation generates
+at least $n+1$ and at most $\Theta(n^2)$ rotations (the upper bound follows from the bound on the number of new nodes from
+Lemma~\ref{avl-lemma}).
+\end{example}
+
+Notice that if the algorithm could choose the optimal order of concatenations namely $$((\dots((\slp{F}_1 \cdot \slp{F}_2)
+\cdot\slp{F}_3) \dots ) \cdot \slp{F}_{n+1}) \cdot ((\dots((\slp{F}_{n+2} \cdot \slp{F}_{n+3}) \cdot \slp{F}_{n+4})
+\dots) \cdot\slp{F}_{2n+3}),$$ then the algorithm would generate no rotations at all.
+
+One of possible directions for an optimization of Rytter's algorithm is to determine ``good'' concatenation order.
+Another direction for an optimization consists of minimizing the number of queries to an AVL-grammar. Minimizing of the
+number of queries to AVL-grammars becomes important when the size of input text becomes huge and we cannot store an
+AVL-tree in the memory. Formally it means that costs of a query to an AVL-tree are greater than costs of calculations
+in memory. Our next example shows that several factors can be processed together if they occur in a single SLP.
+
+\begin{example}
+Let $n > 0$ be an integer and $S = b\cdot a^{2^{n-1}}\cdot b \cdot a^{2^{n-2}} \cdots b \cdot a$. The length of $S$
+is equal to $2^n + n - 2$. Consider the LZ-factorization of $S$: $$ b \cdot a \cdot a \cdot a^2 \cdot a^4 \cdots
+a^{2^{n-2} - 1} \cdot ba^{2^{n-2}} \cdot ba^{2^{n-3}} \cdots ba.$$ Let $\slp{S}_1$ be an SLP that derives $b \cdot
+a^{2^{n-1}}$. It is obvious that all other factors starting with $b \cdot a^{2^{n-2}}$ occur in $S_1$. Therefore it is
+possible to process them together. So we can construct SLPs $\slp{S}_2$ that derives $b \cdot a^{2^{n-2}}$,
+$\slp{S}_3$ that derives $b \cdot a^{2^{n-3}}$, etc. Finally we can concatenate the SLPs in the following
+order: $\slp{S}_1\cdot(\dots(\slp{S}_{n-3}\cdot(\slp{S}_{n-2} \cdot \slp{S}_{n-1})))$.
+\end{example}
+
+\subsection{Optimization of Rytter's algorithm}
+
+The main ideas of our improved algorithm are to process several factors together and to concatenate each group of
+factors choosing an optimal order. The intuition behind the algorithm is very simple: if the algorithm has already 
+constructed a huge SLP, then most factors occur in the text generated by this SLP and may be processed together.
+
+\medskip
+
+\header{Modified Rytter's algorithm} Using input text $S$ and its LZ-factorization $F_1, F_2, \dots, F_k$ the algorithm
+constructs an SLP $\slp{S}$ that derives $S$.
+
+\smallskip
+
+\textbf{Base:} Initially $\slp{S}$ is equal to the terminal rule that derives $S[0]$.
+
+\smallskip
+
+\textbf{Main loop:} Let $\slp{S}$ be an SLP that derives the text $\concat{F}{1}{2}{i}$ where $0 < i < k$. Let
+$\ell\in\{1,\dots,k-i\}$ be a maximal integer such that each factor from the following set $F_{i+1}$, \dots,
+$F_{i+\ell}$ occurs in $\concat{F}{1}{2}{i}$. Since LZ-factorization is fixed, the value of $\ell$ can be obtained by a
+linear search on factors. The SLPs $\tuple{\slp{F}}{i+1}{i+2}{i+\ell}$ that derive the texts $\tuple{F}{i+1}{i+2}{i+\ell}$
+can be computed by an application of the subgrammar cutting algorithm (analogously to \cite{SLPConstruction}).
+
+Next the algorithm concatenates $\slp{F}_{i+1}, \dots, \slp{F}_{i+k}$. It optimizes concatenation order using dynamic
+programming. Let $\varphi(p, q)$ be the function that is calculated by the following recurrent formula:
+$$\varphi(p, q) = \begin{cases}
+0 &\text{if } p=q, \\
+\min_{r = p}^q(\varphi(p, r) + \varphi(r+1, q) +&\\
+|\log(|f_{i+p}|+\dots+|f_{i+r}|) -& \\
+\log(|f_{i+r+1}|+\dots+|f_{i+q}|)|) &\mbox{otherwise}.
+\end{cases}$$
+The value of $\varphi(p,q)$ is proportional to the upper bound of the number of rotations of a grammar tree that are performed
+during the process of concatenation of $\slp{F}_p, \slp{F}_{p+1}, \dots, \slp{F}_q$. The upper bound follows from
+Lemma~\ref{avl-lemma} and from estimation of height of an AVL-tree from \cite{Knuth}. Typically the upper bound is
+overrated. So it is more correct to consider the function $\varphi(p,q)$ as a heuristic using which the algorithm obtains
+``good'' groups of factors. 
+
+The algorithm fills out an $\ell\times\ell$-table with values of $\varphi(p,q)$, $1\le p,q\le\ell$. In case when $p<q$ it
+additionally stores an integer $r\in\{p,p+1,\dots,q-1\}$ on which minimum of the following expression is reached:
+$$\varphi(p,r)+\varphi(r+1,q)+\bigl|\log(|F_{i+p}|+\mbox{\dots}+|F_{i+r}|)-\log(|F_{i+r+1}|+\mbox{\dots}+|F_{i+q}|)\bigr|.$$
+The order of filling out the table is the following: all cells $(p,q)$ such that $p\ge q$ are set to be equal to
+0, next the algorithm fills out cells such that $q - p = 1$, next it fills out cells such that $q - p = 2$, etc.
+Thus, the algorithm does not recompute recursively the values of $\varphi(p, r)$ and $\varphi(r+1, q)$ since they
+already exist in the table. So every single value of $\varphi(p, q)$ can be calculated using $O(k)$ time.
+Figure\,\ref{computing_fi_value} presents the pseudo-code of the corresponding procedure. Thus, the algorithm fills out
+the table using $O(\ell^3)$ time and $O(\ell^2)$ space.
+\begin{figure}[ht]
+    \begin{center}
+        \begin{picture}(-40,105)(120,20)
+            \ComputingFiValue
+        \end{picture}
+    \end{center}
+    \caption{Pseudo code that computes value of $\varphi(p,q)$}
+    \label{computing_fi_value}
+\end{figure}
+
+Finally the algorithm reads the value of $r$ from the cell $(1,\ell)$ and determines the order of concatenations for
+$\slp{F}_{i+1}, \dots, \slp{F}_{i+k}$ using $O(\ell)$ time. Using this order, the algorithm constructs an SLP
+$\slp{F}$ that derives $\concat{F}{i+1}{i+2}{i+l}$. Finally the algorithm concatenates $\slp{S}$ and $\slp{F}$ and sets
+$\slp{S}$ to be equal to $\slp{S} \cdot \slp{F}$.
+
+\begin{thm}
+Let $f_1, f_2, \cdots, f_k$ be the LZ-factorization of a text $w$. The above algorithm constructs an SLP for $w$ of
+size $O(k\log n)$.
+\end{thm}
+\begin{proof1} mainly repeats the correspondent part of the proof of Theorem~\ref{thm:rytter} but we reproduce it for
+the sake of completeness.
+
+Let us prove the theorem by induction on the number of factors. The base case is clear.
+
+Suppose that an SLP $\slp{S}$ that derives text $\concat{F}{1}{2}{i}$, where $0 < i < k$, is already built and has size $O(i \log
+|\concat{F}{1}{2}{i}|)=O(i \log n)$. Let $F_{i+1}$, \dots, $F_{i+\ell}$ be next factors that occur in
+$\concat{F}{1}{2}{i}$. Let us consider the subgrammars $\tuple{\slp{F}}{i+1}{i+2}{i+\ell}$ of $\slp{S}$ that derive texts
+$\tuple{F}{i+1}{i+2}{i+\ell}$ correspondingly. The height of $\slp{F}_{i+j}$ is not greater than $1.4404\log|F_{i+j}|$
+\cite{Knuth}. Hence by Lemma~\ref{avl-lemma} the number of new rules that the algorithm adds at each step of constructing
+SLP $\slp{F}$ that derives $\concat{F}{i+1}{i+2}{i+\ell}$ is at most $O\left(\log |F_{i+1}| + \log |F_{i+2}| + \dots +
+\log |F_{i+\ell}|\right)=O(\log n)$. Each rotation of an AVL-grammar generates at most three new rules. The total number of
+rules from the SLP $\slp{F}$ that are absent in the SLP $\slp{S}$ is at most $O(\ell\log n)$. Analogously, the number of new rules
+that the algorithm adds during concatenation of $\slp{S}$ and $\slp{F}$ is equal to $O(\log n)$. Hence the size of SLP
+$\slp{S}\cdot\slp{F}$ that derives the text $\concat{F}{1}{2}{i+\ell}$ is equal to $O((i+\ell)\log n)$.
+\end{proof1}
+
+The time complexity of modified Rytter's algorithm can not be less than the complexity of the original algorithm
+from~\cite{SLPConstruction} since the last algorithm is a special case of the present modification when all groups
+are of size 1. On the one hand the new algorithm generates less rotations, but on the other hand the
+new algorithm spends some extra time for calculating order of concatenation. The cumulative influence of both factors on
+execution time is unclear. In the next section we propose a practical comparison of discussed algorithms.
+
+\subsectionnew{SLP construction using Cartesian trees}
+
+As we already noticed, SLP construction algorithms that use AVL-trees spend a lot of time on balance. We think that following idea
+maybe useful for solving SLP construction problem: to change data structure that represents
+SLPs from an AVL-tree to another one that spends less time on balance. In this section we present an algorithm
+that construct SLPs using Cartesian trees.
+
+There is a probabilistic logarithmic estimation of the height of a Cartesian tree that depends on the total number of nodes (see
+\cite{Seidel&Aragon:1996}). Namely if priorities of nodes were chosen randomly, independently and has the same
+distribution, then the expected height of a Cartesian tree with $n$ nodes is $O(\log n)$. Also for every fixed constant $c$ where $c>1$
+the probability of the event that height of a Cartesian tree with $n$ nodes is greater than $2c\ln n$ is bounded by 
+$n\left(\frac{n}{e}\right)^{-c\ln(c/e)}$.
+
+We need the two main operations to construct an SLP from an LZ-factorization: the operation of cutting a subtree by
+specified positions and the operation of concatenation of two trees. For a Cartesian tree it is easy to implement the
+following operations: \emph{split} is the operation of partition of a tree into two subtrees by a specified position and
+\emph{merge} is the operation of merging two trees. But a standard implementation of \emph{merge} operation requires
+the following condition: every key of the first tree should be less than any key of the second tree. Hence it is
+necessary to regenerate keys of a tree that was obtained after applying \emph{split} operation. This situation appears
+in the main loop of the SLP construction algorithm. After the algorithm has constructed a tree $T$ that derives a prefix of 
+the input text, the algorithm cuts a subtree $T'$ of $T$ that derives a next factor and applies \emph{merge} operation to $T$ and $T'$. 
+Therefore the algorithm should completely regenerate keys of $T'$ before merging $T$ and $T'$. It is profitable to avoid explicit storing of
+keys for the sake of efficiency. Next we explain why it is possible.\footnote{Unfortunately, the elegant idea of
+Cartesian tree without explicit storing of keys has not yet been published in academic literature. A quite complete account of this idea is
+presented at the Internet publication~\cite{Pol10} in Russian. We knew for a certainty that for the first time this idea was
+applied at an ACM programming contest in 2002 by N.\,V.\,Dourov and A.\,S.\,Lopatin (members of the student team of St
+Petersburg State University).}
+
+Let $T$ be an arbitrary Cartesian tree and the information about its keys has been lost. One can recover the linear order
+relation of the keys using only the tree structure. The recovering algorithm recursively traverses the tree in the
+following order: left subtree, root, right subtree. The order number of the current node is greater than number of
+nodes of a subtree that the algorithm bypasses before visit the current node. Therefore we are able to avoid explicit 
+storing of the keys. 
+
+\begin{definition}
+A \emph{Cartesian tree with implicit keys} is a Cartesian tree that does not store information about values of keys.
+\end{definition}
+
+Next in the paper we suppose that a key of a node of a Cartesian tree $T$ with implicit keys is equal to the order number of
+the key in the linear order of all keys of $T$. We denote a subtree of $T$ with the root at a node $T_i$ by
+$\overline{T_i}$ and the total number of nodes of the subtree by $\cnt(T_i)$. If both $T_\ell$ and $T_r$ are left and right children of $T_i$
+correspondingly then we use the following short notation for this fact: $T_i = (T_\ell, T_r)$. Also it is possible that
+nodes $T_\ell$ and/or $T_r$ may be empty. For example if $T_i$ is a leaf then both $T_\ell$ and $T_r$ are empty. 
+
+Let us introduce implementation of \emph{split} and \emph{merge} operations for Cartesian trees with implicit keys. 
+
+\subparagraph*{\emph{Split} operation.} The input has a Cartesian tree $T$ with implicit keys and a positive integer 
+$k$ where $k \le |T|+1$. The output is a pair of Cartesian trees $L$ and $R$ with implicit keys such
+that $L$ holds all nodes of $T$ with keys less than $k$ and $R$ holds all other nodes of $T$. By definition
+the operation produces two empty trees on the following input: (empty tree, 1).
+
+The algorithm starts from the root $T_0$ of $T$ and works recursively. There are following cases:
+
+\begin{itemize}
+  \item[(S1)] If $k\le\cnt(T_\ell) + 1$ then $T_0$ occurs at $R$ and the algorithm splits subtree
+  $\overline{T}_\ell$. Let \emph{split} operation returns two trees $L'$ and $R'$  on input $(\overline{T}_\ell,k)$.
+  So the algorithm returns $L = L'$ and $R =(R',\overline{T}_r)$.
+  \item[(S2)] If $k >\cnt(T_\ell) + 1$ then $T_0$ occurs at $L$ and the algorithm splits
+  subtree $T_r$. Let \emph{split} operation returns two trees $L'$ and $R'$ on input $(\overline{T}_r,k
+  -\cnt(T_\ell)-1)$. So the algorithm returns $L = (\overline{T}_\ell, L')$ and $R = R'$.
+\end{itemize}
+
+We would like to emphasize that the algorithm stores at each node $T_i$ a number $\cnt(T_i)$. Since at every step the
+algorithm either terminates or recursively calls \emph{split} operation with subtree of less height, time complexity 
+of the algorithm is equal to $O(\log|T|)$.
+
+Since a parse tree of an SLP is maximal binary tree then we should modify \emph{split} operation to guarantee that result
+trees are maximal. To achieve this aim it is enough to delete all nodes that have exactly single child from both output trees. 
+Formally if a node $T_j$ has a single child $T_k$ then we delete $T_j$ from a tree.
+If $T_j$ is the root then we set up $T_k$ as the root after deleting $T_j$. Priorities of nodes does not change. 
+
+Obviously if an input tree $T$ is maximal then there is at most one node with a single child at each step of the algorithm
+in every output tree $L$ or $R$. So time complexity of maximizing both trees $L$ and $R$ is equal to $O(\log|T|)$.
+Indeed practical implementation of the maximization procedure does not require independent pass through the output since it may be
+integrated into the algorithm. Next in the paper by \emph{split} operation we mean its modified version that returns
+maximal trees.
+
+\subparagraph*{\emph{Merge} operation.} The input has two Cartesian tress $T'$ and $T''$ with implicit keys. 
+The output is a Cartesian tree $T$ with implicit keys that contains all nodes from both
+$T'$ and $T''$. By definition if $T'$ is empty, then the operation produces $T''$ and vise-versa if $T''$ is empty then
+the operation produces $T'$.
+
+The algorithm starts from roots $T'_0$ and $T''_0$ of the trees $T'$ and $T''$ respectively and works recursively. 
+Let $T'_0$ is equal to $(T'_{\ell}, T'_{r})$ and $T''_0$ is equal to $(T''_{k}, T''_{q})$. Since priorities of all nodes 
+were chosen randomly and independently we suppose that they are pairwise different. There are two cases:
+
+\begin{itemize}
+  \item[(M1)] If the priority of the node $T'_0$ is greater than priority of the node $T''_0$, then the algorithm sets $T'_0$ as the
+  root of $T$. The left subtree is equal to $\overline{T}'_{\ell}$ and the right subtree is equal to the tree that
+  \emph{merge} operation produces on the input $(\overline{T}'_{r},T'')$.
+  \item[(M2)] If priority of the node $T'_0$ is less than priority of the node $T''_0$, then the algorithm sets $T_0''$ as the root
+  of $T$. The right subtree is equal to $\overline{T}''_{q}$ and the left subtree is equal to a tree that \emph{merge} operation 
+  produces on the input $(T',\overline{T}''_k)$.
+\end{itemize}
+
+Since at each step of recursion the algorithm walks down in either a left subtree or a right subtree then the
+expectation of the execution time of the algorithm is $O(\log|T'| + \log |T''|)$.
+
+As in the case of \emph{split} operation we should modify \emph{merge} operation to be able apply it during SLP
+construction. There are two problems. The first one is that we should guarantee that a result tree is a maximal binary
+tree. The second one is that we should guarantee that an array of leaves of $T$ is equal to concatenation of an array of leaves of
+$T'$ and an array of leaves of $T''$. Both problems can be solved using the following simple modification of the
+algorithm. 
+
+Let $T'_i$ be the rightmost leaf of $T'$ and $T''_j$ be the leftmost leaf of $T''$. We would like to note that extreme
+leaves defined unambiguously in Cartesian trees with implicit keys. Let $y'$ and $y''$ be priorities of $T'_i$ and
+$T''_j$ correspondingly. Let $y_*$ be equal to $\min(y',y'')$ and let $y^*$ be equal to $\max(y',y'')$. We set
+priorities of $T'_i$ and $T''_j$ to be equal to $y_*$. The algorithm eventually reaches the following configuration applying
+rules (M1) and (M2): the current roots $T'_0$ and $T''_0$ are equal to leaves $T'_i$ and $T''_j$ correspondingly. At
+this moment the algorithm adds a new node $U=(T'_i,T''_j)$ with priority $y^*$ and completes the construction of the tree $T$ by adding
+the three-element subtree
+\begin{picture}(54,18)(-10,2)\put(1,-1){\line(1,1){14}}\put(15,13){\line(1,-1){14}}\put(17,14){$U$}\put(-10,0){$T'_i$}\put(31,0){$T''_j$}\end{picture}
+instead of the two-element subtree
+(\begin{picture}(36,20)(-10,2)\put(1,-1){\line(1,1){14}}\put(17,14){$T''_j$}\put(-10,0){$T'_i$}\end{picture} or
+\begin{picture}(32,20)(-10,2)\put(-10,13){\line(1,-1){14}}\put(-7,14){$T'_i$}\put(7,0){$T''_j$}\end{picture}). Clearly
+the modified algorithm spends the same time $O(\log|T'| + \log |T''|)$ as the standard algorithm. It is easy to check
+that if the trees $T'$ and $T''$ are maximal then the output tree $T$ is maximal too. Also $T$
+is a concatenation of $T'$ and $T''$ in the sense of SLPs, see Section 2. Next in the paper by \emph{merge} operation we mean
+its modified version that returns a maximal tree.
+
+We say that an SLP is a \emph{Cartesian SLP} if its parse tree is a Cartesian tree with implicit keys. Next we introduce
+a Cartesian SLP construction algorithm.
+
+\medskip
+
+\header{Cartesian SLP construction algorithm}
+
+\header{Input:} a text $S$ and its LZ-factorization $F_1$, $F_2$, \dots, $F_k$.
+
+\header{Output:} a Cartesian SLP that derives $S$.
+
+\smallskip
+
+\noindent\textbf{Base:} Initially $S$ is equal to the terminal rule that derives $F_1 = S[0]$.
+
+\smallskip
+
+\noindent\textbf{Main loop:} Let a Cartesian SLP $\slp{S}$ that derives the text $\concat{F}{1}{2}{i}$ have already been
+constructed for a fixed integer $i$ where $i > 1$. A factor $F_{i+1}$ occurs in the text $S=\concat{F}{1}{2}{i}$ by the definition of
+LZ-factorization. Let $\ell$ and $r$ be positions in $S$ such that $F_{i+1}=S\substr{\ell}{r}$. Let
+$\ell^*$ and $r^*$ be priorities of the leaves $S[\ell]$ and $S[r]$ in $\slp{S}$ correspondingly. Since the algorithm
+stores $\cnt(\slp{S}_i)$ in each node $\slp{S}_i$, the values of $\ell^*$ and $r^*$ can be easily computed
+from $\ell$ and $r$.
+
+The algorithm invokes \emph{split} operation with $(\slp{S}, \ell^*)$. Let $R$ be the rightmost tree from the output. 
+Next the algorithm invokes \emph{split} operation with $(R,r^*-\ell^*)$. The leftmost tree from the output is a Cartesian SLP 
+$\slp{F}$ that derives $F_{i+1}$. Finally the algorithm invokes \emph{merge} operation with $\slp{S}$ and $\slp{F}$ and the output is 
+a Cartesian SLP that derives $\concat{F}{1}{2}{i+1}$.
+
+\begin{thm}
+\label{thm:cartesian} The expectation of the execution time of the presented algorithm on a text $S$ of length $n$
+and its LZ-factorization of size $k$ is equal to $O(k\log n)$. The expectation of the size of an SLP returned
+by the algorithm is equal to $O(k\log n)$.
+\end{thm}
+
+\begin{proof}
+At each step the algorithm applies at most two \emph{split} operations and at most one \emph{merge} operation. It follows that 
+the expectation of the execution time of every step of the algorithm is equal to $O(\log n)$. Since the algorithm consists of
+exactly $k$ steps, then the expectation of the execution time of the algorithm is equal to $O(k \log n)$.
+
+At every step of each operation (\emph{split} or \emph{merge}) the algorithm generates one new nonterminal rule. Since the
+time complexity of each operation is equal $O(\log n)$ and the operations are invoked $3k$ times in total, the expectation
+of size of the output SLP is equal to $O(k\log n)$.
+\end{proof}
+
+\sectionnew{Practical results}
+
+\subsectionnew{Setup of experiments.}
+Obviously, the nature of input strings highly affects compression time and compression ratio. In this paper we consider
+three types of strings:
+
+\begin{itemize}
+  \item DNA sequences (downloaded from DNA Data Bank of Japan, \url{http://www.ddbj.nig.ac.jp/});
+  \item Fibonacci strings;
+  \item random strings over four letters alphabet.
+\end{itemize}
+
+These types of strings have been chosen for the following reasons. Fibonacci strings are known to be one of the best inputs to the 
+SLP Construction problem. So we can estimate potential of SLPs as a compression model. Random strings are considered to
+be incompressible and, potentially, they are the worst input for the SLP Construction problem. DNA sequences form a
+class of well-compressed strings widely used in practice.
+
+We compare the SLP construction algorithms presented in Section 3 with classic compression algorithms from the Lempel-Ziv family. Our test
+suite contains two implementations of the Lempel-Ziv algorithm \cite{LZ77}: the algorithm with small (32Kb) searching window and
+the algorithm with infinite searching window. Also the test suite contains an implementation of the Lempel-Ziv-Welch algorithm \cite{LZW}. All source
+code is available under the following link: \url{http://code.google.com/p/overclocking/}. All algorithms run in the same
+environment on PC with the following characteristics: Intel Core i7-2600, 3.4GHz, 8Gb operational memory, OS Windows 7
+x64.
+
+\subsectionnew{Experimental results.}
+As expected, all SLP construction algorithms work infinitely fast on Fibonacci strings and construct extremely compact
+representations. For example, on the 35-th Fibonacci word of size 36.9Mb the algorithms work within 1ms and build SLPs
+of size 100. 
+
+Figures \,\ref{dna_rotations}--\ref{random_compression_ratio} present main experimental results on random strings and DNA
+sequences. For convenience, we accept the following common conventions for tested algorithms:
+
+\begin{center}
+    \begin{picture}(100,70)(100,10)
+        \algorithmNotations
+    \end{picture}
+\end{center}
+
+We estimate performance of a compression algorithm in terms of compression ratio and execution time. We calculate
+compression ratio as the ratio between the size of a compressed presentation and the size of an input text. We measure
+compression ratio in percents. For example, the formula for SLP compression ratio looks like $\frac{|\slp{S}|}{|S|}
+\cdot 100$. We additionally calculate number of rotations for SLP construction algorithms that use AVL trees.
+
+\begin{figure}[th]
+    \begin{center}
+        \begin{picture}(100,250)(95,10)
+            \DNARotations
+        \end{picture}
+        \begin{picture}(100,170)(0,10)
+            \RandomRotations
+        \end{picture}
+    \end{center}
+    \caption{AVL rotations statistics on DNA sequences (from the left) and on random strings (on the right)}
+    \label{dna_rotations}
+\end{figure}
+
+Figure \,\ref{dna_rotations} shows how the proposed modification of Rytter's algorithm affects the
+rotations number. Obviously the modified algorithm uses essentially less rotations on texts of length more than 10Mb.
+Figure \,\ref{dna_rotations} shows that the proposed heuristic is efficient. It is very interesting that the number of rotations
+regularly depends on size of the input text and execution time weakly depends on the nature of the input text for all
+algorithms. We have no theoretical explanation of these observations.
+
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(100,230)(150,10)
+            \DNATimeStats
+        \end{picture}
+    \end{center}
+    \caption{SLP construction time on DNA sequences when an SLP stores in operational memory (from the left) and in
+    external file (on the right)}
+    \label{dna_time_stats}
+    \begin{center}
+        \begin{picture}(100,230)(160,10)
+            \RandomTimeStats
+        \end{picture}
+    \end{center}
+    \caption{SLP construction time on random strings when n SLP stores in operational memory (from the left) and in
+    external file (on the right)}
+    \label{random_time_stats}
+\end{figure}
+
+As discussed at Subsection 3.3 optimization of the number of rotations does not guarantee optimization of speed of SLP
+construction since the modified algorithm spends additional time on calculation of the optimal order of concatenation. We
+compare speed of all SLP construction algorithms using the two following tests. In the first one, the algorithms have
+stored all SLPs being constructed in operational memory, while in the second one, the SLPs have been stored in an
+external file so that every rotation of an AVL-tree forces I/O operations with the file. Figures 
+\,\ref{dna_time_stats} and~\ref{random_time_stats} present results of both tests on DNA sequences and random strings
+correspondingly. From experimental results it follows that the modified algorithm from Subsection 3.3 works several times faster
+than Rytter's algorithm. The modified algorithm works two times faster on random strings and three times faster on DNA
+sequences if an SLP is stored in operational memory. Also it works five time faster on DNA sequences and three times
+faster on random strings if an SLP is stored in a file system. The algorithm that use Cartesian trees works faster
+than Rytter's algorithm but slower than the modified algorithm. The reason for this is that heights of constructed
+Cartesian trees are essentially larger than heights of correspondent AVL-trees. The experimental results show that the
+average height of an AVL-tree is equal to 21.8 and the average height of a Cartesian tree is equal to 47.8. So Cartesian SLP 
+construction algorithm processes more rules than algorithms that use AVL-trees during concatenation.
+This compensates the gain of simplicity of balance supporting in Cartesian trees.
+
+Figure\,\ref{random_compression_ratio} presents experimental results of compression ratio achieved by SLP
+construction algorithms and by the classic compression algorithms from the Lempel-Ziv family. From the figure it follows that the algorithms that
+use AVL-trees achieve similar compression ratio that is twice less on average than compression ratio achieved by LZW.
+It is interesting that ratio between compression ratios achieved by algorithms that use AVL-trees and compression ratio
+achieved by LZW does not depend on time, type and length of input text. Compression ratio of the algorithm that uses
+Cartesian trees is essentially worse than compression ratio of other algorithms. In this case we also observe that
+ratio between compression ratios weakly depends on type and length of input text.
+
+\begin{figure}[p]
+    \begin{center}
+        \begin{picture}(100,250)(100,-50)
+            \resizebox{10cm}{11cm}{
+                \CompressionRatioOnDNAs
+            }
+        \end{picture}
+    \end{center}
+    \begin{center}
+        \begin{picture}(100,250)(100,15)
+            \resizebox{10cm}{11cm}{
+                \CompressionRatioOnRandoms
+            }
+        \end{picture}
+    \end{center}
+    \caption{Compression ratio achieved on DNA sequences (at the top) and on random strings (at the bottom)}
+    \label{random_compression_ratio}
+\end{figure}
+
+\sectionnew{Conclusion}
+
+Our experimental results shows that both Rytter's algorithm and the modified algorithm achieve the same compression ratio. But
+time of SLP construction of the second algorithm is essentially smaller than analogous time of the first one. Since using of
+a file system is inevitable with growing of the input, it is important to notice that the modified algorithm is more
+stable to growing of input than Rytter's algorithm.
+
+In the paper we present Cartesian SLP construction algorithm. This algorithm is close to another
+discussed SLP construction algorithms by execution time but essentially yield them by achieved compression ratio and by
+height of an output tree. This circumstances is important for searching algorithms that works directly with compressed
+representations. So our aim to improve performance of SLP construction using efficient data structure was not achieved.
+Now we think that this aim is hard to reach. It appears that searching of new heuristics on AVL-trees that allow one to
+construct more compact SLPs is a more productive idea.
+
+All tested SLP construction algorithms lose to the classic compression algorithms from the Lempel-Ziv family by both achieved
+compression ratio and execution time. SLP construction algorithms are interesting (at least from theoretical point
+of view) since they provide a well structured data representation that allows to solve some classic searching problems
+without prior unpacking. However the question on what volumes of input data SLP searching algorithms will be more
+efficient than classic string searching algorithms is still open. We think that is one of the main research directions
+in this area.
+
+\section*{Acknowledgment}
+
+The authors would like to thank professor Mikhail V. Volkov for his critical notes and absolute supporting of
+their activity. The authors would like to thank anonymous referee for his notes and improvements of the initial text of
+the paper.
+
+\small
+
+\begin{thebibliography}{99}
+\bibitem{RunLengthEncoding}
+\textsl{A.\,Apostolico, G.\,M.\,Landau, S.\,Skiena}, Matching for Run-Length Encoded Strings, J. Complexity, 15 (1999),
+4--16.
+
+\bibitem{BKh11}
+\textsl{I.\,Burmistrov, L.\,Khvorost}, Straight-line programs: a practical test, Proc. Int. Conf. Data Compression, Commun., Process., CCP
+(2011), 76--81.
+
+\bibitem{SmallestCFG}
+\textsl{M.\,Charikar, E.\,Lehman,  D.\,Liu, R.\,Panigrahy, M.\,Prabhakaran, A.\,Sahai, A.\,Shelat}, The smallest grammar problem, IEEE
+Trans. Information Theory, 51 (2005), 2554--2576.
+
+\bibitem{collages}
+\textsl{T.\,Kida, T.\,Matsumoto, Y.\,Shibata, M.\,Takeda, A.\,Shinohara, S.\,Arikawa}, Collage system: a unifying
+framework for compressed pattern matching, Theor. Comput. Sci., 298 (2003), 253--272.
+
+\bibitem{Knuth}
+\textsl{D.\,Knuth}, The Art of Computer Programming, vol. 3. Sorting and Searching, Second Edition: Addison-Wesley,
+1998.
+
+\bibitem{PM_and_HD}
+\textsl{Y.\,Lifshits}, Processing compressed texts: A tractability border, Lect. Notes Comput. Sci., 4580 (2007), 228--240.
+
+\bibitem{LCSubstring}
+\textsl{W.\,Matsubara, S.\,Inenaga, A.\,Ishino, A.\,Shinohara, T.\,Nakamura, K.\,Hashimoto}, Computing longest common
+substring and all palindromes from compressed strings, Lect. Notes Comput. Sci., 4910 (2008), 364--375.
+
+\bibitem{Pol10}
+\textsl{A.\,Polozov}, Cartesian Tree: Part 3. Cartesian tree with implicit keys, blog post,
+\url{http://habrahabr.ru/blogs/algorithm/102364/}.
+
+\bibitem{SLPConstruction}
+\textsl{W.\,Rytter}, Application of {L}empel-{Z}iv factorization to the approximation of grammar-based compression,
+Theor. Comput. Sci., 302 (2003), 211--222.
+
+\bibitem{Seidel&Aragon:1996}
+\textsl{R.\,Seidel, C.\,Aragon}, Randomized search trees, Algorithmica 16 (1996), 464--497.
+
+\bibitem{antidictionaries}
+\textsl{Y.\,Shibata, M.\,Takeda, A.\,Shinohara, S.\,Arikawa}, Pattern matching in text compressed by using
+antidictionaries, Lect. Notes Comput. Sci., 1645 (1999), 37--49.
+
+\bibitem{LCS_P}
+\textsl{A.\,Tiskin}, Faster subsequence recognition in compressed strings, Journal of Mathematical Sciences, 158 (2009),
+759—769.
+
+\bibitem{LZW}
+\textsl{T.\,Welch}, A technique for high-performance data compression, IEEE Computer, 17 (1984), 8--19.
+
+\bibitem{LZ77}
+\textsl{J.\,Ziv, A.\,Lempel}, A universal algorithm for sequential data compression, IEEE Trans. Information Theory, 23 (1977), 337--343.
+
+\bibitem{LZ78}
+\textsl{J.\,Ziv, A.\,Lempel}, Compression of individual sequences via variable-rate coding, IEEE Trans. Information Theory, 24 (1978),
+530--536.
+
+\end{thebibliography}
+\end{document}

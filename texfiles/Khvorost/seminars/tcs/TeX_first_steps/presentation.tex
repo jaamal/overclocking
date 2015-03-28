@@ -1,0 +1,292 @@
+\documentclass[cp1251]{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+} 
+
+\usepackage[english,russian]{babel}
+\usepackage{amssymb}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{automata}
+\usetikzlibrary{positioning}
+
+\pgfdeclareimage[width=10cm]{contexthelp1}{contexthelp1}
+\pgfdeclareimage[width=10cm]{contexthelp2}{contexthelp2}
+\pgfdeclareimage[width=8cm]{menuhelp}{menuhelp}
+\pgfdeclareimage[width=10cm]{contexterrors}{contexterrors}
+\pgfdeclareimage[width=10cm]{spellchecker}{spellchecker}
+\pgfdeclareimage[width=3cm]{till}{till}
+\pgfdeclareimage[width=11cm]{tikzcode}{tikzcode}
+\pgfdeclareimage[width=8cm]{fun}{fun}
+
+\title{TeX: первые шаги к комфорту}
+
+\author{Алексей Хворост}
+
+\date{Теоретические компьютерные науки}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{TeX}
+
+\begin{frame}
+\frametitle{Что такое TeX?}
+
+\begin{block}{Определение}<1->
+TeX -- набор команд для верски текста.
+\end{block}
+
+\begin{block}{Эволюция}
+\begin{itemize}
+  \item<2-> 1978 г. \emph{Д. Кнут} Оригинальный пакет \textbf{TeX} (Искусство программирования);
+  \item<3-> 1984 г. \emph{Л. Лэмпорт} Пакет \textbf{LaTeX} (ориентированный на удобную верстку публикаций);
+  \item<4-> 1985 г. \emph{О. Паташник и Л. Лэмпорт} Пакет \textbf{BibTeX} (ориентированный на управление ссылками);
+  \item<5-> 1990 г. \emph{Г. Хэйген} Пакет \textbf{ConTeXt} (ориентированный на верстку книг);
+  \item<6-> 1994 г. \emph{Д. Хобби} Пакет \textbf{MetaPost} (ориентированный на создание иллюстраций);
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{С чем мы работаем на самом деле?}
+
+\begin{block}{Знакомые строчки}<1->
+	\textbackslash \textbf{usepackage}[russian]\{babel\} \newline
+	\textbackslash \textbf{usepackage}\{amssymb\} \newline
+	\textbackslash \textbf{usepackage}\{url\} \newline
+	\textbackslash \textbf{usepackage}\{pgf\} \newline
+\end{block}
+
+\begin{alertblock}{}<2->
+Непонятно к чему относятся все перечисленные выше пакеты!
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Знаете ли Вы какие пакеты поддерживаются Вашей сборкой TeX-a?}
+
+\begin{block}{TeXLive (\url{http://tug.org/texlive/})}
+	\begin{itemize}
+  		\item Бесплатная сборка пакетов TeX-a;
+  		\item Поддерживаются почти все пакеты (\textbf{TeX}, \textbf{LaTeX}, \textbf{BibTeX},
+  		\textbf{ConTeXt},\textbf{MetaPost});
+  		\item Регулярное обновление пакетов;
+  		\item Поддержка большинства ОС (Windows, Unix);	
+  	\end{itemize}
+\end{block}
+\end{frame}
+
+\section{IDE}
+
+\begin{frame}
+\frametitle{Какой средой разработки Вы пользутесь для работы с TeX-ом?}
+
+\begin{itemize}
+  \item<2-> Блокнот и командная строка;
+  \item<3-> WinEdt (а Вы знали, что это платная программма?);
+  \item<4-> Eclipse и TeXlipse  (\url{http://texlipse.sourceforge.net/release.html});
+  \item<5-> Kile (только для линуксойдов :));
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Eclipse}
+
+\begin{block}{Основные фичи TeXlipse}
+	\only<1>{
+		\begin{itemize}
+		  \item Контекстная подсказка основных команд (меню с основными командами);
+		\end{itemize}
+	}
+	
+	\only<2>{
+	\begin{center}
+		\begin{tikzpicture}
+			\draw (0,0) node {\pgfuseimage{contexthelp1}};
+		\end{tikzpicture}
+	\end{center}
+	}
+	
+	\only<3>{
+		\begin{center}
+			\begin{tikzpicture}
+				\draw (0,0) node {\pgfuseimage{menuhelp}};
+			\end{tikzpicture}
+		\end{center}
+	}
+	
+	\only<4>{
+		\begin{itemize}
+		  \item Контекстная подсказка основных команд (меню с основными командами);
+		  \item Контекстная подсказка для пользовательских стилевых пакетов;
+		\end{itemize}
+	}
+	
+	\only<5>{
+		\begin{center}
+			\begin{tikzpicture}
+				\draw (0,0) node {\pgfuseimage{contexthelp2}};
+			\end{tikzpicture}
+		\end{center}	
+	}
+	
+	\only<6>{
+		\begin{itemize}
+		  \item Контекстная подсказка основных команд (меню с основными командами);
+		  \item Контекстная подсказка для пользовательских стилевых пакетов;
+		  \item Контекстная подсказка ошибок и предупреждений;
+		\end{itemize}
+	}
+	
+	\only<7>{
+		\begin{center}
+			\begin{tikzpicture}
+				\draw (0,0) node {\pgfuseimage{contexterrors}};
+			\end{tikzpicture}
+		\end{center}	
+	}
+	
+	\only<8>{
+		\begin{itemize}
+		  \item Контекстная подсказка основных команд (меню с основными командами);
+		  \item Контекстная подсказка для пользовательских стилевых пакетов;
+		  \item Контекстная подсказка ошибок и предупреждений;
+		  \item Проверка орфографии (английский по-умолчанию, для русского надо скачать словарь); 
+		\end{itemize}
+	}
+	
+	\only<9>{
+		\begin{center}
+			\begin{tikzpicture}
+				\draw (0,0) node {\pgfuseimage{spellchecker}};
+			\end{tikzpicture}
+		\end{center}	
+	}
+	
+	\only<10->{
+		\begin{itemize}
+		  \item Контекстная подсказка основных команд (меню с основными командами);
+		  \item Контекстная подсказка для пользовательских стилевых пакетов;
+		  \item Контекстная подсказка ошибок и предупреждений;
+		  \item Проверка орфографии (английский по-умолчанию, для русского надо скачать словарь);
+		  \item Автоматическая компиляция при сохранении файла;
+		  \item<11-> Абсолютно бесплатный софт;
+		  \item<12-> Обновления он-лайн;
+		  \item<13-> Интеграция с системами контроля версий; 
+		\end{itemize}
+	}
+\end{block}
+\end{frame}
+
+\section{Okular}
+
+\begin{frame}
+\frametitle{Презентации}
+
+\begin{itemize}
+  \item<1-> Вы часто делаете презентации?
+  \item<2-> Ваш ритм работы: внес изменения $\to$ компиляция $\to$ закрыть Adobe Reader $\to$ открыть презентацию;
+  \item<3-> Cтранное ощущение: почему приходится тратить время на закрытие Adobe Reader и его повторное открытие?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Okular}
+
+\begin{block}{Okular (\url{http://windows.kde.org/})}<2->
+	\begin{itemize}
+	  \item<2-> Автоматическое обновление файла экономит массу времени;
+	  \item<3-> Абсолютно бесплатный софт;
+	  \item<4> Инсталировать чуть сложнее чем Adobe Reader;
+	\end{itemize}
+\end{block}
+\end{frame}
+
+\section{TikZ}
+
+\begin{frame}
+\frametitle{Презентации}
+
+\begin{itemize}
+  \item<2-> Вы тратите львиную долю время на верстку картинок?
+  \item<3-> Вам надоело прорисовывать каждую точку руками?
+  \item<4-> В поисковиках столько картинок, неужели их так сложно рисовать?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Till Tantau}
+
+\begin{center}
+	\begin{tikzpicture}
+		\draw (0,0) node {\pgfuseimage{till}};
+	\end{tikzpicture}
+\end{center}	
+ 
+\begin{tabular}{l}
+    \qquad \qquad \qquad \qquad \qquad \textbullet \quad beamer  \\
+    \qquad \qquad \qquad \qquad \qquad \textbullet \quad TikZ
+\end{tabular} 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Сколько необходимо времени чтобы нарисовать этот автомат?}
+
+\begin{center}
+	\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=2cm,on grid,semithick,inner sep=2pt,bend angle=45,scale=0.8] 
+		\node[initial,state] (A)            		{$q_a$};
+		\node[state]    	 (B) [above right=of A] {$q_b$};
+		\node[state]    	 (D) [below right=of A] {$q_d$};
+		\node[state] 		 (C) [below right=of B] {$q_c$};
+		\node[state]		 (E) [below=of D] 		{$q_e$};
+		
+		\path [every node/.style={font=\footnotesize}]
+		(A) edge				node {0,1,L} (B)
+			edge				node {1,1,R} (C)
+		(B) edge [loop above] 	node {1,1,L} (B)
+			edge				node {0,1,L} (C)
+		(C) edge				node {0,1,L} (D)
+			edge [bend left] 	node {1,0,R} (E)
+		(D) edge [loop below] 	node {1,1,R} (D)
+			edge				node {0,1,R} (A)
+		(E) edge [bend left] 	node {1,0,R} (A);
+	\end{tikzpicture}
+\end{center}	
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Код, который получается с помощью TikZ}
+
+\begin{center}
+	\begin{tikzpicture}
+		\draw (0,0) node {\pgfuseimage{tikzcode}};
+	\end{tikzpicture}
+\end{center}	
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Вы уже все бросили и побежали ставить обновления? :)}
+
+\begin{center}
+	\begin{tikzpicture}
+		\draw (0,0) node {\pgfuseimage{fun}};
+	\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\end{document}

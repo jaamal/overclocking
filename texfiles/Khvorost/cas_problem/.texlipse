@@ -1,0 +1,14 @@
+#TeXlipse project settings
+#Mon Jan 14 23:06:33 YEKT 2013
+markTmpDer=true
+builderNum=2
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=cas_problem.tex
+outputFile=cas_problem.pdf
+langSpell=en
+markDer=true
+srcDir=

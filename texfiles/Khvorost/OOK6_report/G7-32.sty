@@ -1,0 +1,178 @@
+% This package designed and commented in russian utf-8 encoding.
+%
+% Р›РёС†РµРЅР·РёСЏ GNU GPL v2 Рё СЃРѕРІРјРµСЃС‚РёРјС‹Рµ
+%
+% РђРІС‚РѕСЂ - РђР»РµРєСЃРµР№ РўРѕРјРёРЅ, СЃ РїРѕРјРѕС‰СЊСЋ СЃРїРёСЃРєР° СЂР°СЃСЃС‹Р»РєРё latex-gost-request@ice.ru
+% Р’СЃРµ РІРѕРїСЂРѕСЃС‹, Р·Р°РјРµС‡Р°РЅРёСЏ Рё РїРѕР¶РµР»Р°РЅРёСЏ СЃСЋРґР°: mailto:alxt@yandex.ru
+%
+% Р”Р°Р»СЊРЅРµР№С€Р°СЏ СЂР°Р·СЂР°Р±РѕС‚РєР° Рё РїРѕРґРґРµСЂР¶РєР° - РњРёС…Р°РёР» РљРѕРЅРЅРёРє,
+% СЃРІСЏР·Р°С‚СЊСЃСЏ РјРѕР¶РЅРѕ РїРѕ Р°РґСЂРµСЃСѓ mydebianblog@gmail.com
+%
+\ProvidesPackage{G7-32}[2003/07/07 v1.00 Titles for GOST 7.32-2001]
+
+%СЃС‚Р°РЅРґР°СЂС‚РЅС‹Рµ С‡Р°СЃС‚Рё
+\newcommand\Executors{%СЃРїРёСЃРѕРє РёСЃРїРѕР»РЅРёС‚РµР»РµР№
+ \chapter*{\CYRS\cyrp\cyri\cyrs\cyro\cyrk~%
+           \cyri\cyrs\cyrp\cyro\cyrl\cyrn\cyri\cyrt\cyre\cyrl\cyre\cyr\cyrishrt}%
+}
+\newcommand\Referat{%СЂРµС„РµСЂР°С‚
+ \chapter*{\CYRR\cyre\cyrf\cyre\cyrr\cyra\cyrt}%
+}
+\addto\captionsrussian{%СЃРѕРґРµСЂР¶Р°РЅРёРµ
+ \def\contentsname{%
+  \CYRS\cyro\cyrd\cyre\cyrr\cyrzh\cyra\cyrn\cyri\cyre}%
+}
+\newenvironment{abstract}{%РўРѕ Р¶Рµ СЃР°РјРѕРµ, С‚РѕР»СЊРєРѕ РєР°Рє Сѓ Р±РµР»С‹С… Р»СЋРґРµР№ -- РљРѕСЂРѕС‚РєРѕРІ Р�.
+ \Referat
+}{}
+\newcommand\NormRefs{%РЅРѕСЂРјР°С‚РёРІРЅС‹Рµ СЃСЃС‹Р»РєРё
+ \chapter*{\CYRN\cyro\cyrr\cyrm\cyra\cyrt\cyri\cyrv\cyrn\cyrery\cyre~%
+           \cyrs\cyrs\cyrery\cyrl\cyrk\cyri}%
+}
+\newcommand\Defines{%РѕРїСЂРµРґРµР»РµРЅРёСЏ
+ \chapter*{\CYRO\cyrp\cyrr\cyre\cyrd\cyre\cyrl\cyre\cyrn\cyri\cyrya}%
+}
+\newcommand\Abbreviations{%РѕР±РѕР·РЅР°С‡РµРЅРёСЏ Рё СЃРѕРєСЂР°С‰РµРЅРёСЏ
+ \chapter*{\CYRO\cyrb\cyro\cyrz\cyrn\cyra\cyrch\cyre\cyrn\cyri\cyrya~\cyri~%
+           \cyrs\cyro\cyrk\cyrr\cyra\cyrshch\cyre\cyrn\cyri\cyrya}%
+}
+\newcommand\Introduction{%РІРІРµРґРµРЅРёРµ
+ \chapter{\CYRV\cyrv\cyre\cyrd\cyre\cyrn\cyri\cyre}%
+}
+\newcommand\Conclusion{%Р·Р°РєР»СЋС‡РµРЅРёРµ
+ \chapter{\CYRZ\cyra\cyrk\cyrl\cyryu\cyrch\cyre\cyrn\cyri\cyre}%
+}
+\addto\captionsrussian{%СЃРїРёСЃРѕРє РёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹С… РёСЃС‚РѕС‡РЅРёРєРѕРІ
+ \def\bibname{%
+  \CYRS\cyrp\cyri\cyrs\cyro\cyrk~
+  \cyri\cyrs\cyrp\cyro\cyrl\cyrsftsn\cyrz\cyro\cyrv\cyra\cyrn\cyrn\cyrery\cyrh~
+  \cyri\cyrs\cyrt\cyro\cyrch\cyrn\cyri\cyrk\cyro\cyrv}%
+}
+
+%Р­Р»РµРјРµРЅС‚С‹ РѕС„РѕСЂРјР»РµРЅРёСЏ С‚РёС‚СѓР»СЊРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹
+\newcommand\Nir@UdkName{\CYRU\CYRD\CYRK}
+
+\newcommand\Nir@No{%
+ \No~\cyrg\cyro\cyrs\cyrr\cyre\cyrg\cyri\cyrs\cyrt\cyrr\cyra\cyrc\cyri\cyri%
+}
+
+\newcommand\Nir@Confirm{
+ {\small\CYRU\CYRT\CYRV\CYRE\CYRR\CYRZH\CYRD\CYRA\CYRYU}%
+}
+
+\newcommand\Nir@InventarNo{
+ \CYRI\cyrn\cyrv.~\No
+}
+
+\newcommand\Nir@Otchet{{%
+ \small\CYRO\CYRT\CYRCH\CYRYO\CYRT \\
+ \CYRO{} \CYRN\CYRA\CYRU\CYRCH\CYRN\CYRO-%
+ \CYRI\CYRS\CYRS\CYRL\CYRE\CYRD\CYRO\CYRV\CYRA\CYRT\CYRE\CYRL\CYRSFTSN\CYRS\CYRK\CYRO\CYRISHRT{} %
+ \CYRR\CYRA\CYRB\CYRO\CYRT\CYRE%
+}}
+
+\newcommand\Nir@AnnOtchet{ %РѕС‚С‡С‘С‚ Р°РЅРЅРѕС‚Р°С†РёРѕРЅРЅС‹Р№!?
+}
+
+\newcommand\Nir@MainBegin{%
+ \CYRR\cyru\cyrk\cyro\cyrv\cyro\cyrd\cyri\cyrt\cyre\cyrl\cyrsftsn{} %
+ \CYRN\CYRI\CYRR%
+}
+
+\newcommand\Nir@OrgLongName{%
+ \CYRP\cyro\cyrl\cyrn\cyro\cyre~
+ \cyrn\cyra\cyrz\cyrv\cyra\cyrn\cyri\cyre~
+ \cyro\cyrr\cyrg\cyra\cyrn\cyri\cyrz\cyra\cyrc\cyri\cyri%
+}
+
+\newcommand\Nir@StageNo{ % РЅРѕРјРµСЂ СЌС‚Р°РїР° СЂР°Р±РѕС‚
+}
+
+\newcommand\Nir@StageTitle{ % Р·Р°РіРѕР»РѕРІРѕРє СЌС‚Р°РїР° СЂР°Р±РѕС‚
+}
+\newcommand\Nir@StageType{ % РІРёРґ РѕС‚С‡С‘С‚Р°
+}
+
+
+\newcommand\Nir@BossPost{%
+ \CYRK\cyrt\cyro \newline
+ \cyru\cyrt\cyrv\cyre\cyrr\cyrzh\cyrd\cyra\cyre\cyrt%
+}
+
+\newcommand\Nir@BossName{\CYRF.~\CYRI.~\CYRO}
+\newcommand\Nir@Year{\the\year}
+\newcommand\Nir@Town{\CYRG\cyro\cyrr\cyro\cyrd}
+\newcommand\Nir@ManagerPost{%
+ \cyrb\cyro\cyrl\cyrsftsn\cyrsh\cyro\cyrishrt{}
+ \cyrn\cyra\cyrch\cyra\cyrl\cyrsftsn\cyrn\cyri\cyrk%
+}
+
+\newcommand\Nir@ManagerName{\CYRI\cyrv\cyra\cyrn\cyro\cyrv}
+
+\newcommand\NirTitle[1]{
+ \thispagestyle{empty}
+ \begin{centering}
+   \linespread{1.1}\normalsize
+ 
+ 	\underline{\textbf{\ \CYRM \CYRI \CYRN \CYRI \CYRS \CYRT \CYRE \CYRR \CYRS \CYRT \CYRV \CYRO \ \CYRO \CYRB
+ 	\CYRR \CYRA \CYRZ \CYRO \CYRV \CYRA \CYRN \CYRI \CYRYA \ \CYRI \ \CYRN \CYRA \CYRU \CYRK \CYRI \ \CYRR \CYRO \CYRS \CYRS \CYRI
+ 	\CYRISHRT \CYRS \CYRK \CYRO \CYRISHRT \ \CYRF \CYRE \CYRD \CYRE \CYRR \CYRA \CYRC \CYRI \CYRI}}
+ 	
+ 	\vspace{12pt} 
+ 	
+  {\Nir@OrgLongName}
+
+  \vfill
+  \begin{tabular}{p{80mm}p{80mm}}
+    \Nir@UdkName \newline
+    \Nir@No \newline
+   &
+    \Nir@Confirm
+
+    \vspace{5mm}
+    \Nir@BossPost \newline \newline
+    \underline{~~~~~~~~~~~~~~~~~} \Nir@BossName \newline
+    <<\underline{~~~~~}>> \ \cyrn \cyro \cyrya \cyrb \cyrr \cyrya \ \Nir@Year~\cyrg.
+  \end{tabular}
+  \vfill
+
+\Nir@AnnOtchet \Nir@Otchet
+
+  \vspace{8mm}
+  #1
+  \vspace{8mm}
+  
+\begin{flushleft}
+	\qquad \qquad \Nir@StageNo~~\Nir@StageTitle 
+\end{flushleft}
+
+
+
+
+
+
+  \vfill
+  \begin{tabular}{p{80mm}p{80mm}}
+    \Nir@MainBegin, \newline
+    \Nir@ManagerPost
+   &
+    ~\newline\underline{~~~~~~~~~~~~~~~~~~~} \Nir@ManagerName \newline
+  \end{tabular}
+  \vfill
+  \vfill
+  \Nir@Town~\Nir@Year
+
+ \end{centering}
+ \linespread{\Gost@LineSpread}\normalsize
+}
+
+%Р­С‚Рё РєРѕРјР°РЅРґС‹ РЅСѓР¶РЅРѕ РІС‹Р·РІР°С‚СЊ РґР»СЏ РєРѕСЂСЂРµРєС‚РЅРѕРіРѕ РѕРїСЂРµРґРµР»РµРЅРёСЏ С‚РёС‚СѓР»СЊРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹
+\newcommand\NirStage[3]{\renewcommand\Nir@StageNo{#1}\renewcommand\Nir@StageType{#2}\renewcommand\Nir@StageTitle{#3}}%%virens added: РЅРѕРјРµСЂ РіРѕСЃСЂРµРіРёСЃС‚СЂР°С†РёРё
+\newcommand\NirIsAnnotacion[1]{\renewcommand\Nir@AnnOtchet{#1}} %%Р•СЃР»Рё РѕС‚С‡С‘С‚ Р°РЅРЅРѕС‚Р°С†РёРѕРЅРЅС‹Р№
+\newcommand\NirOrgLongName[1]{\renewcommand\Nir@OrgLongName{#1}}
+\newcommand\NirBoss[2]{\renewcommand\Nir@BossPost{#1}\renewcommand\Nir@BossName{#2}}
+\newcommand\NirYear[1]{\renewcommand\Nir@Year{#1}}
+\newcommand\NirManager[2]{\renewcommand\Nir@ManagerPost{#1}\renewcommand\Nir@ManagerName{#2}}
+\newcommand\NirTown[1]{\renewcommand\Nir@Town{#1}}%%virens added: СѓРєР°Р·С‹РІР°РµРј РіРѕСЂРѕРґ РЅР°РїРёСЃР°РЅРёСЏ РѕС‚С‡С‘С‚Р°
+\newcommand\NirUdk[1]{\renewcommand\Nir@UdkName{#1}}%%virens added: РґР»СЏ РёР·РјРµРЅРµРЅРёСЏ РЈР”Рљ РІ С‚РµРєСЃС‚Рµ РґРѕРєСѓРјРµРЅС‚Р°
+\newcommand\NirGosNo[1]{\renewcommand\Nir@No{#1}}%%virens added: РЅРѕРјРµСЂ РіРѕСЃСЂРµРіРёСЃС‚СЂР°С†РёРё

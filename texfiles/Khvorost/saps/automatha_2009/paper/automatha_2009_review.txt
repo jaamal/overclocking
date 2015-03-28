@@ -1,0 +1,24 @@
+The submitted paper constructs a polynomial-time algorithm for finding all squares (that is, substrings of the form $xx$) in a given compressed 
+string $w$, which is represented by a context-free grammar generating $\{w\}$ (known as a straight-line program, SLP).
+
+Similar problems has been studied before. Apostolico et al. (ICALP 1992) have proposed a parallel algorithm for solving this problem for 
+uncompressed $w$. The ideas of their algorithm were later employed by Gasieniec et al. (SWAT 1996), who claimed an algorithm for finding 
+squares in an LZ-compressed string (a somewhat less general case than an SLP), but did not present the details. Recently, Matsubara et al. 
+("Testing square-freeness of strings compressed by balanced straight line program", CATS 2009) proposed an efficient algorithm for the special 
+case of SLPs, in which the parse tree of the string is balanced.
+
+The submission deals with the most general case so far, and the new polynomial-time algorithm is certainly interesting. 
+A major problem with the paper is its poor writing style: already the definition of the main data structure is unclear and incomplete 
+(so that one is left to guess what is being computed), the key earlier results on which the paper is based are referenced in unpredictable 
+places or not referenced at all. It is not easy to reconstruct the algorithm from the given draft.
+
+I think that the paper requires total rewriting. The author should take more care of presenting his results to the readers 
+(and to the audience, if the paper is accepted). The writing should be planned so that the main earlier ideas are recollected, 
+the main new ideas are communicated, and the algorithm is presented in the way that it can be easily read and implemented.
+
+
+
+Note to the author:
+
+Though it might be interesting to know about the migration of mice, it is more important to cite all relevant literature on the problem 
+(at least the three papers mentioned in my report), because this is the context in which the new paper appears.

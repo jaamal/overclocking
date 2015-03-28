@@ -1,0 +1,89 @@
+-------------------- review 1 --------------------
+
+PAPER: 19
+TITLE: Computing All Pure Squares in Compressed Texts
+    
+
+Weaknesses:
+The paper is very difficult to follow.
+
+Comments on the structure:
+-the paper should allow the reader to understand the general concept(s) quickly,
+and then focus on particular details separately. Currently, the paper does not seem
+to be very helpful in this respect.
+-it would also improve readability if the algorithm would be explained in more
+explicit and imperative way - e.g. all of the first five 2^{i-3} blocks of the neighborhood
+are inspected as candidates for a square, but this is made very clear only in the example,
+not in the description on page 6.
+-in the example (Appendix B), the cases that do not result in a found square are simply said
+to be rejected, and the reader needs to find out the reason him- or herself. Including the
+reason for rejection would help to understand the algorithm.
+
+Comments:
+-page 1, last sentence of the abstract "where |/S/| (respectively |S|) is the ...":
+would be better to say "where |/S/| and |S| are the size of SLP /S/ and the length
+of the string S, respectively." or "where |/S/| is the size of SLP /S/ and |S| is the length
+of the string S".
+-page 2, paragraph -4: first sentence ("A string x is primitive if...") is incomprehensible.
+Saying that "String x is primitive if there is no integer k>=2 and string u such that x=u^k" would be better.
+-page 2, footnote, last sentence ("... algorithm have ever been appeared."): "been"
+should be deleted.
+-page 6, paragraph 2:
+--line 4, "[... of equal] length." should probably read "lengths"
+--length 2^{i-3} can be <1
+--line 6, "..., then the left half of [? - missing] must fully contain ..."
+-page 6, paragraph 3, line -3, "are interested to find start ..." should read
+"are interested in finding".
+-page 6 and 7, cases (1), (2) and (3): there is always at least one occurrence of
+the block in the neighborhood (the "original" one) - would be more accurate to say
+"no/one/more than one additional occurrence(s)".
+-page 6, paragraph -1 (i.e. case (2)), "then we can extend two blocks": should probably
+read "... the two blocks..."
+-page 7, line 1, reference to Subsection 3.3 - the subsection does not seem to provide
+very much details.
+-page 7, case (3): the four arithmetical progressions mentioned here should be shown explicitely
+-page 7, paragraph 3 (under the figure): what is |B|/2-block?
+-page 10, paragraph -2, line 2: "sich" should read "such"
+-page 11, paragraph 4 (under Lemma 3.7), "The lemma it implies ...": the sentence is not a proper English sentence
+-page 11, paragraph -2, "Also it is not excluded ...": should probably read e.g. "It is also possible ..."
+-page 14, paragraph -2, line -2 ".. and find some family of ..." should probably be "the same family"
+-overall in the paper: when a Lemma contains a citation, the citation is preceded by an extra space. 
+
+
+-------------------- review 2 --------------------
+
+PAPER: 19
+TITLE: Computing All Pure Squares in Compressed Texts
+    
+
+The paper presents an algorithm which computes all pure squares in a compressed straight line program. The idea is to fill out a table considering 
+incrementally all the possible candidate substrings. The paper relies on previous work and extends it to the application at hand.
+
+The writing style is very dense, and though the example in the appendix is very helpful, the paper is still hard to follow. But as far as I could, 
+it seemed without flaws, and its contribution should justify the paper being accepted.
+
+A few technical comments:
+
+1) The complexity is claimed to be O(max(|S|^5 log |S'|, |S|^3 log^3 |S| log |S'|). But isn't the maximum always obtained with the first term, 
+at least asymptotically?
+
+2) The author cites "the" Lempel-Ziv algorithm, but should be aware that there are two, quite different ones, of 1977 and 1978.
+
+3) The running example uses Fibonacci words, so one would expect the general definition to be    F(i) = F(i-1) F(i-2), but the given definitions are 
+inconsistent with that for F(3) and F(4). To get it consistent, all one has to to is to reverse the first 2 elements: F(1)=b and F(2)=a. Then one 
+can define F(3) = F(2)F(1) and F(4)=F(3)F(2) as expected, and one generates exactly the same string!
+
+4) p 6: something missing in the phrase:  "then the left half of must fully contain..."
+
+5) p.12, In ref [5]  Zip  should be  Ziv  (that might be a Freudian error...) 
+
+
+-------------------- review 3 --------------------
+
+PAPER: 19
+TITLE: Computing All Pure Squares in Compressed Texts
+    
+
+The author considers a string s represented by a straight-line program S containing |S| rules and describes an algorithm that computes all squares 
+xx (x primitive) in s.  The algorithm is primarily of theoretical interest; however, there is a polynomial relation between |S| and the size of the 
+Lempel-Ziv dictionary for s.  The paper is well-written. 

@@ -1,0 +1,14 @@
+#TeXlipse project settings
+#Sat Sep 22 14:25:55 YEKT 2012
+markTmpDer=true
+builderNum=2
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=cas_problem_rufidim_show.tex
+outputFile=cas_problem_rufidim_show.pdf
+langSpell=en
+markDer=true
+srcDir=

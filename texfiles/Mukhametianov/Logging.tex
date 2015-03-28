@@ -1,0 +1,30 @@
+\subsection{Протоколирование в контейнере}
+
+В контейнер заложена возможность получения протокола (лога) сборки последнего объекта. Метод getLastLog вернет строковое представление лога в достаточно удобном формате:
+будут отмечены все этапы построения объекта, все вызовы методов получения или создания объектов, отмечены переиспользования уже собранных объектов,
+для удобства добавлена табуляция. Например, для нашего примера лог построения требуемого объекта будет выглядеть как в листинге 15:
+
+\begin{lstlisting}[language=Java,caption={Пример лога получения экземпляра реализации интерфейса IAuthenticatorsProvider}]
+Getting IAuthenticatorsProvider
+  Creating IAuthenticatorsProvider
+    Getting AuthenticatorsProvider
+      Creating AuthenticatorsProvider
+        Getting all IAuthenticator
+          Getting FacebookAuthenticator
+            Creating FacebookAuthenticator
+            End creating FacebookAuthenticator
+          End getting FacebookAuthenticator
+          Getting GmailAuthenticator
+            Creating GmailAuthenticator
+            End creating GmailAuthenticator
+          End getting GmailAuthenticator
+          Getting LocalAuthenticator
+            Creating LocalAuthenticator
+            End creating LocalAuthenticator
+          End getting LocalAuthenticator
+        End getting all IAuthenticator
+      End creating AuthenticatorsProvider
+    End getting AuthenticatorsProvider
+  End creating IAuthenticatorsProvider
+End getting IAuthenticatorsProvider
+\end{lstlisting}

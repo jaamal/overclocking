@@ -1,0 +1,61 @@
+\subsection{Применение принципа инверсии зависимостей без использования DI-контейнеров}
+
+Рассмотрим следующий пример. Есть сервис, поддерживающий несколько способов аутентификации: 
+\begin{itemize}
+	\item аутентификация с использованием сторонних сервисов
+	\item аутентификация с использованием собственного механизма
+\end{itemize}
+Аутентификация будет производиться через интерфейс IAuthenticator, который описан в листинге 1:
+
+\begin{lstlisting}[language=Java,caption={IAuthenticator}]
+public interface IAuthenticator
+{
+    String authenticate(String login, String password);
+    String getName();
+}
+\end{lstlisting}
+
+Метод authenticate принимает на вход логин и пароль пользователя и возвращает идентификатор сессии или null, если аутентификация не удалась, 
+метод getName возвращает имя способа аутентификации, который реализован данным классом. Необходимо реализовать интерфейс, описанный в листинге 2:
+
+\begin{lstlisting}[language=Java,caption={IAuthenticatorsProvider}]
+public interface IAuthenticatorsProvider
+{
+    IAuthenticator getAuthenticator(String name);
+}
+\end{lstlisting}
+
+Метод getAuthenticator должен принять на вход одну строку name и вернуть реализацию способа аутентификации с таким именем или null, если такого нет.
+
+Рассмотрим реализацию данной задачи без использования DI контейнеров.
+В листинге 3 приведен код класса AuthenticatorsProvider, реализующего интерфейс IAuthenticatorsProvider.
+Листинг 4 демонстрирует, как нужно создавать экземпляр этого класса без использования контейнера. Здесь LocalAuthenticator "--- класс, отвечающий за аутентификацию с использованием
+собственного механизма, а GmailAuthenticator и FacebookAuthenticator "--- классы, отвечающие за аутентификацию с помощью сторонних сервисов.
+
+
+\begin{lstlisting}[language=Java,caption={Реализация интерфейса IAuthenticatorsProvider}]
+public class AuthenticatorsProvider implements IAuthenticatorsProvider
+{
+    IAuthenticator[] authenticators;
+
+    public AuthenticatorsProvider(IAuthenticator[] authenticators)
+    {
+        this.authenticators = authenticators;
+    }
+
+    public IAuthenticator getAuthenticator(String authenticatorName)
+    {
+        for(IAuthenticator authenticator : authenticators)
+            if(authenticator.getName().equals(authenticatorName))
+                return authenticator;
+        return null;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java,caption={Место получения (в данном случае создания) экземпляра класса AuthenticatorsProvider}]
+IAuthenticatorsProvider provider = new AuthenticatorsProvider(new IAuthenticator[]{new LocalAuthenticator(), new FacebookAuthenticator(), new GmailAuthenticator()});
+\end{lstlisting}
+
+В листинге 4 показан кусок достаточно рутинного кода. В действительности, когда классов на порядок больше, количество рутины соответственно возрастет.
+Dependency Injection контейнеры берут на себя ответственность за создание объектов, тем самым избавляя разработчика от ручного труда.

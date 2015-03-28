@@ -1,0 +1,493 @@
+\documentclass[cp1251]{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+} 
+
+\usepackage[english,russian]{babel}
+\usepackage{amssymb}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{scalefnt}
+%\usepackage{commands}
+\usepackage{pictures}
+
+\title{Алгоритмические свойства сжатых текстов}
+
+\author{Анна Козлова, Евгений Курпилянский, Алексей Хворост}
+
+\date{28 ноября 2011 года}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Введение}
+
+\begin{frame}
+
+\begin{block}{}
+С ростом размера входных данных для классических задач меняются алгоритмы,
+способные их эффективно решать.
+\end{block}
+Существует неcколько подходов, например:
+\pause
+\begin{itemize}
+  \item Алгоритмы эффективного ввода-вывода~-- алгоритмы, минимизирующие
+  чтение данных с жесткого диска. \pause  
+  \item Сокращение размера входа за счет предварительной обработки.
+\end{itemize}
+\end{frame}
+
+\section{Прямолинейные программы}
+
+\begin{frame}
+\frametitle{Определение прямолинейной программы}
+
+\begin{block}{Определение}
+\textbf{Прямолинейная программа} (ПП) $\mathcal{X}$ размера $n$~-- это
+последовательность правил вывода
+\begin{center}
+$\mathcal{X}_1 = expr_1, \mathcal{X}_2 = expr_2,\dots,\mathcal{X}_n = expr_n$,
+\end{center}
+где $\mathcal{X}_i$~-- это \textbf{переменные}, а $expr_i$~-- это
+\textbf{выражения} вида:
+\begin{itemize}  
+  \item $expr_i$~-- символ из алфавита $\Sigma$ (\textbf{терминальные} правила).
+  \item $expr_i = \mathcal{X}_l \cdot \mathcal{X}_r$ ($l,r < i$)
+ (\textbf{нетерминальные} правила).
+\end{itemize}
+\end{block}
+
+\pause
+\begin{block}{}
+\textbf{Прямолинейная программа}~-- это грамматика, выводящая в точности одно
+слово.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Пример}
+Рассмотрим ПП $\mathcal{X}$, выводящую строку $X =
+\mbox{<<}abaababaabaab\mbox{>>}$.
+
+\begin{center}
+$\mathcal{X}_1 = b$\\
+$\mathcal{X}_2 = a$\\
+$\mathcal{X}_3 = \mathcal{X}_2 \cdot \mathcal{X}_1$\\
+$\mathcal{X}_4 = \mathcal{X}_3 \cdot \mathcal{X}_2$\\
+$\mathcal{X}_5 = \mathcal{X}_4 \cdot \mathcal{X}_3$\\
+$\mathcal{X}_6 = \mathcal{X}_5 \cdot \mathcal{X}_4$\\
+$\mathcal{X}_7 = \mathcal{X}_6 \cdot \mathcal{X}_5$
+\end{center}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Пример}
+Графическое изображение ПП:
+
+\picOne
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+    \frametitle{ПП ~-- это способ сжатия данных}
+    \begin{block}{}
+        Длина строки, выводимой из ПП, может быть экспоненциальной относительно размеров ПП.     
+    \end{block}
+    \pause
+    \begin{alertblock}{Недостатки}
+        Сжатие с помощью ПП значительно уступает стандартным алгоритмам сжатия. 
+    \end{alertblock}
+    \pause
+    \begin{block}{Преимущества}
+        Есть возможность осуществлять различные алгоритмы над ПП, не распаковывая данные.      
+    \end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Алгоритмы над ПП}
+
+\begin{block}{}
+Существует ряд классических задач, сформулированных в терминах ПП и разрешимых
+за полиномиальное время от размера ПП, например:
+
+\pause
+\begin{itemize}
+  \item Поиск сжатого образца в сжатом тексте
+  \item Поиск наибольшей общей подстроки двух сжатых строк
+  \item Поиск палиндромов в сжатой строке
+  \item Поиск квадратов в сжатой строке
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+\begin{alertblock}{Главный вопрос}
+Осмысленно ли использование прямолинейных программ на практике?
+\end{alertblock}
+
+\pause
+
+\begin{itemize}
+  \item<2-> Насколько сложна задача построения ПП?\pause
+  \item<3-> Насколько сжатие с использованием ПП уступает классическим
+  алгоритмам сжатия?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Как строить ПП?}
+\begin{block}{Утверждение. \textbf{W.Rytter et al. 2003}}
+Задача построения минимальной ПП, выводящей заданную строку $T$~-- NP-полная.
+\end{block}
+
+\pause
+
+\begin{center}
+$\Downarrow$
+\end{center}
+
+\begin{block}{}
+Для построения ПП требуется использовать приближенные алгоритмы.
+\end{block}
+\end{frame}
+
+\section{$LZ$-факторизация}
+
+\begin{frame}
+\begin{block}{Идея}
+Для построения ПП в качестве отправной точки использовать классические алгоритмы
+сжатия.
+\end{block}
+
+\pause
+\begin{block}{}
+Оказалось, что классический \textbf{\alert{алгоритм Лемпеля-Зива}} хорошо
+подходит для этой задачи.
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+%\frametitle{Опеределение факторизации}
+\begin{block}{Определение}
+\textbf{Факторизация} строки $T$~-- это набор строк $F_1$, $F_2$, \ldots, $F_k$ такой,
+что $T = F_1 \cdot F_2 \cdot \ldots \cdot F_k$.
+\end{block}
+\pause
+\begin{block}{Определение}
+\textbf{$LZ$-факторизация} строки $T$~-- это набор строк $F_1, F_2, \mbox{\dots}, F_k$,
+где
+
+\begin{itemize}
+  \item $F_1 = T[0]$;
+  \item $F_i$ равен наибольшему префиксу $T\substr{|F_1\cdot \mbox{\dots} \cdot
+  F_{i-1}|}{|T| - 1}$, который встречался в тексте ранее \textbf{или} $T[|F_1\cdot
+\mbox{\dots} \cdot F_{i-1}|]$ в случае, если этот префикс пустой.
+\end{itemize}
+\end{block}
+\pause
+\begin{exampleblock}{Факторизации строки <<$abaababaabaab$>>}
+\begin{itemize}
+  \item $a \cdot b \cdot a \cdot a \cdot b \cdot a \cdot b \cdot a \cdot a
+  \cdot b \cdot a \cdot a \cdot b$;
+  \item $a \cdot b \cdot a \cdot aba \cdot baaba \cdot ab$;
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+$LZ$-факторизацию строки $T$ длины $n$ можно построить как минимум двумя
+способами:
+\pause
+\begin{itemize}
+  \item За $O(n)$ с использованием \textbf{\alert{суффиксного дерева}}. Тяжело
+  адаптируется на случай, когда заканчивается оперативная память. \pause
+  \item За $O(n\log{n})$ с использованием \textbf{\alert{суффиксного массива}}.
+  Проще в реализации, легко адаптируется на использование внешней памяти.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{$LZ77$-факторизация}
+    \begin{block}{Определение}
+        \textbf{$LZ77$-факторизация} строки $T$~-- это набор строк $F_1, F_2, \mbox{\dots}, F_k$, где
+
+        \begin{itemize}
+            \item $F_1 = T[0]$;
+            \item $F_i$ равен наибольшему префиксу $T\substr{|F_1\cdot \mbox{\dots} \cdot
+            F_{i-1}|}{|T| - 1}$, который встречался \textbf{\alert{в~суффиксе}} уже просмотренного текста 
+            \textbf{или} $T[|F_1\cdot \mbox{\dots} \cdot F_{i-1}|]$ в случае, если этот префикс пустой.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \begin{alertblock}{Недостатки}
+        $LZ77$-факторизация содержит больше факторов, чем $LZ$-факторизация.
+    \end{alertblock}
+    \pause
+    \begin{block}{Преимущества}
+        Алгоритм построения факторизации может работать в оперативной памяти.
+    \end{block}
+\end{frame}
+
+\section{Построение ПП по факторизации}
+
+\begin{frame}
+\begin{block}{Постановка задачи}
+\textsc{Вход:} Строка $T$ и ее факторизация $F_1$, $F_2$, \ldots, $F_k$.
+
+\textsc{Выход:} ПП, выводящая строку $T$.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Алгоритм Риттера}
+\begin{block}{Описание алгоритма}
+    \begin{itemize}
+        \item Дерево разбора ПП представляется в виде $AVL$-дерева.
+        \pause
+        \item Факторы обрабатываются последовательно.
+        \pause
+        \item Необходимо уметь реализовывать операцию конкатенации двух ПП.
+    \end{itemize}
+\end{block}
+\pause
+\begin{block}{}<4->
+    \begin{itemize}
+        \item Для эффективности реализации структура данных должна обладать свойством
+            \textit{\alert{confluently persistent}}.          
+        \pause
+        \item Все вершины дерева должны быть неизменяемыми. Если требуется изменить вершину,
+        создаем и изменяем копию этой вершины.
+        \pause
+        \item Появляются много неиспользуемых вершин. $\Rightarrow$ Необходим менеджер памяти, освобождающий
+        ресурсы.
+     \end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Теорема. \textbf{W.Rytter et al. 2003}}
+Пусть дан текст $T$ и его факторизация размера $k$.
+Тогда \textbf{\alert{алгоритм Риттера}} позволяет построить ПП $\mathcal{T}$
+размером $O(k \cdot \log{|T|})$ за время $O(k \cdot \log{|T|})$.
+\end{block} 
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Преимущества}
+        \begin{itemize}
+            \item Размер полученной ПП всего в $O(\log{n})$ больше размера минимальной ПП
+            \pause
+            \item $AVL$-дерево <<сильносбалансированное>> дерево, его высота ограничена сверху $\frac{1 + \sqrt{5}}{2}\log{n}$. 
+        \end{itemize}
+    \end{block}
+    \pause
+    \begin{alertblock}{Недостатки}
+        \begin{itemize}
+            \item Операция перебалансировки узла является достаточно дорогой операцией, обновляется три вершины.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Модернизация алгоритма Риттера}
+    \begin{alertblock}{Проблема}
+        На каждой итерации алгоритм выполняется конкатенацию потенцииально огромного дерева с маленьким.        
+    \end{alertblock}
+    \pause
+    \begin{block}{Основная идея}
+        Можно соптимизировать порядок конкатенаций, уменьшив количество поворотов дерева.
+    \end{block}
+    \pause
+    \begin{block}{Решение}
+        Найти оптимальный порядок конкатенаций $k$ деревьев можно с помощью динамического программирования за $O(k^3)$.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Построение ПП с помощью декартовых деревьев}
+\begin{block}{Мысль}
+Почему бы для построения ПП не использовать другое сбалансированное двоичное дерево?
+\end{block}
+
+\pause
+\begin{block}{}
+    \begin{itemize}
+        \item Декартово дерево~-- двоичное дерево, в каждой вершине которого хранится ее приоритет.
+        При этом всегда выполняется свойство: приоритет в потомках меньше, чем приоритет самой вершины.
+        \pause
+        \item Доказано, что если приоритеты выбираются случайно, высота декартова дерева $O(\log{n})$.
+        \pause
+        \item Над декартовым деревом определены две стандартные операции: конкатенация и разрезание.
+    \end{itemize}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Алгоритм}
+        Идея алгоритма совпадает с идеей алгоритма Риттера.
+    \end{block}
+    \pause
+    \begin{block}{Преимущества}
+        \begin{itemize}
+            \item Простота реализации.
+            \pause
+            \item С помощью двух операций разрезания можно получить подстроку, соответсвующую следующему фактору, одним деревом целиком.
+        \end{itemize}
+    \end{block}
+    \pause
+    \begin{alertblock}{Недостатки}
+        \begin{itemize}
+            \item Высота декартова дерева на практике в два-три раза больше высоты $AVL$-дерева.
+            \pause
+            \item Недетерминированность алгоритма.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+\section{Практические результаты}
+\begin{frame}
+\frametitle{Практические результаты}
+
+Алгоритмы были протестированы на ДНК, взятых с сайта \url{http://www.ddbj.nig.ac.jp/}.
+
+\end{frame}
+
+\begin{frame}
+Будут приведены результаты тестирования следующих алгоритмов:
+
+\pause
+\begin{itemize}
+  \item Алгоритм $LZ$-факторизации. Обозначение~-- \textbf{lz} \pause  
+  \item Алгоритм $LZ77$-факторизации. Обозначение~-- \textbf{lz77} \pause
+  \item Алгоритм Риттера. Обозначение~-- \textbf{SLPClassic} \pause
+  \item Модернизированный алгоритм Риттера. Обозначение~-- \textbf{SLPNew} \pause
+  \item Алгоритм построения ПП с помощью декартовых деревьев. Обозначение~-- \textbf{SLPCartesian}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Число перебалансировок}
+
+%\begin{multicols}{2}
+   \begin{figure}[!ht]
+        \begin{center}
+            \DNARotations
+        \end{center}
+   \end{figure}
+
+%    \begin{figure}[!ht]
+%        \begin{center}
+%            \RandomRotations
+%        \end{center}
+%    \end{figure}
+%\end{multicols}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Скорость работы на строках ДНК}
+
+\begin{multicols}{2}
+   \begin{figure}[!ht]
+        \begin{center}
+            \DNATimeStatsInMemory 
+        \end{center}
+   \end{figure}
+
+    \begin{figure}[!ht]
+        \begin{center}
+            \DNATimeStatsOnFiles
+        \end{center}
+    \end{figure}
+\end{multicols}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Коэффициенты сжатия}
+
+%\begin{multicols}{2}
+%   \begin{figure}[!ht]
+        \begin{center}
+            \CompressionRatioOnDNAs
+        \end{center}
+%   \end{figure}
+%
+%    \begin{figure}[!ht]
+%        \begin{center}
+%            \RandomSpeedTestInFile
+%        \end{center}
+%    \end{figure}
+%\end{multicols}
+%
+\end{frame}
+
+\begin{frame}
+\frametitle{Высоты деревьев}
+%\begin{multicols}{2}
+   \begin{figure}[!ht]
+        \begin{center}
+            \DNAHeightStats
+        \end{center}
+   \end{figure}
+
+%    \begin{figure}[!ht]
+%        \begin{center}
+%            \RandomCompression
+%        \end{center}
+%    \end{figure}
+%\end{multicols}
+
+\end{frame}
+
+\section{Заключение}
+\begin{frame}
+\frametitle{Результаты}
+
+\pause
+\begin{itemize}
+  \item Алгоритм $LZ$-факторизации с помощью суффиксного массива \pause
+  \item Алгоритм $LZ77$-факторизации с помощью суффиксного дерева \pause
+  \item Модернизированный алгоритм Риттера \pause
+  \item Алгоритм построения ПП с помощью декартовых деревьев \pause
+  \item Тесты
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Планы}
+
+\pause
+\begin{itemize}
+  \item Алгоритм факторизации, эффективный с точки зрения операций чтения-записи
+  \pause
+  \item Алгоритм построения ПП, эффективный с точки зрения операций
+  чтения-записи \pause
+  \item Худший случай алгоритма Риттера или уточнение оценки размера ПП \pause
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Вопросы?}
+\end{frame}
+
+\end{document}

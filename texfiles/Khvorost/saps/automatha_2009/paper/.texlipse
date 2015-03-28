@@ -1,0 +1,13 @@
+#TeXlipse project settings
+#Thu Jul 14 15:41:31 YEKST 2011
+builderNum=2
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=papert.tex
+outputFile=paper.pdf
+langSpell=en
+markDer=true
+srcDir=

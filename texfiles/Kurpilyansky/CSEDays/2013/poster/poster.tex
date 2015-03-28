@@ -1,0 +1,229 @@
+% --------------------------------------------------------------------------- %
+% Poster for the CSEDays 2013.                                                %
+% --------------------------------------------------------------------------- %
+% Created with Brian Amberg's LaTeX Poster Template. Please refer for the     %
+% attached README.md file for the details how to compile with `pdflatex`.     %
+% --------------------------------------------------------------------------- %
+% $LastChangedDate:: 2011-09-11 10:57:12 +0200 (V, 11 szept. 2011)          $ %
+% $LastChangedRevision:: 128                                                $ %
+% $LastChangedBy:: rlegendi                                                 $ %
+% $Id:: poster.tex 128 2011-09-11 08:57:12Z rlegendi                        $ %
+% --------------------------------------------------------------------------- %
+\documentclass[a1paper,portrait,fontscale=0.45]{baposter}
+
+\usepackage{relsize}		% For \smaller
+\usepackage{url}			% For \url
+\usepackage{epstopdf}	% Included EPS files automatically converted to PDF to include with pdflatex
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\DeclareSymbolFont{rsfscript}{OMS}{rsfs}{m}{n}
+\DeclareSymbolFontAlphabet{\mathrsfs}{rsfscript}
+\DeclareMathOperator{\Syn}{Syn}
+
+\usepackage{tikz}
+\usepackage{graphs}
+\usepackage{amsmath,amssymb,amsthm}
+
+%%% Global Settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\graphicspath{{pix/}}	% Root directory of the pictures
+\tracingstats=2			% Enabled LaTeX logging with conditionals
+\newtheorem{thm}{Theorem}
+
+%%% Color Definitions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{bordercol}{RGB}{40,40,40}
+\definecolor{headercol1}{RGB}{186,215,230}
+\definecolor{headercol2}{RGB}{80,80,80}
+\definecolor{headerfontcol}{RGB}{0,0,0}
+\definecolor{boxcolor}{RGB}{186,215,230}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Utility functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Save space in lists. Use this after the opening of the list %%%%%%%%%%%%%%%%
+\newcommand{\compresslist}{
+	\setlength{\itemsep}{1pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}
+}
+
+\newcommand{\slp}[1]{\mathbb{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Document Start %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\typeout{Poster rendering started}
+
+%%% Setting Background Image %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\background{
+	\begin{tikzpicture}[remember picture,overlay]%
+	\draw (current page.north west)+(-2em,2em) node[anchor=north west]
+	{\includegraphics[height=1.1\textheight]{background}};
+	\end{tikzpicture}
+}
+
+%%% General Poster Settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% Eye Catcher, Title, Authors and University Images %%%%%%%%%%%%%%%%%%%%%%
+\begin{poster}{
+	grid=false,
+	% Option is left on true though the eyecatcher is not used. The reason is
+	% that we have a bit nicer looking title and author formatting in the headercol
+	% this way
+	%eyecatcher=false,
+	borderColor=bordercol,
+	headerColorOne=headercol1,
+	headerColorTwo=headercol2,
+	headerFontColor=headerfontcol,
+	% Only simple background color used, no shading, so boxColorTwo isn't necessary
+	boxColorOne=boxcolor,
+	headershape=roundedright,
+	headerfont=\sf\bf,
+	textborder=rectangle,
+	background=user,
+	headerborder=open,
+    boxshade=plain
+}
+%%% Eye Cacther %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+	Eye Catcher, empty if option eyecatcher=false - unused
+}
+%%% Title %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf
+	Straight-line Programs:\\
+    A Short Overview
+}
+%%% Authors %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+	\vspace{1em} Eugene B. Kurpilyansky\\
+	{\smaller dembelz@yandex.ru}
+}
+%%% Logo %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+% The logos are compressed a bit into a simple box to make them smaller on the result
+% (Wasn't able to find any bigger of them.)
+\setlength\fboxsep{0.5pt}
+\setlength\fboxrule{0.5pt}
+	\fbox{
+		\begin{minipage}{15em}
+			\begin{center}
+				\includegraphics[scale=0.65]{zzz.jpg}
+			\end{center}
+		\end{minipage}
+	}
+}
+
+\headerbox{Definitions}{name=definitions,column=0,row=0}{
+
+Straight-line program (SLP) is a context-free grammar in Chomsky normal form which produces exactly one string over $\Sigma^+$.
+	%\begin{figure}[hb]
+    \begin{center}
+        \begin{picture}(30,95)(75,0)
+            \fibonacciwordslp
+        \end{picture}
+    \end{center}
+    %\caption{An SLP that derives $abaababaabaab$}
+	%\end{figure}
+}
+
+\headerbox{Main Facts}{name=main,column=0,below=definitions}{
+\begin{thm}{\cite{SmallestCFG}}
+There is no polynomial-time algorithm for the smallest grammar problem with approximation ratio less than
+$\frac{8569}{8568}$ unless P = NP
+\end{thm}
+
+\begin{thm}{\cite{SLPConstruction}}
+We can construct in $O(n \log |\Sigma|)$ time a $O(\log n)$-ratio approximation of a minimal grammar-based compression. Given LZ-factorization of length $k$ we can construct a correcponding grammar of size $O(k \log n)$ in time $O(k \log n)$.
+\end{thm}
+}
+
+\headerbox{Complexity}{name=complexity,column=0,below=main}{
+
+There is a class of string problems that can be solved in terms of SLPs. Let $\mathbb{T}$ be an SLP that derives a text and let $\mathbb{P}$ be an SLP that derives a pattern. 
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+    \textbf{Problem} & \textbf{Time} \\ \hline
+	Pattern matching & $O(|\mathbb{T}|^2|\mathbb{P}|)$ \\ \hline
+	Counting all palindromes & $O(|\mathbb{T}|^4$) \\ \hline
+	Longest common substring & $O(|\mathbb{T}|^4 \log |\mathbb{T}|)$ \\ \hline
+	Computing all overlaps & $O(|\mathbb{T}|^4 \log |\mathbb{T}|)$ \\
+\hline
+\end{tabular}
+\end{center}
+
+There is a class of string problems that have no polynomial algorithm in terms of SLPs.
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+    \textbf{Problem} & \textbf{Complexity} \\ \hline
+	Hamming distance & \#P-complete \\ \hline
+	Embedding & $\theta^p_2$-hard \\ \hline
+	Longest common subsequence & NP-hard \\
+\hline
+\end{tabular}
+\end{center}
+}
+
+\headerbox{References}{name=references,column=0,below=complexity}{
+\smaller													% Make the whole text smaller
+\vspace{-0.4em} 										% Save some space at the beginning
+\bibliographystyle{plain}							% Use plain style
+\renewcommand{\section}[2]{\vskip 0.05em}		% Omit "References" title
+\begin{thebibliography}{1}							% Simple bibliography with widest label of 1
+\itemsep=-0.01em										% Save space between the separation
+\setlength{\baselineskip}{0.4em}					% Save space with longer lines
+
+\bibitem{Springer}
+\textsl{I.\,Burmistrov, A.\,Kozlova, E.\,Kurpilyansky, A.\,Khvorost}, Straight-line programs: a practical test (extended abstract),
+Journal of Mathematical Sciences, 192 (2013), 282--294.
+
+\bibitem{SmallestCFG}
+\textsl{M.\,Charikar, E.\,Lehman,  D.\,Liu, R.\,Panigrahy, M.\,Prabhakaran, A.\,Sahai, A.\,Shelat}, The smallest grammar problem, IEEE
+Trans. Information Theory, 51 (2005), 2554--2576.
+
+\bibitem{SLPConstruction}
+\textsl{W.\,Rytter}, Application of {L}empel-{Z}iv factorization to the approximation of grammar-based compression,
+Theor. Comput. Sci., 302 (2003), 211--222.
+
+\end{thebibliography}
+}
+
+\headerbox{A Prctical Test}{name=comparisonAlgorithms,span=2,column=1,row=0}{
+	We are investigating different approaches that improve Rytter's algorithm:
+	\begin{itemize}
+		\item To minimize number of AVL-rotations using dynamic programming \cite{Springer}
+		\item To spend less time on balancing of nodes using Cartesian trees instead of AVL trees \cite{Springer}
+		\item To construct AVL trees in parallel. 
+	\end{itemize}
+	Algorithms notations:
+	\begin{center}
+		\begin{picture}(50,60)(70,0)
+	    		\algorithmNotations
+	    \end{picture}
+    \end{center}
+    
+    AVL rotations optimization statistics:
+	\begin{center}
+		\begin{picture}(50,200)(70,0)
+        	\DNARotations
+		\end{picture}
+	\end{center}
+	SLPs construction time statistics on DNAs: 
+	\begin{center}
+    	\begin{picture}(50,170)(70,0)
+        	\DNATimeStats
+		\end{picture}
+	\end{center}
+	Compressions ratio statistics on DNAs:
+    \begin{center}
+        \begin{picture}(50,240)(70,0)
+        	\CompressionRatioOnDNAs
+        \end{picture}
+    \end{center}
+}
+
+\end{poster}
+\end{document}

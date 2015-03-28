@@ -1,0 +1,1027 @@
+\colorlet{shaded}{white!60!black}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheoremstyle{break}% name
+  {9pt}%      Space above, empty = `usual value'
+  {9pt}%      Space below
+  {\itshape}% Body font
+  {}%         Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% Thm head font
+  {.}%        Punctuation after thm head
+  {.5em}% Space after thm head: \newline = linebreak
+  {}%         Thm head spec
+\theoremstyle{break}
+\newtheorem{lem}[thm]{Lemma}
+
+\newcommand{\prog}[3]{\langle #1, #2, #3\rangle}
+\newcommand{\slp}[1]{\mathbb{#1}}
+\newcommand{\slpterm}[3]{\slp{#1}_{#2} = #3}
+\newcommand{\slpnonterm}[4]{\slp{#1}_{#2} = \slp{#1}_{#3} \cdot \slp{#1}_{#4}}
+\newcommand{\substr}[2]{[#1\dots#2]}
+
+\newcommand{\probleminput}[1]{\noindent \textsc{Input:} #1}
+\newcommand{\problemoutput}[1]{\noindent \textsc{Output:} #1}
+\newcommand{\problem}[3]{
+            \noindent {\sc Problem:} \textbf{#1} \newline
+            \noindent {\sc Input:} #2 \newline
+            \noindent {\sc Output:} #3
+}
+\renewcommand{\proof}{{\bf Proof:}}
+\newcommand{\example}[1]{{\bf Example} (#1)}
+
+\newcounter{figures}
+\newcommand{\pic}[5] {
+    \addtocounter{figures}{1}
+    \begin{center}
+        \begin{pgfpicture}{#1cm}{#2cm}{#3cm}{#4cm}
+            {\scriptsize
+                {\sf
+                    #5
+                }
+            }
+        \end{pgfpicture}
+    \end{center}
+}
+
+\newcommand{\textline}[3]{
+    \pgfputat{\pgfxy(#1,#2)}{\pgfbox[left,center]{\mbox{#3} }}
+}
+
+\newcommand{\ComputingFiValue}{
+    \pic{0}{-0.75}{10}{4.5}{
+        \textline{1.5}{4}{$result = +\infty;$}
+        \textline{1.5}{3.5}{$l = 0, r = |f_{i+p}| + \dots + |f_{i+q}|;$}
+        \textline{1.5}{3}{\textbf{for} ($int~r = p; r \leq q; r++;$) \{ }
+        	\textline{2}{2.5}{$l += |f_{i+r}|;$}
+        	\textline{2}{2}{$r -= |f_{i+r}|;$}
+        	\textline{2}{1.5}{$tmp = \varphi(p,r) + \varphi(r+1, q) + |\log l - \log r|;$}
+            \textline{2}{1}{\textbf{if} ($tmp < result$)}
+        		\textline{2.5}{0.5}{$result = tmp;$}
+        \textline{1.5}{0}{\}}
+        \textline{1}{-0.75}{{\bf Figure \arabic{figures}.} Pseudo code of computing single value of $\varphi(p,q)$}
+    }
+}
+
+\newcommand{\drawLZNode}[2]{
+	\draw (#1,#2) rectangle +(0.1,0.1);
+}
+
+\newcommand{\drawLZinfNode}[2]{
+	\filldraw[fill=black] (#1,#2) rectangle +(0.1,0.1);
+}
+
+\newcommand{\drawSLPoldNode}[2]{
+	\draw (#1, #2) circle (1.5pt);
+}
+
+\newcommand{\drawSLPnewNode}[2]{
+	\filldraw[fill=black] (#1, #2) circle (1.5pt);
+}
+
+\newcommand{\drawAVLNode}[2]{
+	\filldraw[fill=black] #1 circle (2pt) node[anchor=south] {\scriptsize {#2}};
+}
+
+\newcommand{\drawTriangle}[3]{
+	\filldraw[fill=shaded] #1 -- #2 -- #3 -- #1; 
+}
+
+\newcommand{\drawLZWNode}[2]{
+	\filldraw[fill=shaded] (#1,#2) -- +(0.08, 0.15) -- +(0.16, 0) -- (#1,#2); 
+}
+
+\newcommand{\DNARotations}{
+	\begin{tikzpicture}
+		\addtocounter{figures}{1}
+		
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,8.2);
+		\draw[->] (0,0) -- (0,8.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext$Mb}}; 
+		\foreach \y / \ytext in {1/0.5, 2/1, 3/1.5, 4/2, 5/2.5, 6/3, 7/3.5, 8/4}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$ million}};
+		
+		%SLPnew
+		\drawSLPnewNode{0.1}{0.01}
+		\drawSLPnewNode{0.15}{0.01}
+		\drawSLPnewNode{0.17}{0.02}
+		\drawSLPnewNode{0.2}{0.019}
+		\drawSLPnewNode{0.27}{0.025}
+		\drawSLPnewNode{0.32}{0.033}
+		\drawSLPnewNode{0.36}{0.043}
+		\drawSLPnewNode{0.42}{0.046}
+		\drawSLPnewNode{0.44}{0.052}
+		\drawSLPnewNode{0.5}{0.056}
+		\drawSLPnewNode{0.58}{0.067}
+		\drawSLPnewNode{0.6}{0.074}
+		\drawSLPnewNode{0.6}{0.08}
+		\drawSLPnewNode{0.7}{0.094}
+		\drawSLPnewNode{0.75}{0.098}
+		\drawSLPnewNode{0.8}{0.107}
+		\drawSLPnewNode{0.84}{0.112}
+		\drawSLPnewNode{0.92}{0.116}
+		\drawSLPnewNode{0.96}{0.126}
+		\drawSLPnewNode{1}{0.133}
+		\drawSLPnewNode{1.08}{0.137}
+		\drawSLPnewNode{1.16}{0.13}
+		\drawSLPnewNode{1.2}{0.132}
+		\drawSLPnewNode{1.34}{0.177}
+		\drawSLPnewNode{1.42}{0.187}
+		\drawSLPnewNode{1.54}{0.203}
+		\drawSLPnewNode{1.63}{0.213}
+		\drawSLPnewNode{1.72}{0.226}
+		\drawSLPnewNode{1.84}{0.242}
+		\drawSLPnewNode{1.95}{0.258}
+		\drawSLPnewNode{2.06}{0.27}
+		\drawSLPnewNode{2.1}{0.297}
+		\drawSLPnewNode{2.26}{0.284}
+		\drawSLPnewNode{2.48}{0.362}
+		\drawSLPnewNode{2.94}{0.383}
+		\drawSLPnewNode{3.28}{0.433}
+		\drawSLPnewNode{3.66}{0.475}
+		\drawSLPnewNode{4.22}{0.557}
+		\drawSLPnewNode{4.5}{0.553}
+				
+		%SLPclassic
+		\drawSLPoldNode{0.1}{0.126}
+		\drawSLPoldNode{0.15}{0.29}
+		\drawSLPoldNode{0.17}{0.227}
+		\drawSLPoldNode{0.2}{0.374}
+		\drawSLPoldNode{0.27}{0.487}
+		\drawSLPoldNode{0.32}{0.622}
+		\drawSLPoldNode{0.36}{0.675}
+		\drawSLPoldNode{0.42}{0.754}
+		\drawSLPoldNode{0.44}{0.764}
+		\drawSLPoldNode{0.5}{0.947}
+		\drawSLPoldNode{0.58}{1.013}
+		\drawSLPoldNode{0.6}{1.14}
+		\drawSLPoldNode{0.6}{1.32}
+		\drawSLPoldNode{0.7}{1.38}
+		\drawSLPoldNode{0.75}{1.5}
+		\drawSLPoldNode{0.8}{1.575}
+		\drawSLPoldNode{0.84}{1.6}
+		\drawSLPoldNode{0.92}{1.71}
+		\drawSLPoldNode{0.96}{1.8}
+		\drawSLPoldNode{1}{1.88}
+		\drawSLPoldNode{1.08}{1.757}
+		\drawSLPoldNode{1.16}{1.826}
+		\drawSLPoldNode{1.2}{2.39}
+		\drawSLPoldNode{1.34}{2.53}
+		\drawSLPoldNode{1.42}{2.78}
+		\drawSLPoldNode{1.54}{2.87}
+		\drawSLPoldNode{1.63}{3.07}
+		\drawSLPoldNode{1.72}{3.35}
+		\drawSLPoldNode{1.84}{3.48}
+		\drawSLPoldNode{1.95}{3.76}
+		\drawSLPoldNode{2.06}{3.81}
+		\drawSLPoldNode{2.1}{4.1}
+		\drawSLPoldNode{2.26}{3.88}
+		\drawSLPoldNode{2.48}{4.89}
+		\drawSLPoldNode{2.94}{5.2}
+		\drawSLPoldNode{3.28}{6.02}
+		\drawSLPoldNode{3.66}{6.52}
+		\drawSLPoldNode{4.22}{7.66}
+		\drawSLPoldNode{4.5}{7.35}
+		
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Number of rotations of an AVL tree on DNA
+		sequences}};
+	\end{tikzpicture}
+}
+
+\newcommand{\DNASpeedTestInFile}{
+	\begin{tikzpicture}
+		\addtocounter{figures}{1}
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,6.2);
+		\draw[->] (0,0) -- (0,6.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext$Mb}}; 
+		\draw (-1pt,1 cm) -- (1pt,1 cm) node[anchor=east] {\tiny{$1$hour}};	
+		\foreach \y in {2, 3, 4, 5, 6}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\y$hours}};
+		
+		%SLPnew
+		\drawSLPnewNode{0.6}{0.01}
+		\drawSLPnewNode{0.7}{0.012}
+		\drawSLPnewNode{0.75}{0.015}
+		\drawSLPnewNode{0.8}{0.018}
+		\drawSLPnewNode{0.84}{0.017}
+		\drawSLPnewNode{0.92}{0.019}
+		\drawSLPnewNode{0.96}{0.02}
+		\drawSLPnewNode{1}{0.022}
+		\drawSLPnewNode{1.08}{0.02}
+		\drawSLPnewNode{1.16}{0.022}
+		\drawSLPnewNode{1.2}{0.035}
+		\drawSLPnewNode{1.34}{0.039}
+		\drawSLPnewNode{1.42}{0.054}
+		\drawSLPnewNode{1.54}{0.054}
+		\drawSLPnewNode{1.63}{0.082}
+		\drawSLPnewNode{1.72}{0.137}
+		\drawSLPnewNode{1.84}{0.155}
+		\drawSLPnewNode{1.95}{0.236}
+		\drawSLPnewNode{2.06}{0.236}
+		\drawSLPnewNode{2.1}{0.342}
+		\drawSLPnewNode{2.26}{0.239}
+		\drawSLPnewNode{2.48}{0.695}
+		\drawSLPnewNode{2.94}{0.88}
+		\drawSLPnewNode{3.28}{1.53}
+		\drawSLPnewNode{3.66}{2.066}
+		\drawSLPnewNode{4.22}{3.51}
+		\drawSLPnewNode{4.5}{2.78}
+						
+		%SLPclassic
+		\drawSLPoldNode{0.6}{0.02}
+		\drawSLPoldNode{0.7}{0.023}
+		\drawSLPoldNode{0.75}{0.026}
+		\drawSLPoldNode{0.8}{0.029}
+		\drawSLPoldNode{0.84}{0.029}
+		\drawSLPoldNode{0.92}{0.032}
+		\drawSLPoldNode{0.96}{0.034}
+		\drawSLPoldNode{1}{0.037}
+		\drawSLPoldNode{1.08}{0.034}
+		\drawSLPoldNode{1.16}{0.037}
+		\drawSLPoldNode{1.2}{0.059}
+		\drawSLPoldNode{1.34}{0.069}
+		\drawSLPoldNode{1.42}{0.094}
+		\drawSLPoldNode{1.54}{0.092}
+		\drawSLPoldNode{1.63}{0.14}
+		\drawSLPoldNode{1.72}{0.213}
+		\drawSLPoldNode{1.84}{0.239}
+		\drawSLPoldNode{1.95}{0.333}
+		\drawSLPoldNode{2.06}{0.341}
+		\drawSLPoldNode{2.1}{0.541}
+		\drawSLPoldNode{2.26}{0.406}
+		\drawSLPoldNode{2.48}{1.44}
+		\drawSLPoldNode{2.94}{1.94}
+		\drawSLPoldNode{3.28}{3.22}
+		\drawSLPoldNode{3.66}{3.84}
+		\drawSLPoldNode{4.22}{6.76}
+		\drawSLPoldNode{4.5}{6.04}		
+								
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Time statistic of an SLP construction on DNA
+		sequences }};
+		\draw (2.5, -1.4) node {\scriptsize {\sf (an AVL tree stored in file)}};
+	\end{tikzpicture}
+}
+
+\newcommand{\DNASpeedTestInMemory}{
+	\begin{tikzpicture}
+		\addtocounter{figures}{1}
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,4.2);
+		\draw[->] (0,0) -- (0,4.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext$Mb}}; 
+		\foreach \y / \ytext in {1/5, 2/10, 3/15, 4/20}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$min}};
+		
+		%SLPnew
+		\drawSLPnewNode{0.5}{0.051}
+		\drawSLPnewNode{0.58}{0.053}
+		\drawSLPnewNode{0.6}{0.071}
+		\drawSLPnewNode{0.6}{0.093}
+		\drawSLPnewNode{0.7}{0.098}
+		\drawSLPnewNode{0.75}{0.114}
+		\drawSLPnewNode{0.8}{0.127}
+		\drawSLPnewNode{0.84}{0.144}
+		\drawSLPnewNode{0.92}{0.149}
+		\drawSLPnewNode{0.96}{0.168}
+		\drawSLPnewNode{1}{0.187}
+		\drawSLPnewNode{1.08}{0.16}
+		\drawSLPnewNode{1.16}{0.168}
+		\drawSLPnewNode{1.2}{0.296}
+		\drawSLPnewNode{1.34}{0.329}
+		\drawSLPnewNode{1.42}{0.43}
+		\drawSLPnewNode{1.54}{0.43}
+		\drawSLPnewNode{1.63}{0.528}
+		\drawSLPnewNode{1.72}{0.595}
+		\drawSLPnewNode{1.84}{0.7}
+		\drawSLPnewNode{1.95}{0.745}
+		\drawSLPnewNode{2.06}{0.765}
+		\drawSLPnewNode{2.1}{0.899}
+		\drawSLPnewNode{2.26}{0.88}
+		\drawSLPnewNode{2.48}{1.44}
+		\drawSLPnewNode{2.94}{1.66}
+		\drawSLPnewNode{3.28}{2.275}
+		\drawSLPnewNode{3.66}{2.766}
+		\drawSLPnewNode{4.22}{4.131}
+		\drawSLPnewNode{4.5}{3.626}
+				
+		%SLPclassic
+		\drawSLPoldNode{0.5}{0.065}
+		\drawSLPoldNode{0.58}{0.078}
+		\drawSLPoldNode{0.6}{0.1}
+		\drawSLPoldNode{0.6}{0.122}
+		\drawSLPoldNode{0.7}{0.12}
+		\drawSLPoldNode{0.75}{0.139}
+		\drawSLPoldNode{0.8}{0.153}
+		\drawSLPoldNode{0.84}{0.169}
+		\drawSLPoldNode{0.92}{0.198}
+		\drawSLPoldNode{0.96}{0.2}
+		\drawSLPoldNode{1}{0.191}
+		\drawSLPoldNode{1.08}{0.185}
+		\drawSLPoldNode{1.16}{0.227}
+		\drawSLPoldNode{1.2}{0.323}
+		\drawSLPoldNode{1.34}{0.3886}
+		\drawSLPoldNode{1.42}{0.485}
+		\drawSLPoldNode{1.54}{0.459}
+		\drawSLPoldNode{1.63}{0.521}
+		\drawSLPoldNode{1.72}{0.623}
+		\drawSLPoldNode{1.84}{0.651}
+		\drawSLPoldNode{1.95}{0.866}
+		\drawSLPoldNode{2.06}{0.8}
+		\drawSLPoldNode{2.1}{1.036}
+		\drawSLPoldNode{2.26}{0.946}
+		\drawSLPoldNode{2.48}{1.46}
+		\drawSLPoldNode{2.94}{1.524}
+		\drawSLPoldNode{3.28}{2.185}
+		\drawSLPoldNode{3.66}{2.595}
+		\drawSLPoldNode{4.22}{3.507}
+		\drawSLPoldNode{4.5}{3.119}
+								
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Time statistic of an SLP construction on DNA
+		sequences}};
+		\draw (2.5, -1.4) node {\scriptsize {\sf (an AVL tree stored in operational memory)}};
+	\end{tikzpicture}
+}
+
+\newcommand{\RandomRotations}{
+	\begin{tikzpicture}
+		\addtocounter{figures}{1}
+			
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,5.2);
+		\draw[->] (0,0) -- (0,5.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext$Mb}}; 
+		\foreach \y / \ytext in {1, 2, 3, 4, 5}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$ million}};
+			
+		%SLPnew
+		\drawSLPnewNode{0.1}{0.007}
+		\drawSLPnewNode{0.2}{0.014}
+		\drawSLPnewNode{0.3}{0.02}
+		\drawSLPnewNode{0.4}{0.026}
+		\drawSLPnewNode{0.6}{0.04}
+		\drawSLPnewNode{0.8}{0.053}
+		\drawSLPnewNode{1}{0.067}
+		\drawSLPnewNode{1.2}{0.08}
+		\drawSLPnewNode{1.4}{0.094}
+		\drawSLPnewNode{1.6}{0.106}
+		\drawSLPnewNode{1.8}{0.119}
+		\drawSLPnewNode{2}{0.133}
+		\drawSLPnewNode{2.2}{0.146}
+		\drawSLPnewNode{2.4}{0.159}
+		\drawSLPnewNode{2.6}{0.173}
+		\drawSLPnewNode{2.8}{0.187}
+		\drawSLPnewNode{3}{0.2}
+		\drawSLPnewNode{3.2}{0.213}
+		\drawSLPnewNode{3.4}{0.227}
+		\drawSLPnewNode{3.6}{0.24}
+		\drawSLPnewNode{3.8}{0.251}
+		\drawSLPnewNode{4}{0.266}
+		\drawSLPnewNode{4.2}{0.281}
+		\drawSLPnewNode{4.4}{0.293}
+		\drawSLPnewNode{4.6}{0.306}
+		\drawSLPnewNode{4.8}{0.321}
+		\drawSLPnewNode{5}{0.333}
+		\drawSLPnewNode{5.2}{0.346}
+		\drawSLPnewNode{5.4}{0.359}
+
+		%SLPclassic	
+		\drawSLPoldNode{0.1}{0.116}
+		\drawSLPoldNode{0.2}{0.22}
+		\drawSLPoldNode{0.3}{0.323}
+		\drawSLPoldNode{0.4}{0.421}
+		\drawSLPoldNode{0.6}{0.617}
+		\drawSLPoldNode{0.8}{0.81}
+		\drawSLPoldNode{1}{1}
+		\drawSLPoldNode{1.2}{1.183}
+		\drawSLPoldNode{1.4}{1.369}
+		\drawSLPoldNode{1.6}{1.551}
+		\drawSLPoldNode{1.8}{1.733}
+		\drawSLPoldNode{2}{1.913}
+		\drawSLPoldNode{2.2}{2.095}
+		\drawSLPoldNode{2.4}{2.276}
+		\drawSLPoldNode{2.6}{2.451}
+		\drawSLPoldNode{2.8}{2.628}
+		\drawSLPoldNode{3}{2.808}
+		\drawSLPoldNode{3.2}{2.982}
+		\drawSLPoldNode{3.4}{3.16}
+		\drawSLPoldNode{3.6}{3.339}
+		\drawSLPoldNode{3.8}{3.512}
+		\drawSLPoldNode{4}{3.686}
+		\drawSLPoldNode{4.2}{3.862}
+		\drawSLPoldNode{4.4}{4.035}
+		\drawSLPoldNode{4.6}{4.215}
+		\drawSLPoldNode{4.8}{4.39}
+		\drawSLPoldNode{5}{4.565}
+		\drawSLPoldNode{5.2}{4.743}
+		\drawSLPoldNode{5.4}{4.914}	
+		
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Number of rotations of an AVL tree on random
+		strings}};
+	\end{tikzpicture}
+}
+
+\newcommand{\RandomSpeedTestInMemory}{
+	\begin{tikzpicture}
+		\addtocounter{figures}{1}
+		
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,5.2);
+		\draw[->] (0,0) -- (0,5.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext$Mb}}; 
+		\foreach \y / \ytext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$ min}};
+			
+		%SLPnew
+		\drawSLPnewNode{0.1}{0.008}
+		\drawSLPnewNode{0.2}{0.019}
+		\drawSLPnewNode{0.3}{0.031}
+		\drawSLPnewNode{0.4}{0.046}
+		\drawSLPnewNode{0.6}{0.084}
+		\drawSLPnewNode{0.8}{0.131}
+		\drawSLPnewNode{1}{0.183}
+		\drawSLPnewNode{1.2}{0.252}
+		\drawSLPnewNode{1.4}{0.324}
+		\drawSLPnewNode{1.6}{0.405}
+		\drawSLPnewNode{1.8}{0.504}
+		\drawSLPnewNode{2}{0.606}
+		\drawSLPnewNode{2.2}{0.713}
+		\drawSLPnewNode{2.4}{0.837}
+		\drawSLPnewNode{2.6}{0.96}
+		\drawSLPnewNode{2.8}{1.093}
+		\drawSLPnewNode{3}{1.239}
+		\drawSLPnewNode{3.2}{1.392}
+		\drawSLPnewNode{3.4}{1.564}
+		\drawSLPnewNode{3.6}{1.741}
+		\drawSLPnewNode{3.8}{1.902}
+		\drawSLPnewNode{4}{2.116}
+		\drawSLPnewNode{4.2}{2.319}
+		\drawSLPnewNode{4.4}{2.516}
+		\drawSLPnewNode{4.6}{2.766}
+		\drawSLPnewNode{4.8}{3.006}
+		\drawSLPnewNode{5}{3.24}
+		\drawSLPnewNode{5.2}{3.511}
+		\drawSLPnewNode{5.4}{3.755}
+		
+		%SLPclassic	
+		\drawSLPoldNode{0.1}{0.009}
+		\drawSLPoldNode{0.2}{0.023}
+		\drawSLPoldNode{0.3}{0.038}
+		\drawSLPoldNode{0.4}{0.058}
+		\drawSLPoldNode{0.6}{0.103}
+		\drawSLPoldNode{0.8}{0.162}
+		\drawSLPoldNode{1}{0.227}
+		\drawSLPoldNode{1.2}{0.312}
+		\drawSLPoldNode{1.4}{0.403}
+		\drawSLPoldNode{1.6}{0.504}
+		\drawSLPoldNode{1.8}{0.628}
+		\drawSLPoldNode{2}{0.759}
+		\drawSLPoldNode{2.2}{0.891}
+		\drawSLPoldNode{2.4}{1.049}
+		\drawSLPoldNode{2.6}{1.212}
+		\drawSLPoldNode{2.8}{1.361}
+		\drawSLPoldNode{3}{1.574}
+		\drawSLPoldNode{3.2}{1.744}
+		\drawSLPoldNode{3.4}{1.966}
+		\drawSLPoldNode{3.6}{2.209}
+		\drawSLPoldNode{3.8}{2.397}
+		\drawSLPoldNode{4}{2.779}
+		\drawSLPoldNode{4.2}{2.935}
+		\drawSLPoldNode{4.4}{3.221}
+		\drawSLPoldNode{4.6}{3.563}
+		\drawSLPoldNode{4.8}{3.824}
+		\drawSLPoldNode{5}{4.121}
+		\drawSLPoldNode{5.2}{4.399}
+		\drawSLPoldNode{5.4}{4.696}
+			
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Time statistic of an SLP construction on
+		random strings }};
+		\draw (2.5, -1.4) node {\scriptsize {\sf (an AVL tree stored in operational memory)}};
+	\end{tikzpicture}
+}
+
+\newcommand{\RandomSpeedTestInFile}{
+	\begin{tikzpicture}[scale=0.8]
+		\addtocounter{figures}{1}
+		
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,8.2);
+		\draw[->] (0,0) -- (0,8.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext$Mb}}; 
+		\foreach \y / \ytext in {1/2, 2/4, 3/6, 4/8, 5/10, 6/12, 7/14, 8/16}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$ hours}};
+			
+		%SLPnew
+		\drawSLPnewNode{0.8}{0.009}
+		\drawSLPnewNode{1}{0.015}
+		\drawSLPnewNode{1.2}{0.019}
+		\drawSLPnewNode{1.4}{0.027}
+		\drawSLPnewNode{1.6}{0.046}
+		\drawSLPnewNode{1.8}{0.081}
+		\drawSLPnewNode{2}{0.13}
+		\drawSLPnewNode{2.2}{0.193}
+		\drawSLPnewNode{2.4}{0.275}
+		\drawSLPnewNode{2.6}{0.373}
+		\drawSLPnewNode{2.8}{0.474}
+		\drawSLPnewNode{3}{0.615}
+		\drawSLPnewNode{3.2}{0.773}
+		\drawSLPnewNode{3.4}{0.956}
+		\drawSLPnewNode{3.6}{1.143}
+		\drawSLPnewNode{3.8}{1.348}
+		\drawSLPnewNode{4}{1.597}
+		\drawSLPnewNode{4.2}{1.871}
+		\drawSLPnewNode{4.4}{2.138}
+		\drawSLPnewNode{4.6}{2.434}
+		\drawSLPnewNode{4.8}{2.784}
+		\drawSLPnewNode{5}{3.109}
+		\drawSLPnewNode{5.2}{3.508}
+		\drawSLPnewNode{5.4}{4.125}
+
+		%SLPclassic	
+		\drawSLPoldNode{0.8}{0.02}
+		\drawSLPoldNode{1}{0.029}
+		\drawSLPoldNode{1.2}{0.043}
+		\drawSLPoldNode{1.4}{0.063}
+		\drawSLPoldNode{1.6}{0.101}
+		\drawSLPoldNode{1.8}{0.163}
+		\drawSLPoldNode{2}{0.236}
+		\drawSLPoldNode{2.2}{0.334}
+		\drawSLPoldNode{2.4}{0.462}
+		\drawSLPoldNode{2.6}{0.629}
+		\drawSLPoldNode{2.8}{0.821}
+		\drawSLPoldNode{3}{0.993}
+		\drawSLPoldNode{3.2}{1.277}
+		\drawSLPoldNode{3.4}{1.582}
+		\drawSLPoldNode{3.6}{1.871}
+		\drawSLPoldNode{3.8}{2.356}
+		\drawSLPoldNode{4}{2.714}
+		\drawSLPoldNode{4.2}{3.222}
+		\drawSLPoldNode{4.4}{3.888}
+		\drawSLPoldNode{4.6}{4.428}
+		\drawSLPoldNode{4.8}{5.456}
+		\drawSLPoldNode{5}{6.134}
+		\drawSLPoldNode{5.2}{6.821}
+		\drawSLPoldNode{5.4}{8.175}	
+					
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Time statistic of an SLP construction on
+		random strings}};
+		\draw (2.5, -1.4) node {\scriptsize {\sf (an AVL tree stored in file)}};
+	\end{tikzpicture}
+}
+
+\newcommand{\DNACompression}{
+	\begin{tikzpicture}[scale=0.8]
+		\addtocounter{figures}{1}
+		\draw[step=1cm, gray, very thin] (0,0) grid (7.2,7.2);
+		\draw[->] (0,0) -- (0,7.5);
+		\draw[->] (0,0) -- (7.5,0);
+		
+		\foreach \x / \xtext in {1/3, 2/6, 3/9, 4/12, 5/15, 6/18, 7/21}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext$Mb}}; 
+		\foreach \y / \ytext in {1/3, 2/6, 3/9, 4/12, 5/15, 6/18, 7/21}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$\%}};
+		
+		%lz77
+		\drawLZNode{0.16}{3.34}
+		\drawLZNode{0.96}{4.07}
+		\drawLZNode{1}{4.33}
+		\drawLZNode{1.17}{4.28}
+		\drawLZNode{1.25}{4.21}
+		\drawLZNode{1.33}{4.21}
+		\drawLZNode{1.4}{4.25}
+		\drawLZNode{1.53}{4.17}
+		\drawLZNode{1.6}{3.97}
+		\drawLZNode{1.67}{4.02}
+		\drawLZNode{1.8}{4.06}
+		\drawLZNode{1.93}{4.3}
+		\drawLZNode{1.98}{4.23}
+		\drawLZNode{2.23}{4.09}
+		\drawLZNode{2.37}{4.09}
+		\drawLZNode{2.57}{4.18}
+		\drawLZNode{2.71}{4.08}
+		\drawLZNode{2.87}{4.19}
+		\drawLZNode{3.07}{4.34}
+		\drawLZNode{3.26}{4.28}
+		\drawLZNode{3.43}{4.47}
+		\drawLZNode{3.5}{4.44}
+		\drawLZNode{3.77}{4.46}
+		\drawLZNode{4.13}{4.4}
+		\drawLZNode{4.57}{4.32}
+		\drawLZNode{4.9}{4.33}
+		\drawLZNode{5.47}{4.57}
+		\drawLZNode{6.1}{4.55}
+		\drawLZNode{7.03}{4.55}
+		\drawLZNode{7.5}{4.35}
+		
+		%lz77inf
+		\drawLZinfNode{0.16}{2.01}
+		\drawLZinfNode{0.96}{2.78}
+		\drawLZinfNode{1}{3.07}
+		\drawLZinfNode{1.17}{3.04}
+		\drawLZinfNode{1.25}{2.94}
+		\drawLZinfNode{1.33}{2.83}
+		\drawLZinfNode{1.4}{2.97}
+		\drawLZinfNode{1.53}{2.78}
+		\drawLZinfNode{1.6}{2.74}
+		\drawLZinfNode{1.67}{2.76}
+		\drawLZinfNode{1.8}{2.69}
+		\drawLZinfNode{1.93}{2.38}
+		\drawLZinfNode{1.98}{2.43}
+		\drawLZinfNode{2.23}{2.76}
+		\drawLZinfNode{2.37}{2.74}
+		\drawLZinfNode{2.57}{2.8}
+		\drawLZinfNode{2.71}{2.74}
+		\drawLZinfNode{2.87}{2.76}
+		\drawLZinfNode{3.07}{2.87}
+		\drawLZinfNode{3.26}{2.79}
+		\drawLZinfNode{3.43}{2.92}
+		\drawLZinfNode{3.5}{2.9}
+		\drawLZinfNode{3.77}{2.88}
+		\drawLZinfNode{4.13}{2.49}
+		\drawLZinfNode{4.57}{2.78}
+		\drawLZinfNode{4.9}{2.76}
+		\drawLZinfNode{5.47}{2.93}
+		\drawLZinfNode{6.1}{2.83}
+		\drawLZinfNode{7.03}{2.87}
+		\drawLZinfNode{7.5}{2.52}
+		
+		%lzw
+		\drawLZWNode{0.16}{4.62}
+		\drawLZWNode{0.96}{3.83}
+		\drawLZWNode{1}{3.9}
+		\drawLZWNode{1.17}{3.83}
+		\drawLZWNode{1.25}{3.75}
+		\drawLZWNode{1.33}{3.72}
+		\drawLZWNode{1.4}{3.74}
+		\drawLZWNode{1.53}{3.74}
+		\drawLZWNode{1.6}{3.48}
+		\drawLZWNode{1.67}{3.51}
+		\drawLZWNode{1.8}{3.53}
+		\drawLZWNode{1.93}{3.72}
+		\drawLZWNode{1.98}{3.68}
+		\drawLZWNode{2.23}{3.5}
+		\drawLZWNode{2.37}{3.48}
+		\drawLZWNode{2.57}{3.52}
+		\drawLZWNode{2.71}{3.51}
+		\drawLZWNode{2.87}{3.48}
+		\drawLZWNode{3.07}{3.58}
+		\drawLZWNode{3.26}{3.52}
+		\drawLZWNode{3.43}{3.64}
+		\drawLZWNode{3.5}{3.69}
+		\drawLZWNode{3.77}{3.63}
+		\drawLZWNode{4.13}{3.61}
+		\drawLZWNode{4.57}{3.47}
+		\drawLZWNode{4.9}{3.48}
+		\drawLZWNode{5.47}{3.59}
+		\drawLZWNode{6.1}{3.55}
+		\drawLZWNode{7.03}{3.52}
+		\drawLZWNode{7.5}{3.41}
+				
+		%slp classic
+		\drawSLPoldNode{0.16}{4.74}
+		\drawSLPoldNode{0.96}{5.46}
+		\drawSLPoldNode{1}{5.82}
+		\drawSLPoldNode{1.17}{5.81}
+		\drawSLPoldNode{1.25}{5.66}
+		\drawSLPoldNode{1.33}{5.66}
+		\drawSLPoldNode{1.4}{5.71}
+		\drawSLPoldNode{1.53}{5.35}
+		\drawSLPoldNode{1.6}{5.39}
+		\drawSLPoldNode{1.67}{5.41}
+		\drawSLPoldNode{1.8}{5.25}
+		\drawSLPoldNode{1.93}{4.69}
+		\drawSLPoldNode{1.98}{4.69}
+		\drawSLPoldNode{2.23}{5.37}
+		\drawSLPoldNode{2.37}{5.32}
+		\drawSLPoldNode{2.57}{5.4}
+		\drawSLPoldNode{2.71}{5.36}
+		\drawSLPoldNode{2.87}{5.34}
+		\drawSLPoldNode{3.07}{5.48}
+		\drawSLPoldNode{3.26}{5.36}
+		\drawSLPoldNode{3.43}{5.5}
+		\drawSLPoldNode{3.5}{5.44}
+		\drawSLPoldNode{3.77}{5.43}
+		\drawSLPoldNode{4.13}{4.73}
+		\drawSLPoldNode{4.57}{5.31}
+		\drawSLPoldNode{4.9}{5.27}
+		\drawSLPoldNode{5.47}{5.49}
+		\drawSLPoldNode{6.1}{5.32}
+		\drawSLPoldNode{7.03}{5.41}
+		\drawSLPoldNode{7.5}{4.92}
+		
+		%slp modern
+		\drawSLPnewNode{0.16}{5.23}
+		\drawSLPnewNode{0.96}{5.93}
+		\drawSLPnewNode{1}{6.25}
+		\drawSLPnewNode{1.17}{6.21}
+		\drawSLPnewNode{1.25}{6.04}
+		\drawSLPnewNode{1.33}{6.02}
+		\drawSLPnewNode{1.4}{6.08}
+		\drawSLPnewNode{1.53}{5.74}
+		\drawSLPnewNode{1.6}{5.66}
+		\drawSLPnewNode{1.67}{5.69}
+		\drawSLPnewNode{1.8}{5.55}
+		\drawSLPnewNode{1.93}{5.1}
+		\drawSLPnewNode{1.98}{5.1}
+		\drawSLPnewNode{2.23}{5.68}
+		\drawSLPnewNode{2.37}{5.63}
+		\drawSLPnewNode{2.57}{5.73}
+		\drawSLPnewNode{2.71}{5.65}
+		\drawSLPnewNode{2.87}{5.65}
+		\drawSLPnewNode{3.07}{5.83}
+		\drawSLPnewNode{3.26}{5.68}
+		\drawSLPnewNode{3.43}{5.91}
+		\drawSLPnewNode{3.5}{5.87}
+		\drawSLPnewNode{3.77}{5.84}
+		\drawSLPnewNode{4.13}{5.09}
+		\drawSLPnewNode{4.57}{5.64}
+		\drawSLPnewNode{4.9}{5.61}
+		\drawSLPnewNode{5.47}{5.89}
+		\drawSLPnewNode{6.1}{5.7}
+		\drawSLPnewNode{7.03}{5.77}
+		\drawSLPnewNode{7.5}{5.26}
+		
+		\draw (3.5,-0.8) node {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Compression results on DNA sequences}};
+	\end{tikzpicture}
+}
+
+\newcommand{\RandomCompression}{
+	\begin{tikzpicture}[scale=0.9]
+		\addtocounter{figures}{1}
+		\draw[step=1cm, gray, very thin] (0,0) grid (6.2,7.2);
+		\draw[->] (0,0) -- (0,7.5);
+		\draw[->] (0,0) -- (6.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25, 6/30}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext$Mb}}; 
+		\foreach \y / \ytext in {1/3, 2/6, 3/9, 4/12, 5/15, 6/18, 7/21}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$\%}};
+		
+		%lz77
+		\drawLZNode{0.1}{4.66}
+		\drawLZNode{0.2}{4.65}
+		\drawLZNode{0.3}{4.64}
+		\drawLZNode{0.4}{4.64}
+		\drawLZNode{0.6}{4.64}
+		\drawLZNode{0.8}{4.64}
+		\drawLZNode{1}{4.64}
+		\drawLZNode{1.2}{4.64}
+		\drawLZNode{1.4}{4.64}
+		\drawLZNode{1.6}{4.64}
+		\drawLZNode{1.8}{4.64}
+		\drawLZNode{2}{4.64}
+		\drawLZNode{2.2}{4.64}
+		\drawLZNode{2.4}{4.64}
+		\drawLZNode{2.4}{4.64}
+		\drawLZNode{2.6}{4.64}
+		\drawLZNode{2.8}{4.64}
+		\drawLZNode{3}{4.64}
+		\drawLZNode{3.2}{4.64}
+		\drawLZNode{3.4}{4.64}
+		\drawLZNode{3.6}{4.64}
+		\drawLZNode{3.8}{4.64}
+		\drawLZNode{4}{4.64}
+		\drawLZNode{4.2}{4.64}
+		\drawLZNode{4.4}{4.64}
+		\drawLZNode{4.6}{4.64}
+		\drawLZNode{4.8}{4.64}
+		\drawLZNode{5}{4.64}
+		\drawLZNode{5.2}{4.64}
+		\drawLZNode{5.4}{4.64}		
+		
+		%lz77inf
+		\drawLZinfNode{0.1}{3.87}
+		\drawLZinfNode{0.2}{3.65}
+		\drawLZinfNode{0.3}{3.54}
+		\drawLZinfNode{0.4}{3.46}
+		\drawLZinfNode{0.6}{3.36}
+		\drawLZinfNode{0.8}{3.29}
+		\drawLZinfNode{1}{3.24}
+		\drawLZinfNode{1.2}{3.2}
+		\drawLZinfNode{1.4}{3.16}
+		\drawLZinfNode{1.6}{3.13}
+		\drawLZinfNode{1.8}{3.11}
+		\drawLZinfNode{2}{3.09}
+		\drawLZinfNode{2.2}{3.07}
+		\drawLZinfNode{2.4}{3.05}
+		\drawLZinfNode{2.4}{3.03}
+		\drawLZinfNode{2.6}{3.02}
+		\drawLZinfNode{2.8}{3}
+		\drawLZinfNode{3}{2.99}
+		\drawLZinfNode{3.2}{2.98}
+		\drawLZinfNode{3.4}{2.97}
+		\drawLZinfNode{3.6}{2.96}
+		\drawLZinfNode{3.8}{2.95}
+		\drawLZinfNode{4}{2.94}
+		\drawLZinfNode{4.2}{2.93}
+		\drawLZinfNode{4.4}{2.92}
+		\drawLZinfNode{4.6}{2.92}
+		\drawLZinfNode{4.8}{2.91}
+		\drawLZinfNode{5}{2.9}
+		\drawLZinfNode{5.2}{2.89}
+		\drawLZinfNode{5.4}{2.89}	
+		
+		%lzw
+		\drawLZWNode{0.1}{4.84}
+		\drawLZWNode{0.2}{4.54}
+		\drawLZWNode{0.3}{4.38}
+		\drawLZWNode{0.4}{4.28}
+		\drawLZWNode{0.6}{4.14}
+		\drawLZWNode{0.8}{4.04}
+		\drawLZWNode{1}{3.97}
+		\drawLZWNode{1.2}{3.91}
+		\drawLZWNode{1.4}{3.87}
+		\drawLZWNode{1.6}{3.83}
+		\drawLZWNode{1.8}{3.79}
+		\drawLZWNode{2}{3.76}
+		\drawLZWNode{2.2}{3.73}
+		\drawLZWNode{2.4}{3.71}
+		\drawLZWNode{2.4}{3.69}
+		\drawLZWNode{2.6}{3.67}
+		\drawLZWNode{2.8}{3.65}
+		\drawLZWNode{3}{3.63}
+		\drawLZWNode{3.2}{3.62}
+		\drawLZWNode{3.4}{3.6}
+		\drawLZWNode{3.6}{3.59}
+		\drawLZWNode{3.8}{3.57}
+		\drawLZWNode{4}{3.56}
+		\drawLZWNode{4.2}{3.55}
+		\drawLZWNode{4.4}{3.54}
+		\drawLZWNode{4.6}{3.53}
+		\drawLZWNode{4.8}{3.52}
+		\drawLZWNode{5}{3.51}
+		\drawLZWNode{5.2}{3.5}
+		\drawLZWNode{5.4}{3.5}	
+		
+		%slp_classic
+		\drawSLPoldNode{0.1}{7.29}
+		\drawSLPoldNode{0.2}{6.77}
+		\drawSLPoldNode{0.3}{6.52}
+		\drawSLPoldNode{0.4}{6.36}
+		\drawSLPoldNode{0.6}{6.15}
+		\drawSLPoldNode{0.8}{6.02}
+		\drawSLPoldNode{1}{5.93}
+		\drawSLPoldNode{1.2}{5.86}
+		\drawSLPoldNode{1.4}{5.8}
+		\drawSLPoldNode{1.6}{5.76}
+		\drawSLPoldNode{1.8}{5.72}
+		\drawSLPoldNode{2}{5.68}
+		\drawSLPoldNode{2.2}{5.65}
+		\drawSLPoldNode{2.4}{5.63}
+		\drawSLPoldNode{2.4}{5.6}
+		\drawSLPoldNode{2.6}{5.58}
+		\drawSLPoldNode{2.8}{5.57}
+		\drawSLPoldNode{3}{5.55}
+		\drawSLPoldNode{3.2}{5.53}
+		\drawSLPoldNode{3.4}{5.52}
+		\drawSLPoldNode{3.6}{5.5}
+		\drawSLPoldNode{3.8}{5.49}
+		\drawSLPoldNode{4}{5.48}
+		\drawSLPoldNode{4.2}{5.46}
+		\drawSLPoldNode{4.4}{5.45}
+		\drawSLPoldNode{4.6}{5.44}
+		\drawSLPoldNode{4.8}{5.43}
+		\drawSLPoldNode{5}{5.42}
+		\drawSLPoldNode{5.2}{5.41}
+		\drawSLPoldNode{5.4}{5.41}	
+		
+		%slp_modern
+		\drawSLPnewNode{0.1}{7.27}
+		\drawSLPnewNode{0.2}{6.85}
+		\drawSLPnewNode{0.3}{6.63}
+		\drawSLPnewNode{0.4}{6.48}
+		\drawSLPnewNode{0.6}{6.29}
+		\drawSLPnewNode{0.8}{6.16}
+		\drawSLPnewNode{1}{6.06}
+		\drawSLPnewNode{1.2}{5.99}
+		\drawSLPnewNode{1.4}{5.92}
+		\drawSLPnewNode{1.6}{5.87}
+		\drawSLPnewNode{1.8}{5.82}
+		\drawSLPnewNode{2}{5.78}
+		\drawSLPnewNode{2.2}{5.74}
+		\drawSLPnewNode{2.4}{5.71}
+		\drawSLPnewNode{2.4}{5.68}
+		\drawSLPnewNode{2.6}{5.65}
+		\drawSLPnewNode{2.8}{5.63}
+		\drawSLPnewNode{3}{5.6}
+		\drawSLPnewNode{3.2}{5.58}
+		\drawSLPnewNode{3.4}{5.56}
+		\drawSLPnewNode{3.6}{5.54}
+		\drawSLPnewNode{3.8}{5.52}
+		\drawSLPnewNode{4}{5.5}
+		\drawSLPnewNode{4.2}{5.48}
+		\drawSLPnewNode{4.4}{5.47}
+		\drawSLPnewNode{4.6}{5.45}
+		\drawSLPnewNode{4.8}{5.44}
+		\drawSLPnewNode{5}{5.42}
+		\drawSLPnewNode{5.2}{5.41}
+		\drawSLPnewNode{5.4}{5.41}	
+		
+		\draw (3,-1) node {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Compression results on random strings}};
+	\end{tikzpicture}
+}
+
+\newcommand{\algorithmNotations}{
+	\begin{tikzpicture}
+		\drawLZNode{0}{2}
+		\drawLZinfNode{0}{1.5}
+		\drawLZWNode{0}{1}
+		\drawSLPoldNode{0}{0.5}
+		\drawSLPnewNode{0}{0}
+		
+		\draw (0.2, 2) node[anchor=west] {\scriptsize {\sf -- \textbf{lz77} (Lempel-Ziv algorithm with 32Kb scanning
+		window)}}; \draw (0.2, 1.5) node[anchor=west] {\scriptsize {\sf -- \textbf{lz77inf} (Lempel-Ziv algorithm with
+		infinite scanning window)}}; 
+		\draw (0.2,1) node[anchor=west] {\scriptsize {\sf -- \textbf{lzw} (Lempel-Ziv-Welch algorithm)}}; 
+		\draw (0.2,0.5) node[anchor=west] {\scriptsize {\sf -- \textbf{SLPclassic} (the algorithm proposed at
+		\cite{SLPConstruction})}}; 
+		\draw (0.2,0) node[anchor=west] {\scriptsize {\sf -- \textbf{SLPnew} (the algorithm from Section~3)}};
+	\end{tikzpicture}
+}
+
+\newcommand{\AVLrotations}{
+	\begin{tikzpicture}%[scale=0.9]
+		\addtocounter{figures}{1}
+		
+		%simple rotation picture
+		\drawTriangle{(1.2,0)}{(0.6, -1)}{(1.8, -1)}
+		\drawTriangle{(2.2,-0.75)}{(1.6,-1.75)}{(2.8, -1.75)}
+		\drawTriangle{(4.2,-0.75)}{(3.4,-2.25)}{(5,-2.25)}
+		
+		\drawAVLNode{(1.2,0)}{$\slp{B}$}
+		\drawAVLNode{(2.2,0.75)}{$\slp{A}$}
+		\drawAVLNode{(3.2,0)}{$\slp{D}$}
+		\drawAVLNode{(2.2,-0.75)}{$\slp{C}$}
+		\drawAVLNode{(4.2,-0.75)}{$\slp{E}$}
+		
+		\draw (1.2,0) -- (2.2,0.75) -- (3.2,0);
+		\draw (2.2,-0.75) -- (3.2,0) -- (4.2,-0.75);
+		
+		\drawTriangle{(6.4,-0.75)}{(5.8,-1.75)}{(7, -1.75)}
+		\drawTriangle{(8,-0.75)}{(7.4,-1.75)}{(8.6, -1.75)}
+		\drawTriangle{(9.4,0)}{(8.6,-1.5)}{(10.2,-1.5)}
+		
+		\drawAVLNode{(6.4,-0.75)}{$\slp{B}$}
+		\drawAVLNode{(8.2,0.75)}{$\slp{A}'$}
+		\drawAVLNode{(7.2,0)}{$\slp{D}'$}
+		\drawAVLNode{(8,-0.75)}{$\slp{C}$}
+		\drawAVLNode{(9.4,0)}{$\slp{E}$}
+		
+		\draw (6.4,-0.75) -- (7.2,0) -- (8,-0.75);
+		\draw (7.2,0) -- (8.2,0.75) -- (9.4,0);
+		
+		\draw[thick,->] (4.6,0.2) -- (5.2,0.2) node[anchor=south]{\scriptsize {\sf rotation}} -- (5.9,0.2);
+		
+		%complex rotation picture
+		\drawTriangle{(-0.5,-4)}{(-1.1,-5)}{(0.1,-5)}
+		\drawTriangle{(1,-5)}{(0.4,-6)}{(1.6,-6)}
+		\drawTriangle{(2.5,-5)}{(1.9,-6)}{(3.1,-6)}
+		\drawTriangle{(4,-4.5)}{(3.4,-5.5)}{(4.6,-5.5)}
+		
+		\drawAVLNode{(1.5,-3.5)}{$\slp{A}$}
+		\drawAVLNode{(-0.5,-4)}{$\slp{B}$}
+		\drawAVLNode{(1.75,-4.5)}{$\slp{C}$}
+		\drawAVLNode{(2.8,-4)}{$\slp{D}$}
+		\drawAVLNode{(4,-4.5)}{$\slp{E}$}
+		\drawAVLNode{(1,-5)}{$\slp{F}$}
+		\drawAVLNode{(2.5,-5)}{$\slp{G}$}
+		
+		\draw (-0.5,-4) -- (1.5,-3.5) -- (2.8,-4);
+		\draw (1.75,-4.5) -- (2.8,-4) -- (4,-4.5);
+		\draw (1,-5) -- (1.75,-4.5) -- (2.5,-5);
+		
+		\drawTriangle{(6.5,-4.5)}{(5.9,-5.5)}{(7.1,-5.5)}
+		\drawTriangle{(8,-4.5)}{(7.4,-5.5)}{(8.6,-5.5)}
+		\drawTriangle{(9.5,-4.5)}{(8.9,-5.5)}{(10.1,-5.5)}
+		\drawTriangle{(11,-4.5)}{(10.4,-5.5)}{(11.6,-5.5)}
+		
+		\drawAVLNode{(8.75,-3.5)}{$\slp{A}'$}
+		\drawAVLNode{(6.5,-4.5)}{$\slp{B}$}
+		\drawAVLNode{(7.25,-4)}{$\slp{C}'$}
+		\drawAVLNode{(10.25,-4)}{$\slp{D}'$}
+		\drawAVLNode{(11,-4.5)}{$\slp{E}$}
+		\drawAVLNode{(8,-4.5)}{$\slp{F}$}
+		\drawAVLNode{(9.5,-4.5)}{$\slp{G}$}
+		
+		\draw (6.5,-4.5) -- (7.25,-4) -- (8,-4.5);
+		\draw (7.25,-4) -- (8.75,-3.5) -- (10.25,-4);
+		\draw (9.5,-4.5) -- (10.25,-4) -- (11,-4.5);
+		
+		\draw[thick,->] (4.6,-4) -- (5.2,-4) node[anchor=south]{\scriptsize {\sf rotation}} -- (5.9,-4);
+		
+		\draw (5,-7) node {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Rotations of an AVL tree}};
+	\end{tikzpicture}	
+}

@@ -1,0 +1,838 @@
+\documentclass{beamer}
+
+\beamertemplateshadingbackground{red!10}{blue!10}
+\usepackage{beamerthemeshadow}
+\beamertemplatetransparentcovereddynamic
+
+\usepackage[english]{babel}
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{colortbl}
+\usepackage{amsmath,amssymb}
+
+\pgfdeclareimage[interpolate=true, width=1cm,height=1.2cm]{Department}{Department}
+
+\pgfdeclareimage[height=7cm]{airport}{Airport}
+
+\pgfdeclareimage[height=6.5cm]{dna}{DNA}
+
+\pgfdeclareimage[height=7.5cm]{migration}{Migration}
+
+\pgfdeclareimage[height=7cm]{racoon}{Racoon}
+
+\title[Computing All Pure Squares In Compressed Texts]{Computing All Pure Squares In Compressed Texts}
+\author{Lesha Khvorost}
+\institute[USU]{Ural State University}
+\date{\today}
+\logo{\hfil\pgfuseimage{Department}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\frame {
+    \frametitle{Decoding DNA and Feature Extraction}
+    \begin{figure}
+    \pgfuseimage{dna}
+    \end{figure}
+}
+
+\frame {
+    \frametitle{Searching a Criminal by His Photo}
+    \begin{figure}
+    \pgfuseimage{airport}
+    \end{figure}
+}
+
+\frame {
+    \frametitle{SLP that Generates $a^{12}$}
+    \begin{example}
+        \begin{center}
+        \begin{pgfpicture}{-8cm}{-0.5cm}{-1cm}{4cm}
+            \pgfputat{\pgfxy(-7.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-7,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-6.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-6,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-5.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-4.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-4,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-2.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-2,0)}{\pgfbox[left,center]{$a$}}
+
+            \pgfxyline(-7.4,0.2)(-7.4, 0.5)
+            \pgfxyline(-6.9,0.2)(-6.9, 0.5)
+            \pgfxyline(-6.4,0.2)(-6.4, 0.5)
+            \pgfxyline(-5.9,0.2)(-5.9, 0.5)
+            \pgfxyline(-5.4,0.2)(-5.4, 0.5)
+            \pgfxyline(-4.9,0.2)(-4.9, 0.5)
+            \pgfxyline(-4.4,0.2)(-4.4, 0.5)
+            \pgfxyline(-3.9,0.2)(-3.9, 0.5)
+            \pgfxyline(-3.4,0.2)(-3.4, 0.5)
+            \pgfxyline(-2.9,0.2)(-2.9, 0.5)
+            \pgfxyline(-2.4,0.2)(-2.4, 0.5)
+            \pgfxyline(-1.9,0.2)(-1.9, 0.5)
+
+            \pgfputat{\pgfxy(-7.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-7.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-6.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-6.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-5.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-5.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-4.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-4.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-2.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-2.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+
+            \pgfxyline(-7.4,0.9)(-7.15, 1.1)
+            \pgfxyline(-6.9,0.9)(-7.15, 1.1)
+            \pgfputat{\pgfxy(-7.3,1.25)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-6.4,0.9)(-6.15, 1.1)
+            \pgfxyline(-5.9,0.9)(-6.15, 1.1)
+            \pgfputat{\pgfxy(-6.3,1.25)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-5.4,0.9)(-5.15, 1.1)
+            \pgfxyline(-4.9,0.9)(-5.15, 1.1)
+            \pgfputat{\pgfxy(-5.3,1.25)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-4.4,0.9)(-4.15, 1.1)
+            \pgfxyline(-3.9,0.9)(-4.15, 1.1)
+            \pgfputat{\pgfxy(-4.3,1.25)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-3.4,0.9)(-3.15, 1.1)
+            \pgfxyline(-2.9,0.9)(-3.15, 1.1)
+            \pgfputat{\pgfxy(-3.3,1.25)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-2.4,0.9)(-2.15, 1.1)
+            \pgfxyline(-1.9,0.9)(-2.15, 1.1)
+            \pgfputat{\pgfxy(-2.3,1.25)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-7.15,1.5)(-6.65, 1.7)
+            \pgfxyline(-6.15,1.5)(-6.65, 1.7)
+            \pgfputat{\pgfxy(-6.75,1.85)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-5.15,1.5)(-4.65, 1.7)
+            \pgfxyline(-4.15,1.5)(-4.65, 1.7)
+            \pgfputat{\pgfxy(-4.75,1.85)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-3.15,1.5)(-2.65, 1.7)
+            \pgfxyline(-2.15,1.5)(-2.65, 1.7)
+            \pgfputat{\pgfxy(-2.75,1.85)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-6.65,2.1)(-5.65, 2.4)
+            \pgfxyline(-4.65,2.1)(-5.65, 2.4)
+            \pgfputat{\pgfxy(-5.85,2.65)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-2.65,2.1)(-2.65, 2.9)
+            \pgfxyline(-5.65,2.9)(-4.15, 3.4)
+            \pgfxyline(-2.65,2.9)(-4.15, 3.4)
+            \pgfputat{\pgfxy(-4.15,3.55)}{\pgfbox[left,center]{$P_5$}}
+        \end{pgfpicture}
+        \end{center}
+    \end{example}
+}
+
+\frame {
+    \frametitle{Simple Definitions}
+    \begin{block}{Primitive string}
+        A string $x$ is {\bf primitive} if $x = u^k$ for some $k$ implies that $k = 1$ and $u = x$.
+    \end{block}
+
+    \begin{block}{Pure square and repetition}
+        A {\bf pure} square is a square $xx$ where $x$ is primitive. Otherwise, $xx$ is called a {\bf repetition}.
+    \end{block}
+}
+
+\frame {
+    \frametitle{Main Problem}
+    \begin{block}{Computing All Pure Squares Problem}
+        {\sc Input:} an SLP $S$ that derives some text $S$;
+        \bigskip
+        {\sc Output:} a data structure (a PS-table) that contains information about all pure squares in $S$ in a
+compressed form;
+    \end{block}
+}
+
+\frame {
+    \frametitle{SLPs Background}
+
+    \begin{overprint}
+
+    \onslide<1>
+    \begin{example}
+        \begin{center}
+        \begin{pgfpicture}{-8cm}{-1.5cm}{-1cm}{4cm}
+            \pgfputat{\pgfxy(-7.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-7.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-7,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-6.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-6.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-5.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-5.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-4.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-4.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-4.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-4,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-3.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-2.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-1.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-1.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-1.2,0)}{\pgfbox[left,center]{$\cdot$}}
+
+            \pgfxyline(-6.9,0.2)(-6.9, 0.5)
+            \pgfxyline(-6.4,0.2)(-6.4, 0.5)
+            \pgfxyline(-5.9,0.2)(-5.9, 0.5)
+            \pgfxyline(-5.4,0.2)(-5.4, 0.5)
+            \pgfxyline(-4.9,0.2)(-4.9, 0.5)
+            \pgfxyline(-4.4,0.2)(-4.4, 0.5)
+            \pgfxyline(-3.9,0.2)(-3.9, 0.5)
+            \pgfxyline(-3.4,0.2)(-3.4, 0.5)
+            \pgfxyline(-2.4,0.2)(-2.4, 0.5)
+            \pgfxyline(-1.9,0.2)(-1.9, 0.5)
+            \pgfxyline(-1.4,0.2)(-1.4, 0.5)
+
+            \pgfputat{\pgfxy(-7.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-6.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-6.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-5.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-5.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-4.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-4.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-2.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-2.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-1.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-7.4,0.9)(-7.15, 1.1)
+            \pgfxyline(-6.9,0.9)(-7.15, 1.1)
+            \pgfputat{\pgfxy(-7.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-6.4,0.9)(-6.4, 1.5)
+            \pgfxyline(-7.1,1.5)(-6.75, 1.7)
+            \pgfxyline(-6.4, 1.5)(-6.75, 1.7)
+            \pgfputat{\pgfxy(-6.9, 1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-5.9,0.9)(-5.65, 1.1)
+            \pgfxyline(-5.4,0.9)(-5.65, 1.1)
+            \pgfputat{\pgfxy(-5.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-5.65,1.55)(-5.65, 2.1)
+            \pgfxyline(-6.75, 2.1)(-6.2, 2.3)
+            \pgfxyline(-5.65, 2.1)(-6.2, 2.3)
+            \pgfputat{\pgfxy(-6.35,2.45)}{\pgfbox[left,center]{$P_5$}}
+
+            \pgfxyline(-4.9,0.9)(-4.65, 1.1)
+            \pgfxyline(-4.4,0.9)(-4.65, 1.1)
+            \pgfputat{\pgfxy(-4.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-3.9,0.9)(-3.9, 1.5)
+            \pgfxyline(-4.6,1.5)(-4.25, 1.7)
+            \pgfxyline(-3.9, 1.5)(-4.25, 1.7)
+            \pgfputat{\pgfxy(-4.4,1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-4.25,2.1)(-4.25, 2.7)
+            \pgfxyline(-6.2,2.7)(-5.25, 2.9)
+            \pgfxyline(-4.25, 2.7)(-5.25, 2.9)
+            \pgfputat{\pgfxy(-5.4,3.05)}{\pgfbox[left,center]{$P_6$}}
+
+            \pgfxyline(-3.4,0.9)(-3.15, 1.1)
+            \pgfxyline(-2.9,0.9)(-3.15, 1.1)
+            \pgfputat{\pgfxy(-3.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-1.9,0.9)(-1.65, 1.1)
+            \pgfxyline(-1.4,0.9)(-1.65, 1.1)
+            \pgfputat{\pgfxy(-1.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-2.4,0.9)(-2.4, 1.5)
+            \pgfxyline(-3.1,1.5)(-2.75, 1.7)
+            \pgfxyline(-2.4, 1.5)(-2.75, 1.7)
+            \pgfputat{\pgfxy(-2.9,1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-1.5, 1.5)(-1.5, 2.1)
+            \pgfxyline(-2.75,2.1)(-2.1, 2.3)
+            \pgfxyline(-1.5, 2.1)(-2.1, 2.3)
+            \pgfputat{\pgfxy(-2.25,2.45)}{\pgfbox[left,center]{$P_5$}}
+
+            \pgfxyline(-2.1,2.7)(-2.1, 3.25)
+            \pgfxyline(-5.25,3.25)(-3.7, 3.55)
+            \pgfxyline(-2.1, 3.25)(-3.7, 3.55)
+            \pgfputat{\pgfxy(-3.85, 3.7)}{\pgfbox[left,center]{$P_7$}}
+
+            \color{red}
+            \pgfputat{\pgfxy(-7.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-7.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfxyline(-7.4,0.2)(-7.4, 0.5)
+
+            \pgfputat{\pgfxy(-3,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-3.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfxyline(-2.9,0.2)(-2.9, 0.5)
+        \end{pgfpicture}
+        \end{center}
+    \end{example}
+
+    \onslide<2>
+    \begin{example}
+        \begin{center}
+        \begin{pgfpicture}{-8cm}{-1.5cm}{-1cm}{4cm}
+            \pgfputat{\pgfxy(-7.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-7.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-7.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-7,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-6.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-6.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-5.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-5.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-4.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-4.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-4.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-4,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-3.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-3,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-2.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-2.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-1.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-1.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-1.2,0)}{\pgfbox[left,center]{$\cdot$}}
+
+            \pgfxyline(-7.4,0.2)(-7.4, 0.5)
+            \pgfxyline(-6.9,0.2)(-6.9, 0.5)
+            \pgfxyline(-6.4,0.2)(-6.4, 0.5)
+            \pgfxyline(-5.9,0.2)(-5.9, 0.5)
+            \pgfxyline(-5.4,0.2)(-5.4, 0.5)
+            \pgfxyline(-4.9,0.2)(-4.9, 0.5)
+            \pgfxyline(-4.4,0.2)(-4.4, 0.5)
+            \pgfxyline(-3.9,0.2)(-3.9, 0.5)
+            \pgfxyline(-3.4,0.2)(-3.4, 0.5)
+            \pgfxyline(-2.9,0.2)(-2.9, 0.5)
+            \pgfxyline(-2.4,0.2)(-2.4, 0.5)
+            \pgfxyline(-1.9,0.2)(-1.9, 0.5)
+            \pgfxyline(-1.4,0.2)(-1.4, 0.5)
+
+            \pgfputat{\pgfxy(-7.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-7.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-6.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-6.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-5.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-5.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-4.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-4.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-2.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-1.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-7.4,0.9)(-7.15, 1.1)
+            \pgfxyline(-6.9,0.9)(-7.15, 1.1)
+            \pgfputat{\pgfxy(-7.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-6.4,0.9)(-6.4, 1.5)
+            \pgfxyline(-7.1,1.5)(-6.75, 1.7)
+            \pgfxyline(-6.4, 1.5)(-6.75, 1.7)
+
+            \pgfxyline(-5.9,0.9)(-5.65, 1.1)
+            \pgfxyline(-5.4,0.9)(-5.65, 1.1)
+
+            \pgfxyline(-4.9,0.9)(-4.65, 1.1)
+            \pgfxyline(-4.4,0.9)(-4.65, 1.1)
+            \pgfputat{\pgfxy(-4.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-3.9,0.9)(-3.9, 1.5)
+            \pgfxyline(-4.6,1.5)(-4.25, 1.7)
+            \pgfxyline(-3.9, 1.5)(-4.25, 1.7)
+            \pgfputat{\pgfxy(-4.4,1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-4.25,2.1)(-4.25, 2.7)
+            \pgfxyline(-6.2,2.7)(-5.25, 2.9)
+            \pgfxyline(-4.25, 2.7)(-5.25, 2.9)
+            \pgfputat{\pgfxy(-5.4,3.05)}{\pgfbox[left,center]{$P_6$}}
+
+            \pgfxyline(-3.4,0.9)(-3.15, 1.1)
+            \pgfxyline(-2.9,0.9)(-3.15, 1.1)
+
+
+            \pgfxyline(-1.9,0.9)(-1.65, 1.1)
+            \pgfxyline(-1.4,0.9)(-1.65, 1.1)
+            \pgfputat{\pgfxy(-1.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-1.5, 1.5)(-1.5, 2.1)
+            \pgfxyline(-2.75,2.1)(-2.1, 2.3)
+            \pgfxyline(-1.5, 2.1)(-2.1, 2.3)
+            \pgfputat{\pgfxy(-2.25,2.45)}{\pgfbox[left,center]{$P_5$}}
+
+            \pgfxyline(-2.1,2.7)(-2.1, 3.25)
+            \pgfxyline(-5.25,3.25)(-3.7, 3.55)
+            \pgfxyline(-2.1, 3.25)(-3.7, 3.55)
+            \pgfputat{\pgfxy(-3.85, 3.7)}{\pgfbox[left,center]{$P_7$}}
+
+            \color{red}
+            \pgfxyline(-5.65,1.55)(-5.65, 2.1)
+            \pgfxyline(-6.75, 2.1)(-6.2, 2.3)
+            \pgfxyline(-5.65, 2.1)(-6.2, 2.3)
+            \pgfputat{\pgfxy(-6.35,2.45)}{\pgfbox[left,center]{$P_5$}}
+            \pgfputat{\pgfxy(-6.9, 1.85)}{\pgfbox[left,center]{$P_4$}}
+            \pgfputat{\pgfxy(-5.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-2.4,0.9)(-2.4, 1.5)
+            \pgfxyline(-3.1,1.5)(-2.75, 1.7)
+            \pgfxyline(-2.4, 1.5)(-2.75, 1.7)
+            \pgfputat{\pgfxy(-2.9,1.85)}{\pgfbox[left,center]{$P_4$}}
+            \pgfputat{\pgfxy(-3.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+            \pgfputat{\pgfxy(-2.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+        \end{pgfpicture}
+        \end{center}
+    \end{example}
+
+    \onslide<3>
+    \begin{example}
+        \begin{center}
+        \begin{pgfpicture}{-8cm}{-1.5cm}{-1cm}{4cm}
+            \pgfputat{\pgfxy(-7.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-7.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-7,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-6.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-6.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-5.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-5.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-4.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-4.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-4.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-4,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-3.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-3,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-2.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-2.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-1.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-1.5,0)}{\pgfbox[left,center]{$b$}}
+
+            \pgfxyline(-7.4,0.2)(-7.4, 0.5)
+            \pgfxyline(-6.9,0.2)(-6.9, 0.5)
+            \pgfxyline(-6.4,0.2)(-6.4, 0.5)
+            \pgfxyline(-5.9,0.2)(-5.9, 0.5)
+            \pgfxyline(-5.4,0.2)(-5.4, 0.5)
+            \pgfxyline(-4.9,0.2)(-4.9, 0.5)
+            \pgfxyline(-4.4,0.2)(-4.4, 0.5)
+            \pgfxyline(-3.9,0.2)(-3.9, 0.5)
+            \pgfxyline(-3.4,0.2)(-3.4, 0.5)
+            \pgfxyline(-2.9,0.2)(-2.9, 0.5)
+            \pgfxyline(-2.4,0.2)(-2.4, 0.5)
+            \pgfxyline(-1.9,0.2)(-1.9, 0.5)
+            \pgfxyline(-1.4,0.2)(-1.4, 0.5)
+
+            \pgfputat{\pgfxy(-7.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-7.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-6.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-6.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-5.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-5.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-4.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-4.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-2.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-2.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-1.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-7.4,0.9)(-7.15, 1.1)
+            \pgfxyline(-6.9,0.9)(-7.15, 1.1)
+            \pgfputat{\pgfxy(-7.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-6.4,0.9)(-6.4, 1.5)
+            \pgfxyline(-7.1,1.5)(-6.75, 1.7)
+            \pgfxyline(-6.4, 1.5)(-6.75, 1.7)
+            \pgfputat{\pgfxy(-6.9, 1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-5.9,0.9)(-5.65, 1.1)
+            \pgfxyline(-5.4,0.9)(-5.65, 1.1)
+            \pgfputat{\pgfxy(-5.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-5.65,1.55)(-5.65, 2.1)
+            \pgfxyline(-6.75, 2.1)(-6.2, 2.3)
+            \pgfxyline(-5.65, 2.1)(-6.2, 2.3)
+            \pgfputat{\pgfxy(-6.35,2.45)}{\pgfbox[left,center]{$P_5$}}
+
+            \pgfxyline(-4.9,0.9)(-4.65, 1.1)
+            \pgfxyline(-4.4,0.9)(-4.65, 1.1)
+            \pgfputat{\pgfxy(-4.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-3.9,0.9)(-3.9, 1.5)
+            \pgfxyline(-4.6,1.5)(-4.25, 1.7)
+            \pgfxyline(-3.9, 1.5)(-4.25, 1.7)
+            \pgfputat{\pgfxy(-4.4,1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-4.25,2.1)(-4.25, 2.7)
+            \pgfxyline(-6.2,2.7)(-5.25, 2.9)
+            \pgfxyline(-4.25, 2.7)(-5.25, 2.9)
+            \pgfputat{\pgfxy(-5.4,3.05)}{\pgfbox[left,center]{$P_6$}}
+
+            \pgfxyline(-3.4,0.9)(-3.15, 1.1)
+            \pgfxyline(-2.9,0.9)(-3.15, 1.1)
+            \pgfputat{\pgfxy(-3.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-1.9,0.9)(-1.65, 1.1)
+            \pgfxyline(-1.4,0.9)(-1.65, 1.1)
+            \pgfputat{\pgfxy(-1.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-2.4,0.9)(-2.4, 1.5)
+            \pgfxyline(-3.1,1.5)(-2.75, 1.7)
+            \pgfxyline(-2.4, 1.5)(-2.75, 1.7)
+            \pgfputat{\pgfxy(-2.9,1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-1.5, 1.5)(-1.5, 2.1)
+            \pgfxyline(-2.75,2.1)(-2.1, 2.3)
+            \pgfxyline(-1.5, 2.1)(-2.1, 2.3)
+            \pgfputat{\pgfxy(-2.25,2.45)}{\pgfbox[left,center]{$P_5$}}
+
+            \pgfxyline(-2.1,2.7)(-2.1, 3.25)
+            \pgfxyline(-5.25,3.25)(-3.7, 3.55)
+            \pgfxyline(-2.1, 3.25)(-3.7, 3.55)
+            \pgfputat{\pgfxy(-3.85, 3.7)}{\pgfbox[left,center]{$P_7$}}
+
+            \color{red}
+            \pgfputat{\pgfxy(-9.5, -1)}{\pgfbox[left,center]{{\it 0 position}}}
+            \pgfputat{\pgfxy(-7.7,0)}{\pgfbox[left,center]{${\cdot}$}}
+
+
+            \pgfputat{\pgfxy(-1.5, -1)}{\pgfbox[left,center]{{\it last position}}}
+            \pgfputat{\pgfxy(-1.2,0)}{\pgfbox[left,center]{$\cdot$}}
+
+            \pgfsetendarrow{\pgfarrowdouble{\pgfarrowto}}
+            \pgfxyline(-8.5, -0.8)(-7.7, -0.1)
+            \pgfxyline(-0.7, -0.8)(-1.15, -0.1)
+        \end{pgfpicture}
+        \end{center}
+    \end{example}
+
+    \onslide<4>
+    \begin{example}
+        \begin{center}
+        \begin{pgfpicture}{-8cm}{-1.5cm}{-1cm}{4cm}
+            \pgfputat{\pgfxy(-7.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-7.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-7.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-7,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-6.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-6.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-5.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-5.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-4.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-4.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-4.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-4,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-3,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-2.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-2.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-1.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-1.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-1.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2.7,0)}{\pgfbox[left,center]{$\cdot$}}
+
+            \pgfxyline(-7.4,0.2)(-7.4, 0.5)
+            \pgfxyline(-6.9,0.2)(-6.9, 0.5)
+            \pgfxyline(-6.4,0.2)(-6.4, 0.5)
+            \pgfxyline(-5.9,0.2)(-5.9, 0.5)
+            \pgfxyline(-5.4,0.2)(-5.4, 0.5)
+            \pgfxyline(-4.9,0.2)(-4.9, 0.5)
+            \pgfxyline(-4.4,0.2)(-4.4, 0.5)
+            \pgfxyline(-3.9,0.2)(-3.9, 0.5)
+            \pgfxyline(-3.4,0.2)(-3.4, 0.5)
+            \pgfxyline(-2.9,0.2)(-2.9, 0.5)
+            \pgfxyline(-2.4,0.2)(-2.4, 0.5)
+            \pgfxyline(-1.9,0.2)(-1.9, 0.5)
+            \pgfxyline(-1.4,0.2)(-1.4, 0.5)
+
+            \pgfputat{\pgfxy(-7.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-7.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-6.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-6.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-5.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-5.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-4.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-4.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-2.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-2.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-1.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-7.4,0.9)(-7.15, 1.1)
+            \pgfxyline(-6.9,0.9)(-7.15, 1.1)
+            \pgfputat{\pgfxy(-7.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-6.4,0.9)(-6.4, 1.5)
+            \pgfxyline(-7.1,1.5)(-6.75, 1.7)
+            \pgfxyline(-6.4, 1.5)(-6.75, 1.7)
+            \pgfputat{\pgfxy(-6.9, 1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-5.9,0.9)(-5.65, 1.1)
+            \pgfxyline(-5.4,0.9)(-5.65, 1.1)
+            \pgfputat{\pgfxy(-5.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-5.65,1.55)(-5.65, 2.1)
+            \pgfxyline(-6.75, 2.1)(-6.2, 2.3)
+            \pgfxyline(-5.65, 2.1)(-6.2, 2.3)
+            \pgfputat{\pgfxy(-6.35,2.45)}{\pgfbox[left,center]{$P_5$}}
+
+            \pgfxyline(-4.9,0.9)(-4.65, 1.1)
+            \pgfxyline(-4.4,0.9)(-4.65, 1.1)
+            \pgfputat{\pgfxy(-4.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-3.9,0.9)(-3.9, 1.5)
+            \pgfxyline(-4.6,1.5)(-4.25, 1.7)
+            \pgfxyline(-3.9, 1.5)(-4.25, 1.7)
+            \pgfputat{\pgfxy(-4.4,1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-4.25,2.1)(-4.25, 2.7)
+            \pgfxyline(-6.2,2.7)(-5.25, 2.9)
+            \pgfxyline(-4.25, 2.7)(-5.25, 2.9)
+            \pgfputat{\pgfxy(-5.4,3.05)}{\pgfbox[left,center]{$P_6$}}
+
+            \pgfxyline(-3.4,0.9)(-3.15, 1.1)
+            \pgfxyline(-2.9,0.9)(-3.15, 1.1)
+            \pgfputat{\pgfxy(-3.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-1.9,0.9)(-1.65, 1.1)
+            \pgfxyline(-1.4,0.9)(-1.65, 1.1)
+            \pgfputat{\pgfxy(-1.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-2.4,0.9)(-2.4, 1.5)
+            \pgfxyline(-3.1,1.5)(-2.75, 1.7)
+            \pgfxyline(-2.4, 1.5)(-2.75, 1.7)
+            \pgfputat{\pgfxy(-2.9,1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-1.5, 1.5)(-1.5, 2.1)
+            \pgfxyline(-2.75,2.1)(-2.1, 2.3)
+            \pgfxyline(-1.5, 2.1)(-2.1, 2.3)
+            \pgfputat{\pgfxy(-2.25,2.45)}{\pgfbox[left,center]{$P_5$}}
+
+            \pgfxyline(-2.1,2.7)(-2.1, 3.25)
+            \pgfxyline(-5.25,3.25)(-3.7, 3.55)
+            \pgfxyline(-2.1, 3.25)(-3.7, 3.55)
+            \pgfputat{\pgfxy(-3.85, 3.7)}{\pgfbox[left,center]{$P_7$}}
+
+            \color{red}
+            \pgfxyline(-2.65, -0.6)(-5.1, -0.6)
+            \pgfxyline(-2.65, -0.6)(-2.65, -0.3)
+            \pgfxyline(-5.1, -0.6)(-5.1, -0.3)
+            \pgfputat{\pgfxy(-3.7,0)}{\pgfbox[left,center]{$\cdot$}}
+        \end{pgfpicture}
+        \end{center}
+    \end{example}
+
+    \onslide<5>
+    \begin{example}
+        \begin{center}
+        \begin{pgfpicture}{-8cm}{-1.5cm}{-1cm}{4cm}
+            \pgfputat{\pgfxy(-7.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-7.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-7.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-7,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-6.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-6.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-5.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-5.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-4.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-4.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-4,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-3.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-3.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-3,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-2.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2.5,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-2.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-2,0)}{\pgfbox[left,center]{$a$}}
+            \pgfputat{\pgfxy(-1.7,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-1.5,0)}{\pgfbox[left,center]{$b$}}
+            \pgfputat{\pgfxy(-1.2,0)}{\pgfbox[left,center]{$\cdot$}}
+
+            \pgfxyline(-7.4,0.2)(-7.4, 0.5)
+            \pgfxyline(-6.9,0.2)(-6.9, 0.5)
+            \pgfxyline(-6.4,0.2)(-6.4, 0.5)
+            \pgfxyline(-5.9,0.2)(-5.9, 0.5)
+            \pgfxyline(-5.4,0.2)(-5.4, 0.5)
+            \pgfxyline(-4.9,0.2)(-4.9, 0.5)
+            \pgfxyline(-4.4,0.2)(-4.4, 0.5)
+            \pgfxyline(-3.9,0.2)(-3.9, 0.5)
+            \pgfxyline(-3.4,0.2)(-3.4, 0.5)
+            \pgfxyline(-2.9,0.2)(-2.9, 0.5)
+            \pgfxyline(-2.4,0.2)(-2.4, 0.5)
+            \pgfxyline(-1.9,0.2)(-1.9, 0.5)
+            \pgfxyline(-1.4,0.2)(-1.4, 0.5)
+
+            \pgfputat{\pgfxy(-7.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-7.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-6.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-6.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-5.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-5.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-4.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-3.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-3.1,0.65)}{\pgfbox[left,center]{$P_2$}}
+            \pgfputat{\pgfxy(-2.6,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-2.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+            \pgfputat{\pgfxy(-1.6,0.65)}{\pgfbox[left,center]{$P_2$}}
+
+            \pgfxyline(-7.4,0.9)(-7.15, 1.1)
+            \pgfxyline(-6.9,0.9)(-7.15, 1.1)
+            \pgfputat{\pgfxy(-7.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-6.4,0.9)(-6.4, 1.5)
+            \pgfxyline(-7.1,1.5)(-6.75, 1.7)
+            \pgfxyline(-6.4, 1.5)(-6.75, 1.7)
+            \pgfputat{\pgfxy(-6.9, 1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-5.9,0.9)(-5.65, 1.1)
+            \pgfxyline(-5.4,0.9)(-5.65, 1.1)
+            \pgfputat{\pgfxy(-5.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-5.65,1.55)(-5.65, 2.1)
+            \pgfxyline(-6.75, 2.1)(-6.2, 2.3)
+            \pgfxyline(-5.65, 2.1)(-6.2, 2.3)
+            \pgfputat{\pgfxy(-6.35,2.45)}{\pgfbox[left,center]{$P_5$}}
+
+            \pgfxyline(-4.9,0.9)(-4.65, 1.1)
+            \pgfxyline(-4.4,0.9)(-4.65, 1.1)
+
+            \pgfxyline(-4.25,2.1)(-4.25, 2.7)
+            \pgfxyline(-6.2,2.7)(-5.25, 2.9)
+            \pgfxyline(-4.25, 2.7)(-5.25, 2.9)
+            \pgfputat{\pgfxy(-5.4,3.05)}{\pgfbox[left,center]{$P_6$}}
+
+            \pgfxyline(-3.4,0.9)(-3.15, 1.1)
+            \pgfxyline(-2.9,0.9)(-3.15, 1.1)
+            \pgfputat{\pgfxy(-3.3,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-1.9,0.9)(-1.65, 1.1)
+            \pgfxyline(-1.4,0.9)(-1.65, 1.1)
+            \pgfputat{\pgfxy(-1.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+
+            \pgfxyline(-2.4,0.9)(-2.4, 1.5)
+            \pgfxyline(-3.1,1.5)(-2.75, 1.7)
+            \pgfxyline(-2.4, 1.5)(-2.75, 1.7)
+            \pgfputat{\pgfxy(-2.9,1.85)}{\pgfbox[left,center]{$P_4$}}
+
+            \pgfxyline(-1.5, 1.5)(-1.5, 2.1)
+            \pgfxyline(-2.75,2.1)(-2.1, 2.3)
+            \pgfxyline(-1.5, 2.1)(-2.1, 2.3)
+            \pgfputat{\pgfxy(-2.25,2.45)}{\pgfbox[left,center]{$P_5$}}
+
+            \pgfxyline(-2.1,2.7)(-2.1, 3.25)
+            \pgfxyline(-5.25,3.25)(-3.7, 3.55)
+            \pgfxyline(-2.1, 3.25)(-3.7, 3.55)
+            \pgfputat{\pgfxy(-3.85, 3.7)}{\pgfbox[left,center]{$P_7$}}
+
+            \color{red}
+            \pgfputat{\pgfxy(-4.2,0)}{\pgfbox[left,center]{$\cdot$}}
+            \pgfputat{\pgfxy(-6.5, -1)}{\pgfbox[left,center]{{\it cut position}}}
+
+            \pgfxyline(-3.9,0.9)(-3.9, 1.5)
+            \pgfxyline(-4.6,1.5)(-4.25, 1.7)
+            \pgfxyline(-3.9, 1.5)(-4.25, 1.7)
+            \pgfputat{\pgfxy(-4.4,1.85)}{\pgfbox[left,center]{$P_4$}}
+            \pgfputat{\pgfxy(-4.8,1.25)}{\pgfbox[left,center]{$P_3$}}
+            \pgfputat{\pgfxy(-4.1,0.65)}{\pgfbox[left,center]{$P_1$}}
+
+            \pgfsetendarrow{\pgfarrowdouble{\pgfarrowto}}
+            \pgfxyline(-5.5, -0.8)(-4.2, -0.1)
+        \end{pgfpicture}
+        \end{center}
+    \end{example}
+    \end{overprint}
+}
+
+\frame {
+    \frametitle{Pure Squares Table}
+    \begin{block}{PS-table Properties}
+        \begin{itemize}
+        \item The size of $PS$-table is equal to $(\lfloor\log |S|\rfloor+1) \times (|\mathbb{S}|+1)$;
+        \item The cell $PS(i,j)$ with $i,j>0$ contains information about the family of all pure squares such that
+                \renewcommand{\labelenumi}{(\theenumi)}
+                \begin{enumerate}
+	                \item they touch the cut position of the rule $\mathbb{S}_j$;
+	                \item they are contained in the text $S_j$;
+	                \item lengths of their roots belong to the interval $[2^{i-1}, 2^i)$.
+                \end{enumerate}
+        \end{itemize}
+    \end{block}
+}
+
+\frame {
+    \frametitle{Summarize}
+    \begin{block}{Features of the algorithm}
+        \begin{enumerate}
+        \item The algorithm runs on $O(\max(|\mathbb{S}|^5\log|S|, |\mathbb{S}|^3\log^3|\mathbb{S}|\log|S|))$
+        time and requires $O(\mathbb{S}^3)$ space;
+        \item The algorithm is divided into independent steps in contrast to classical algorithms in this area
+        which consecutively accumulate information about required objects. As a result it can be parallelized;
+        \item The algorithm is not excluded that the constants hidden in the ``$O$'' notation are actually very
+        big;
+        \end{enumerate}
+    \end{block}
+}
+
+\frame {
+    \frametitle{Genesis and Migration of Mice Problem}
+    \begin{figure}
+    \pgfuseimage{migration}
+    \end{figure}
+}
+
+\frame {
+    \frametitle{Open Problems}
+    \begin{block}{Computing All Squares Problem}
+        Can we compress all other families of repetitions?
+    \end{block}
+
+    \begin{block}{Optimization}
+        Can we optimize a time complexity of the algorithm?
+    \end{block}
+}
+
+\frame {
+    \frametitle{Haven't you slept yet?}
+    \begin{figure}
+    \pgfuseimage{racoon}
+    \end{figure}
+}
+\end{document}

@@ -1,0 +1,400 @@
+﻿\colorlet{shaded}{white!60!black}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheoremstyle{break}% name
+  {9pt}%      Space above, empty = `usual value'
+  {9pt}%      Space below
+  {\itshape}% Body font
+  {}%         Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% Thm head font
+  {.}%        Punctuation after thm head
+  {.5em}% Space after thm head: \newline = linebreak
+  {}%         Thm head spec
+\theoremstyle{break}
+\newtheorem{lem}[thm]{Lemma}
+
+\newcommand{\prog}[3]{\langle #1, #2, #3\rangle}
+\newcommand{\slp}[1]{\mathbb{#1}}
+\newcommand{\slpterm}[3]{\slp{#1}_{#2} = #3}
+\newcommand{\slpnonterm}[4]{\slp{#1}_{#2} = \slp{#1}_{#3} \cdot \slp{#1}_{#4}}
+\newcommand{\substr}[2]{[#1\dots#2]}
+\newcommand{\subslp}[3]{\slp{#1}[#2\dots#3]}
+
+\newcommand{\probleminput}[1]{\noindent \textsc{Input:} #1}
+\newcommand{\problemoutput}[1]{\noindent \textsc{Output:} #1}
+\newcommand{\problem}[3]{
+            \noindent {\sc Problem:} \textbf{#1} \newline
+            \noindent {\sc Input:} #2 \newline
+            \noindent {\sc Output:} #3
+}
+\renewcommand{\proof}{{\bf Proof:}}
+\newcommand{\example}[1]{{\bf Example} (#1)}
+
+\renewcommand{\emptyset}{
+	\font\msbm = msbm10 at 12pt 
+	\mbox{\msbm \char 63}
+}
+
+\newcounter{figures}
+\newcommand{\pic}[5] {
+    \addtocounter{figures}{1}
+    \begin{center}
+        \begin{pgfpicture}{#1cm}{#2cm}{#3cm}{#4cm}
+            {\scriptsize
+                {\sf
+                    #5
+                }
+            }
+        \end{pgfpicture}
+    \end{center}
+}
+
+\newcommand{\textline}[3]{
+    \pgfputat{\pgfxy(#1,#2)}{\pgfbox[left,center]{\mbox{#3} }}
+}
+
+\newcommand{\codeline}[2]{
+	\draw #1 node[anchor=west] {\scriptsize \textsf{#2}};
+}
+
+\newcommand{\FibonacciWordSLP}{
+    \pic{0}{-0.9}{8.5}{5}{
+        \pgfsetlinewidth{0.7pt}
+
+            \textline{0}{0}{$a$}        \textline{0.7}{0}{$b$}        \textline{1.4}{0}{$a$}        \textline{2.1}{0}{$a$}
+            \textline{2.8}{0}{$b$}        \textline{3.5}{0}{$a$}        \textline{4.2}{0}{$b$}        \textline{4.9}{0}{$a$}
+            \textline{5.6}{0}{$a$}        \textline{6.3}{0}{$b$}        \textline{7}{0}{$a$}        \textline{7.7}{0}{$a$}
+            \textline{8.4}{0}{$b$}
+
+            \textline{-0.35}{0}{$\cdot$}        \textline{0.35}{0}{$\cdot$}        \textline{1.05}{0}{$\cdot$}
+            \textline{1.75}{0}{$\cdot$}        \textline{2.45}{0}{$\cdot$}        \textline{3.15}{0}{$\cdot$}
+            \textline{3.85}{0}{$\cdot$}        \textline{4.55}{0}{$\cdot$}        \textline{5.25}{0}{$\cdot$}
+            \textline{5.95}{0}{$\cdot$}        \textline{6.65}{0}{$\cdot$}        \textline{7.35}{0}{$\cdot$}
+            \textline{8.05}{0}{$\cdot$}        \textline{8.75}{0}{$\cdot$}
+
+            \pgfxyline(0.1,0.2)(0.1, 0.6)        \pgfxyline(0.8,0.2)(0.8, 0.6)        \pgfxyline(1.5,0.2)(1.5, 0.6)
+            \pgfxyline(2.2,0.2)(2.2, 0.6)        \pgfxyline(2.9,0.2)(2.9, 0.6)        \pgfxyline(3.6,0.2)(3.6, 0.6)
+            \pgfxyline(4.3,0.2)(4.3, 0.6)        \pgfxyline(5,0.2)(5, 0.6)        \pgfxyline(5.7,0.2)(5.7, 0.6)
+            \pgfxyline(6.4,0.2)(6.4, 0.6)        \pgfxyline(7.1,0.2)(7.1, 0.6)        \pgfxyline(7.8,0.2)(7.8, 0.6)
+            \pgfxyline(8.5,0.2)(8.5, 0.6)
+
+            \textline{-0.1}{0.75}{$\slp{F}_1$}        \textline{0.6}{0.75}{$\slp{F}_2$}        \textline{1.3}{0.75}{$\slp{F}_1$}
+            \textline{2}{0.75}{$\slp{F}_1$}        \textline{2.7}{0.75}{$\slp{F}_2$}        \textline{3.4}{0.75}{$\slp{F}_1$}
+            \textline{4.1}{0.75}{$\slp{F}_2$}        \textline{4.8}{0.75}{$\slp{F}_1$}        \textline{5.5}{0.75}{$\slp{F}_1$}
+            \textline{6.2}{0.75}{$\slp{F}_2$}        \textline{6.9}{0.75}{$\slp{F}_1$}        \textline{7.6}{0.75}{$\slp{F}_1$}
+            \textline{8.3}{0.75}{$\slp{F}_2$}
+
+            \pgfxyline(0.1,1)(0.1, 1.2)        \pgfxyline(0.8,1)(0.8, 1.2)        \pgfxyline(0.1,1.2)(0.45, 1.5)
+            \pgfxyline(0.8,1.2)(0.45, 1.5)        \textline{0.3}{1.65}{$\slp{F}_3$}
+
+            \pgfxyline(2.2,1)(2.2, 1.2)        \pgfxyline(2.9,1)(2.9, 1.2)        \pgfxyline(2.2,1.2)(2.55,1.5)
+            \pgfxyline(2.9,1.2)(2.55,1.5)        \textline{2.4}{1.65}{$\slp{F}_3$}
+
+            \pgfxyline(3.6,1)(3.6, 1.2)        \pgfxyline(4.3,1)(4.3, 1.2)        \pgfxyline(3.6,1.2)(3.95, 1.5)
+            \pgfxyline(4.3,1.2)(3.95, 1.5)        \textline{3.8}{1.65}{$\slp{F}_3$}
+
+            \pgfxyline(5.7,1)(5.7, 1.2)        \pgfxyline(6.4,1)(6.4, 1.2)        \pgfxyline(5.7,1.2)(6.05, 1.5)
+            \pgfxyline(6.4,1.2)(6.05, 1.5)        \textline{5.9}{1.65}{$\slp{F}_3$}
+
+            \pgfxyline(7.8,1)(7.8, 1.2)        \pgfxyline(8.5,1)(8.5, 1.2)        \pgfxyline(7.8,1.2)(8.15, 1.5)
+            \pgfxyline(8.5,1.2)(8.15, 1.5)        \textline{8}{1.65}{$\slp{F}_3$}
+
+            \pgfxyline(1.5, 1)(1.5, 1.9)        \pgfxyline(0.45, 1.9)(0.97, 2.3)        \pgfxyline(1.5, 1.9)(0.97, 2.3)
+            \textline{0.82}{2.45}{$\slp{F}_4$}
+
+            \pgfxyline(5, 1)(5, 1.9)        \pgfxyline(3.95, 1.9)(4.47, 2.3)        \pgfxyline(5, 1.9)(4.47, 2.3)
+            \textline{4.32}{2.45}{$\slp{F}_4$}
+
+            \pgfxyline(7.1,1)(7.1, 1.9)        \pgfxyline(6.05,1.9)(6.57, 2.3)        \pgfxyline(7.1, 1.9)(6.57, 2.3)
+            \textline{6.42}{2.45}{$\slp{F}_4$}
+
+            \pgfxyline(2.55,1.85)(2.55, 2.65)        \pgfxyline(0.97, 2.65)(1.76, 3.05)        \pgfxyline(2.55, 2.65)(1.76, 3.05)
+            \textline{1.61}{3.2}{$\slp{F}_5$}
+
+            \pgfxyline(8.15, 1.85)(8.15, 2.65)        \pgfxyline(6.57,2.65)(7.36, 3.05)        \pgfxyline(8.15, 2.65)(7.36, 3.05)
+            \textline{7.21}{3.2}{$\slp{F}_5$}
+
+            \pgfxyline(4.47,2.65)(4.47, 3.4)        \pgfxyline(1.76,3.4)(3.11, 3.8)        \pgfxyline(4.47, 3.4)(3.11, 3.8)
+            \textline{2.96}{3.95}{$\slp{F}_6$}
+
+            \pgfxyline(7.36,3.4)(7.36, 4.15)        \pgfxyline(3.11,4.15)(5.23, 4.75)        \pgfxyline(7.36, 4.15)(5.23, 4.75)
+            \textline{5.08}{4.9}{$\slp{F}_7$}
+
+            \pgfsetendarrow{\pgfarrowsingle}
+            \pgfxyline(5.75, -0.55)(4.65, -0.15)
+            \textline{5.75}{-0.55}{\emph{the cut position of} $\slp{F}_4$}
+
+        	\textline{-0.5}{-1.1}{\textbf{Figure \arabic{figures}.} The parse tree of the SLP that generates $F_7 = 
+        	abaababaabaab$} } }
+
+\newcommand{\LeechSLP}{
+	\pic{0}{-0.9}{10}{5}{
+		\textline{0}{0}{$a$}	\textline{0.7}{0}{$b$}  \textline{1.4}{0}{$c$}	\textline{2.1}{0}{$b$}
+        \textline{2.8}{0}{$a$}  \textline{3.5}{0}{$c$}  \textline{4.2}{0}{$b$}  \textline{4.9}{0}{$c$}
+        \textline{5.6}{0}{$a$}  \textline{6.3}{0}{$b$}  \textline{7}{0}{$c$}    \textline{7.7}{0}{$b$}
+        \textline{8.4}{0}{$a$}	\textline{9.1}{0}{$b$}	\textline{9.8}{0}{$c$}
+        
+        \textline{-0.35}{0}{$\cdot$} \textline{0.35}{0}{$\cdot$}	\textline{1.05}{0}{$\cdot$}
+        \textline{1.75}{0}{$\cdot$}  \textline{2.45}{0}{$\cdot$}    \textline{3.15}{0}{$\cdot$}
+        \textline{3.85}{0}{$\cdot$}  \textline{4.55}{0}{$\cdot$}    \textline{5.25}{0}{$\cdot$}
+        \textline{5.95}{0}{$\cdot$}  \textline{6.65}{0}{$\cdot$}    \textline{7.35}{0}{$\cdot$}
+        \textline{8.05}{0}{$\cdot$}  \textline{8.75}{0}{$\cdot$}	\textline{9.45}{0}{$\cdot$}
+        \textline{10.15}{0}{$\cdot$}
+
+        \pgfxyline(0.1,0.2)(0.1, 0.6)   \pgfxyline(0.8,0.2)(0.8, 0.6)   \pgfxyline(1.5,0.2)(1.5, 0.6)
+        \pgfxyline(2.2,0.2)(2.2, 0.6)   \pgfxyline(2.9,0.2)(2.9, 0.6)   \pgfxyline(3.6,0.2)(3.6, 0.6)
+        \pgfxyline(4.3,0.2)(4.3, 0.6)   \pgfxyline(5,0.2)(5, 0.6)       \pgfxyline(5.7,0.2)(5.7, 0.6)
+        \pgfxyline(6.4,0.2)(6.4, 0.6)   \pgfxyline(7.1,0.2)(7.1, 0.6)   \pgfxyline(7.8,0.2)(7.8, 0.6)
+        \pgfxyline(8.5,0.2)(8.5, 0.6)	\pgfxyline(9.2,0.2)(9.2, 0.6)	\pgfxyline(9.9,0.2)(9.9, 0.6)
+
+        \textline{-0.1}{0.75}{$\slp{L}_1$}	\textline{0.6}{0.75}{$\slp{L}_2$}	\textline{1.3}{0.75}{$\slp{L}_3$}
+        \textline{2}{0.75}{$\slp{L}_2$}		\textline{2.7}{0.75}{$\slp{L}_1$}	\textline{3.4}{0.75}{$\slp{L}_3$}
+        \textline{4.1}{0.75}{$\slp{L}_2$}	\textline{4.8}{0.75}{$\slp{L}_3$}	\textline{5.5}{0.75}{$\slp{L}_1$}
+        \textline{6.2}{0.75}{$\slp{L}_2$}	\textline{6.9}{0.75}{$\slp{L}_3$} 	\textline{7.6}{0.75}{$\slp{L}_2$}
+        \textline{8.3}{0.75}{$\slp{L}_1$}	\textline{9}{0.75}{$\slp{L}_2$} 	\textline{9.7}{0.75}{$\slp{L}_3$}
+        
+        \pgfxyline(0.8,1)(1.15, 1.3) \pgfxyline(1.5,1)(1.15, 1.3) \textline{1}{1.5}{$\slp{L}_4$}
+        
+        \pgfxyline(2.2,1)(2.55, 1.3) \pgfxyline(2.9,1)(2.55, 1.3) \textline{2.4}{1.5}{$\slp{L}_5$}
+        
+        \pgfxyline(4.3,1)(4.65, 1.3) \pgfxyline(5,1)(4.65, 1.3) \textline{4.5}{1.5}{$\slp{L}_4$}
+        
+        \pgfxyline(6.4,1)(6.75, 1.3) \pgfxyline(7.1,1)(6.75, 1.3) \textline{6.6}{1.5}{$\slp{L}_4$}
+        
+        \pgfxyline(7.8,1)(8.15, 1.3) \pgfxyline(8.5,1)(8.15, 1.3) \textline{8}{1.5}{$\slp{L}_5$}
+        
+        \pgfxyline(9.2,1)(9.55, 1.3) \pgfxyline(9.9,1)(9.55, 1.3) \textline{9.4}{1.5}{$\slp{L}_4$}
+        
+        
+        \pgfxyline(1.15,1.7)(0.6, 2) \pgfxyline(0.1,1.7)(0.6, 2) \pgfxyline(0.1,1)(0.1, 1.7)
+        \textline{0.45}{2.15}{$\slp{L}_6$}
+        
+        \pgfxyline(3.6,1.7)(4.1, 2) \pgfxyline(4.65,1.7)(4.1, 2) \pgfxyline(3.6,1)(3.6, 1.7)
+        \textline{3.95}{2.15}{$\slp{L}_7$}
+        
+        \pgfxyline(5.7,1.7)(6.2, 2) \pgfxyline(6.75,1.7)(6.2, 2) \pgfxyline(5.7,1)(5.7, 1.7)
+        \textline{6.05}{2.15}{$\slp{L}_6$}
+        
+        
+        \pgfxyline(0.6,2.4)(1.6, 2.8) \pgfxyline(2.55,2.4)(1.6, 2.8) \pgfxyline(2.55,1.7)(2.55, 2.4)
+        \textline{1.45}{2.95}{$\slp{L}_8$}
+        
+        \pgfxyline(6.2,2.4)(7.2, 2.8) \pgfxyline(8.15,2.4)(7.2, 2.8) \pgfxyline(8.15,1.7)(8.15, 2.4)
+        \textline{7.05}{2.95}{$\slp{L}_8$}
+        
+        \pgfxyline(7.2,3.2)(8.35, 3.6) \pgfxyline(9.55,3.2)(8.35, 3.6) \pgfxyline(9.55,1.7)(9.55, 3.2)
+        \textline{8.2}{3.75}{$\slp{L}_9$}
+        
+        \pgfxyline(1.6,3.2)(2.85, 3.6) \pgfxyline(4.1,3.2)(2.85, 3.6) \pgfxyline(4.1,2.4)(4.1, 3.2)
+        \textline{2.7}{3.75}{$\slp{L}_{10}$}
+        
+        \pgfxyline(2.85,4)(5.1, 4.7) \pgfxyline(8.35,4)(5.1, 4.7) \textline{4.95}{4.85}{$\slp{L}_{11}$}
+        
+        \textline{0}{-0.6}{\textbf{Figure \arabic{figures}.} The parse tree of $\slp{L}_{11}$ that generates
+        \emph{a~b~c~b~a~c~b~c~a~b~c~b~b~a~b~c}} }
+}
+
+\newcommand{\LeechWordPartitionSimple}{
+	\begin{center}
+		\begin{tikzpicture}
+			%draw blocks content
+			\codeline{(0,2)}{\emph{\$}}	\codeline{(0.75,2)}{\emph{\$}}	\codeline{(1.5,2)}{\emph{\$}} 
+			\codeline{(2.25,2)}{\emph{\$}} \codeline{(3,2)}{\emph{\$}} \codeline{(3.75,2)}{\emph{a}} \codeline{(4.5,2)}{\emph{b}}
+			\codeline{(5.25,2)}{\emph{c}} \codeline{(6,2)}{\emph{b}}	\codeline{(6.75,2)}{\emph{a}} \codeline{(7.5,2)}{\emph{\$}}
+			\codeline{(8.25,2)}{\emph{\$}} \codeline{(9,2)}{\emph{\$}} \codeline{(9.75,2)}{\emph{\$}}
+			\codeline{(10.5,2)}{\emph{\$}} \codeline{(11.25,2)}{\emph{\$}}
+			
+			%draw blocks order
+			\codeline{(0,1)}{1}	\codeline{(0.75,1)}{2}	\codeline{(1.5,1)}{3}	\codeline{(2.25,1)}{4}	\codeline{(3,1)}{5}
+			\codeline{(3.75,1)}{6} \codeline{(4.5,1)}{7} \codeline{(5.25,1)}{8}	\codeline{(6,1)}{9}	\codeline{(6.75,1)}{10}
+			\codeline{(7.5,1)}{11}	\codeline{(8.25,1)}{12}	\codeline{(9,1)}{13} \codeline{(9.75,1)}{14} \codeline{(10.5,1)}{15}
+			\codeline{(11.25,1)}{16}
+			
+			\codeline{(3.5,0)}{\textbf{Figure \arabic{figures}.} Partition $L_8'$ into blocks} 
+		\end{tikzpicture}
+	\end{center}
+}
+
+\newcommand{\LeechWordPartitionComplex}{
+	\begin{center}
+		\begin{tikzpicture}
+			\addtocounter{figures}{1}
+		
+			%draw blocks content
+			\codeline{(0,2)}{\emph{\$\$}}	\codeline{(0.75,2)}{\emph{\$\$}}	\codeline{(1.5,2)}{\emph{\$\$}}
+			\codeline{(2.25,2)}{\emph{\$\$}} 	\codeline{(3,2)}{\emph{ab}} \codeline{(3.75,2)}{\emph{cb}}
+			\codeline{(4.5,2)}{\emph{ac}} 	\codeline{(5.25,2)}{\emph{bc}}  \codeline{(6,2)}{\emph{ab}}
+			\codeline{(6.75,2)}{\emph{cb}} \codeline{(7.5,2)}{\emph{ab}} \codeline{(8.25,2)}{\emph{c\$}}
+			\codeline{(9,2)}{\emph{\$\$}} \codeline{(9.75,2)}{\emph{\$\$}}	\codeline{(10.5,2)}{\emph{\$\$}}
+			\codeline{(11.25,2)}{\emph{\$\$}}
+			
+			%draw blocks order
+			\codeline{(0.1,1)}{1}	\codeline{(0.85,1)}{2}	\codeline{(1.6,1)}{3}	\codeline{(2.35,1)}{4}	\codeline{(3.1,1)}{5}
+			\codeline{(3.85,1)}{6} \codeline{(4.6,1)}{7} \codeline{(5.35,1)}{8}	\codeline{(6.1,1)}{9}	\codeline{(6.75,1)}{10}
+			\codeline{(7.5,1)}{11}	\codeline{(8.25,1)}{12}	\codeline{(9,1)}{13} \codeline{(9.75,1)}{14}	\codeline{(10.5,1)}{15}
+			\codeline{(11.25,1)}{16}
+			
+			\codeline{(3.5,0)}{\textbf{Figure \arabic{figures}.} Partition $L_{11}'$ into blocks} 
+		\end{tikzpicture}
+	\end{center}
+}
+
+\newcommand{\FibonacciWordPartition}{
+	\begin{center}
+		\begin{tikzpicture}
+			\addtocounter{figures}{1}
+			
+			%draw blocks content
+			\codeline{(0,2)}{\emph{\$}}	\codeline{(0.75,2)}{\emph{\$}}	\codeline{(1.5,2)}{\emph{\$}}
+			\codeline{(2.25,2)}{\emph{a}}	\codeline{(3,2)}{\emph{b}} \codeline{(3.75,2)}{\emph{a}} \codeline{(4.5,2)}{\emph{a}} 
+			\codeline{(5.25,2)}{\emph{b}}	\codeline{(6,2)}{\emph{a}}	\codeline{(6.75,2)}{\emph{b}} \codeline{(7.5,2)}{\emph{a}}
+			\codeline{(8.25,2)}{\emph{\$}}	\codeline{(9,2)}{\emph{\$}} \codeline{(9.75,2)}{\emph{\$}}
+			\codeline{(10.5,2)}{\emph{\$}} \codeline{(11.25,2)}{\emph{\$}}
+			
+			%draw blocks order
+			\codeline{(0,1)}{1}	\codeline{(0.75,1)}{2}	\codeline{(1.5,1)}{3}	\codeline{(2.25,1)}{4}	\codeline{(3,1)}{5}
+			\codeline{(3.75,1)}{6} \codeline{(4.5,1)}{7} \codeline{(5.25,1)}{8}	\codeline{(6,1)}{9}	\codeline{(6.75,1)}{10}
+			\codeline{(7.5,1)}{11}	\codeline{(8.25,1)}{12}	\codeline{(9,1)}{13} \codeline{(9.75,1)}{14}	\codeline{(10.5,1)}{15}
+			\codeline{(11.25,1)}{16}
+			
+			\codeline{(3.5,0)}{\textbf{Figure \arabic{figures}.} Partition $F_6'$ into blocks} 
+		\end{tikzpicture}
+	\end{center}
+}
+
+\newcommand{\FibonacciWordPartitionComplex}{
+	\begin{center}
+		\begin{tikzpicture}
+			\addtocounter{figures}{1}
+		
+			%draw blocks content
+			\codeline{(0,2)}{\emph{\$\$}}	\codeline{(0.75,2)}{\emph{\$\$}}	\codeline{(1.5,2)}{\emph{\$\$}}
+			\codeline{(2.25,2)}{\emph{\$\$}} \codeline{(3,2)}{\emph{\$a}} \codeline{(3.75,2)}{\emph{ba}}
+			\codeline{(4.5,2)}{\emph{ab}} 	\codeline{(5.25,2)}{\emph{ab}} 	\codeline{(6,2)}{\emph{ab}}
+			\codeline{(6.75,2)}{\emph{aa}} \codeline{(7.5,2)}{\emph{b\$}} \codeline{(8.25,2)}{\emph{\$\$}}
+			\codeline{(9,2)}{\emph{\$\$}} \codeline{(9.75,2)}{\emph{\$\$}}	\codeline{(10.5,2)}{\emph{\$\$}}
+			\codeline{(11.25,2)}{\emph{\$\$}}
+			
+			%draw blocks order
+			\codeline{(0.1,1)}{1}	\codeline{(0.85,1)}{2}	\codeline{(1.6,1)}{3}	\codeline{(2.35,1)}{4}	\codeline{(3.1,1)}{5}
+			\codeline{(3.85,1)}{6} \codeline{(4.6,1)}{7} \codeline{(5.35,1)}{8}	\codeline{(6.1,1)}{9}	\codeline{(6.75,1)}{10}
+			\codeline{(7.5,1)}{11}	\codeline{(8.25,1)}{12}	\codeline{(9,1)}{13} \codeline{(9.75,1)}{14}	\codeline{(10.5,1)}{15}
+			\codeline{(11.25,1)}{16}
+			
+			\codeline{(3.5,0)}{\textbf{Figure \arabic{figures}.} Partition $F_{7}'$ into blocks} 
+		\end{tikzpicture}
+	\end{center}
+}
+
+\newcommand{\ComplexExamplePartititon}{
+	\begin{center}
+		\begin{tikzpicture}
+			\addtocounter{figures}{1}
+		
+			%draw blocks content
+			\codeline{(0,2)}{\dots} \codeline{(0.5,2)}{\emph{a~b~a~a~b~a~b~a}} \codeline{(3,2)}{\emph{a~b~a~b~a~a~b~a}}
+			\codeline{(5.5,2)}{\emph{b~a~a~b~a~a~b~a}} \codeline{(8,2)}{\emph{b~a~a~b~a~b~a~a}}
+			\codeline{(10.5,2)}{\emph{b~a~b~a~a~b~a~b}} \codeline{(12.5,2)}{\dots}
+			
+			%draw blocks order
+			\codeline{(1.25,1)}{7} \codeline{(3.75,1)}{8} \codeline{(6.25,1)}{9} \codeline{(8.75,1)}{10}
+			\codeline{(11.25,1)}{11}
+			
+			\codeline{(4.5,0)}{\textbf{Figure \arabic{figures}.} Partition $E'$ into blocks} 
+		\end{tikzpicture}
+	\end{center}
+}
+
+\newcommand{\SubCutPseudoCode}{
+	\begin{center}
+		\begin{tikzpicture}
+			\addtocounter{figures}{1}
+			
+			\codeline{(1.5,0)}{\textbf{function} ($\slp{L}, l$) \{}
+				\codeline{(1.8, -0.4)}{\textbf{if} ($\ell == 0$)}
+				\codeline{(2.1, -0.8)}{\textbf{return} $\slp{L}$;}
+				\codeline{(1.8, -1.2)}{\textbf{var} $result = \emptyset;$}
+				\codeline{(1.8, -1.6)}{\textbf{var} $\slp{C} = \slp{L};$ \quad //we suppose $\slp{C} = \slp{C}_l \cdot \slp{C}_r$}
+				\codeline{(1.8, -2)}{\textbf{while} ($l \ != 0$) \{}
+					\codeline{(2.1, -2.4)}{\textbf{if} ($l \geq |\slp{C}_l|$)}
+						\codeline{(2.4, -2.8)}{$\slp{C} = \slp{C}_r;$}
+					\codeline{(2.1, -3.2)}{\textbf{else} \{}
+						\codeline{(2.4, -3.6)}{$result += \slp{C}_r;$}
+						\codeline{(2.4, -4)}{$\slp{C} = \slp{C}_l;$}
+					\codeline{(2.1, -4.4)}{\}}
+				\codeline{(1.8, -4.8)}{\}}
+				\codeline{(1.8, -5.2)}{\textbf{return} result;}
+			\codeline{(1.5, -5.6)}{\}}
+			
+			\draw (0,-6.1) node[anchor=west] {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Pseudo code for decomposition
+			$\slp{L}$ into rules $\slp{L}_p \cdot \mbox{\dots} \cdot \slp{L}_1$}};
+		\end{tikzpicture}
+	\end{center}
+}
+
+\newcommand{\SquareFreenessCode}{
+	\begin{center}
+		\begin{tikzpicture}
+			\addtocounter{figures}{1}
+			
+			\codeline{(0,6)}{\textbf{for each} ($\slp{S}_j \in \slp{S}$)}
+				\codeline{(0.5,5.5)}{\textbf{for each} ($i \in \{1, \dots, i_0\}$)}
+					\codeline{(1,5)}{partition text $S_j$ into 12 blocks of length $2^{i-2}$;}
+					\codeline{(1,4.5)}{\textbf{for each} ($B_k, k \in \{5, \dots, 12\}$) \{}
+						\codeline{(1.5,4)}{\textbf{var} progressions = \textbf{PM}$(B_{k-1}, B_{k+1}\cdot B_{k+2})$;}
+						\codeline{(1.5,3.5)}{\textbf{for each} ($\prog{a}{p}{t} \in$ progressions) \{}
+							\codeline{(2,3)}{\textbf{if} ($t = 2$) \textbf{return false};}
+							\codeline{(2,2.5)}{\textbf{if} ($t = 1$) \{}
+								\codeline{(2.5, 2)}{$l_{ex}, r_{ex} = \mbox{\textbf{SubsExt}}(B_k,S\substr{a}{a+2^{i-2}});$}
+								\codeline{(2.5, 1.5)}{\textbf{if} ($l_{ex} + r_{ex} > a - (k-1)\cdot 2^{i-2}$) \textbf{return false};}
+							\codeline{(2,1)}{\}}
+						\codeline{(1.5,0.5)}{\}}
+					\codeline{(1,0)}{\}}
+			\codeline{(0,-0.5)}{\textbf{return true};}
+			\draw (0,-1.25) node[anchor=west] {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Pseudo code of algorithm that
+			solves square-freeness problem}};
+		\end{tikzpicture}
+	\end{center}
+}
+
+\newcommand{\SearchingPureSquaresCode}{
+	\begin{center}
+		\begin{tikzpicture}
+			\addtocounter{figures}{1}
+			
+			\codeline{(-1,14)}{\textbf{for each} ($\slp{S}_j \in \slp{S}$)}
+				\codeline{(-0.5,13.5)}{\textbf{for each} ($i \in \{1, \dots, i_0\}$)}
+					\codeline{(0,13)}{partition text $S_j$ into 12 blocks of length $2^{i-2}$;}
+					\codeline{(0,12.5)}{\textbf{for each} ($B_k, k \in \{5, \dots, 12\}$) \{}
+						\codeline{(0.5,12)}{\textbf{var} progressions = \textbf{PM}$(B_{k-1}, B_{k+1}\cdot B_{k+2})$;}
+						\codeline{(0.5,11.5)}{\textbf{for each} ($\prog{a}{p}{t} \in$ progressions) \{}
+							\codeline{(1,11)}{$\alpha_R, \alpha_L =$ \textbf{PeriodTermination}$(\slp{S}_j, B_k);$}
+							\codeline{(1,10.5)}{$\gamma_L, \gamma_R =$ \textbf{PeriodTermination}$(\slp{S}_j, S_j\substr{a}{a + p\cdot t});$}
+							\codeline{(1,10)}{\textbf{if} ($\alpha_R$ is undefined or $\gamma_L$ is undefined)}
+								\codeline{(1.5,9.5)}{\textbf{break};}
+							\codeline{(1,9)}{\textbf{if} ($\alpha_L$ is defined and exists $t' | \gamma_L - \alpha_L = a +t'\cdot p -
+							(k-1)2^{i-2}$) \{}
+								\codeline{(1.5,8.5)}{\textbf{var} repetitions = $\alpha_R < \gamma_L ? \{\gamma_L -\alpha_L, k2^{i-2},
+								\alpha_R\} : \{\gamma_L - \alpha_L, k2^{i-2}, \gamma_L - 1\} ;$}
+								\codeline{(1.5,8)}{\textbf{PurityCheck}(repetitions);}
+							\codeline{(1,7.5)}{\}}
+							\codeline{(1,7)}{\textbf{if} ($\gamma_R$ is defined and exists $t'' | \gamma_R - \alpha_R = a + t''\cdot p -
+							(k-1)2^{i-2}$) \{}
+								\codeline{(1.5,6.5)}{\textbf{var} repetitions = $\alpha_R < \gamma_L ? \{\gamma_L - \alpha_L, \gamma_L + 1,
+								\min\{a,(k+1)2^{i-2}\}\}: \{\gamma_R - \alpha_R, \alpha_R, \min\{a,(k+1)2^{i-2}\}\};$}
+								\codeline{(1.5,6)}{\textbf{PurityCheck}(repetitions);}
+							\codeline{(1,5.5)}{\}}
+							\codeline{(1,5)}{\textbf{if} ($\alpha_L, \gamma_R$ are defined and $t' = t''$) \{}
+								\codeline{(1.5,4.5)}{\textbf{if} ($\alpha_R < \gamma_L$) \{}
+									\codeline{(2,4)}{\textbf{var } repetitions = $\{\gamma_R - \alpha_R, \alpha_R + 1, \gamma_L\}$;}
+									\codeline{(2,3.5)}{\textbf{PurityCheck}(repetitions);}
+								\codeline{(1.5,3)}{\}}
+								\codeline{(1.5,2.5)}{\textbf{var } pureSquares = $k, \prog{a}{p}{t}, \alpha_L, \alpha_R, \gamma_L, \gamma_R$;}
+							\codeline{(1,2)}{\}}
+						\codeline{(0.5,1.5)}{\}}
+					\codeline{(0,1)}{\}}
+			\draw (0,0) node[anchor=west] {\scriptsize {\sf \textbf{ Figure \arabic{figures}}. Pseudo code of algorithm that
+			solves searching all pure squares problem}};
+		\end{tikzpicture}
+	\end{center}
+}

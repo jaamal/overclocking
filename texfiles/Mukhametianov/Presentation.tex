@@ -1,0 +1,161 @@
+%% LaTeX Beamer presentation template (requires beamer package)
+%% see http://latex-beamer.sourceforge.net/
+%% idea contributed by H. Turgut Uyar
+%% template based on a template by Till Tantau
+%% this template is still evolving - it might differ in future releases!
+
+\documentclass[cp1251]{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+} 
+
+\usepackage[english,russian]{babel}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage{listings}
+\lstloadlanguages{XML,Java}
+\lstset{language=Java,
+		extendedchars=true,
+		escapechar=|,
+		frame=tb,
+		commentstyle=\itshape,
+		stringstyle=\bfseries,
+		basicstyle=\ttfamily\scriptsize,
+		breaklines=true}
+
+
+\title{Реализация DI-контейнера с минимальной конфигурацией для языка Java}
+
+\author{Денис Мухаметьянов}
+
+\date{20 июня 2013}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Dependency Inversion}
+
+\begin{frame}[fragile]
+	\pause
+	\begin{block}{Код без соблюдения принципа инверсии зависимостей}
+		\begin{lstlisting}[language=Java]
+			public A()
+			{
+			    this.b = new B();
+			    this.c = new C();
+			}
+		\end{lstlisting}
+	\end{block}
+	\pause
+	\begin{block}{Код с соблюдением принципа инверсии зависимостей}
+		\begin{lstlisting}[language=Java]
+			public A(IB b, IC c)
+			{
+			    this.b = b;
+			    this.c = c;
+			}
+		\end{lstlisting}
+	\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+	\begin{block}{Наблюдение}
+		Должно быть место, где создаются и хранятся объекты.
+	\end{block}
+	\pause
+	\begin{block}{ServiceLocator}
+		\begin{lstlisting}[language=Java]
+			ServiceLocator.register(IB.class, new B());
+			ServiceLocator.register(IC.class, new C());
+			ServiceLocator.register(IA.class, new A(ServiceLocator.get(IB.class), ServiceLocator.get(IC.class)));
+		\end{lstlisting}
+	\end{block}
+\end{frame}
+
+\section{DI-контейнеры}
+
+\begin{frame}
+	\begin{block}{Решение проблем ServiceLocator'а}
+		DI-контейнер берет на себя ответственность за создание объектов
+	\end{block}
+\end{frame}
+
+\section{Проблема существующих}
+
+\begin{frame}[fragile]
+	\pause
+	\begin{block}{Spring IoC Container}
+		\begin{lstlisting}[language=XML]
+			<bean id="AClassImpl" class="A" />
+			<bean id="BClassImpl" class="B" />
+			<bean id="CClassImpl" class="C" />
+		\end{lstlisting}
+	\end{block}
+	\pause
+	\begin{block}{Google Guice}
+		\begin{lstlisting}[language=Java]
+			bind(IA.class).to(A.class);
+			bind(IB.class).to(B.class);
+			bind(IC.class).to(C.class);
+		\end{lstlisting}
+	\end{block}
+\end{frame}
+
+\section{JRoboContainer}
+
+\begin{frame}
+	\begin{block}{}
+		Можно ли реализовать DI-контейнер, конфигурирование которого не потребует большого количества кода?
+	\end{block}
+	\pause
+	\begin{block}{JRoboContainer}
+		Разработан JRoboContainer "--- контейнер, который позволяет избежать явного перечисления всех классов
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\begin{block}{}
+		Контейнер готов к использованию сразу после создания
+	\end{block}
+	\pause
+	\begin{block}{}
+		Имеется возможность точечной настройки
+		\pause
+		\begin{itemize}
+			\item аннотация @ContainerConstructor
+			\pause
+			\item указание конкретной реализации абстракции
+			\pause
+			\item указание конкретного экземпляра абстракции
+			\pause
+			\item указание конкретного загрузчика класса
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\begin{block}{}
+		\begin{itemize}
+			\item Код тщательно протестирован
+			\pause
+			\item Контейнер внедрен в реальный проект
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\begin{block}{}
+		\begin{center}
+			https://code.google.com/p/jrobo-container/
+		\end{center}
+	\end{block}
+\end{frame}
+
+\end{document}

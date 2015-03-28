@@ -1,0 +1,729 @@
+﻿\documentclass[11pt]{article}
+\usepackage{cite}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{url}
+\usepackage{hvorost}
+
+\begin{document}
+
+\title{Computing All Pure Squares in Compressed Texts}
+\author{L. Khvorost\thanks{The author acknowledges support from the Federal
+Education Agency of Russia, grant  2.1.1/3537.}\\
+Ural State University\\
+jaamal@mail.ru}
+\date{}
+\maketitle
+
+\begin{abstract}
+A square $xx$ is called pure if $x$ is a primitive string. We consider the problem of computing all pure squares
+in a string represented by a straight-line program (SLP). An instance of the problem is an SLP $\slp{S}$ that
+derives some string $S$ and we seek a solution in the form of a table that contains information about all pure
+squares in $S$ in a compressed form. We present an algorithm that solves the problem in $O(|\slp{S}|^4\cdot
+\log^2{|S|})$ time and requires $O(|\slp{S}|\cdot \max\{ |\slp{S}|, \log{|S|}\})$ space, where $|\slp{S}|$
+(respectively $|S|$) is the size of the SLP $\slp{S}$ (respectively the length of the string $S$).
+\end{abstract} 
+
+\section{Introduction}
+
+Various compressed representations of strings are known: straight-line programs (SLPs) \cite{14,15,16,18},
+collage-systems \cite{12}, string representations using antidictionaries \cite{13}, etc. Nowadays text compression
+based on context-free grammars such as SLPs attracts much attention. The reason for this is not only that grammars
+provide well-structured compression but also that the SLP-based compression is in a sense polynomially equivalent
+to the compression achieved by the Lempel-Ziv algorithm that is widely used in practice. It means that, given a
+text $S$, there is a polynomial relation between the size of an SLP that derives $S$ and the size of the
+dictionary stored by the Lempel-Ziv algorithm \cite{18}.
+
+While compressed representations save storage space, there is a price to pay: some classical problems on strings
+become computationally hard when one deals with compressed data and measures algorithms' speed in terms of the
+size of compressed representations. As examples we mention here the problems \textbf{Hamming distance} \cite{15} and
+\textbf{Literal shuffle} \cite{4}. On the other hand, there exist problems that admit algorithms working rather well on
+compressed representations: \textbf{Pattern matching} \cite{15, 10}, \textbf{Longest common substring} \cite{16}, 
+\textbf{Computing all palindromes} \cite{16}. This dichotomy gives rise to the following research direction: to
+classify important string problems by their behavior with respect to compressed data.
+
+The \textbf{Computing All Squares} (\textbf{CAS}) problem is a well-known problem on strings. It is of importance, for
+example, in molecular biology. (We just mention in passing that the story of origin and migration of mice on the
+Eurasia continent was restored thanks to information on squares in DNA sequences in mouse genome \cite{19}.) It is
+not yet known whether or not \textbf{CAS} admits an algorithm polynomial in the size of a compressed representation
+of a given text.\footnote{A polynomial algorithm that solves \textbf{CAS} for strings represented by Lempel-Ziv
+encodings was announced in~\cite{8}. This representation is slightly more general than that by SLPs. However no
+details of the algorithm have ever been appeared.} In general, a string can have exponentially many squares with
+respect to the size of its compressed representation. For example, the string $a^n$ has $\Theta(n^2)$ squares,
+while it is easy to build an SLP of size $O(\log n)$ that derives $a^n$. So we must store information about
+squares in a compressed form. Also this implies that we cannot search for squares consecutively by moving from one
+square to the ``next'' one. Squares should be somehow grouped in relatively large families that are to be
+discovered at once. So far we are able to overcome these difficulties for pure squares only.
+
+A string $x$ is \emph{primitive} if $x = u^k$ for some integer $k$ implies that $k = 1$ and $u = x$. A \emph{pure}
+square is a square $xx$ where $x$ is primitive. Otherwise, $xx$ is called a \emph{repetition}. We formulate the \textbf{
+Computing all pure squares} problem in terms of SLPs as follows:
+
+\problem{CAPS}{an SLP $\slp{S}$ that derives some text $S$;}{a data structure (a PS-table) that contains
+information about all pure squares in $S$ in a compressed form.}
+
+Observe that restricting to pure squares by no means makes the problem easy: the difficulties mentioned above
+persist for pure squares. Indeed, the same string $a^n$ has $n-1$ pure squares, thus exponentially many with
+respect to the size of its compressed representation.
+
+Let us describe in more detail the content of the present paper and its structure. Section~2 gathers some
+preliminaries about SLPs. In Section~3 we present some basic operations over SLPs widely used in paper. In
+Section~4 we present two algorithms. The first algorithm, given an SLP $\slp{S}$, checks whether or not the text
+$\slp{S}$ generates is square free. (A polynomial algorithm for testing square-freeness of a compressed text has been
+recently developed in~\cite{new} but only for the special case of SLPs, in which the parse tree of the text is
+balanced.) The second algorithm, given SLP $\slp{S}$, fills out the corresponding PS-table. Both algorithms use time
+and space resources that depend polynomially on the size of $\slp{S}$ and logarithmically on the size of the text
+generated by $\slp{S}$. Our algorithms closely follows the approach from~\cite{2} where an efficient solution
+to \textbf{CAS} for non-compressed strings has been proposed and we reproduce the key lemmas from~\cite{2} for the reader's
+convenience. Also in Section~4 we discuss functionality of PS-tables and list several problems that can be easily solved
+whenever a PS-table is available. In Section~5 we summarize our results. Appendix A contains illustrative examples.
+
+\section{Preliminaries}
+
+We consider strings of characters from a fixed finite alphabet $\Sigma$. The \emph{length} of a string $S$ is the number
+of its characters and is denoted by $|S|$. The \emph{concatenation} of strings $S_1$ and $S_2$ is denoted by $S_1 \cdot
+S_2$.  A \emph{position} in a string $S$ is a point between consecutive characters. We number positions from left to 
+right by $1,2,\dots,|S|-1$. It is convenient to consider also the position 0 preceding the text and the position $|S|$ 
+following it. For a string $S$ and an integer $i (0 \leq i \leq |S|)$ we define $S[i]$ as character between positions
+$i$ and $i+1$ of $S$. For example $S[0]$ is a first character of $S$. A \emph{substring} of $S$ starting at a position
+$\ell$  and ending at a position $r$, $0\leq \ell < r \leq |S|$, is denoted by $S[\ell \dots r]$ (in other words 
+$S[\ell \dots r] = S[\ell] \cdot S[\ell + 1] \cdot \mbox{\dots} \cdot S[r-1]$). We say that a substring $S[\ell \dots
+r]$ \emph{touches} some position $t$ if $\ell \leq t \leq r$. The position $|x|$ of a square $xx$ is called the
+\emph{center} of $xx$ and $x$ is referred to as the \emph{root} of $xx$.
+
+A \emph{straight-line program} (SLP) $\slp{S}$ is a sequence of assignments of the form:
+
+\begin{center}
+$\slp{S}_1 = expr_1,\ \slp{S}_2 = expr_2, \dots, \slp{S}_n = expr_n,$
+\end{center}
+where $\slp{S}_i$ are \emph{rules} and $expr_i$ are expressions of the form:
+\begin{itemize}
+\item $expr_i$ is a symbol of $\Sigma$ (we call such rules \emph{terminal}), or
+\item $expr_i = \slp{S}_\ell\cdot \slp{S}_r \ (\ell, r < i)$ (we call such rules \emph{nonterminal}).
+\end{itemize}
+
+Thus, an SLP is a context-free grammar in Chomsky normal form. Every SLP $\slp{S}$ generates exactly one string
+$S\in\Sigma^+$ and we refer to it as the \emph{text} generated by $\slp{S}$.
+
+{\bf Example}: The following SLP $\slp{F}_7$ generates the 7-th Fibonacci word $F_7$= \emph{a~b~a~a~b~a~b~a~a~b~a~a~b}:
+\begin{center}
+$\slp{F}_1 = a,\ \slp{F}_2 = b,\ \slp{F}_3 = \slp{F}_1\cdot \slp{F}_2,\ \slp{F}_4 = \slp{F}_3\cdot \slp{F}_1,$
+
+$\slp{F}_5 = \slp{F}_4\cdot \slp{F}_3,\ \slp{F}_6 = \slp{F}_5\cdot \slp{F}_4,\ \slp{F}_7 = \slp{F}_6\cdot
+\slp{F}_5$;
+\end{center}
+
+We accept the following conventions in the paper: every SLP is denoted by a capital blackboard bold letter, for
+example, $\slp{S}$. Every rule of this SLP is denoted by the same letter with indices, for example,
+$\slp{S}_1,\slp{S}_2,\dots$. The text that is derived from a rule is denoted by the same indexed capital letter in
+the standard font, for example, the text that is derived from $\slp{S}_i$ is denoted by $S_i$. 
+
+The \emph{size} of an SLP $\slp{S}$ is the number of its rules and is denoted by $|\slp{S}|$. The \emph{concatenation}
+of SLPs $\slp{S}_1$ and $\slp{S}_2$ is an SLP that derives $S_1 \cdot S_2$ and denoted by $\slp{S}_1 \cdot \slp{S}_2$. 
+The \emph{cut position} of a nonterminal rule $\slp{S}_i = \slp{S}_\ell\cdot \slp{S}_r$ is the position $|S_\ell|$ in
+the text $S_i$. For instance, the cut position of $\slp{F}_4$ in the example in Figure~1 is equal to~2. For every
+terminal rule we define its cut position to be equal to~0.
+
+\begin{figure}[t]
+	\FibonacciWordSLP
+\end{figure}
+
+\section{Basic operations}
+
+In this section we present some basic operation over SLPs widely used in the paper. 
+
+\subsection{Subgrammar cutting}
+
+\problem{SubCut}{an SLP $\slp{S}$ that derives text $S$ and $0 \leq \ell < r \leq |\slp{S}| $ are integers;}{an SLP
+$\slp{S}\substr{\ell}{r}$ that derives text $S\substr{\ell}{r}$;}
+
+\noindent {\sc Algorithm:} The algorithm descends from the root of $\slp{S}$ to a son that touches both positions $\ell$
+and $r$ while it finds a rule $\slp{S}'$ such that $\slp{S}'$ is a terminal rule or a nonterminal rule that left son
+touches only $\ell$ and right son touches only $r$. Notice that original values of $\ell$ and $r$ may change during the
+process. If $\slp{S}'$ is a terminal rule then the algorithm returns $\slp{S}'$. Let $\slp{S}' = \slp{L} \cdot \slp{R}$
+be a nonterminal rule and $\gamma$ be a cut position of $\slp{S}'$. The algorithm decompose $\slp{L}$ into rules
+$\slp{L}_p, \dots, \slp{L}_1 \in \slp{L}$ such that $\slp{L}_p \cdot \mbox{\dots} \cdot \slp{L}_1$ derives
+$S\substr{\ell}{\gamma}$ and decompose $\slp{R}$ into rules $\slp{R}_1, \dots, \slp{R}_q \in \slp{R}$ such that
+$\slp{R}_1 \cdot \mbox{\dots} \cdot \slp{R}_q$ derives $S\substr{\gamma}{r}$. At Figure 2 presented pseudo code that
+illustrate how the algorithm obtains $\slp{L}_p, \dots, \slp{L}_1$. The set of rules $\slp{R}_1, \dots, \slp{R}_q$ obtains similarly.
+
+\SubCutPseudoCode
+
+Finally the algorithm concatenates two set of rules into a single SLP in the following order: $$\slp{L}_p \cdot
+(\slp{L}_{p-1} \cdot \mbox{\dots} \cdot (\slp{L}_1 \cdot (\slp{R}_1 \cdot \mbox{\dots} \cdot (\slp{R}_{q-1} \cdot
+\slp{R}_q) ) ) ).$$
+
+\noindent \textsc{Complexity:} To find a rule $\slp{S}'$ the algorithm descends along a path between the root of
+$\slp{S}$ and some leaf of $\slp{S}$ at worst case, so the algorithm needs $O(|\slp{S}|)$ time. To decompose $\slp{L}$
+into rules $\slp{L}_p, \dots, \slp{L}_1$ the algorithm descends along a path between the root of $\slp{L}$ and some leaf
+of $\slp{L}$ at worst case, so the algorithm needs $O(|\slp{L}|)$ time. Similarly the algorithm needs $O(|\slp{R}|)$ time
+to decompose $\slp{R}$ into rules $\slp{R}_1, \dots, \slp{R}_q$. Altogether there is algorithm that solves
+\textbf{SubCut} problem using $O(|\slp{S}|)$ time and $O(|\slp{S}|)$ space.
+
+\subsection{Pattern matching}
+
+\problem{PM}{SLP's $\slp{S}, \slp{T}$ such that $|S| \leq |T|$;}{$O(|\slp{T}|)$ arithmetic progressions that describe
+start positions of all occurrences $S$ in $T$;}
+
+\begin{thm}[{\rm\cite{15}}]
+There is algorithm that solves \textbf{PM} problem using $O(|\slp{T}|^2|\slp{S}|)$ time and $O(|\slp{T}||\slp{S}|)$
+space.
+\end{thm}
+
+\subsection{Substrings extending}
+
+\problem{SubsExt}{an SLP $\slp{S}$ and integers $\ell_1, r_1, \ell_2, r_2 (0 \leq \ell_1 < r_1 \leq |\slp{S}|, 0 \leq
+\ell_2 < r_2 \leq |\slp{S}|)$ such that $S\substr{\ell_1}{r_1} = S\substr{\ell_2}{r_2}$;}{integers $\ell_{ex}$ and 
+$r_{ex}$, where $\ell_{ex}$ is the length of the longest common suffix of $S\substr{1}{r_1}$ and $S\substr{1}{r_2}$,
+$r_{ex}$ is the length of the longest common prefix of $S\substr{\ell_1}{|S|}$ and $S\substr{\ell_2}{|S|}$;}
+
+\vspace{2pt}
+
+\noindent \textsc{Algorithm:} The algorithm obtains $r_{ex}$ by induction.
+
+\vspace{2pt}
+
+\noindent \textsc{Base:} The algorithm set $r_{ex}$ is equal to $\min \{|S| - r_1, |S| - r_2\}$. Using \textbf{SubCut}
+problem the algorithm constructs $\subslp{S}{r_1}{r_1 + r_{ex}}$ and $\subslp{S}{r_2}{r_2 + r_{ex}}$.  Next it runs
+\textbf{PM} problem with the SLPs as input. If the result set is not empty then algorithm stops. Otherwise it sets
+$step = \lfloor \frac{r_{ex}}{2} \rfloor$ and $r_{ex} = 0$.
+
+\vspace{2pt}
+
+\noindent \textsc{Step:} Using \textbf{SubCut} problem the algorithm constructs $\subslp{S}{r_1}{r_1 + r_{ex} + step}$
+and $\subslp{S}{r_2}{r_2 + r_{ex} + step}$.  Next it runs \textbf{PM} problem with the SLPs as input. If the result set
+is not empty then the algorithm sets $r_{ex} = r_{ex} + step$ and $step = step + \lceil \frac{step}{2} \rceil$.
+Otherwise it sets $step = step - \lceil \frac{step}{2} \rceil$.
+
+The algorithm obtains $\ell_{ex}$ analogously.
+
+\vspace{2pt}
+
+\noindent \textsc{Complexity:} There are $O(\log |S|)$ steps. At each step the algorithm runs \textbf{SubCut} problem
+two times and \textbf{PM} problem one time. Totally it needs $O(|\slp{S}|^3)$ time and $O(|\slp{S}|^2)$ space for each
+step. Altogether there is algorithm that solves \textbf{SubsExt} problem $O(|\slp{S}|^3 \log|S|)$ time and 
+$O(|\slp{S}|^2)$ space.
+
+Using \textbf{SubsExt} problem we can easy solve the following problem:
+
+\problem{Period termination}{an SLP $\slp{S}$, an integer $p > 0$ and positions $0 \leq \ell < r \leq |\slp{S}|$ such that
+$S\substr{\ell}{r}$ is $p$-periodic substring;}{$t_L, t_R$ are positions in the text $S$ where $p$-periodicity of
+$S\substr{\ell}{r}$ terminates from the left and from the right correspondingly;}
+
+\vspace{2pt}
+
+\noindent \textsc{Algorithm:} Using \textbf{SubCut} problem the algorithm constructs SLP $\slp{P}$ that derives
+$S\substr{\ell}{\ell + p}$. Let $k$ be an odd integer that $p^k > |S|$. Using $\Theta(\log k)$ time the algorithm constructs
+SLP $\slp{P}^k$ that derives $S\substr{\ell}{\ell+p}^k$. Finally it runs \textbf{SubsExt} problem with the following parameters:
+$\slp{S} \cdot \slp{P}^k$, $\ell_1 = \ell, r_1 = r, \ell_2 = |S| + p \cdot \frac{k-1}{2}, r_2 = |S| + p \cdot \frac{k-1}{2} + (r
+- \ell)$.
+
+\vspace{2pt}
+
+\noindent \textsc{Complexity:} The algorithm runs \textbf{SubCut} problem one time. Next it spends $\log k \leq \log
+|S|$ operations to construct $\slp{P}^k$. Finally in runs \textbf{SubsExt} problem one time. Altogether there is
+algorithm that solves \textbf{Period termination} problem using $O(|\slp{S}|^3 \log|S|)$ time and
+$O(|\slp{S}|^2)$ space.
+
+%TODO move to SAPS algorithm section
+\subsection{Purity check}
+
+\problem{Purity check}{an integer $p > 0$ and an SLP $\slp{S}$ such that $|S| \geq 2p$ and for every position $c \in
+\overline{p \dots |S| - p}$ $S\substr{c-p}{c+p}$ is a repetition;}{\textbf{true}, if all the
+repetitions are pure squares, otherwise \textbf{false};}
+
+\begin{lem}[{\rm\cite{2}}]
+A family of repetitions contains a pure square if and only if all the repetitions in the family are pure squares.
+\end{lem}
+
+If square $xx$ is not pure then $x$ contains at least one pure square. It follows form definition of pure square. To
+solve \textbf{Purity check} problem enough to check whether exists pure square that belongs to $S\substr{\ell - |x|}{\ell}$. 
+
+Sketch: 
+
+The algorithm starts from root of $\slp{S}$ and recursively goes down in parse tree of $\slp{S}$. 
+
+\section{The algorithm}
+
+\subsection{Idea of pure squares location}
+
+Let us fix a rule $\slp{S}_j = \slp{S}_l \cdot \slp{S}_r$ and its cut position $\gamma$. There exists a number
+$i_0$ such that $2^{i_0} \geq \max\{|S_l|, |S_r|\}$. Let us fix a number $i \in \{ 1, \dots, i_0 \}$. So for
+every pair $(j, i)$ the algorithm looks for the following set of pure squares: $\{xx \ | \ |x| \in
+[2^{i-1}, 2^i-1] \mbox{ and $xx$ touches $\gamma$}\}$.
+
+\noindent \textsc{Correctness:} Let us show that the algorithm doesn't miss any pure square by contradiction. Let $xx$
+be a pure square that was not found using the search algorithm. Let $\ell, r$ be left and right position of $xx$ in the
+text $S$. Using $O(|\slp{S}|)$ time we can obtain a rule $\slp{S}_j$ that $S_j$ fully contains $xx$ and $xx$ touches cut
+position of $\slp{S}_j$ (just walk down from root of $\slp{S}$ while not found a first rule that cut position is in
+$[\ell, r]$). There exist number $i$ that $|x| \in [2^{i-1}, 2^i-1]$. Since $xx$ touches $\gamma$ and $|xx| < 2^{i+1}$ 
+then $xx$ belongs to $2^{i+1}$-environment of $\gamma$. So we have contradiction with condition that for fixed rule 
+$\slp{S}_j$ and number $i$ we able to found all pure squares.
+
+\subsection{Idea of local search}
+
+Let partition the $2^{i+1}$-environment of $\gamma$ into 16 text blocks of equal length. Thus the length of each
+block is $2^{i-2}$. Partition starts from $\gamma$ so leftmost and rightmost blocks in the partition may have
+length less than $2^{i-2}$. Let us enumerate the blocks from $B_1$ to $B_{16}$. Notice centers of pure squares
+should locate at blocks from $B_5$ to $B_{12}$ otherwise we get contradiction with length of pure square or
+touching $\gamma$.
+
+Let $c$ be center of a pure square $xx$ and it belongs to one of the eight blocks $B_k$. Since $|x| \geq 2^{i-1}$
+then $xx$ should contain at least three consecutive blocks $B_{k-1}, B_{k}$ and $B_{k+1}$. For example, let $c$
+belong to block $B_7$ then $xx$ must contains blocks $B_6$ and $B_8$. Let us fix $B_{k-1}$. Using pattern matching
+algorithm we able to find all occurrences of $B_{k-1}$ in $B_{k+1}\cdot B_{k+2}$. Next the algorithm take pair of
+blocks ($B_{k-1}$ and its occurrence in $B_{k+1}\cdot B_{k+2}$) and extend both to check whether or not they form
+a square.
+
+\noindent \textsc{Correctness:} Let us show correctness of the idea by contradiction. Let $xx$ be a pure square that
+fully contains in $S_j$, touches $\gamma$ and $|x| \in [2^{i-1}, 2^i-1]$. Suppose $xx$ was not found using the search
+algorithm. Let $c$ be a center of $xx$. If $c$ not belong to blocks from $B_5$ to $B_{12}$ then we have contradiction
+as shown above. Let $c$ belong to block $B_k$ where $k\in \{ 5, \dots, 12 \}$. If two adjacent blocks of $B$ not
+belong to $xx$ then we have contradiction with length of $xx$. Since $|x| \geq 2^{i-1}$ then $xx$ contains at least
+three consecutive blocks of the partition. Let $B_{k-1}$ is one of two adjacent blocks. If start position of occurrence
+of $B_{k-1}$ belong to $B_k$ then $|x| < 2\cdot 2^{i-2} < 2^{i-1}$ that contradicts with $|x| \in [2^{i-1},2^i-1]$. If
+start position of occurrence of $B_{k-1}$ belong to $B_{k+3}$ (or even greater) then $|x| > 4\cdot 2^{i-2} > 2^i-1$
+that contradicts with $|x| \in [2^{i-1},2^i-1]$ also. Otherwise we have contradiction with condition that we able to
+find all pure squares between a block and its occurrences in some area.
+
+\subsection{Square-freeness problem}
+
+\problem{Square-freeness}{an SLP $\slp{S}$ that derives text $S$;}{Whether or not $S$ is square-free?}
+
+The following lemma is helpful for solving square-freeness problem:
+
+\begin{lem}[{\rm\cite{2}}]
+Assume that the period of a string $B$ is $p$. If $B$ occurs only at positions $p_1 < p_2 < \dots < p_k$ of a text
+$S$ and $p_k - p_1 \leq \frac{|B|}{2}$ then the $p_i$'s form an arithmetic progression with difference $p$.
+\end{lem}
+
+\SquareFreenessCode
+
+So for every block $B_{k-1}$ we obtain all occurrences of $B_{k-1}$ in $B_{k+1}\cdot B_{k+2}$. From the lemma
+above follows that we can represent all occurrences using four arithmetic progressions. Therefore we need to check
+whether on not block $B_{k-1}$ and progression $\prog{a}{p}{t}$ of its occurrences form a square? We propose the following
+algorithm for the check:
+
+\begin{itemize}
+\item If $t = 0$ then there are no squares. The algorithm moves to the next block;
+
+\item If $t = 1$ then we obtain $\ell_{ex}$, $r_{ex}$ using \textbf{SubsExt} problem for $B_{k-1}$ and $S_j[a\dots a +
+2^{i-2}]$. If $\ell_{ex} + r_{ex} > a - (k-1)\cdot 2^{i-2}$ then there exist at least one square and the  algorithm returns
+$\bf{false}$. Otherwise there are no squares and the algorithm moves to the next block;
+
+\item If $t \geq 2$ there exists at least one square. The algorithm returns $\bf{false}$. 
+\end{itemize}
+
+Pseudo code for square-freeness checking presented at figure 3.
+
+\begin{thm}
+There is algorithm that solves square-freeness problem using $O(|\slp{S}|^4\cdot \log^2{|S|})$ time and $O(|\slp{S}|^2)$ space.
+\end{thm}
+
+\subsection{PS-table}
+
+The \emph{pure squares table} (PS-table) is a rectangular table $PS(\slp{S})$ that stores information about all pure
+squares in the text in a compressed form. The size of $PS(\slp{S})$ is equal to $(\lfloor\log |S|\rfloor+1) \times
+(|\slp{S}|+1)$. It is convenient to start numbering of rows and columns of PS-tables with 0. We denote the cell in
+the $i$-th row and $j$-th column of table by $PS(i,j)$. The cell $PS(0,0)$ is always left blank. The cells $PS(0,j)$
+with $j>0$ contain the rules of the SLP $\slp{S}$ ordered such that the lengths of the texts they derive increase. (If some
+rules derive texts of the same length then the rules are listed in an arbitrary but fixed order). Thus, the first cells 
+of the 0-th row contain terminal rules followed by rules that derive texts of length~2, etc.  The cells $PS(i,0)$ with
+$i>0$ contain segments $[2^{i-1}, 2^i - 1]$. In every cell $PS(i, j)$ with $i,j>0$, we shall store information about
+families of pure squares. There exist three types of stored families:
+
+\begin{itemize}
+  \item empty family (stored as $\emptyset$);
+  \item family of pure squares with fixed root length (stored using triple $\{|x|, c_l, c_r \}$ where $|x|$ is length
+  of root, $c_l$ is center position of leftmost pure square in $\slp{S}_j$, $c_r$ is center position of rightmost pure
+  square in $\slp{S}_j$);
+  \item family of pure squares with float root length;
+\end{itemize}
+
+The reader may wish to look at the example of the PS-table for the SLP $\slp{F}_7$ in Appendix~A in which all square
+families has fixed root length.
+
+Once a PS-table is constructed, it is easy to solve the following problems:
+
+\begin{itemize}
+  \item to find information about all pure squares of fixed length;
+  \item to compute the number of pure squares that are contained in $S$.
+\end{itemize}
+
+More complicated questions also can be answered. For instance, suppose we are given SLPs $\slp{S}$ and $\slp{P}$ such
+that $\slp{P}$ derives a pure square $xx$. The question is whether or not $xx$ occurs in the text $S$?
+
+Sketch of algorithm:
+
+The algorithm computes length of $xx$ using $O(|\slp{P}|)$ time. Next it find a row of the PS-table such that
+$2^{i-1} < |x| < 2^i$ using $O(\log{|S|})$ time. Finally the algorithm checks whether $xx$ belongs to a family encoded
+in any cell of the row. Obviously the algorithm skip empty families. The following cases are remained to be
+considered:
+
+\begin{itemize}
+  \item the algorithm process the following family: $\{|y|, c_l, c_r\}$. If $|x| \neq |y|$ then the algorithm moves to
+  the next family. Otherwise it take subgrammar $\slp{S}\substr{c_l - |x|}{c_r + |x|}$ using $O(|\slp{S}|)$ time and run
+  pattern matching algorithm on $\slp{S}\substr{c_l - |x|}{c_r + |x|}$ and $\slp{P}$ using $O(|\slp{P}|^3)$ time.
+  \item the algorithm process the following family: $k, \prog{a}{p}{t}, \alpha_L, \alpha_R, \gamma_L, \gamma_R$. If
+  there is no integer $t' \in \overline{0 \dots t}$ such that $t' = \frac{|x| - a + (k-1) \cdot 2^{i-2} }{p}$ or $|x|
+  \geq \min(\alpha_R -\alpha_L, \gamma_R - \gamma_L)$ then the algorithm moves to the next family. Otherwise the
+  family reduced to family with fixed root length $\{|x|, \max(\alpha_L + |x|, \gamma_L) + 1, \min(\alpha_R,
+  \gamma_R - |x|)\}$ and processed as shown above.
+\end{itemize}
+
+If the algorithm find match at some family then it immediately stops and return \textbf{true}. If the algorithm find no
+match checking all families in the row then it return \textbf{false}.
+
+In the worst case we need $O(\max\{ |\slp{S}|, \log |S|\} \cdot |\slp{P}|^3)$ time. Moreover, we can modify the
+algorithm to save information about all occurrences of $xx$ in $S$. Clearly, the general pattern matching algorithm also
+solves these problem, but it needs $O(|\slp{P}||\slp{S}|^2)$ time. Therefore using information from the PS-table will be
+more effective if $|\slp{S}|$ much larger than $|\slp{P}|$. 
+
+Another natural problem is the following. Let an SLP $\slp{S}$ derive the text $S$ and let a position $i$ be fixed.
+The problem is to construct an SLP that derives all pure squares starting from the position $i$ in $S$. (Since by the
+definition each SLP derives only one string, we mean here an SLP that derives a string consisting of all pure squares
+in question separated by a new symbol.)  Altogether there are $O(\log|\slp{S}|)$ rules that contain $i$.
+
+\begin{lem}[{\rm\cite{11}}]
+If there are three squares $xx, yy, zz$ with $|x| < |y| < |z|$ that start at the same position of some string, then $|x|
++ |y| \leq |z|$.
+\end{lem}
+
+The lemma implies that for every interval of lengths there exist at most two squares starting from an arbitrary
+position. Therefore altogether there are $O(|\slp{S}|)$ pure squares starting at a particular position. So we can
+gather information about all pure squares in an explicit form. We can build an SLP that derives all pure squares
+starting in a particular position in $O(|\slp{S}|^2)$ time using the substring taking algorithm.
+
+\subsection{Searching all pure squares problem}
+
+Remind the main problem:
+
+\problem{Searching all pure squares}{an SLP $\slp{S}$ that derives text $S$;}{a compressed presentation of all
+pure squares in $S$;}
+
+To solve the problem remain to recognize all pure squares between a block $B_k$ and an arithmetic progression
+$\prog{a}{p}{t}$ of its occurrences. Since $t$ can be exponentially large relative to $|\slp{S}|$ the algorithm
+cannot consecutively check every occurrence of $B_k$.
+
+Let $\alpha_L, \alpha_R$ be output of \textbf{Period termination} problem for $\slp{S}_j, B_k =
+S_j\substr{(k-1)\cdot2^{i-2}}{k\cdot 2^{i-2} -1}$. $\alpha_L, \alpha_R$ called \emph{defined} if they satisfies
+the following inequalities: $(2k-1)\cdot2^{i-2} - (a + p\cdot t) \leq \alpha_L$, $\alpha_R < a + 2^{i-2}$.
+Otherwise they are called \emph{undefined}. Since $2^{i} - 1$ is the greatest length of a root then start
+positions of pure squares can not be further right than $(2k-1)\cdot2^{i-2} - (a + p\cdot t)$. So it does not
+matter where the $p$-periodicity terminates outside. Analogously $\gamma_L, \gamma_R$ defined as output of
+\textbf{Period termination} problem for $\slp{S}_j, S_j\substr{a}{a + p\cdot t}$. $\gamma_L, \gamma_R$  called
+\emph{defined} if they satisfies the following inequalities: $(k-1)2^{i-2} \leq \gamma_L$ and $\gamma_R < 2(a + p\cdot
+t) - (k-1)2^{i-2}$. Otherwise they are called \emph{undefined}.
+
+For the positions $\alpha_L, \alpha_R, \gamma_L$ and $\gamma_R$ the following lemmas are valid:
+
+\begin{lem}[{\rm\cite{2}}]
+If one of $\alpha_R$ or $\gamma_L$ is defined, then the other one is defined, and $\alpha_R - \gamma_L \leq p$.
+\end{lem}
+
+\begin{lem}[{\rm\cite{2}}]
+If both $\alpha_R$ and $\gamma_L$ are undefined, then none of the repetitions possible containing $B_k$ are a
+square.
+\end{lem}
+
+Therefore squares exists if and only if $\alpha_R$ and $\gamma_L$ are defined. Let us consider possible relative
+positions of $\alpha_R$ and $\gamma_L$:
+\begin{itemize}
+\item If $\alpha_R < \gamma_L$ then centers of pure squares may located at $[k \cdot 2^{i-2}, \alpha_R]$, $(\alpha_R, \gamma_L]$, 
+$(\gamma_L, (k+1)\cdot2^{i-2}]$;
+\item If $\alpha_R > \gamma_L$ then centers of pure squares may located at $[k \cdot 2^{i-2}, \gamma_L]$, $(\gamma_L, \alpha_R]$, 
+$(\alpha_R, (k+1)\cdot2^{i-2}]$;
+\end{itemize}
+
+Most cases (except $(\gamma_L, \alpha_R]$) can be solved using the following lemma:
+
+\begin{lem}[{\rm\cite{2}}]
+If both $\alpha_R, \gamma_L$ are defined then:
+
+\begin{enumerate}
+\item Repetitions that are contain $B_k$ and centered at positions $h$, such that $h \leq \gamma_L$, may exist only if
+$\alpha_L$ is defined. These repetitions constitute a family of repetitions that corresponds to the difference
+$|x| = a + t'\cdot p - (k-1)2^{i-2}$, provided that there exists some $t' \in \overline{0\dots t}$ such that
+$\gamma_L - \alpha_L = a + t'\cdot p - (k-1)2^{i-2}$.
+\item Repetitions that are contain $B_k$ and centered at positions $h$, such that $\alpha_R < h$, may exist only if
+$\gamma_R$ is defined. These repetitions constitute a family of repetitions that corresponds to the difference
+$|x| = a + t''\cdot p - (k-1)2^{i-2}$, provided that there exists some $t'' \in \overline{0\dots t}$ such that
+$\gamma_L - \alpha_L = a + t''\cdot p - (k-1)2^{i-2}$.
+\end{enumerate}
+Notice that if $\alpha_R < \gamma_L$, then repetitions whose center $h$ satisfies $\alpha_R < h \leq\gamma_L$ may
+exist only if both $\alpha_L$ and $\gamma_R$ are defined and $\gamma_R - \alpha_R = \gamma_L - \alpha_L$.
+\end{lem}
+
+At each case of the previous lemma the algorithm may obtain exponentially many repetitions. Therefore it stores in
+compressed way: $\{|x|, c_l, c_r\}$ where $|x|$ is length of the root, $c_l$ is center of leftmost repetition,
+$c_r$ is center of rightmost repetition. So if $\alpha_R < \gamma_L$ the algorithm may obtain the following three
+families of repetitions at worst case: $\{\gamma_L - \alpha_L, k \cdot 2^{i-2}, \alpha_R\}, \{\gamma_R - \alpha_R,
+\alpha_R + 1, \gamma_L\}, \{\gamma_L - \alpha_L, \gamma_L + 1, \min\{a,(k+1) \cdot 2^{i-2}\}\}$. Else the algorithm may
+obtain the following two families of repetitions at worst case: $\{\gamma_L - \alpha_L, k \cdot 2^{i-2}, \gamma_L - 1\},
+\{\gamma_R - \alpha_R, \alpha_R, \min\{a,(k+1) \cdot 2^{i-2}\}\}$.
+
+The last case can be solved using the following lemma:
+
+\begin{lem}[{\rm\cite{2}}]
+If $\alpha_R, \gamma_L$ are defined and $\gamma_L < \alpha_R$, then there might be a family of repetitions
+associated with each of the differences $|x| = a + p\cdot t' - (k-1)\cdot 2^{i-2}$ where $t' \in \overline{0\dots t}$,
+with centers at positions $h$, such that $\gamma_L < h \leq \alpha_R$. The repetitions in each such family are all
+pure squares, and they are centered at positions $h$, such that $\max(\alpha_L + |x|, \gamma_L) < h \leq
+\min(\alpha_R, \gamma_R-|x|)$. Notice that such a family is not empty only if $|x| < \min(\alpha_R-\alpha_L,
+\gamma_R-\gamma_L)$.
+\end{lem}
+
+Since families of pure squares have float centers and float length of root the algorithm store it exactly:
+$k, \prog{a}{p}{t}, \alpha_L, \alpha_R, \gamma_L, \gamma_R$. 
+
+Pseudo code of the algorithm presented at figure 4.
+
+\SearchingPureSquaresCode
+
+\begin{thm}
+There is algorithm that solves Searching all pure squares problem using $O(|\slp{S}|^4 \cdot \log^2{|S|})$ time and
+$O(|\slp{S}| \cdot \max(|\slp{S}|, \log{|S|}))$ space.
+\end{thm}
+
+\section{Conclusion}
+
+We have presented an algorithm that, given an SLP $\slp{S}$ deriving a text $S$, fills out a table containing
+information about all pure squares that occur in $S$ in time $O(|\slp{S}|^4\cdot \log^2{|S|})$ using
+$O(|\slp{S}|\cdot \max\{ |\slp{S}|, \log{|S|}\})$ space. We would like to emphasize some features of the
+algorithm:
+
+\begin{itemize}
+\begin{item}
+This algorithm is divided into independent steps in contrast to classical algorithms in this area which
+consecutively accumulate information about required objects. As a result it can be parallelized.
+\end{item}
+\begin{item}
+The algorithm is quite difficult from the viewpoint of practical implementation. Also it is not excluded that the
+constants hidden in the ``$O$'' notation  are actually very big.
+\end{item}
+\end{itemize}
+
+\bibliography{saps_journal}{}
+\bibliographystyle{plain}
+
+\begin{appendix}
+\section{Examples}
+
+\subsection{Leech word square-freeness}
+Let us consider the SLP $\slp{L}$ that derives substring of Leech square free word: 
+
+\begin{center}
+$\slpterm{L}{1}{a}, \slpterm{L}{2}{b}, \slpterm{L}{3}{c}, \slpnonterm{L}{4}{2}{3}, \slpnonterm{L}{5}{2}{1},
+\slpnonterm{L}{6}{1}{4}$
+
+$\slpnonterm{L}{7}{3}{4}, \slpnonterm{L}{8}{6}{5}, \slpnonterm{L}{9}{8}{4}, \slpnonterm{L}{10}{8}{7},
+\slpnonterm{L}{11}{10}{9}$
+\end{center}
+
+Parse tree for $\slp{L}$ presented at figure 4.
+
+\begin{figure}[th]
+\LeechSLP
+\end{figure}
+
+Let us check square freeness of $\slp{L}$. Since $|L| = 15$ then the algorithm check the following segments of root
+length: [1, 1], [2, 3], [4, 7]. Notice that rules of $\slp{L}$ already ordered by length of derived text.
+
+\begin{itemize}
+  \item \textbf{checking square freeness of squares that root length equals to 1}
+  
+  Firstly the algorithm skip terminal rules. Next it consecutively look for squares exactly in other rules. For
+  instance, let us consider how it checks $\slpnonterm{L}{10}{8}{7}$. The algorithm find $L_8[5] = a$ and $L_7[1] = c$
+  using $\slp{L}_{10}$. Since $a \neq c$ it moves to $\slp{L}_{11}$.
+  
+  It is clear that $\slp{L}_4, \dots, \slp{L}_{11}$ have no squares of length 2 around its cut positions.
+  \item \textbf{checking square freeness of squares that root length belong to [2, 3]}
+  
+  The algorithm skip all rules that have length less 4 (i.e. $\slp{L}_1, \dots, \slp{L}_7$). For instance, let us
+  consider how it checks $\slpnonterm{L}{8}{6}{5}$. Since $|L_8| = 5$ and block length is equal to 1 then the algorithm
+  construct an SLP $\slp{L}_8'$ that derives text \emph{\$~\$~\$~\$~\$~a~b~c~b~a~\$~\$~\$~\$~\$~\$}, where \emph{\$} is
+  special symbol not from $\Sigma$. At figure 5 presented partition of $L_8'$ into blocks of length 1.
+  
+  \LeechWordPartitionSimple
+  
+  Remind that the algorithm necessary to check blocks $B_5, \dots, B_{12}$. It no need to check $B_5$ since it contains
+  \emph{\$}. Also it no need to check $B_9$ and $B_{10}$ since the search area is out of $L_8$. For instance, let us
+  consider how it checks $B_7$. The algorithm build $\slp{L}_8'\substr{6}{7}$ that derives $B_7$ and  
+  $\slp{L}_8'\substr{8}{11}$ that derives search area $B_9 \cdot B_{10}$. Next it runs pattern matching algorithm on
+  $\slp{L}_8'\substr{6}{7}$, $\slp{L}_8'\substr{8}{11}$ and obtain occurrence of $B_7$ at position 9 of $L_8'$. Finally
+  it runs \textbf{SubsExt} problem with the following parameters: $\slp{L}_8'$ and positions 6, 7, 8, 9. The algorithm
+  obtains $\ell_{ex} = r_{ex} = 0$. Since $\ell_{ex} + r_{ex} = 0 = a - (k - 1) \cdot 2^{i-2} = 8 - (9 - 1) \cdot 1$ then
+  algorithm moves to $L_9$.
+
+  \item \textbf{checking square freeness of squares that root length belongs to [4, 7]}
+  
+  The algorithm skip all rules that have length less 8 (i.e. $\slp{L}_1, \dots, \slp{L}_9$). For instance, let us
+  consider how it checks $\slpnonterm{L}{11}{10}{9}$. Firstly it construct an SLP $\slp{L}_{11}'$ that derives $L$
+  surrounded with \emph{\$} and $|L_{11}'| = 32$. At figure 6 presented partition of $L_{11}'$ into blocks of length
+  2. 
+  
+  \LeechWordPartitionComplex
+
+  Next the algorithm find no squares for $B_5, \dots, B_8$ since pattern matching algorithm returns empty set of
+  results. Next the algorithm find occurrence of $B_9$ at position 22 of $L_{11}'$ and run \textbf{SubsExt}
+  problem with the following parameters: $\slp{L}_{11}'$ and positions 16, 18, 20, 22. Since $\ell_{ex} = r_{ex} = 0$ the
+  algorithm moves to $B_{10}$. Finally the algorithm find no squares for $B_{10}, B_{11}, B_{12}$ since correspond
+  search areas contains \emph{\$}.
+\end{itemize}
+
+\subsection{Construction PS-table for $\slp{F}_7$}
+
+Let us consider how the algorithm construct PS-table for $\slp{F}_7$ that derives text \emph{a~b~a~a~b~a~b~a~a~b~a~a~b}.
+The PS-table size is equal to $(\lfloor\log |F_7|\rfloor+1)\times (|\slp{F}_7|+1) = 4 \times 8$. 
+
+\begin{itemize}
+  \item \textbf{looking for squares that root length equals to 1}
+  
+  Firstly the algorithm mark cells with $\varnothing$ for rules with length less than 2. Next it consecutively look for
+  squares exactly in other rules. PS(1, 3) = $\varnothing$ since $F_1[1] = a \neq b = F_2[1]$. Analogously PS(1, 4) =
+  PS(1, 6) = $\varnothing$. PS(1, 5) = \{1, 3, 3\} since $F_4[3] = a = F_3[1]$. PS(1, 7) = \{1, 8, 8\} since $F_6[8] = a
+  = F_5[1]$. After first step PS-table has the following view: 
+  
+  \begin{figure}[h]
+	  {\footnotesize\noindent
+		\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
+	 	& $\slpterm{F}{1}{a}$ & $\slpterm{F}{2}{b}$ & $\slpnonterm{F}{3}{1}{2}$ & $\slpnonterm{F}{4}{3}{1}$ &
+	 	$\slpnonterm{F}{5}{4}{3}$ & $\slpnonterm{F}{6}{5}{4}$ & $\slpnonterm{F}{7}{6}{5}$ \\ \hline
+	
+	 	[1, 1] & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & \{1, 3, 3\} & $\varnothing$ & \{1, 8, 8\} \\
+	 	\hline
+	
+	 	[2, 3] & & & & & & & \\ \hline
+	
+	 	[4, 7] & & & & & & & \\ \hline
+		\end{tabular}
+	  }
+  \end{figure}
+  
+  \item \textbf{looking for squares that root length belongs to [2, 3]}
+  
+  The algorithm mark cells with $\varnothing$ for rules with length less than 4. For instance, let us consider
+  how the algorithm fill PS(2, 6). The algorithm construct SLP $\slp{F}_6'$ that derives text
+  \emph{\$~\$~\$~a~b~a~a~b~a~b~a~\$~\$~\$~\$~\$} of length 16. At figure 7 presented partition of $F_6'$ into blocks.
+  
+  \FibonacciWordPartition
+  
+  $B_5$: using \textbf{PM} problem the algorithm obtain occurrence of $B_5$ at position 8 of $F_6'$ on  
+  $\slp{F}_{6}'\substr{5}{6}, \slp{F}_{6}'\substr{7}{9}$; the substring extending algorithm obtain $\ell_{ex} = r_{ex} = 1$
+  on $\slp{F}_{6}'$ with parameters 5, 6, 8, 9; so family of repetitions \{3, 7, 7\} was found;
+  
+  $B_6$: using \textbf{PM} problem the algorithm obtain occurrence of $B_6$ at position 9 of $F_6'$ on  
+  $\slp{F}_{6}'\substr{6}{7}, \slp{F}_{6}'\substr{8}{10}$; the substring extending algorithm obtain $\ell_{ex} = 2, r_{ex}
+  = 0$ on $\slp{F}_{6}'$ with parameters 6, 7, 9, 10; so family of repetitions \{3, 7, 7\} was found;
+  
+  $B_7$: using \textbf{PM} problem the algorithm obtain occurrence of $B_7$ at position 9 of $F_6'$ on  
+  $\slp{F}_{6}'\substr{7}{8}, \slp{F}_{6}'\substr{9}{11}$; the substring extending algorithm obtain $\ell_{ex} = 0, r_{ex}
+  = 1$ on $\slp{F}_{6}'$ with parameters 7, 8, 9, 10; so no family of repetitions was found;
+  
+  $B_8$: using \textbf{PM} problem the algorithm obtain occurrence of $B_8$ at position 10 of $F_6'$ on  
+  $\slp{F}_{6}'\substr{8}{9}, \slp{F}_{6}'\substr{10}{12}$; the substring extending algorithm obtain $\ell_{ex} = r_{ex}
+  = 1$ on $\slp{F}_{6}'$ with parameters 8, 9, 10, 11; so family of repetitions \{2, 8, 9\} was found;
+  
+  $B_9$: using \textbf{PM} problem the algorithm obtain occurrence of $B_9$ at position 11 of $F_6'$ on  
+  $\slp{F}_{6}'\substr{9}{10}, \slp{F}_{6}'\substr{11}{13}$; the substring extending algorithm obtain $\ell_{ex} = 1,
+  r_{ex} = 0$ on $\slp{F}_{6}'$ with parameters 9, 10, 11, 12; so family of repetitions \{2, 9, 9\} was found;
+  
+  The algorithm skip blocks $B_{10}, \dots, B_{12}$ since the search area consist of \emph{\$}. After merging families 
+  of repetitions the algorithm have the following result: \{3, 7, 7\}, \{2, 8, 9\}. Finally the algorithm check purity
+  of families and shift them form $F_{6}'$ to $F_6$. 
+  
+  After second step PS-table has the following view:
+  
+  \begin{figure}[h]
+	  {\footnotesize\noindent
+		\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
+	 	& $\slpterm{F}{1}{a}$ & $\slpterm{F}{2}{b}$ & $\slpnonterm{F}{3}{1}{2}$ & $\slpnonterm{F}{4}{3}{1}$ &
+	 	$\slpnonterm{F}{5}{4}{3}$ & $\slpnonterm{F}{6}{5}{4}$ & $\slpnonterm{F}{7}{6}{5}$ \\ \hline
+	
+	 	[1, 1] & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & \{1, 3, 3\} & $\varnothing$ & \{1, 8, 8\} \\
+	 	\hline
+	
+	 	[2, 3] & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & \{3, 4, 4\}, \{2, 5, 6\} &
+	 	\{3, 10, 10\} \\ 	\hline
+	
+	 	[4, 7] & & & & & & & \\ \hline
+		\end{tabular}
+	  }
+  \end{figure}
+  
+  \item \textbf{looking for squares that root length belongs to [4, 7]}
+  
+  The algorithm mark cells with $\varnothing$ for rules with length less than 8. The algorithm construct SLP
+  $\slp{F}_7'$ that surrounds with \emph{\$} and has length 32. At figure 8 presented partition of $F_7'$ into
+  blocks. Let us consider how the algorithm fill PS(3, 7). It skips $B_5$ since $B_5$ contains \emph{\$}. 
+  
+   \FibonacciWordPartitionComplex
+  
+  $B_6$: using \textbf{PM} problem the algorithm obtain occurrence of $B_6$ at position 15; the substring extending algorithm
+  obtain $\ell_{ex} = 1, r_{ex} = 3$ on $\slp{F}_{7}'$ with parameters 10, 12, 14, 18; so family of repetitions \{5, 14,
+  15\} was found;
+  
+  $B_7$: using \textbf{PM} problem the algorithm obtain occurrence of $B_7$ at position 17; the substring extending algorithm
+  obtain $\ell_{ex} = 3, r_{ex} = 1$ on $\slp{F}_{7}'$ with parameters 12, 14, 16, 20; so family of repetitions \{5, 14,
+  15\} was found;
+  
+  $B_8$: using \textbf{PM} problem the algorithm obtain occurrence of $B_8$ at position 20; the substring extending algorithm
+  obtain $\ell_{ex} = r_{ex} = 0$ on $\slp{F}_{7}'$ with parameters 14, 16, 18, 22; so there are no families of
+  repetitions;
+  
+  $B_9$: using \textbf{PM} problem the algorithm obtain no occurrence of $B_9$; so there are no families of repetitions;
+  
+  The algorithm skips $B_{10}$ and $B_{11}$ since search areas consist of \emph{\$}. It skips $B_{12}$ since $B_{12}$
+  contains \emph{\$}. After merging families of repetitions the algorithm have the following result: \{5, 14, 15\}. 
+  Finally the algorithm check purity of families and shift them form $F_{7}'$ to $F_7$.
+  
+  Finally PS-table has the following view:
+  
+  \begin{figure}[h]
+	  {\footnotesize\noindent
+		\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
+	 	& $\slpterm{F}{1}{a}$ & $\slpterm{F}{2}{b}$ & $\slpnonterm{F}{3}{1}{2}$ & $\slpnonterm{F}{4}{3}{1}$ &
+	 	$\slpnonterm{F}{5}{4}{3}$ & $\slpnonterm{F}{6}{5}{4}$ & $\slpnonterm{F}{7}{6}{5}$ \\ \hline
+	
+	 	[1, 1] & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & \{1, 3, 3\} & $\varnothing$ & \{1, 8, 8\} \\
+	 	\hline
+	
+	 	[2, 3] & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & \{3, 4, 4\}, \{2, 5, 6\} &
+	 	\{3, 10, 10\} \\ \hline
+	
+	 	[4, 7] & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & $\varnothing$ & \{5, 5, 6\}
+	 	\\ \hline
+		\end{tabular}
+	  }
+  \end{figure}
+\end{itemize}
+
+\subsection{Text with complex family of pure squares}
+Let us consider an SLP $\slp{E} = \slp{E}_l \cdot \slp{E}_r$ such that $\slp{E}_l$ derives text $(a~b~a~b~a)^6~a~b~a$
+and $\slp{E}_r$ derives text $b~a~a~b~a~(a~b~a~b~a)^7$. So $\slp{E}$ derives text $(a~b~a~b~a)^7~a~b~a~(a~b~a~b~a)^7$
+and $|E| = 73$. Let us consider how the algorithm looking for pure squares for rule $\slp{E}$ and segment [16, 31]. The 
+algorithm construct SLP $\slp{E}'$ that surrounds with \emph{\$} and has length 128. The partition of $E'$ into blocks
+presented at figure 9. 
+
+\ComplexExamplePartititon
+
+Let us consider how the algorithm process block $B_8$. It find occurrence of $B_8$ in $B_9 \cdot B_{10}$ at positions
+$\prog{72}{2}{5}$. Since the algorithm find more than one occurrence it extends periodicity to calculate parameters
+$\alpha_L, \alpha_R, \gamma_L, \gamma_R$. So $\alpha_L = \infty, \alpha_R = 69, \gamma_L = 66, \gamma_R = \infty$.
+According to lemma !!! the algorithm find complex family of pure squares associated with each of root length \{18, 23\} 
+and centred at positions \{66, 67, 68, 69\}. Next we write every root from the family exactly: 
+
+\begin{itemize}
+  \item \textbf{roots of length 18}
+
+  $a~b~a(a~b~a~b~a)^3$, $b~a(a~b~a~b~a)^3a$, $a(a~b~a~b~a)^3a~b$, $(a~b~a~b~a)^3a~b~a$;
+  \item \textbf{roots of length 23}
+  
+  $a~b~a(a~b~a~b~a)^4$, $b~a(a~b~a~b~a)^4a$, $a(a~b~a~b~a)^4a~b$, $(a~b~a~b~a)^4a~b~a$;
+\end{itemize}
+
+\end{appendix}
+
+\end{document}

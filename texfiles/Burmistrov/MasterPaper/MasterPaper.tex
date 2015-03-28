@@ -1,0 +1,2349 @@
+\documentclass[12pt]{article}
+\usepackage[english,russian]{babel}
+\usepackage[final]{graphicx}
+\usepackage{pstricks-add,pst-node,pst-text,pst-3d}
+\usepackage{pgf, pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{amsmath, amssymb}
+\usepackage{amsthm}
+\usepackage{clrscode}
+\usepackage{tikz}
+
+\begin{document}
+
+\colorlet{shaded}{white!75!black}
+
+\newtheoremstyle{break}% name
+  {9pt}%      Space above, empty = `usual value'
+  {9pt}%      Space below
+  {\itshape}% Body font
+  {}%         Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% Thm head font
+  {.}%        Punctuation after thm head
+  {\newline}% Space after thm head: \newline = linebreak
+  {}%         Thm head spec
+
+\theoremstyle{break}
+\newtheorem{bthm}{Теорема}
+\newtheorem{blem}{Лемма}
+\newtheorem{bprop}{Предложение}
+
+%    Dispel annoying problem of slightly overlong lines:
+\addtolength{\textwidth}{8pt}
+
+\newcommand{\slp}[1]{\mathbb{#1}}
+
+\newcounter{figures}
+\newcommand{\pic}[5] {
+    \addtocounter{figures}{1}
+    \begin{center}
+        \begin{pgfpicture}{#1cm}{#2cm}{#3cm}{#4cm}
+            {\scriptsize
+                {\sf
+                    #5
+                }
+            }
+        \end{pgfpicture}
+    \end{center}
+}
+
+\newcommand{\drawAVLNode}[2]{
+	\filldraw[fill=black] #1 circle (2pt) node[anchor=south] {\scriptsize {#2}};
+}
+
+\newcommand{\drawTriangle}[3]{
+	\filldraw[fill=shaded] #1 -- #2 -- #3 -- #1; 
+}
+
+\newcommand{\drawLZinfNode}[2]{
+	\filldraw[fill=black] (#1,#2) rectangle +(0.1,0.1);
+}
+
+\newcommand{\drawSLPoldNode}[2]{
+	\draw (#1, #2) circle (1.5pt);
+}
+
+\newcommand{\drawSLPnewNode}[2]{
+	\filldraw[fill=black] (#1, #2) circle (1.5pt);
+}
+
+\newcommand{\drawSTNode}[2]{
+	\filldraw[fill=black] (#1, #2) circle (3pt);
+}
+
+\newcommand{\drawLZWNode}[2]{
+	\filldraw[fill=shaded] (#1,#2) -- +(0.08, 0.15) -- +(0.16, 0) -- (#1,#2); 
+}
+
+\newcommand{\SuffTree}{
+	\begin{tikzpicture}[scale=1.5]
+	\addtocounter{figures}{1}
+	
+	\drawSTNode{4.3}{0.2}		
+	\draw[thick] (4.3,0.2) -- (5.2,0.8) node[anchor=south]{{\sf xa}} -- (6.1,1.4);	
+	\drawSTNode{6.1}{1.4}
+
+	\draw[thick] (4.3,0.2) -- (5.2,0.4) node[anchor=south]{{\sf \$}} -- (6.1,0.6);
+	\drawSTNode{6.1}{0.6}
+	
+	\draw[thick] (4.3,0.2) -- (5.2,0) node[anchor=south]{{\sf bxa\$}} --
+	(6.1,-0.2);
+	\drawSTNode{6.1}{-0.2}
+	
+	\draw[thick] (4.3,0.2) -- (5.2,-0.4) node[anchor=south]{{\sf a}} --
+	(6.1,-1.0);
+	\drawSTNode{6.1}{-1.0}
+	
+	\draw[thick] (6.1,1.4) -- (7.0,1.7) node[anchor=south] {{\sf bxa\$}} --
+	(7.9,2.0);
+	\drawSTNode{7.9}{2.0}
+	
+	\draw[thick] (6.1,1.4) -- (7.0,1.1) node[anchor=south] {{\sf \$}} --
+	(7.9,0.8);
+	\drawSTNode{7.9}{0.8}
+	
+	\draw[thick] (6.1,-1.0) -- (7.0,-0.7) node[anchor=south]{{\sf bxa\$}} --
+	(7.9,-0.4);
+	\drawSTNode{7.9}{-0.4}
+	
+	\draw[thick] (6.1,-1.0) -- (7.0,-1.3) node[anchor=south]{{\sf \$}} --
+	(7.9,-1.6);
+	\drawSTNode{7.9}{-1.6}
+	
+	\draw[thick] (8.1,2.0) node {{\sf 1}};
+	\draw[thick] (8.1,-0.4) node {{\sf 2}};
+	\draw[thick] (6.3,-0.2) node {{\sf 3}};
+	\draw[thick] (8.1,0.8) node {{\sf 4}};
+	\draw[thick] (8.1,-1.6) node {{\sf 5}};
+	\draw[thick] (6.3,0.6) node {{\sf 6}};
+	
+	\draw (6.3,-2) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}.
+	Суффиксное дерево для строки $\mbox{<<}xabxa\mbox{>>}$.	
+	}};	
+	\end{tikzpicture}
+}
+
+\newcommand{\AVLrotations}{
+	\begin{tikzpicture}[scale=1]
+		\addtocounter{figures}{1}
+		
+		%simple rotation picture
+		\drawTriangle{(1.2,0)}{(0.6, -1)}{(1.8, -1)}
+		\drawTriangle{(2.2,-0.75)}{(1.6,-1.75)}{(2.8, -1.75)}
+		\drawTriangle{(4.2,-0.75)}{(3.4,-2.25)}{(5,-2.25)}
+		
+		\drawAVLNode{(1.2,0)}{$\mathcal{R}$}
+		\drawAVLNode{(2.2,0.75)}{$\mathcal{W}''$}
+		\drawAVLNode{(3.2,0)}{$\mathcal{V}'$}
+		\drawAVLNode{(2.2,-0.75)}{$\mathcal{V}$}
+		\drawAVLNode{(4.2,-0.75)}{$\mathcal{B}$}
+		
+		\draw (1.2,0) -- (2.2,0.75) -- (3.2,0);
+		\draw (2.2,-0.75) -- (3.2,0) -- (4.2,-0.75);
+		
+		\drawTriangle{(6.4,-0.75)}{(5.8,-1.75)}{(7, -1.75)}
+		\drawTriangle{(8,-0.75)}{(7.4,-1.75)}{(8.6, -1.75)}
+		\drawTriangle{(9.4,0)}{(8.6,-1.5)}{(10.2,-1.5)}
+		
+		\drawAVLNode{(6.4,-0.75)}{$\mathcal{R}$}
+		\drawAVLNode{(8.2,0.75)}{$\mathcal{W}''_{new}$}
+		\drawAVLNode{(7.2,0)}{$\mathcal{V}'_{new}$}
+		\drawAVLNode{(8,-0.75)}{$\mathcal{V}$}
+		\drawAVLNode{(9.4,0)}{$\mathcal{B}$}
+		
+		\draw (6.4,-0.75) -- (7.2,0) -- (8,-0.75);
+		\draw (7.2,0) -- (8.2,0.75) -- (9.4,0);
+		
+		\draw[thick,->] (4.3,0.2) -- (5.2,0.2) node[anchor=south]{\scriptsize {\sf
+		преобразование}} -- (6.1,0.2);
+		
+		\draw (5,-2.8) node {\scriptsize {\sf \textbf{}{\bf $h(\mathcal{V}') =
+		h(\mathcal{R}) + 2, h(\mathcal{V}) = h(\mathcal{B}) - 1$}.}};
+				
+		%complex rotation picture
+		\drawTriangle{(0,-4)}{(-0.6,-5)}{(0.6,-5)}
+		\drawTriangle{(1.5,-5)}{(0.9,-6)}{(2.1,-6)}
+		\drawTriangle{(3,-5)}{(2.4,-6)}{(3.6,-6)}
+		\drawTriangle{(4.5,-4.5)}{(3.9,-5.5)}{(5.1,-5.5)}
+		
+		\drawAVLNode{(2,-3.5)}{$\mathcal{W}''$}
+		\drawAVLNode{(0,-4)}{$\mathcal{R}$}
+		\drawAVLNode{(2.25,-4.5)}{$\mathcal{V}$}
+		\drawAVLNode{(3.3,-4)}{$\mathcal{V}'$}
+		\drawAVLNode{(4.5,-4.5)}{$\mathcal{B}$}
+		\drawAVLNode{(1.5,-5)}{$\mathcal{V}_l$}
+		\drawAVLNode{(3,-5)}{$\mathcal{V}_r$}
+		
+		\draw (0,-4) -- (2,-3.5) -- (3.3,-4);
+		\draw (2.25,-4.5) -- (3.3,-4) -- (4.5,-4.5);
+		\draw (1.5,-5) -- (2.25,-4.5) -- (3,-5);
+		
+		\drawTriangle{(6,-4.5)}{(5.4,-5.5)}{(6.6,-5.5)}
+		\drawTriangle{(7.5,-4.5)}{(6.9,-5.5)}{(8.1,-5.5)}
+		\drawTriangle{(9,-4.5)}{(8.4,-5.5)}{(9.6,-5.5)}
+		\drawTriangle{(10.5,-4.5)}{(9.9,-5.5)}{(11.1,-5.5)}
+		
+		\drawAVLNode{(8.25,-3.5)}{$\mathcal{W}''_{new}$}
+		\drawAVLNode{(6,-4.5)}{$\mathcal{R}$}
+		\drawAVLNode{(6.75,-4)}{$\mathcal{V}_{new}$}
+		\drawAVLNode{(9.75,-4)}{$\mathcal{V}'_{new}$}
+		\drawAVLNode{(10.5,-4.5)}{$\mathcal{B}$}
+		\drawAVLNode{(7.5,-4.5)}{$\mathcal{V}_l$}
+		\drawAVLNode{(9,-4.5)}{$\mathcal{V}_r$}
+		
+		\draw (6,-4.5) -- (6.75,-4) -- (7.5,-4.5);
+		\draw (6.75,-4) -- (8.25,-3.5) -- (9.75,-4);
+		\draw (9,-4.5) -- (9.75,-4) -- (10.5,-4.5);
+		
+		\draw[thick,->] (4.3,-4) -- (5.2,-4) node[anchor=south]{\scriptsize {\sf
+		преобразование}} -- (6.1,-4);
+		
+		\draw (5,-6.5) node {\scriptsize {\sf \textbf{}{\bf $h(\mathcal{V}') =
+		h(\mathcal{R}) + 2, h(\mathcal{V}) = h(\mathcal{B})$}.}};
+		
+		\draw (5,-7) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}.
+		Операция перебалансировки}};
+	\end{tikzpicture}	
+}
+
+\newcommand{\picOne}{
+\begin{center}
+\begin{pgfpicture}{0cm}{0cm}{8.5cm}{5cm}
+
+        \pgfputat{\pgfxy(0,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(0.7,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(1.4,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.1,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(2.8,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(3.5,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(4.2,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(4.9,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(5.6,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(6.3,0)}{\pgfbox[left,center]{$b$}}
+        \pgfputat{\pgfxy(7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(7.7,0)}{\pgfbox[left,center]{$a$}}
+        \pgfputat{\pgfxy(8.4,0)}{\pgfbox[left,center]{$b$}}
+
+        \pgfxyline(0.1,0.2)(0.1, 0.6)
+        \pgfxyline(0.8,0.2)(0.8, 0.6)
+        \pgfxyline(1.5,0.2)(1.5, 0.6)
+        \pgfxyline(2.2,0.2)(2.2, 0.6)
+        \pgfxyline(2.9,0.2)(2.9, 0.6)
+        \pgfxyline(3.6,0.2)(3.6, 0.6)
+        \pgfxyline(4.3,0.2)(4.3, 0.6)
+        \pgfxyline(5,0.2)(5, 0.6)
+        \pgfxyline(5.7,0.2)(5.7, 0.6)
+        \pgfxyline(6.4,0.2)(6.4, 0.6)
+        \pgfxyline(7.1,0.2)(7.1, 0.6)
+        \pgfxyline(7.8,0.2)(7.8, 0.6)
+        \pgfxyline(8.5,0.2)(8.5, 0.6)
+
+        \pgfputat{\pgfxy(-0.1,0.75)}{\pgfbox[left,center]{$\mathcal{X}_2$}}
+        \pgfputat{\pgfxy(0.6,0.75)}{\pgfbox[left,center]{$\mathcal{X}_1$}}
+        \pgfputat{\pgfxy(1.3,0.75)}{\pgfbox[left,center]{$\mathcal{X}_2$}}
+        \pgfputat{\pgfxy(2,0.75)}{\pgfbox[left,center]{$\mathcal{X}_2$}}
+        \pgfputat{\pgfxy(2.7,0.75)}{\pgfbox[left,center]{$\mathcal{X}_1$}}
+        \pgfputat{\pgfxy(3.4,0.75)}{\pgfbox[left,center]{$\mathcal{X}_2$}}
+        \pgfputat{\pgfxy(4.1,0.75)}{\pgfbox[left,center]{$\mathcal{X}_1$}}
+        \pgfputat{\pgfxy(4.8,0.75)}{\pgfbox[left,center]{$\mathcal{X}_2$}}
+        \pgfputat{\pgfxy(5.5,0.75)}{\pgfbox[left,center]{$\mathcal{X}_2$}}
+        \pgfputat{\pgfxy(6.2,0.75)}{\pgfbox[left,center]{$\mathcal{X}_1$}}
+        \pgfputat{\pgfxy(6.9,0.75)}{\pgfbox[left,center]{$\mathcal{X}_2$}}
+        \pgfputat{\pgfxy(7.6,0.75)}{\pgfbox[left,center]{$\mathcal{X}_2$}}
+        \pgfputat{\pgfxy(8.3,0.75)}{\pgfbox[left,center]{$\mathcal{X}_1$}}
+
+        \pgfxyline(0.1,1)(0.1, 1.2)
+        \pgfxyline(0.8,1)(0.8, 1.2)
+        \pgfxyline(0.1,1.2)(0.45, 1.5)
+        \pgfxyline(0.8,1.2)(0.45, 1.5)
+        \pgfputat{\pgfxy(0.3,1.65)}{\pgfbox[left,center]{$\mathcal{X}_3$}}
+
+        \pgfxyline(2.2,1)(2.2, 1.2)
+        \pgfxyline(2.9,1)(2.9, 1.2)
+        \pgfxyline(2.2,1.2)(2.55,1.5)
+        \pgfxyline(2.9,1.2)(2.55,1.5)
+        \pgfputat{\pgfxy(2.4,1.65)}{\pgfbox[left,center]{$\mathcal{X}_3$}}
+
+        \pgfxyline(3.6,1)(3.6, 1.2)
+        \pgfxyline(4.3,1)(4.3, 1.2)
+        \pgfxyline(3.6,1.2)(3.95, 1.5)
+        \pgfxyline(4.3,1.2)(3.95, 1.5)
+        \pgfputat{\pgfxy(3.8,1.65)}{\pgfbox[left,center]{$\mathcal{X}_3$}}
+
+        \pgfxyline(5.7,1)(5.7, 1.2)
+        \pgfxyline(6.4,1)(6.4, 1.2)
+        \pgfxyline(5.7,1.2)(6.05, 1.5)
+        \pgfxyline(6.4,1.2)(6.05, 1.5)
+        \pgfputat{\pgfxy(5.9,1.65)}{\pgfbox[left,center]{$\mathcal{X}_3$}}
+
+        \pgfxyline(7.8,1)(7.8, 1.2)
+        \pgfxyline(8.5,1)(8.5, 1.2)
+        \pgfxyline(7.8,1.2)(8.15, 1.5)
+        \pgfxyline(8.5,1.2)(8.15, 1.5)
+        \pgfputat{\pgfxy(8,1.65)}{\pgfbox[left,center]{$\mathcal{X}_3$}}
+
+        \pgfxyline(1.5, 1)(1.5, 1.9)
+        \pgfxyline(0.45, 1.9)(0.97, 2.3)
+        \pgfxyline(1.5, 1.9)(0.97, 2.3)
+        \pgfputat{\pgfxy(0.82, 2.45)}{\pgfbox[left,center]{$\mathcal{X}_4$}}
+
+        \pgfxyline(5, 1)(5, 1.9)
+        \pgfxyline(3.95, 1.9)(4.47, 2.3)
+        \pgfxyline(5, 1.9)(4.47, 2.3)
+        \pgfputat{\pgfxy(4.32, 2.45)}{\pgfbox[left,center]{$\mathcal{X}_4$}}
+
+        \pgfxyline(7.1,1)(7.1, 1.9)
+        \pgfxyline(6.05,1.9)(6.57, 2.3)
+        \pgfxyline(7.1, 1.9)(6.57, 2.3)
+        \pgfputat{\pgfxy(6.42,2.45)}{\pgfbox[left,center]{$\mathcal{X}_4$}}
+
+        \pgfxyline(2.55,1.85)(2.55, 2.65)
+        \pgfxyline(0.97, 2.65)(1.76, 3.05)
+        \pgfxyline(2.55, 2.65)(1.76, 3.05)
+        \pgfputat{\pgfxy(1.61, 3.2)}{\pgfbox[left,center]{$\mathcal{X}_5$}}
+
+        \pgfxyline(8.15, 1.85)(8.15, 2.65)
+        \pgfxyline(6.57,2.65)(7.36, 3.05)
+        \pgfxyline(8.15, 2.65)(7.36, 3.05)
+        \pgfputat{\pgfxy(7.21,3.2)}{\pgfbox[left,center]{$\mathcal{X}_5$}}
+
+        \pgfxyline(4.47,2.65)(4.47, 3.4)
+        \pgfxyline(1.76,3.4)(3.11, 3.8)
+        \pgfxyline(4.47, 3.4)(3.11, 3.8)
+        \pgfputat{\pgfxy(2.96,3.95)}{\pgfbox[left,center]{$\mathcal{X}_6$}}
+
+        \pgfxyline(7.36,3.4)(7.36, 4.15)
+        \pgfxyline(3.11,4.15)(5.23, 4.75)
+        \pgfxyline(7.36, 4.15)(5.23, 4.75)
+        \pgfputat{\pgfxy(5.08, 4.9)}{\pgfbox[left,center]{$\mathcal{X}_7$}}
+
+  %      \pgfputat{\pgfxy(-2,-0.7)}{\pgfbox[left,center]{{\bf Рисунок 1.} Дерево вывода грамматики, порождающей <<$abaababaabaab$>>}}
+
+    \end{pgfpicture}
+\end{center}
+}
+
+\newcommand{\algorithmNotations}{
+	\begin{tikzpicture}[scale=2]
+		\drawLZinfNode{-0.05}{0.38}
+		\drawSLPoldNode{0}{0.2}
+		\drawSLPnewNode{0}{0}
+		
+		\draw (0.2,0.4) node[anchor=west] {\scriptsize {\sf -- \textbf{lz77}}}; 
+		\draw (0.2,0.2) node[anchor=west] {\scriptsize {\sf -- \textbf{SLPclassic}}}; 
+		\draw (0.2,0) node[anchor=west] {\scriptsize {\sf -- \textbf{SLPnew}}};
+	\end{tikzpicture}
+}
+
+\newcommand{\DNARotations}{
+	\begin{tikzpicture}[scale=1.3]
+		\addtocounter{figures}{1}
+		
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,8.2);
+		\draw[->] (0,0) -- (0,8.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north]
+			{\tiny{$\xtext \cdot 10^6$}}; 
+		\foreach \y / \ytext in {1/0.5, 2/1, 3/1.5,
+			4/2, 5/2.5, 6/3, 7/3.5, 8/4} \draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] 
+			{\tiny{$\ytext \cdot 10^6$}};
+		
+		%SLPnew
+		\drawSLPnewNode{0.1}{0.01}
+		\drawSLPnewNode{0.15}{0.01}
+		\drawSLPnewNode{0.17}{0.02}
+		\drawSLPnewNode{0.2}{0.019}
+		\drawSLPnewNode{0.27}{0.025}
+		\drawSLPnewNode{0.32}{0.033}
+		\drawSLPnewNode{0.36}{0.043}
+		\drawSLPnewNode{0.42}{0.046}
+		\drawSLPnewNode{0.44}{0.052}
+		\drawSLPnewNode{0.5}{0.056}
+		\drawSLPnewNode{0.58}{0.067}
+		\drawSLPnewNode{0.6}{0.074}
+		\drawSLPnewNode{0.6}{0.08}
+		\drawSLPnewNode{0.7}{0.094}
+		\drawSLPnewNode{0.75}{0.098}
+		\drawSLPnewNode{0.8}{0.107}
+		\drawSLPnewNode{0.84}{0.112}
+		\drawSLPnewNode{0.92}{0.116}
+		\drawSLPnewNode{0.96}{0.126}
+		\drawSLPnewNode{1}{0.133}
+		\drawSLPnewNode{1.08}{0.137}
+		\drawSLPnewNode{1.16}{0.13}
+		\drawSLPnewNode{1.2}{0.132}
+		\drawSLPnewNode{1.34}{0.177}
+		\drawSLPnewNode{1.42}{0.187}
+		\drawSLPnewNode{1.54}{0.203}
+		\drawSLPnewNode{1.63}{0.213}
+		\drawSLPnewNode{1.72}{0.226}
+		\drawSLPnewNode{1.84}{0.242}
+		\drawSLPnewNode{1.95}{0.258}
+		\drawSLPnewNode{2.06}{0.27}
+		\drawSLPnewNode{2.1}{0.297}
+		\drawSLPnewNode{2.26}{0.284}
+		\drawSLPnewNode{2.48}{0.362}
+		\drawSLPnewNode{2.94}{0.383}
+		\drawSLPnewNode{3.28}{0.433}
+		\drawSLPnewNode{3.66}{0.475}
+		\drawSLPnewNode{4.22}{0.557}
+		\drawSLPnewNode{4.5}{0.553}
+				
+		%SLPclassic
+		\drawSLPoldNode{0.1}{0.126}
+		\drawSLPoldNode{0.15}{0.29}
+		\drawSLPoldNode{0.17}{0.227}
+		\drawSLPoldNode{0.2}{0.374}
+		\drawSLPoldNode{0.27}{0.487}
+		\drawSLPoldNode{0.32}{0.622}
+		\drawSLPoldNode{0.36}{0.675}
+		\drawSLPoldNode{0.42}{0.754}
+		\drawSLPoldNode{0.44}{0.764}
+		\drawSLPoldNode{0.5}{0.947}
+		\drawSLPoldNode{0.58}{1.013}
+		\drawSLPoldNode{0.6}{1.14}
+		\drawSLPoldNode{0.6}{1.32}
+		\drawSLPoldNode{0.7}{1.38}
+		\drawSLPoldNode{0.75}{1.5}
+		\drawSLPoldNode{0.8}{1.575}
+		\drawSLPoldNode{0.84}{1.6}
+		\drawSLPoldNode{0.92}{1.71}
+		\drawSLPoldNode{0.96}{1.8}
+		\drawSLPoldNode{1}{1.88}
+		\drawSLPoldNode{1.08}{1.757}
+		\drawSLPoldNode{1.16}{1.826}
+		\drawSLPoldNode{1.2}{2.39}
+		\drawSLPoldNode{1.34}{2.53}
+		\drawSLPoldNode{1.42}{2.78}
+		\drawSLPoldNode{1.54}{2.87}
+		\drawSLPoldNode{1.63}{3.07}
+		\drawSLPoldNode{1.72}{3.35}
+		\drawSLPoldNode{1.84}{3.48}
+		\drawSLPoldNode{1.95}{3.76}
+		\drawSLPoldNode{2.06}{3.81}
+		\drawSLPoldNode{2.1}{4.1}
+		\drawSLPoldNode{2.26}{3.88}
+		\drawSLPoldNode{2.48}{4.89}
+		\drawSLPoldNode{2.94}{5.2}
+		\drawSLPoldNode{3.28}{6.02}
+		\drawSLPoldNode{3.66}{6.52}
+		\drawSLPoldNode{4.22}{7.66}
+		\drawSLPoldNode{4.5}{7.35}
+		
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}.
+		Количество операций перебалансировки в процессе построения ПП для строк
+		ДНК.}}; \draw (2.5,-1.4) node {\scriptsize {\sf
+		По горизонтали отмечены длины входных строк, по вертикали~-- количество
+		операций перебалансировки.}};
+	\end{tikzpicture}
+}
+
+\newcommand{\DNASpeedTestInFile}{
+	\begin{tikzpicture}[scale=1.05]
+		\addtocounter{figures}{1}
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,6.2);
+		\draw[->] (0,0) -- (0,6.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext
+			\cdot 10^6$}}; 
+			
+			\draw (-1pt,1 cm) -- (1pt,1 cm) node[anchor=east] {\tiny{$1$ час}};
+			\draw (-1pt,2 cm) -- (1pt,2 cm) node[anchor=east] {\tiny{$2$ часа}};
+			\draw (-1pt,3 cm) -- (1pt,3 cm) node[anchor=east] {\tiny{$3$ часа}};
+			\draw (-1pt,4 cm) -- (1pt,4 cm) node[anchor=east] {\tiny{$4$ часа}};
+			\draw (-1pt,5 cm) -- (1pt,5 cm) node[anchor=east] {\tiny{$5$ часов}};
+			\draw (-1pt,6 cm) -- (1pt,6 cm) node[anchor=east] {\tiny{$6$ часов}};
+		
+		%SLPnew
+		\drawSLPnewNode{0.6}{0.01}
+		\drawSLPnewNode{0.7}{0.012}
+		\drawSLPnewNode{0.75}{0.015}
+		\drawSLPnewNode{0.8}{0.018}
+		\drawSLPnewNode{0.84}{0.017}
+		\drawSLPnewNode{0.92}{0.019}
+		\drawSLPnewNode{0.96}{0.02}
+		\drawSLPnewNode{1}{0.022}
+		\drawSLPnewNode{1.08}{0.02}
+		\drawSLPnewNode{1.16}{0.022}
+		\drawSLPnewNode{1.2}{0.035}
+		\drawSLPnewNode{1.34}{0.039}
+		\drawSLPnewNode{1.42}{0.054}
+		\drawSLPnewNode{1.54}{0.054}
+		\drawSLPnewNode{1.63}{0.082}
+		\drawSLPnewNode{1.72}{0.137}
+		\drawSLPnewNode{1.84}{0.155}
+		\drawSLPnewNode{1.95}{0.236}
+		\drawSLPnewNode{2.06}{0.236}
+		\drawSLPnewNode{2.1}{0.342}
+		\drawSLPnewNode{2.26}{0.239}
+		\drawSLPnewNode{2.48}{0.695}
+		\drawSLPnewNode{2.94}{0.88}
+		\drawSLPnewNode{3.28}{1.53}
+		\drawSLPnewNode{3.66}{2.066}
+		\drawSLPnewNode{4.22}{3.51}
+		\drawSLPnewNode{4.5}{2.78}
+						
+		%SLPclassic
+		\drawSLPoldNode{0.6}{0.02}
+		\drawSLPoldNode{0.7}{0.023}
+		\drawSLPoldNode{0.75}{0.026}
+		\drawSLPoldNode{0.8}{0.029}
+		\drawSLPoldNode{0.84}{0.029}
+		\drawSLPoldNode{0.92}{0.032}
+		\drawSLPoldNode{0.96}{0.034}
+		\drawSLPoldNode{1}{0.037}
+		\drawSLPoldNode{1.08}{0.034}
+		\drawSLPoldNode{1.16}{0.037}
+		\drawSLPoldNode{1.2}{0.059}
+		\drawSLPoldNode{1.34}{0.069}
+		\drawSLPoldNode{1.42}{0.094}
+		\drawSLPoldNode{1.54}{0.092}
+		\drawSLPoldNode{1.63}{0.14}
+		\drawSLPoldNode{1.72}{0.213}
+		\drawSLPoldNode{1.84}{0.239}
+		\drawSLPoldNode{1.95}{0.333}
+		\drawSLPoldNode{2.06}{0.341}
+		\drawSLPoldNode{2.1}{0.541}
+		\drawSLPoldNode{2.26}{0.406}
+		\drawSLPoldNode{2.48}{1.44}
+		\drawSLPoldNode{2.94}{1.94}
+		\drawSLPoldNode{3.28}{3.22}
+		\drawSLPoldNode{3.66}{3.84}
+		\drawSLPoldNode{4.22}{6.76}
+		\drawSLPoldNode{4.5}{6.04}		
+								
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}. 
+		Время выполнения алгоритма на строках ДНК ($AVL$-дерево хранится во внешней
+		памяти). }};		
+	\end{tikzpicture}
+}
+
+\newcommand{\DNASpeedTestInMemory}{
+	\begin{tikzpicture}[scale=1.2]
+		\addtocounter{figures}{1}
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,4.2);
+		\draw[->] (0,0) -- (0,4.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext
+			\cdot 10^6$}}; \foreach \y / \ytext in {1/5, 2/10, 3/15, 4/20}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$мин}};
+		
+		%SLPnew
+		\drawSLPnewNode{0.5}{0.051}
+		\drawSLPnewNode{0.58}{0.053}
+		\drawSLPnewNode{0.6}{0.071}
+		\drawSLPnewNode{0.6}{0.093}
+		\drawSLPnewNode{0.7}{0.098}
+		\drawSLPnewNode{0.75}{0.114}
+		\drawSLPnewNode{0.8}{0.127}
+		\drawSLPnewNode{0.84}{0.144}
+		\drawSLPnewNode{0.92}{0.149}
+		\drawSLPnewNode{0.96}{0.168}
+		\drawSLPnewNode{1}{0.187}
+		\drawSLPnewNode{1.08}{0.16}
+		\drawSLPnewNode{1.16}{0.168}
+		\drawSLPnewNode{1.2}{0.296}
+		\drawSLPnewNode{1.34}{0.329}
+		\drawSLPnewNode{1.42}{0.43}
+		\drawSLPnewNode{1.54}{0.43}
+		\drawSLPnewNode{1.63}{0.528}
+		\drawSLPnewNode{1.72}{0.595}
+		\drawSLPnewNode{1.84}{0.7}
+		\drawSLPnewNode{1.95}{0.745}
+		\drawSLPnewNode{2.06}{0.765}
+		\drawSLPnewNode{2.1}{0.899}
+		\drawSLPnewNode{2.26}{0.88}
+		\drawSLPnewNode{2.48}{1.44}
+		\drawSLPnewNode{2.94}{1.66}
+		\drawSLPnewNode{3.28}{2.275}
+		\drawSLPnewNode{3.66}{2.766}
+		\drawSLPnewNode{4.22}{4.131}
+		\drawSLPnewNode{4.5}{3.626}
+				
+		%SLPclassic
+		\drawSLPoldNode{0.5}{0.065}
+		\drawSLPoldNode{0.58}{0.078}
+		\drawSLPoldNode{0.6}{0.1}
+		\drawSLPoldNode{0.6}{0.122}
+		\drawSLPoldNode{0.7}{0.12}
+		\drawSLPoldNode{0.75}{0.139}
+		\drawSLPoldNode{0.8}{0.153}
+		\drawSLPoldNode{0.84}{0.169}
+		\drawSLPoldNode{0.92}{0.198}
+		\drawSLPoldNode{0.96}{0.2}
+		\drawSLPoldNode{1}{0.191}
+		\drawSLPoldNode{1.08}{0.185}
+		\drawSLPoldNode{1.16}{0.227}
+		\drawSLPoldNode{1.2}{0.323}
+		\drawSLPoldNode{1.34}{0.3886}
+		\drawSLPoldNode{1.42}{0.485}
+		\drawSLPoldNode{1.54}{0.459}
+		\drawSLPoldNode{1.63}{0.521}
+		\drawSLPoldNode{1.72}{0.623}
+		\drawSLPoldNode{1.84}{0.651}
+		\drawSLPoldNode{1.95}{0.866}
+		\drawSLPoldNode{2.06}{0.8}
+		\drawSLPoldNode{2.1}{1.036}
+		\drawSLPoldNode{2.26}{0.946}
+		\drawSLPoldNode{2.48}{1.46}
+		\drawSLPoldNode{2.94}{1.524}
+		\drawSLPoldNode{3.28}{2.185}
+		\drawSLPoldNode{3.66}{2.595}
+		\drawSLPoldNode{4.22}{3.507}
+		\drawSLPoldNode{4.5}{3.119}
+								
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}. 
+		Время выполнения алгоритма на строках ДНК ($AVL$-дерево хранится в
+		оперативной памяти).}};		
+	\end{tikzpicture}
+}
+
+\newcommand{\RandomRotations}{
+	\begin{tikzpicture}[scale=1.2]
+		\addtocounter{figures}{1}
+			
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,5.2);
+		\draw[->] (0,0) -- (0,5.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext
+			\cdot 10^6$}}; \foreach \y / \ytext in {1, 2, 3, 4, 5}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext \cdot
+			10^6$}};
+			
+		%SLPnew
+		\drawSLPnewNode{0.1}{0.007}
+		\drawSLPnewNode{0.2}{0.014}
+		\drawSLPnewNode{0.3}{0.02}
+		\drawSLPnewNode{0.4}{0.026}
+		\drawSLPnewNode{0.6}{0.04}
+		\drawSLPnewNode{0.8}{0.053}
+		\drawSLPnewNode{1}{0.067}
+		\drawSLPnewNode{1.2}{0.08}
+		\drawSLPnewNode{1.4}{0.094}
+		\drawSLPnewNode{1.6}{0.106}
+		\drawSLPnewNode{1.8}{0.119}
+		\drawSLPnewNode{2}{0.133}
+		\drawSLPnewNode{2.2}{0.146}
+		\drawSLPnewNode{2.4}{0.159}
+		\drawSLPnewNode{2.6}{0.173}
+		\drawSLPnewNode{2.8}{0.187}
+		\drawSLPnewNode{3}{0.2}
+		\drawSLPnewNode{3.2}{0.213}
+		\drawSLPnewNode{3.4}{0.227}
+		\drawSLPnewNode{3.6}{0.24}
+		\drawSLPnewNode{3.8}{0.251}
+		\drawSLPnewNode{4}{0.266}
+		\drawSLPnewNode{4.2}{0.281}
+		\drawSLPnewNode{4.4}{0.293}
+		\drawSLPnewNode{4.6}{0.306}
+		\drawSLPnewNode{4.8}{0.321}
+		\drawSLPnewNode{5}{0.333}
+		\drawSLPnewNode{5.2}{0.346}
+		\drawSLPnewNode{5.4}{0.359}
+
+		%SLPclassic	
+		\drawSLPoldNode{0.1}{0.116}
+		\drawSLPoldNode{0.2}{0.22}
+		\drawSLPoldNode{0.3}{0.323}
+		\drawSLPoldNode{0.4}{0.421}
+		\drawSLPoldNode{0.6}{0.617}
+		\drawSLPoldNode{0.8}{0.81}
+		\drawSLPoldNode{1}{1}
+		\drawSLPoldNode{1.2}{1.183}
+		\drawSLPoldNode{1.4}{1.369}
+		\drawSLPoldNode{1.6}{1.551}
+		\drawSLPoldNode{1.8}{1.733}
+		\drawSLPoldNode{2}{1.913}
+		\drawSLPoldNode{2.2}{2.095}
+		\drawSLPoldNode{2.4}{2.276}
+		\drawSLPoldNode{2.6}{2.451}
+		\drawSLPoldNode{2.8}{2.628}
+		\drawSLPoldNode{3}{2.808}
+		\drawSLPoldNode{3.2}{2.982}
+		\drawSLPoldNode{3.4}{3.16}
+		\drawSLPoldNode{3.6}{3.339}
+		\drawSLPoldNode{3.8}{3.512}
+		\drawSLPoldNode{4}{3.686}
+		\drawSLPoldNode{4.2}{3.862}
+		\drawSLPoldNode{4.4}{4.035}
+		\drawSLPoldNode{4.6}{4.215}
+		\drawSLPoldNode{4.8}{4.39}
+		\drawSLPoldNode{5}{4.565}
+		\drawSLPoldNode{5.2}{4.743}
+		\drawSLPoldNode{5.4}{4.914}	
+		
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}.
+		Количество операций перебалансировки в процессе построения ПП для случайных
+		строк.}}; \draw (2.5,-1.4) node {\scriptsize {\sf По горизонтали отмечены
+		длины входных строк, по вертикали~-- количество операций перебалансировки.}};
+	\end{tikzpicture}
+}
+
+\newcommand{\RandomSpeedTestInMemory}{
+	\begin{tikzpicture}[scale=1.2]
+		\addtocounter{figures}{1}
+		
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,5.2);
+		\draw[->] (0,0) -- (0,5.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext \cdot
+			10^6$}}; \foreach \y / \ytext in {1/5, 2/10, 3/15, 4/20, 5/25} \draw (-1pt,\y
+			cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$ мин}};
+			
+		%SLPnew
+		\drawSLPnewNode{0.1}{0.008}
+		\drawSLPnewNode{0.2}{0.019}
+		\drawSLPnewNode{0.3}{0.031}
+		\drawSLPnewNode{0.4}{0.046}
+		\drawSLPnewNode{0.6}{0.084}
+		\drawSLPnewNode{0.8}{0.131}
+		\drawSLPnewNode{1}{0.183}
+		\drawSLPnewNode{1.2}{0.252}
+		\drawSLPnewNode{1.4}{0.324}
+		\drawSLPnewNode{1.6}{0.405}
+		\drawSLPnewNode{1.8}{0.504}
+		\drawSLPnewNode{2}{0.606}
+		\drawSLPnewNode{2.2}{0.713}
+		\drawSLPnewNode{2.4}{0.837}
+		\drawSLPnewNode{2.6}{0.96}
+		\drawSLPnewNode{2.8}{1.093}
+		\drawSLPnewNode{3}{1.239}
+		\drawSLPnewNode{3.2}{1.392}
+		\drawSLPnewNode{3.4}{1.564}
+		\drawSLPnewNode{3.6}{1.741}
+		\drawSLPnewNode{3.8}{1.902}
+		\drawSLPnewNode{4}{2.116}
+		\drawSLPnewNode{4.2}{2.319}
+		\drawSLPnewNode{4.4}{2.516}
+		\drawSLPnewNode{4.6}{2.766}
+		\drawSLPnewNode{4.8}{3.006}
+		\drawSLPnewNode{5}{3.24}
+		\drawSLPnewNode{5.2}{3.511}
+		\drawSLPnewNode{5.4}{3.755}
+		
+		%SLPclassic	
+		\drawSLPoldNode{0.1}{0.009}
+		\drawSLPoldNode{0.2}{0.023}
+		\drawSLPoldNode{0.3}{0.038}
+		\drawSLPoldNode{0.4}{0.058}
+		\drawSLPoldNode{0.6}{0.103}
+		\drawSLPoldNode{0.8}{0.162}
+		\drawSLPoldNode{1}{0.227}
+		\drawSLPoldNode{1.2}{0.312}
+		\drawSLPoldNode{1.4}{0.403}
+		\drawSLPoldNode{1.6}{0.504}
+		\drawSLPoldNode{1.8}{0.628}
+		\drawSLPoldNode{2}{0.759}
+		\drawSLPoldNode{2.2}{0.891}
+		\drawSLPoldNode{2.4}{1.049}
+		\drawSLPoldNode{2.6}{1.212}
+		\drawSLPoldNode{2.8}{1.361}
+		\drawSLPoldNode{3}{1.574}
+		\drawSLPoldNode{3.2}{1.744}
+		\drawSLPoldNode{3.4}{1.966}
+		\drawSLPoldNode{3.6}{2.209}
+		\drawSLPoldNode{3.8}{2.397}
+		\drawSLPoldNode{4}{2.779}
+		\drawSLPoldNode{4.2}{2.935}
+		\drawSLPoldNode{4.4}{3.221}
+		\drawSLPoldNode{4.6}{3.563}
+		\drawSLPoldNode{4.8}{3.824}
+		\drawSLPoldNode{5}{4.121}
+		\drawSLPoldNode{5.2}{4.399}
+		\drawSLPoldNode{5.4}{4.696}
+			
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}. 
+		Время выполнения алгоритма на случайных строках ($AVL$-дерево хранится в
+		оперативной памяти).}};		
+	\end{tikzpicture}
+}
+
+\newcommand{\RandomSpeedTestInFile}{
+	\begin{tikzpicture}[scale=1.3]
+		\addtocounter{figures}{1}
+		
+		\draw[step=1cm, gray, very thin] (0,0) grid (5.2,8.2);
+		\draw[->] (0,0) -- (0,8.5);
+		\draw[->] (0,0) -- (5.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext \cdot
+			10^6$}}; 
+			
+			\draw (-1pt,1 cm) -- (1pt,1 cm) node[anchor=east] {\tiny{2 часа}};
+			\draw (-1pt,2 cm) -- (1pt,2 cm) node[anchor=east] {\tiny{4 часа}};
+			
+			\foreach \y / \ytext in {3/6, 4/8, 5/10, 6/12, 7/14, 8/16}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$ часов}};
+			
+		%SLPnew
+		\drawSLPnewNode{0.8}{0.009}
+		\drawSLPnewNode{1}{0.015}
+		\drawSLPnewNode{1.2}{0.019}
+		\drawSLPnewNode{1.4}{0.027}
+		\drawSLPnewNode{1.6}{0.046}
+		\drawSLPnewNode{1.8}{0.081}
+		\drawSLPnewNode{2}{0.13}
+		\drawSLPnewNode{2.2}{0.193}
+		\drawSLPnewNode{2.4}{0.275}
+		\drawSLPnewNode{2.6}{0.373}
+		\drawSLPnewNode{2.8}{0.474}
+		\drawSLPnewNode{3}{0.615}
+		\drawSLPnewNode{3.2}{0.773}
+		\drawSLPnewNode{3.4}{0.956}
+		\drawSLPnewNode{3.6}{1.143}
+		\drawSLPnewNode{3.8}{1.348}
+		\drawSLPnewNode{4}{1.597}
+		\drawSLPnewNode{4.2}{1.871}
+		\drawSLPnewNode{4.4}{2.138}
+		\drawSLPnewNode{4.6}{2.434}
+		\drawSLPnewNode{4.8}{2.784}
+		\drawSLPnewNode{5}{3.109}
+		\drawSLPnewNode{5.2}{3.508}
+		\drawSLPnewNode{5.4}{4.125}
+
+		%SLPclassic	
+		\drawSLPoldNode{0.8}{0.02}
+		\drawSLPoldNode{1}{0.029}
+		\drawSLPoldNode{1.2}{0.043}
+		\drawSLPoldNode{1.4}{0.063}
+		\drawSLPoldNode{1.6}{0.101}
+		\drawSLPoldNode{1.8}{0.163}
+		\drawSLPoldNode{2}{0.236}
+		\drawSLPoldNode{2.2}{0.334}
+		\drawSLPoldNode{2.4}{0.462}
+		\drawSLPoldNode{2.6}{0.629}
+		\drawSLPoldNode{2.8}{0.821}
+		\drawSLPoldNode{3}{0.993}
+		\drawSLPoldNode{3.2}{1.277}
+		\drawSLPoldNode{3.4}{1.582}
+		\drawSLPoldNode{3.6}{1.871}
+		\drawSLPoldNode{3.8}{2.356}
+		\drawSLPoldNode{4}{2.714}
+		\drawSLPoldNode{4.2}{3.222}
+		\drawSLPoldNode{4.4}{3.888}
+		\drawSLPoldNode{4.6}{4.428}
+		\drawSLPoldNode{4.8}{5.456}
+		\drawSLPoldNode{5}{6.134}
+		\drawSLPoldNode{5.2}{6.821}
+		\drawSLPoldNode{5.4}{8.175}	
+					
+		\draw (2.5,-1) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}. 
+		Время выполнения алгоритма на случайных строках ($AVL$-дерево хранится во
+		внешней памяти).}};
+		\draw (2.5, -1.4) node {\scriptsize {\sf }};
+	\end{tikzpicture}
+}
+
+\newcommand{\DNACompression}{
+	\begin{tikzpicture}[scale=0.9]
+		\addtocounter{figures}{1}
+		\draw[step=1cm, gray, very thin] (0,0) grid (7.2,7.2);
+		\draw[->] (0,0) -- (0,7.5);
+		\draw[->] (0,0) -- (7.5,0);
+		
+		\foreach \x / \xtext in {1/3, 2/6, 3/9, 4/12, 5/15, 6/18, 7/21}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext \cdot
+			10^6$}}; \foreach \y / \ytext in {1/3, 2/6, 3/9, 4/12, 5/15, 6/18, 7/21}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$\%}};
+		
+		%lz77inf
+		\drawLZinfNode{0.16}{2.01}
+		\drawLZinfNode{0.96}{2.78}
+		\drawLZinfNode{1}{3.07}
+		\drawLZinfNode{1.17}{3.04}
+		\drawLZinfNode{1.25}{2.94}
+		\drawLZinfNode{1.33}{2.83}
+		\drawLZinfNode{1.4}{2.97}
+		\drawLZinfNode{1.53}{2.78}
+		\drawLZinfNode{1.6}{2.74}
+		\drawLZinfNode{1.67}{2.76}
+		\drawLZinfNode{1.8}{2.69}
+		\drawLZinfNode{1.93}{2.38}
+		\drawLZinfNode{1.98}{2.43}
+		\drawLZinfNode{2.23}{2.76}
+		\drawLZinfNode{2.37}{2.74}
+		\drawLZinfNode{2.57}{2.8}
+		\drawLZinfNode{2.71}{2.74}
+		\drawLZinfNode{2.87}{2.76}
+		\drawLZinfNode{3.07}{2.87}
+		\drawLZinfNode{3.26}{2.79}
+		\drawLZinfNode{3.43}{2.92}
+		\drawLZinfNode{3.5}{2.9}
+		\drawLZinfNode{3.77}{2.88}
+		\drawLZinfNode{4.13}{2.49}
+		\drawLZinfNode{4.57}{2.78}
+		\drawLZinfNode{4.9}{2.76}
+		\drawLZinfNode{5.47}{2.93}
+		\drawLZinfNode{6.1}{2.83}
+		\drawLZinfNode{7.03}{2.87}
+		\drawLZinfNode{7.5}{2.52}
+						
+		%slp classic
+		\drawSLPoldNode{0.16}{4.74}
+		\drawSLPoldNode{0.96}{5.46}
+		\drawSLPoldNode{1}{5.82}
+		\drawSLPoldNode{1.17}{5.81}
+		\drawSLPoldNode{1.25}{5.66}
+		\drawSLPoldNode{1.33}{5.66}
+		\drawSLPoldNode{1.4}{5.71}
+		\drawSLPoldNode{1.53}{5.35}
+		\drawSLPoldNode{1.6}{5.39}
+		\drawSLPoldNode{1.67}{5.41}
+		\drawSLPoldNode{1.8}{5.25}
+		\drawSLPoldNode{1.93}{4.69}
+		\drawSLPoldNode{1.98}{4.69}
+		\drawSLPoldNode{2.23}{5.37}
+		\drawSLPoldNode{2.37}{5.32}
+		\drawSLPoldNode{2.57}{5.4}
+		\drawSLPoldNode{2.71}{5.36}
+		\drawSLPoldNode{2.87}{5.34}
+		\drawSLPoldNode{3.07}{5.48}
+		\drawSLPoldNode{3.26}{5.36}
+		\drawSLPoldNode{3.43}{5.5}
+		\drawSLPoldNode{3.5}{5.44}
+		\drawSLPoldNode{3.77}{5.43}
+		\drawSLPoldNode{4.13}{4.73}
+		\drawSLPoldNode{4.57}{5.31}
+		\drawSLPoldNode{4.9}{5.27}
+		\drawSLPoldNode{5.47}{5.49}
+		\drawSLPoldNode{6.1}{5.32}
+		\drawSLPoldNode{7.03}{5.41}
+		\drawSLPoldNode{7.5}{4.92}
+		
+		%slp modern
+		\drawSLPnewNode{0.16}{5.23}
+		\drawSLPnewNode{0.96}{5.93}
+		\drawSLPnewNode{1}{6.25}
+		\drawSLPnewNode{1.17}{6.21}
+		\drawSLPnewNode{1.25}{6.04}
+		\drawSLPnewNode{1.33}{6.02}
+		\drawSLPnewNode{1.4}{6.08}
+		\drawSLPnewNode{1.53}{5.74}
+		\drawSLPnewNode{1.6}{5.66}
+		\drawSLPnewNode{1.67}{5.69}
+		\drawSLPnewNode{1.8}{5.55}
+		\drawSLPnewNode{1.93}{5.1}
+		\drawSLPnewNode{1.98}{5.1}
+		\drawSLPnewNode{2.23}{5.68}
+		\drawSLPnewNode{2.37}{5.63}
+		\drawSLPnewNode{2.57}{5.73}
+		\drawSLPnewNode{2.71}{5.65}
+		\drawSLPnewNode{2.87}{5.65}
+		\drawSLPnewNode{3.07}{5.83}
+		\drawSLPnewNode{3.26}{5.68}
+		\drawSLPnewNode{3.43}{5.91}
+		\drawSLPnewNode{3.5}{5.87}
+		\drawSLPnewNode{3.77}{5.84}
+		\drawSLPnewNode{4.13}{5.09}
+		\drawSLPnewNode{4.57}{5.64}
+		\drawSLPnewNode{4.9}{5.61}
+		\drawSLPnewNode{5.47}{5.89}
+		\drawSLPnewNode{6.1}{5.7}
+		\drawSLPnewNode{7.03}{5.77}
+		\drawSLPnewNode{7.5}{5.26}
+		
+		\draw (4,-0.8) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}.
+		Результаты по относительному размеру для строк ДНК.}};
+	\end{tikzpicture}
+}
+
+\newcommand{\RandomCompression}{
+	\begin{tikzpicture}[scale=1]
+		\addtocounter{figures}{1}
+		\draw[step=1cm, gray, very thin] (0,0) grid (6.2,7.2);
+		\draw[->] (0,0) -- (0,7.5);
+		\draw[->] (0,0) -- (6.5,0);
+		
+		\foreach \x / \xtext in {1/5, 2/10, 3/15, 4/20, 5/25, 6/30}
+			\draw (\x cm,-1pt) -- (\x cm,1pt) node[anchor=north] {\tiny{$\xtext \cdot
+			10^6$}}; \foreach \y / \ytext in {1/3, 2/6, 3/9, 4/12, 5/15, 6/18, 7/21}
+			\draw (-1pt,\y cm) -- (1pt,\y cm) node[anchor=east] {\tiny{$\ytext$\%}};			
+		
+		%lz77inf
+		\drawLZinfNode{0.1}{3.87}
+		\drawLZinfNode{0.2}{3.65}
+		\drawLZinfNode{0.3}{3.54}
+		\drawLZinfNode{0.4}{3.46}
+		\drawLZinfNode{0.6}{3.36}
+		\drawLZinfNode{0.8}{3.29}
+		\drawLZinfNode{1}{3.24}
+		\drawLZinfNode{1.2}{3.2}
+		\drawLZinfNode{1.4}{3.16}
+		\drawLZinfNode{1.6}{3.13}
+		\drawLZinfNode{1.8}{3.11}
+		\drawLZinfNode{2}{3.09}
+		\drawLZinfNode{2.2}{3.07}
+		\drawLZinfNode{2.4}{3.05}
+		\drawLZinfNode{2.4}{3.03}
+		\drawLZinfNode{2.6}{3.02}
+		\drawLZinfNode{2.8}{3}
+		\drawLZinfNode{3}{2.99}
+		\drawLZinfNode{3.2}{2.98}
+		\drawLZinfNode{3.4}{2.97}
+		\drawLZinfNode{3.6}{2.96}
+		\drawLZinfNode{3.8}{2.95}
+		\drawLZinfNode{4}{2.94}
+		\drawLZinfNode{4.2}{2.93}
+		\drawLZinfNode{4.4}{2.92}
+		\drawLZinfNode{4.6}{2.92}
+		\drawLZinfNode{4.8}{2.91}
+		\drawLZinfNode{5}{2.9}
+		\drawLZinfNode{5.2}{2.89}
+		\drawLZinfNode{5.4}{2.89}
+					
+		%slp_classic
+		\drawSLPoldNode{0.1}{7.29}
+		\drawSLPoldNode{0.2}{6.77}
+		\drawSLPoldNode{0.3}{6.52}
+		\drawSLPoldNode{0.4}{6.36}
+		\drawSLPoldNode{0.6}{6.15}
+		\drawSLPoldNode{0.8}{6.02}
+		\drawSLPoldNode{1}{5.93}
+		\drawSLPoldNode{1.2}{5.86}
+		\drawSLPoldNode{1.4}{5.8}
+		\drawSLPoldNode{1.6}{5.76}
+		\drawSLPoldNode{1.8}{5.72}
+		\drawSLPoldNode{2}{5.68}
+		\drawSLPoldNode{2.2}{5.65}
+		\drawSLPoldNode{2.4}{5.63}
+		\drawSLPoldNode{2.4}{5.6}
+		\drawSLPoldNode{2.6}{5.58}
+		\drawSLPoldNode{2.8}{5.57}
+		\drawSLPoldNode{3}{5.55}
+		\drawSLPoldNode{3.2}{5.53}
+		\drawSLPoldNode{3.4}{5.52}
+		\drawSLPoldNode{3.6}{5.5}
+		\drawSLPoldNode{3.8}{5.49}
+		\drawSLPoldNode{4}{5.48}
+		\drawSLPoldNode{4.2}{5.46}
+		\drawSLPoldNode{4.4}{5.45}
+		\drawSLPoldNode{4.6}{5.44}
+		\drawSLPoldNode{4.8}{5.43}
+		\drawSLPoldNode{5}{5.42}
+		\drawSLPoldNode{5.2}{5.41}
+		\drawSLPoldNode{5.4}{5.41}	
+		
+		%slp_modern
+		\drawSLPnewNode{0.1}{7.27}
+		\drawSLPnewNode{0.2}{6.85}
+		\drawSLPnewNode{0.3}{6.63}
+		\drawSLPnewNode{0.4}{6.48}
+		\drawSLPnewNode{0.6}{6.29}
+		\drawSLPnewNode{0.8}{6.16}
+		\drawSLPnewNode{1}{6.06}
+		\drawSLPnewNode{1.2}{5.99}
+		\drawSLPnewNode{1.4}{5.92}
+		\drawSLPnewNode{1.6}{5.87}
+		\drawSLPnewNode{1.8}{5.82}
+		\drawSLPnewNode{2}{5.78}
+		\drawSLPnewNode{2.2}{5.74}
+		\drawSLPnewNode{2.4}{5.71}
+		\drawSLPnewNode{2.4}{5.68}
+		\drawSLPnewNode{2.6}{5.65}
+		\drawSLPnewNode{2.8}{5.63}
+		\drawSLPnewNode{3}{5.6}
+		\drawSLPnewNode{3.2}{5.58}
+		\drawSLPnewNode{3.4}{5.56}
+		\drawSLPnewNode{3.6}{5.54}
+		\drawSLPnewNode{3.8}{5.52}
+		\drawSLPnewNode{4}{5.5}
+		\drawSLPnewNode{4.2}{5.48}
+		\drawSLPnewNode{4.4}{5.47}
+		\drawSLPnewNode{4.6}{5.45}
+		\drawSLPnewNode{4.8}{5.44}
+		\drawSLPnewNode{5}{5.42}
+		\drawSLPnewNode{5.2}{5.41}
+		\drawSLPnewNode{5.4}{5.41}	
+		
+		\draw (3,-0.8) node {\scriptsize {\sf \textbf{ Рисунок \arabic{figures}}.
+		Результаты по относительному размеру для случайных строк.}};
+	\end{tikzpicture}
+}
+
+\tableofcontents
+
+\newpage
+\section{Введение}
+В современном мире объемы информации растут очень быстрыми темпами и, как
+следствие, растут размеры решаемых задач. На данный момент задачи на больших
+объемах данных возникают в различных областях: информационный поиск,
+микробиология, социальные сети. Также в некоторых областях привлечение больших
+объемов данных может повысить точность получаемых моделей. Например, эта идея 
+активно используется в теории машинного обучения.
+
+С ростом размера входа для классических задач меняются и алгоритмы, способные
+их эффективно решать. Так, существует целый класс алгоритмов,
+ориентированных на работу с данными, не помещающимися в оперативную память, и
+оптимизирующих количество операций обращения к жесткому диску. Такие алгоритмы
+называются {\it алгоритмами эффективного ввода-вывода}.
+
+С другой стороны, для ускорения работы с данными, в особенности редко
+меняющимися, разумно использовать предварительную обработку.
+В частности, в случае текстовой информации для этих целей можно использовать
+алгоритмы сжатия. 
+При таком подходе мы экономим место и накапливаем особенности текста, 
+а затем ``моделируем'' запуск строкового алгоритма на сжатом представлении.
+
+Существуют модели сжатия, поддерживающие возможность обращения к исходным данным
+без распаковки. Такими моделями являются, например, прямолинейные программы (ПП) 
+~\cite{5,9,10}, коллаж-системы ~\cite{14}, представления с помощью антисловарей
+~\cite{16}. Мы будем рассматривать сжатие текста с помощью
+прямолинейных программ. Данная модель хорошо структурирована и, кроме того, 
+интересна благодаря связи с алгоритмом Лемпеля-Зива, широко
+применяемом на практике. Эта связь описана в работе Риттера~\cite{21} и будет
+подробно обсуждаться в данной работе. Также существует широкий спектр
+классических строковых задач, сформулированных в терминах сжатых представлений и
+разрешимых за полиномиальное время от размера ПП. 
+Такими задачами являются, например, 
+{\bf поиск сжатого образца в сжатом тексте}~\cite{5}, 
+{\bf поиск наибольшей общей подстроки двух сжатых строк}~\cite{19}, 
+{\bf поиск всех палиндромов в сжатой строке}~\cite{19},
+{\bf поиск квадратов в сжатой строке}~\cite{lesha}.
+
+Несмотря на широкий спектр теоретически решенных задач, до сих пор актуален
+вопрос о практической пригодности ПП как модели сжатия. Известно, что задача
+построения минимальной по размеру ПП для заданной строки является NP-полной.
+Поэтому вызывают интерес алгоритмы, позволяющие построить некоторое приближение
+к минимальной ПП. В данной работе мы хотим ответить на следующие
+вопросы: насколько сложно строить ПП и насколько размер построенных ПП отличается от размера архива, построенного 
+классическими алгоритмами сжатия.
+
+Первая часть работы посвящена классическому алгоритму Лемпеля-Зива сжатия
+текстов. Мы опишем широко известную реализацию данного алгоритма, основанную на
+суффиксном дереве. Также мы предложим альтернативную реализацию, основанную на
+суффиксном массиве. Она имеет более плохую теоретическую
+оценку сложности, однако более перспективна с точки зрения практического
+использования.
+
+Вторая часть работы посвящена преобразованию архива, являющегося результатом
+алгоритма Лемпеля-Зива, в прямолинейную программу. Мы обсудим алгоритм Риттера,
+решающий эту задачу. Также мы предложим новый алгоритм,
+который сокращает количество дорогих операций алгоритма Риттера и на практике
+работает быстрее.
+
+В заключительной части работы мы представим практические результаты по степени
+сжатия текстов с помощью ПП в сравнении со степенью сжатия алгоритмом
+Лемпеля-Зива. Также мы сравним практические результаты работы двух алгоритмов
+построения ПП. Поскольку природа исходного текста влияет на степень сжатия и
+время обработки, в работе рассматриваются следующие типы текстов:
+\begin{itemize}
+  \item {\bf ДНК}~-- строки, свойства которых интересны на практике и активно
+  изучаются;
+  \item {\bf случайные строки}~-- предположительно худший вход для алгоритмов
+  сжатия;
+  \item {\bf строки Фибоначчи}~-- предположительно один из лучших входов
+  алгоритмов сжатия.
+\end{itemize}
+
+\newpage
+
+\section{Обозначения и определения}
+Зафиксируем произвольный непустой конечный алфавит $\Sigma$. 
+{\it Строкой или словом} будем называть элемент из
+множества $\Sigma^+$. {\it Конкатенацию} двух строк $T$ и $S$ будем обозначать
+символом ``$\cdot$'': $A = T \cdot S$. {\it Размером} или {\it длиной} строки $T$ будем называть количество символов в
+ней и обозначать $|T|$. Символ, находящийся в позиции $i$ заданной строки $T$,
+будем обозначать через $T[i]$. {\it Подстроку}, расположенную в строке $T$,
+начиная с позиции $i$ и заканчивая позицией $j$ (включительно), будем обозначать
+через $T[i \dots j]$. {\it Суффиксом с номером i} будем называть подстроку $T[i
+\dots |T|]$.
+
+{\it Строками Фибоначчи} будем называть последовательность строк
+$\{f_i\},i~\ge~1$, определяемую следующими соотношениями:
+\begin{enumerate}
+  \item $f_1 = ``b"$;
+  \item $f_2 = ``a"$;
+  \item $f_i = f_{i-1} \cdot f_{i-2}$, для всех $i \ge 3$.
+\end{enumerate}
+{\bf Пример.} 7-е слово Фибоначчи $f_7 = \mbox{<<}abaababaabaab\mbox{>>}$.
+
+\newpage
+
+\section{LZ77-факторизация}
+
+{\bf Определение.}
+Под {\it факторизацией} $F$ строки $T$ будем понимать некоторое разбиение
+строки $T$ на слова $f_1, f_2,\dots,f_k$, обладающее следующими
+свойствами:
+\begin{enumerate}
+  \item $T = f_1~\cdot~f_2~\cdot~\dots~\cdot~f_k$;
+  \item для любого $1 \le i \le k$ верно, что строка $f_i$ либо состоит из
+одного символа, либо встречается как подстрока в строке $f_1\cdot~\dots~\cdot~f_{i-1}$.
+\end{enumerate}
+Слова $f_1,f_2, \dots, f_k$ будем называть {\it факторами}.\\
+
+В частности, алгоритм Лемпеля-Зива $LZ77$ задает следующую факторизацию строки:
+
+\begin{enumerate}
+\item $f_1 = T[1]$;
+
+\item Пусть уже построена факторизация для префикса строки $T$ длины $k$: 
+$T[1 \dots k] = f_1 \cdot f_2\cdot~\dots~\cdot f_{i-1}$. Тогда $f_i =
+T[{k+1}]$, если символ $T[{k+1}]$ не встречается в строке $T[1 \dots k]$. В противном случае
+$f_i$ равен наибольшему префиксу строки $T[{k+1 \dots |T|}]$, который
+встречается как подстрока в $T[1 \dots k]$.
+\end{enumerate}
+
+Обозначим $LZ77$-факторизацию строки $T$ через $LZ77(T)$, а ее {\it размер}
+положим равным числу факторов и обозначим через $|LZ77(T)|$.
+
+{\bf Пример:} Рассмотрим $LZ77$ и некоторые факторизации $F_1$ и $F_2$ 7-го
+слова Фибоначчи. 
+$$
+LZ77(\mbox{<<}abaababaabaab\mbox{>>}) = f_1 \ f_2\ f_3\ f_4\ f_5\ f_6 = a\ b\ a\
+aba\ baaba\ ab;
+$$
+$$
+F_1(\mbox{<<}abaababaabaab\mbox{>>}) = f_1\ f_2\ f_3\ f_4\ f_5\ f_6\ f_7 = a\ b\
+a\ a\ b\ abaab\ aab
+$$
+$$
+F_2(\mbox{<<}abaababaabaab\mbox{>>}) = f_1\ f_2\ f_3\ f_4\ f_5\ f_6\ f_7\ f_8\ =
+a\ b\ a\ aba\ b\ a\ aba\ ab. 
+$$
+
+\begin{blem}[о минимальности $LZ77$-факторизации]
+Среди всех возможных факторизаций заданной строки $T$
+минимальной по количеству факторов является $LZ77$-факторизация.
+\end{blem}
+{\sc Доказательство:}
+Пусть $g_1 \cdot g_2\cdot~\dots~\cdot g_r$~-- некоторая факторизация строки
+$T$, а $f_1 \cdot f_2\cdot \dots f_k$~-- ее $LZ77$-факторизация.
+Предположим, что $k > r$. 
+Докажем по индукции, что для любого $i \le r$ $|f_1\cdot \dots f_i|
+\ge |g_1\cdot \dots g_i|$:\\
+{\sc База индукции} $f_1 = g_1 = T[1]$;\\
+{\sc Шаг индукции} Пусть утверждение доказано для всех $i = [1 \dots s]$.
+Докажем для ${s+1}$. Рассмотрим два случая:
+\begin{enumerate}
+\item $|f_1 \cdot f_2 \cdot~\dots~\cdot f_s| = |g_1 \cdot g_2 \cdot~\dots~\cdot
+g_s|$. В этом случае $|f_{s+1}| \ge |g_{s+1}|$ в силу построения
+$LZ77$-факторизации (выбирается наидлиннейший из возможных факторов),
+следовательно, $|f_1 \cdot f_2 \cdot~\dots~\cdot f_{s+1}| \ge |g_1 \cdot g_2
+\cdot~\dots~\cdot g_{s+1}|$;
+\item $|f_1 \cdot f_2 \cdot~\dots~\cdot f_s| > |g_1 \cdot g_2 \cdot~\dots~\cdot
+g_s|$. Предположим, что $n = |f_1 \cdot f_2 \cdot~\dots~\cdot f_{s+1}| < |g_1
+\cdot g_2 \cdot~\dots~\cdot g_{s+1}| = m$. Но это значит, что суффикс строки
+$g_{s+1}$ длиной ${m-n}$ входит как подстрока в строку $g_1 \cdot g_2
+\cdot~\dots~\cdot g_s$, а значит, и в строку $f_1 \cdot f_2
+\cdot~\dots~\cdot f_s$. Это значит, что фактор $f_{s+1}$ можно продолжить
+суффиксом строки $g_{s+1}$ длиной ${m-n}$. Значит, предположение неверно.
+\end{enumerate}
+Таким образом, $|T| = |g_1\cdot \dots g_r| \le |f_1\cdot \dots f_r| < |f_1\cdot \dots f_k| < |T|$.
+Полученное противоречие завершает доказательство. $\Box$\\
+
+Сформулируем задачу построения $LZ77$-факторизации по заданной строке $T$.
+
+\noindent {\sc Задача:} Построение $LZ77$-факторизации.
+
+\noindent {\sc Вход:} Строка $T$ длины $n$.
+
+\noindent {\sc Выход:} $LZ77$-фактризация $f_1 \cdot f_2 \cdot \dots \cdot f_k$
+строки $T$.\\
+
+В следующем разделе мы опишем алгоритм построения $LZ77(T)$, имеющий минимально
+возможную теоретическую оценку сложности.
+
+\subsection{Построение LZ77-факторизации с помощью суффиксного дерева}
+
+\subsubsection{Определение и основные свойства суффиксного дерева}
+Пусть $T$~-- строка длины $n$.
+
+{\it Неявное суффиксное дерево} для строки $T$~-- это способ представления этой
+строки. Неформально говоря, чтобы построить неявное суффиксное дерево для строки
+$T$, нужно взять все $n$ суффиксов, подвесить их за начала и склеить все ветки,
+идущие по одинаковым буквам.
+
+Чтобы построить {\it суффиксное дерево} для строки $T$, нужно вначале к строке
+$T$ приписать специальный символ, не равный ни одному символу исходной строки
+(будем обозначать его ``\$''). Затем для строки $T\$$ требуется построить
+неявное суффиксное дерево. Суффиксное дерево для строки $T$ будем
+обозначать через $ST(T)$.
+
+Заметим, что из-за приписанного в конец специального символа ни один суффикс не
+может полностью лежать в другом суффиксе. Поэтому в суффиксном дереве будет
+ровно $n+1$ листьев.
+
+Суффиксное дерево (как и неявное суффиксное дерево) можно хранить, используя
+$O(n)$ памяти. Для этого оставим в дереве только те вершины, которые имеют не менее двух сыновей, а на ребрах будем
+вместо строк хранить ссылку на подстроку $T[i \dots j]$. Дерево в таком виде
+называется {\it сжатым}.
+
+Заметим, что в сжатом суффиксном дереве не может быть более $n$ внутренних
+узлов, поскольку каждый внутренний узел добавляет к своему поддереву как минимум 1 лист. 
+Но листьев всего $n+1$.\\
+
+{\bf Пример.} На рисунке ниже изображен пример суффиксного дерева. Для
+наглядности на ребрах изображены строки, хотя на самом деле там должны
+храниться только пары чисел $i,j$~-- сылки на соответствующие подстроки $T[i
+\dots j]$. Около каждого листа написан номер суффикса, который в нем
+заканчивается.
+
+\begin{center}
+\SuffTree
+\end{center}
+
+\noindent {\sc Примечание} В дальнейшем мы будем отождествлять понятия
+``суффиксное дерево'', ``неявное суффиксное дерево'' и ``сжатое суффиксное дерево''. Все три объекта будем
+называть просто суффиксным деревом. Также в дальнейших рассуждениях нам будет
+удобно считать, что мы работаем с несжатым деревом. Это мысленные допущения, которые не
+влияют на суть алгоритма, но упрощают его описание.\\
+
+{\bf Утверждение}({\rm\cite{1}}).
+Существует алгоритм, который позволяет построить $ST(T)$ за время $O(|T|)$.
+
+При этом алгоритм состоит из $|T|$ итераций, и после $i$-й итерации
+результатом алгоритма является суффиксное дерево $ST_i$ для строки $T[1..i]$.
+Алгоритм называется {\it алгоритмом Укконена}.\\
+
+\subsubsection{Описание алгоритма построения LZ77-факторизации}
+
+Алгоритм построения $LZ77(T)$ следующий:\\
+\noindent {\sc База:} Положим $f_1 = T[1]$ и построим дерево $ST_1$ для первого
+символа строки.\\
+
+\noindent {\sc Шаг:}
+\begin{enumerate}
+  \begin{item}
+  Пусть уже построены факторизация $f_1 \cdot f_2\cdot \dots f_{i-1}$, такая,
+  что $f_1 \cdot f_2\cdot \dots f_{i-1} = T[1 \dots k]$, и суффиксное дерево
+  $ST_{k}$ для префикса $T[1 \dots k]$.
+  \end{item}
+  \begin{item}
+  С помощью суффиксного дерева найдем наибольший префикс $P$ строки $T[k+1 \dots
+  |T|]$, входящий как подстрока в $T[1 \dots k]$. Для этого начнем спуск с корня
+  дерева. Найдем ребро, помеченное символом $T[k+1]$, и спустимся по этому
+  ребру. Повторим процедуру для этого узла и символа $T[k+2]$ и т.д до тех пор,
+  пока не придем в узел, из которого не исходит ребра, помеченного нужным нам
+  символом.
+    
+  Если длина такого префикса равна нулю, то в качестве $P$ возьмем символ
+   $T[{k+1}]$.
+  \end{item}
+  \begin{item}
+  $f_i = P$
+  \end{item}
+  \begin{item}
+  Достроим дерево $ST_k$ до дерева $ST_{k+|f_i|}$ над префиксом $f_1 \cdot
+  f_2\cdot \dots f_i$.
+  \end{item}
+  \begin{item}
+  Будем продолжать эту итерацию до тех пор, пока не построим полную
+  факторизацию строки.
+  \end{item}
+\end{enumerate}
+
+\noindent {\sc Сложность:}
+\begin{enumerate}
+  \item Алгоритм состоит ровно из $k$ итераций, где $k$~-- количество факторов в
+  построенной факторизации.
+  \item Пункт 2 $i$-й итерации выполняется за время $O(|f_i|)$, поскольку
+  во время спуска алгоритм посетит $|f_i|+1$ узел дерева (считая корень).
+  Таким образом, время выполнения пункта 2 в течение всех итераций есть $O(|T|)$.
+  \item Пункт 4 $i$-й итерации выполняется за некоторое время $t_i$. Результатом
+  выполнения данного пункта на всех итерациях будет суффиксное дерево для строки
+  $T$. Поскольку мы используем алгоритм Укконена, то общее время построения
+  дерева есть $O(|T|)$. Следовательно, общее время выполнения пункта 4 в течение
+  всех итераций есть $O(|T|)$. 
+\end{enumerate}
+ Таким образом, общее время работы алгоритма есть $O(|T|)$.\\
+
+\noindent {\sc Недостатки алгоритма:}
+\begin{enumerate}
+  \begin{item}
+  Алгоритм имеет линейную оценку сложности, но за оценкой $O(|T|)$ скрывается
+  достаточно большая константа, что существенным образом сказывается на
+  реальной производительности.
+  \end{item}
+  \begin{item}
+  Если обрабатываемая строка перестает помещаться в оперативную память,
+  возникают большие трудности с адаптацией этого алгоритма. Суффиксное дерево
+  является ссылочной структурой. При переносе этой структуры во внешнюю память
+  любой переход по ссылке может означать обращение к диску.
+  \end{item}
+\end{enumerate}
+
+В следующем разделе мы представим другой алгоритм построения
+$LZ77$-факторизации. Он имеет более плохую теоретическую оценку сложности, но
+является более удобным для использования на практике.
+
+\subsection{Построение LZ77-факторизации с помощью суффиксного массива}
+\subsubsection{Определение и основные свойства суффиксного массива}
+Пусть $T$~-- строка длины $n$.
+
+{\it Суффиксный массив} для строки $T$ ~-- это массив чисел длины $n$
+такой, что в позиции $i$ в этом массиве расположен номер того суффикса,
+который был бы на позиции $i$ среди всех суффиксов строки $T$, отсортированных
+лексикографически. Проще говоря, суффиксный массив ~-- это лексикографически
+отсортированный массив суффиксов строки. Но у каждого суффикса есть номер,
+поэтому в массиве хранятся только номера соответствующих суффиксов.
+Суффиксный массив для строки $T$ будем обозначать $SA(T)$.\\
+
+{\bf Пример:} Отсортированный массив суффиксов для строки
+$"abaab"$ имеет вид [$"aab"$,$"ab"$,$"abaab"$,$"b"$,$"baab"$]. Следовательно,
+суффиксный массив для этой строки имеет вид $[3,4,1,5,2]$.\\
+
+{\it Наибольший общий префикс двух строк $A$ и $B$} ~-- это строка $P$,
+такая, что:
+\begin{itemize}
+  \item $P$ является префиксом как строки $A$, так и строки $B$.
+  \item Символы $A[{|P|+1}]$ и $B[{|P|+1}]$ различны (при условии, что
+  оба существуют).
+\end{itemize}
+
+Длину наибольшего общего префикса двух суффиксов, расположенных в суффиксном
+массиве в позициях с номерами $i$ и $j$, будем обозначать $lcp(i,j)$.
+
+{\it Массив наибольших общих префиксов} $LCP$ для строки $T$ ~-- это массив
+чисел длины $n$, в котором в позиции $i$ записана длина наибольшего общего
+префикса суффиксов, расположенных в позициях $i$ и $i-1$ суффиксного
+массива. Массив наибольших общих префиксов для строки $T$ будем обозначать
+$LCP(T)$.
+
+Таким образом, $lcp(i,i-1) = LCP(i)$.\\
+
+{\bf Пример:} Массивы $SA$ и $LCP$ для 7-го слова Фибоначчи.
+$$
+SA(\mbox{<<}abaababaabaab\mbox{>>}) = [11,8,3,12,9,6,4,1,13,10,7,2,5] 
+$$
+$$
+LCP(\mbox{<<}abaababaabaab\mbox{>>}) = [0,3,4,1,2,5,3,3,0,1,4,5,2] 
+$$\\
+Когда говорят о суффиксном массиве как о структуре данных, то
+нередко имеют в виду связку ``суффиксный массив'' + 
+''массив наибольших общих префиксов''.
+
+\begin{blem}[о наибольшем общем префиксе {\rm\cite{1}}]
+Пусть $T$~-- строка длины $n$, построены $SA(T)$ и $LCP(T)$. Тогда для любой
+пары чисел $i,j$, таких, что $i < j \le n$ верно, что $lcp(i,j) =
+min(LCP[{i+1}],\dots,LCP[j])$.
+\end{blem}
+
+{\sc Доказательство:}
+Докажем индукцией по второму аргументу функции $lcp$. Пусть первый аргумент
+зафиксирован и равен $i$.\\
+
+\noindent {\sc База:}\\
+Если $j = i+1$, то $lcp(i,j) = LCP[{i+1}]$ и утверждение, очевидно, верно.\\
+
+\noindent {\sc Шаг:}\\
+Пусть утверждение доказано для $j = {i+1},{i+2},\dots\,{i+k-1}$. 
+  Докажем для $j={i+k}$. 
+  $lcp(i,i+k-1) = min(LCP[{i+1}],\dots,LCP[{i+k-1}])$ (по индукции). 
+  Обозначим $lcp(i,i+k-1)$ через $s_1$. 
+  $lcp(i+k-1,i+k)$ обозначим через $s_2$.
+  Обозначим суффикс, расположенный в позиции $i$, через $A$, 
+  суффикс в позиции $i+k-1$ через $B$, 
+  а суффикс в позиции $j$ через $C$. 
+  Рассмотрим три случая:
+	  \begin{enumerate}
+	    \item $s_1 = s_2 = s$. Это значит, что $A[1 \dots s] = B[1 \dots s] = C[1
+	    \dots s]$. При этом $A[{s+1}] \neq B[{s+1}]$, а $B[{s+1}] \neq C[{s+1}]$.
+	    В таком случае $A[{s+1}]$ не может быть равно $C[{s+1}]$, поскольку в силу
+	    лексикографической сортировки $A[{s+1}] < B[{s+1}] < C[{s+1}]$. Таким
+	    образом, $lcp(i,j) = s = min(lcp(i,i+k-1),LCP[j]) =
+	    min(LCP[i+1],\dots,LCP[j])$.
+	    \item $s_1 < s_2$. Это значит, что $A[1 \dots s_1] = B[1 \dots s_1]$, а
+	    $B[1 \dots s_2] = C[1 \dots s_2]$. При этом $A[{s_1+1}] \neq B[{s_1+1}]$, 
+	    но $B[{s_1+1}] = C[{s_1+1}]$. Следовательно, $A[{s_1+1}] \neq C[{s_1+1}]$.
+	    Таким образом, длина наибольшего общего префикса между $A$ и $C$ равна
+	    $s_1$. Итак, $lcp(i,j) = lcp(i,i+k-1) = min(lcp(i,i+k-1),LCP[j]) =
+	    min(LCP[i+1],\dots,LCP[j])$.
+	    \item $s_1 > s_2$. Рассмотрение этого пункта аналогично предыдущему.
+	    $\Box$
+	  \end{enumerate}
+\noindent {\bf Следствие} (о монотонности функции lcp).\\
+Зафиксируем некоторую позицию $i$ в
+суффиксном массиве. Тогда из того, что $j < k < i$ следует, что $lcp(j,i) \le
+lcp(k,i)$. Аналогично, из того, что $j > k > i$ следует, что $lcp(j,i) \le
+lcp(k,i)$.
+
+\subsubsection{Структура данных ``разреженная таблица'' для поиска минимума на
+отрезке массива}
+Пусть нам дан массив чисел $A$ размера $n$. Требуется построить структуру
+данных, позволяющую для любых $i,j: i \le j \le n$ за $O(1)$ вычислять минимум среди элементов
+$A[i],\dots,A[j]$.
+
+Для простоты будем считать, что $n = 2^k$ для некоторого $k$. Легко понять, что 
+такое допущение никак не влияет на исходную задачу, поскольку мы можем дополнить
+исходный массив до нужного размера, дописав в конец несколько элементов со
+значением ``бесконечность''.
+
+Будем строить двумерный массив ST размера $n \times k$ по следующему
+правилу:
+
+$$ST[i][j] = \left \{ \begin{array}{l}
+A[i], \mbox{если~} j=0 \\
+\min(ST[i][j-1],ST[i+2^{j-1}][j-1]), \mbox{иначе}.
+\end{array}
+\right. $$
+
+Данный массив будем называть {\it разреженной таблицей}.
+
+Из определения массива очевидно, что $ST[i][j]$~-- минимум среди чисел
+$A[i],A[i+1],\dots,A[i+2^j-1]$.
+
+\begin{blem}[о вычислении минимума на отрезке массива]
+Пусть нам дан массив чисел $A$ размера $n = 2^k$ и для него построен разреженная
+таблица $ST$. Тогда для $i,j: i \le j \le n$ верно, что $min(A[i],\dots,A[j]) =
+min(ST[i][r],ST[j-2^r+1][r])$, где $r$ ~-- максимальное число такое, что $2^r \le {j-i+1}$.
+\end{blem}
+{\sc Доказательство:} $ST[i][r]$ ``покрывает'' отрезок от $i$ до $i+2^r-1$.
+$ST[j-2^r+1][r]$ ``покрывает'' отрезок от $j-2^r+1$ до $j$. В силу выбора
+значения $r$ выполнено неравенство $j-2^r+1 \le i+2^r-1$. $\Box$
+
+Таким образом, требуемая структура данных строится за время $O(n\log{n})$
+и требует $O(n\log{n})$ памяти.
+
+\subsubsection{Массив ``Ближайших меньших''}
+Пусть нам дан массив чисел $A$ размера $n$, все элементы которого различны.
+Рассмотрим массив чисел $B$, где $B[i]$ равен индексу $j$ ближайшего к $i$
+слева элемента массива $A$, такого, что $A[j] < A[i]$. Если такого индекса не существует, то $B[i] = 0$. 
+Такой массив будем называть массивом ``ближайших меньших''.
+
+Опишем алгоритм построения такого массива.
+Заведем {\it стек} $S$, который будет содержать пары чисел $(a,b)$. Верхушку
+стека будем обозначать $TOP(S)$, а первый и второй элементы пары верхушки стека
+будем обозначать $TOP(S).First$ и $TOP(S).Second$, соответственно.
+Операцию удаления верхушки стека будем обозначать $POP(S)$. 
+Операцию добавления элемента $(a,b)$ в стек будем обозначать $PUSH(S,a,b)$.
+Описание алгоритма приведем в виде псевдокода:
+
+\begin{codebox}
+\Procname{$\proc{Построение массива ``ближайших меньших''}$}
+\li $PUSH(S,0,-\infty)$
+\li \For $i \gets 1$ \To $n$
+\li \Do
+\li \While $TOP(S).Second > A[i]$
+\li \Do $POP(S)$
+\li \End 
+\li $B[i] \gets TOP(S).First$
+\li $PUSH(S,i,A[i])$ \End 
+\end{codebox}
+
+{\bf Утверждение.} Описанный алгоритм корректно строит массив ``ближайших
+меньших'' за время $O(n)$ с использованием $O(n)$ дополнительной памяти.
+
+{\sc Доказательство:}
+Асимптотика работы пропорциональна количеству добавлений и удалений элементов из
+стека. Поскольку каждый элемент массива добавляется в стек ровно один раз и
+удаляется из стека не более одного раза, то алгоритм, очевидно, выполняет $O(n)$
+действий. В качестве дополнительной памяти используется только стек, размер
+которого не может стать больше размера исходного массива. Таким образом,
+сложность алгоритма доказана.
+
+Для доказательства корректности рассмотрим $i$-ю итерацию алгоритма. Возможны
+два случая:
+\begin{enumerate}
+  \item $A[i] > TOP(S).Second$. Поскольку после предыдущего шага в верхушке
+  стека расположен предыдущий элемент массива, то он, очевидно, является
+  ближайшим для $i$ элементом, меньшим $A[i]$. Следовательно, в таком случае
+  алгоритм корректно присвоит в $B[i]$ значение $i-1$.
+  \item $A[i] < TOP(S).Second$. Следовательно, $A[i] < A[i-1]$, а значит $B[i]
+  \le B[i-1]$. То есть, ответом для текущего шага является либо тот же элемент,
+  что был ответом на предыдущем шаге (а он остался в стеке), либо какой-то
+  элемент левее (он тоже остался в стеке после предыдущего шага). Значит, на
+  текущем шаге алгоритм корректно найдет ответ. $\Box$
+\end{enumerate}
+
+\newpage
+
+\subsubsection{Эффективный алгоритм построения $LZ77$-факторизации}
+Алгоритм условно разделим на две части: стадия предварительной обработки и
+стадия вычисления основного результата. Стадия предварительной обработки состоит
+из 6 частей.
+\begin{enumerate}
+  \item Построим суффиксный массив $SA$ и массив $LCP$ для строки $T$.
+  \item Построим массив $P$ такой, что $P[i]$ равен позиции суффикса с номером
+  $i$ в суффиксном массиве.
+  \item Построим массив $SARev$~-- массив $SA$, записанный в обратном порядке.
+  \item Построим разреженную таблицу $ST$ для массива $LCP$.  
+  \item Построим массив ``ближайших меньших'' $NS$ для массива $SA$
+  \item Построим массив ``ближайших меньших'' $NSRev$ для массива $SARev$.
+\end{enumerate}
+
+Основной алгоритм опишем индуктивно.\\
+\noindent {\sc База:} $f_1 = T[1]$.\\
+
+\noindent {\sc Шаг:}\\
+Пусть уже построена факторизация $f_1 \cdot f_2~\cdot~\dots~\cdot~f_s$ такая,
+что $f_1~\cdot~f_2~\cdot~\dots~\cdot~f_s = T[1 \dots k]$. Опишем процесс
+получения очередного фактора.
+\begin{enumerate}
+  \item Пусть $P[k+1] = i$.
+  \item Далее алгоритм   делится на 2 независимые части: поиск ответа слева от
+  позиции $i$ и поиск ответа справа от позиции $i$. 
+  В следующих двух пунктах будет описан поиск ответа для ``левой'' части
+  алгоритма.
+  \item Пусть $j$~-- ``ближайший меньший'' элемент слева от позиции $i$, то
+    есть, $NS[i] = j$. 
+  \item Возможны три варианта:
+  \begin{enumerate}    
+    \item $j = 0$. Это значит, что слева от позиции $i$ нет элементов, меньших
+    $k+1$. Следовательно, ответом в таком случае будет 0.
+    \item $lcp(j,i) \le SA[i]-SA[j]$. Это означает, что наибольший из возможных
+    префиксов полностью лежит в строке $T[1 \dots k]$. Значит, ответом в этом
+    случае будет $lcp(j,i)$.
+    \item $lcp(j,i) > SA[i]-SA[j]$. Это означает, что найденный общий префикс
+    пересекает суффикс ${k+1}$, а длина ответа в таком случае равна
+    $SA[i]-SA[j]$, то есть расстоянию между суффиксами $SA[i]$ и $SA[j]$ в
+    строке. Значит, левее от суффикса $SA[j]$ может найтись суффикс, дающий
+    больший ответ.
+    Перейдем к суффиксу, расположенному в позиции $NS[j]$, и повторим
+    рассмотрение случаев $a-c$. 
+    Эту процедуру назовем ``скачком". Будем повторять ``скачки'' до тех пор, пока не придем в такую позицию $r$, что
+    $lcp(NS[r],i) \le SA[i]-SA[NS[r]]$. Тогда ответом будет либо $lcp(NS[r],i)$, либо
+    $SA[i]-SA[r]$. 
+  \end{enumerate}
+  \item Найдем ответ для ``правой'' части алгоритма. Это делается
+  абсолютно аналогично пункту 3. В данном разделе будут использоваться массивы
+  $SARev$ и $NSRev$.
+  \item Из результатов ``левой'' и ``правой'' частей алгоритма выберем
+  наибольший. Пусть он равен $len$. Если $len = 0$, то очередным
+  фактором будет буква $T[k+1]$. Иначе очередным фактором будет подстрока $T[k+1 \dots
+  k+len]$.
+\end{enumerate}
+
+\noindent {\sc Сложность алгоритма:}
+
+Для начала оценим сложность стадии предварительной обработки.
+\begin{enumerate}
+  \item Суффиксный массив можно построить за время за
+  $O(n)$\cite{suffix_array_linear}.
+  \item После построения суффиксного массива массив $LCP$ можно построить за
+  $O(n)$\cite{lcp}.
+  \item Для построения массива $P$ достаточно для каждого $i$ положить
+  $P[SA[i]] = i$. Следовательно, время построения массива $P$ есть $O(n)$.
+  \item Массив $SARev$ также строится за $O(n)$.
+  \item Время построения разреженной таблицы $O(n\log{n})$.
+  \item Время построения массивов $NS$ и $NSRev$ равно $O(n)$.  
+\end{enumerate}
+
+Оценим сложность основной части алгоритма.
+\begin{enumerate}
+  \item Алгоритм состоит из $k$ итераций.
+  \item В каждой итерации делается серия ``скачков''. Пусть в итерации с номером
+  $i$ алгоритм сделал $t_i$ ``скачков''. Заметим, что после каждого ``скачка''
+  длина очередного фактора увеличивается как минимум на 1. Следовательно,
+  $|f_i| \ge t_i$. Следовательно, $t_1 + t_2 + \dots + t_k \le |f_1| + |f_2| +
+  \dots + |f_k| = n$. Таким образом, общее время основного алгоритма есть
+  $O(n)$.
+\end{enumerate}
+
+Таким образом, алгоритм работает за время $O(n\log{n})$ и использует $O(n\log{n})$ 
+дополнительной памяти.\\
+
+По сравнению с алгоритмом, основанном на суффиксном массиве, данная реализация
+имеет одно существенное преимущество: она легко адаптируется на случай, когда
+оперативной памяти оказывается недостаточно. Простота достигается за счет того,
+что все описанные в реализации структуры данных~-- это обычные массивы.
+\newpage
+
+\section{ПП как сжатое представление строк}
+
+\subsection{Обозначения и определения}
+{\it Прямолинейная программа (ПП)} ~-- это последовательность правил вывода
+вида:
+
+\begin{center}
+$\mathcal{X}_1 = expr_1, \mathcal{X}_2 = expr_2, \dots, \mathcal{X}_n = expr_n,$
+\end{center}
+где $\mathcal{X}_i$ -- это переменные, а $expr_i$ -- выражения вида:
+
+\begin{itemize}
+\begin{item}
+$expr_i$ -- символ из алфавита $\Sigma$ (такие правила будем называть
+{\it терминальными}), или
+\end{item}
+\begin{item}
+$expr_i = \mathcal{X}_l \cdot \mathcal{X}_r (l, r < i)$ (такие правила будем
+называть {\it нетерминальными}).
+\end{item}
+\end{itemize}
+
+{\bf Пример}: Рассмотрим ПП $\mathcal{X}$, которая порождает текст <<$abaababaabaab$>>:
+
+\begin{center}
+$\mathcal{X}_1 = b, \mathcal{X}_2 = a, \mathcal{X}_3 = \mathcal{X}_2 \cdot
+\mathcal{X}_1, \mathcal{X}_4 = \mathcal{X}_3 \cdot \mathcal{X}_2,$
+
+$\mathcal{X}_5 = \mathcal{X}_4 \cdot \mathcal{X}_3, \mathcal{X}_6 =
+\mathcal{X}_5 \cdot \mathcal{X}_4, \mathcal{X}_7 = \mathcal{X}_6 \cdot
+\mathcal{X}_5$
+\end{center}
+Тогда дерево вывода грамматики $\mathcal{X}$ имеет вид:
+
+\picOne{}
+
+В дальнейшем дерево вывода грамматики $\mathcal{X}$ будем обозначать 
+через $Tree(\mathcal{X})$.
+
+В работе принято следующее соглашение: все прямолинейные программы обозначаются 
+курсивными буквами, например, $\mathcal{X}$, а строки, которые выводятся из них,
+соответствующими обычными буквами, например, $X$. Аналогично, правило с номером
+$i$ будем обозначать, через $\mathcal{X}_i$, а соответствующую строку~--
+$X_i$. {\it Размером} ПП $\mathcal{X}$ будем называть количество правил в ней и
+обозначать через $|\mathcal{X}|$. Под {\it высотой} дерева будем понимать
+наибольшую длину пути от корня до листа. {\it Высотой} ПП $\mathcal{X}$ будем
+называть высоту дерева $Tree(\mathcal{X})$ и обозначать $h(\mathcal{X})$. Аналогично, {\it высотой} некоторого правила $\mathcal{X}_i$ ПП $\mathcal{X}$
+будем обозначать высоту соответствующего поддерева в дереве вывода и обозначать
+$h(\mathcal{X}_i)$.
+
+\newpage
+\subsection{$AVL$-сбалансированные ПП}
+
+{\bf Определение.} Бинарное дерево называется $AVL$-{\it сбалансированным}, если
+для каждого его узла высоты левого и правого поддеревьев различаются не более, чем на 1.\\
+
+\noindent {\bf Определение.} Прямолинейную программу $\mathcal{T}$ будем
+называть {\sc AVL}-{\it сба\-лансированной}, если дерево вывода
+$Tree(\mathcal{T})$ является {\sc AVL}-сбалансированным.\\
+
+\begin{blem}[О высоте $AVL$-сбалансированного дерева {\rm\cite{2}}]
+$AVL$-сбалансированное дерево из $n$ узлов имеет высоту порядка $O(\log{n})$.
+\end{blem}
+
+\noindent {\bf Следствие} (О высоте $AVL$-сбаланированной ПП).\\
+$AVL$-сбалансированная ПП $\mathcal{T}$ имеет высоту порядка $O(\log{|T|})$.\\
+
+В следующих двух разделам мы опишем две операции, которые поддерживают
+$AVL$-сбалансированные ПП.
+
+\subsubsection{Операция конкатенации}
+\noindent {\sc Задача:} Конкатенация $AVL$-сбалансированных ПП.\\
+ 
+\noindent {\sc Вход:} $\mathcal{A}$, $\mathcal{B}$~-- $AVL$-сбалансированные ПП.\\ 
+
+\noindent {\sc Выход:} $AVL$-сбалансированная ПП $\mathcal{G}$, выводящая $A
+\cdot B$.\\
+
+\noindent {\sc Алгоритм:}\\
+Предположим, что $h(\mathcal{A}) \geq
+h(\mathcal{B})$, другой случай аналогичен. Начиная с корня дерева
+$Tree(\mathcal{A})$, 
+мы будем спускаться по самой правой ветке. Из свойства
+сбалансированности следует, что высота дерева сына будет 
+отличаться от высоты дерева отца не более чем на 2. 
+Поэтому мы сможем найти такое правило $\mathcal{V}$, что $h(\mathcal{B}) -
+h(\mathcal{V}) \in \{0, 1\}$. Пусть $\mathcal{W}$ -- отец $\mathcal{V}$ в
+дереве $Tree(\mathcal{A})$, 
+тогда добавим в ПП новое правило $\mathcal{V}'$ такое, то $\mathcal{V}$ и
+$\mathcal{B}$ -- сыновья $\mathcal{V}'$ в дереве вывода, а $\mathcal{W}$ -- отец
+$\mathcal{V}'$. При этом заметим, что в силу изменения правила $\mathcal{W}$
+необходимо его заменить на новое правило $\mathcal{W}''$, его отца~--
+аналогично, и т.д. до корня.
+Полученная ПП может оказаться несбалансированной на правой ветке.
+Возвращать сбалансированность начнем с правила $\mathcal{W}''$. На Рисунке 2
+показаны преобразования, которые возвращают свойство сбалансированности правилу $\mathcal{W}''$. 
+В результате преобразований некоторые правила в ПП заменяются
+новыми правилами. В частности, как видно на рисунке, правило
+$\mathcal{W}''$ будет заменено на новое~-- $\mathcal{W}''_{new}$. 
+Применение одного из преобразований, представленных на Рисунке 2, будем называть
+{\it операцией перебалансировки}. Заметим, что есть существенное отличие между опрерациями перебалансировки в
+бинарном дерева и в ПП. В дереве перебалансировка осуществляется за счет
+смены детей у некоторых узлов. В случае с ПП мы так поступить не можем, поскольку смена детей будет означать, что мы ``испортили'' какое-то правило вывода. Но это
+правило может присутствовать в ПП многократно, 
+а измениться должно только в одном месте. Поэтому ``портить''
+правила мы не можем, и необходимо вместо этого создавать новые правила вывода.
+После того, как к правилу $\mathcal{W}''$ применили операцию перебалансировки,
+несбалансированным может оказаться отец $\mathcal{W}''_{new}$ в дереве вывода. В
+этом случае применим операцию к нему и т.д. до корня.
+
+\begin{figure}[th]
+\AVLrotations
+\end{figure}
+
+\newpage
+
+\noindent{\sc Сложность алгоритма:}
+\begin{enumerate}
+  \item Вначале алгоритм ищет правило $\mathcal{V}$ такое, что $h(\mathcal{B}) -
+  h(\mathcal{V}) \in \{0, 1\}$. Для этого достаточно спуститься в дереве 
+  $Tree(\mathcal{A})$ по правой ветке до правила высотой, отличающейся от
+  $h(\mathcal{B})$ не более чем на 1. Следовательно, для этого алгоритм
+  совершает $O(h(\mathcal{A}) - h(\mathcal{B}))$ действий.
+  \item После добавления правила $\mathcal{B}$ в ПП на всей правой ветке от
+  правила $\mathcal{W}''$ до корня правила вывода заменяются новыми.
+  Следовательно, добавляется $O(h(\mathcal{A}) - h(\mathcal{B}))$ новых правил
+  вывода.
+  \item Если получанная ПП оказалась несбалансированной, алгоритм совершает
+  серию операций перебалансировки. Каждая операция совершается за время $O(1)$ и
+  в добавляет $O(1)$ новых правил вывода. Поскольку операции начинают
+  выполняться от правила $\mathcal{W''}$ и идут максимум до корня, то алгоритм
+  совершит не более $h(\mathcal{A}) - h(\mathcal{B})$ конкатенаций.
+  Таким образом, перебалансировка ПП работает за время $O(h(\mathcal{A}) -
+  h(\mathcal{B}))$ и в результате нее добавляется не более $O(h(\mathcal{A}) -
+  h(\mathcal{B}))$ новых правил вывода. 
+\end{enumerate}
+Таким образом, операция конкатенации выполняется за время $O(h(\mathcal{A}) -
+h(\mathcal{B}))$ и порождает не более $O(h(\mathcal{A}) -
+  h(\mathcal{B}))$ новых правил вывода.  
+
+\begin{blem}[о конкатенации {\rm\cite{21}}]
+Пусть $\mathcal{A}, \mathcal{B}$ -- два нетерминальных правила {\sc
+AVL}-сбалансированной ПП. Тогда мы можем сконструировать за $O(|h(\mathcal{A}) -
+h(\mathcal{B})|)$ операций перебалансировки {\sc AVL}-сбалансированную ПП
+$\mathcal{G} = \mathcal{A}\cdot \mathcal{B}$, где $G = A \cdot B$, добавив не
+более $O(|h(\mathcal{A}) - h(\mathcal{B})|)$ новых правил вывода.
+\end{blem}
+
+\noindent{\sc Трудности в реализации:}\\
+Потенциально дерево может не помещаться в оперативную память. Это значит, что
+при реализации алгоритма необходимо самостоятельно имитировать ссылочную
+структуру дерева во внешней памяти. При этом, каждая операция перебалансировки
+может породить 3 новых правила и ``убить'' 3 старых правила. Значит, нужно уметь
+добавлять новые и удалять старые правила из грамматики. То есть, каждая операция
+перебалансировки может породить несколько обращений к внешней памяти. И с ростом размера входной строки стоимость этих
+действий будет только увеличиваться (чем больше данных хранится на дисковом
+пространстве, тем более сложным является доступ к ним).\\ 
+Данные наблюдения в некотором смысле меняют взгляд на оценку алгоритмов,
+использующих конкатенацию ПП. Сложность операции перебалансировки теперь нельзя оценивать как $O(1)$.
+Поэтому возникает идея, что при построении прямолинейной программы важно
+минимизировать количество операций перебалансировки (возможно, за счет
+усложнения других частей алгоритма). Реализацию этой идеи мы обсудим в
+следующих главах.
+
+\newpage
+
+\subsubsection{Операция взятия подстроки в $AVL$-сбалансированной ПП}
+
+\noindent {\sc Задача:} Взятие подстроки в $AVL$-сбалансированной ПП.\\
+ 
+\noindent {\sc Вход:} $\mathcal{T}$~-- $AVL$-сбалансированная ПП, и целые числа
+$l$ и $r$, такие, что $1 \le l < r \le |T|$.\\
+
+\noindent {\sc Выход:} $AVL$-сбалансированная ПП $\mathcal{S}$, выводящая
+строку $T[l \dots r]$.\\
+
+\noindent {\sc Алгоритм:}\\
+Будем работать с деревом вывода $Tree(\mathcal{T})$. Каждый узел $\mathcal{X}$
+дерева соответствует некоторой подстроке $T[l_{\mathcal{X}} \dots r_{\mathcal{X}}]$.
+Будем считать, что для каждого узла $\mathcal{X}$ известны числа
+$l_{\mathcal{X}}$ и $r_{\mathcal{X}}$.
+Отрезок $[l_{\mathcal{X}} \dots r_{\mathcal{X}}]$ будем называть {\it
+интервалом узла $\mathcal{X}$} и обозначать $Range(\mathcal{X})$. Левого сына
+узла $\mathcal{X}$ будем обозначать $\mathcal{X}_l$, правого~--
+$\mathcal{X}_r$. Будем говорить, что набор узлов $\mathcal{S}_1,
+\mathcal{S}_2, \dots, \mathcal{S}_t$ {\it покрывает} некоторый отрезок $[l
+\dots r]$, если $Range(\mathcal{S}_1) \cup Range(\mathcal{S}_2) \cup \dots
+\cup Range(\mathcal{S}_t) = [l \dots r]$.\\
+
+Ниже приведено описание алгоритма взятия подстроки.
+
+\begin{enumerate}
+  \item Найдем минимальный по высоте узел $\mathcal{U}$, такой, что
+  $Range(\mathcal{U}) \supseteq [l \dots r]$.
+  
+  Для этого будем спускаться по дереву $Tree(\mathcal{T})$, начиная с корня. 
+  Пусть $\mathcal{V}$~-- текущий узел. Если $Range(\mathcal{V}_l) \supseteq [l \dots r]$, 
+  то спустимся к левому сыну и продолжим процедуру, считая уже $\mathcal{V}_l$ текущим узлом. Если
+  $Range(\mathcal{V}_r) \supseteq [l \dots r]$, то спустимся к правому
+  сыну и продолжим процедуру, считая уже $\mathcal{V}_r$ текущим узлом. Если оба
+  этих условия не выполняются, то текущий узел $\mathcal{V}$ является искомым.
+  \item Если $Range(\mathcal{U}) = [l \dots r]$, то искомый набор состоит из
+  одного узла, и ответ найден.
+  \item В противном случае сначала перейдем к левому сыну узла $\mathcal{U}$~--
+  $\mathcal{U}_l$. Будем спускаться от него по левой ветке до тех пор, пока
+  интервал левого сына текущего узла пересекается с отрезком $[l \dots r]$. То
+  есть, мы должны спуститься до такого узла $\mathcal{U}'$, что
+  $Range(\mathcal{U}'_l) \cap [l \dots r] = \oslash$. Если такого узла нет, то
+  ответ для левой части состоит из единственного узла $\mathcal{U}_l$.
+  Если же узел есть, то повторим рекурсивно данный пункт, только в качестве узла 
+  $\mathcal{U}_l$ будет выступать узел $\mathcal{U}'_r$. После этого добавим к
+  ответу правых детей всех узлов,которые мы прошли по пути от $\mathcal{U}_l$ к $\mathcal{U}'$, кроме
+  самих $\mathcal{U}_l$ и $\mathcal{U}'$ (в порядке, противоположном порядку
+  обхода). В результате мы построим набор узлов $\mathcal{S}_1,
+  \dots, \mathcal{S}_{t_1}$, покрывающих отрезок $[l \dots c]$ для некоторого $c
+  < r$.
+  
+  Заметим, что полученный набор узлов возрастает по высоте, то есть 
+  $h(\mathcal{S}_1) > h(\mathcal{S}_2) > \dots > h(\mathcal{S}_{t_1})$.  
+  \item Проделаем аналогичную процедуру для правого сына узла $\mathcal{U}$~--
+  $\mathcal{U}_r$. Только в этом случае спуск будет осуществляться по правой
+  ветке, к ответу будут добавляться левые дети пройденных узлов и в порядке
+  обхода, а рекурсивное выполнение процедуры будет выполняться после пополнения
+  ответа новыми узлами. В результате мы построим набор узлов $\mathcal{S}_1,
+  \dots, \mathcal{S}_{t_2}$, покрывающих отрезок $[c+1 \dots l]$.
+  
+  Заметим, что полученный набор узлов убывает по высоте, то есть 
+  $h(\mathcal{S}_1) < h(\mathcal{S}_2) < \dots < h(\mathcal{S}_{t_2})$.
+  \item Таким образом, мы построим набор узлов
+  $\mathcal{S}_1,\dots,\mathcal{S}_t$, покрывающих отрезок $[l \dots r]$.
+  \item С помощью операции конкатенации построим ПП $\mathcal{S}$, выводящую
+   $S_1~\cdot~S_2~\cdot~\dots~\cdot~S_t$. 
+\end{enumerate}
+
+\noindent {\sc Сложность алгоритма:}
+\begin{enumerate}
+  \item В пункте 1 алгоритм совершает спуск по дереву до тех пор, пока не
+  найдет узел с нужным свойством. Поскольку ПП $\mathcal{T}$
+  $AVL$-сбалансирована, то ее высота есть $O(\log{|T|})$, следовательно, в
+  данной части алгоритм выполнит не более $O(\log{|T|})$ действий.
+  \item В пунктах 3 и 4 алгоритм также совершает спуски по дереву,
+  следовательно, выполняет не более $O(\log{|T|})$.
+  \item Заметим, что получившееся количество узлов есть $\Theta{(\log{|T|})}$,
+  поскольку во время спусков алгоритм на каждом уровне добавляет к ответу не
+  более 1 узла.
+  \item В пункте 6 производится серия операций конкатенации. Сначала
+  сконкатенируем правила $\mathcal{S}_1, \mathcal{S}_2,\dots,\mathcal{S}_{t_1}$
+  в заданном порядке. Результатом конкатенации будет ПП $\mathcal{S}_l$.
+  Сложность конкатенации и число новых правил вывода будут пропорциональны
+  $h(\mathcal{S}_2) - h(\mathcal{S}_1) + h(\mathcal{S}_3) - h(\mathcal{S}_2) +
+  \dots + h(\mathcal{S}_{t_1}) - h(\mathcal{S}_{t_1 - 1}) =
+  h(\mathcal{S}_{t_1}) - h(\mathcal{S}_1) = O(\log{|T|})$.
+  Аналогично поступим с правой частью, только там правила будем конкатенировать в порядке
+  $\mathcal{S}_t, \mathcal{S}_{t-1},\dots,\mathcal{S}_{t_1 + 1}$ и в результате
+  получим ПП $\mathcal{S}_r$. Сконкатенируем $\mathcal{S}_l$ и $\mathcal{S}_r$,
+  это также можно сделать за время $O(\log{|T|})$, породив при этом
+  $O(\log{|T|})$ новых правил.
+  Таким образом, пункт 6 выполняется за время $O(\log{|T|})$, порождая при этом
+  $O(\log{|T|})$ новых правил вывода.\\
+  Описанные в этом пункте рассуждения о сложности нестрогие. Строгое
+  доказательство можно найти в работе Риттера \cite{21}.
+\end{enumerate}
+
+Таким образом, операция взятия подстроки выполняется за время $O(\log{|T|})$,
+при этом порождает не более $O(\log{|T|})$ новых правил вывода.
+
+\newpage
+\subsection{Алгоритм Риттера построения ПП по некоторой факторизации строки}
+В этой главе мы обсудим алгоритм, который позволяет построить ПП по
+строке, если известна некоторая ее факторизация. Однако часто в контексте
+данного алгоритма под факторизацией понимается $LZ77$-факторизация. Данная
+ассоциация обусловлена ``минимальностью'' данной факторизации, 
+которая была доказана в Лемме 1. Следствием этого свойства
+является отношение между количеством факторов в $LZ77$-факторизации некоторой
+строки $T$ и размером произвольной ПП $\mathcal{T}$, выводящей $T$. Для более
+формального описания этого отношения, сформулируем следующую лемму.
+
+\begin{blem}[о связи между размером ПП и числом $LZ77$-факторов {\rm\cite{21}}]
+Для любой строки $T$ и произвольной ПП $\mathcal{T}$, выводящей $T$, верно, что
+$|\mathcal{T}| \geq |LZ77(T)|$.
+\end{blem}
+
+Данная лемма показывает, что в минимальной ПП, выводящей строку $T$, не меньше
+ $|LZ77(T)|$ правил. Это значит, что для сравнения некоторой ПП с
+минимальной достаточно сравнить количество правил в ней с числом факторов в
+$LZ77$-факторизации.
+
+Далее мы опишем результат Риттера~-- алгоритм
+построения ПП $\mathcal{T}$, размер которой в $\log{|T|}$
+раз больше $|LZ77(T)|$.\\
+
+\noindent {\sc Задача:} Построение ПП $\mathcal{T}$, выводящую заданную строку
+$T$.\\
+
+\noindent {\sc Вход:} Строка $T$ длины $n$, факторизация $F(T): T = f_1
+\cdot f_2\cdot \dots f_k$. Также для каждого фактора $f_i$, если он не
+однобуквенный, известна позиция его вхождения в строку $T_{i-1} = f_1 \cdot f_2
+\cdot~\dots~\cdot f_{i-1}$, то есть, известны числа $l_i$ и $t_i$ такие, что
+$f_i$ = $T[l_i \dots r_i]$.\\
+
+\noindent {\sc Выход:} ПП $\mathcal{T}$, выводящая $T$.\\
+
+\noindent {\sc Агоритм:}\\
+Будем строить прямолинейную программу итеративно.\\
+ 
+\noindent {\sc База:} Построим тривиальную $AVL$-сбалансированную ПП
+$\mathcal{T}_1$, выводящую однобуквенный фактор $f_1$.\\
+
+\noindent {\sc Шаг:}\\
+Пусть мы уже построили $AVL$-сбалансированную ПП $\mathcal{T}_i$ для строки $T_i
+= f_1 \cdot f_2\cdot \dots f_i$. Покажем, как построить $\mathcal{T}_{i+1}$ для строки
+$T_{i+1}~=~f_1~\cdot~f_2~\cdot~\dots~\cdot~f_{i+1}$.
+\begin{enumerate}
+  \item Возьмем фактор $f_{i+1}$. Если это не буква, то известна его позиция
+  вхождения в строку $T_i$. Пусть $f_{i+1} = T_i[l_i \dots r_i]$. Если это
+  буква, то построим из нее тривиальную ПП $\mathcal{S}$ и перейдем к пункту 3.
+  \item С помощью операции взятия подстроки построим ПП $\mathcal{S}$, выводящую
+  строку $T_i[l_i \dots r_i]$.
+  \item С помощью алгоритма конкатенации построим ПП $\mathcal{T}_{i+1} =
+  \mathcal{T}_i \cdot \mathcal{S}$.\\
+\end{enumerate}
+
+\noindent {\sc Сложность алгоритма:}
+\begin{enumerate}
+  \item По условию для каждого фактора известны позиции $l_i$ и $r_i$ его
+  вхождения в строку. Это не является серьезным допущением, поскольку во время построения
+  факторизации можно для каждого фактора запомнить его позицию вхождения
+  в строку. Поэтому в ходе построения ПП вычисление значений $l_i$ и $r_i$ не
+  требуется.
+  \item Операция взятия подстроки работает за время $O(\log{|T|})$ и порождает
+  не более $O(\log{|T|})$ новых правил вывода.
+  \item Конкатенация ПП $\mathcal{T}_i$ и $\mathcal{S}$ также требует
+  $O(\log{|T|})$ времени и порождает $O(\log{|T|})$ новых правил. 
+\end{enumerate}
+Таким образом, можно сформулировать следующую теорему:
+
+\begin{bthm}[{\rm\cite{21}}]
+Пусть задана строка $T$ и некоторая ее факторизация $f_1 \cdot f_2\cdot \dots
+f_k$. Тогда алгоритм Риттера за время $O(k~\cdot~\log{|T|})$ построит ПП
+$\mathcal{T}$,выводящую $T$, размера $O(k~\cdot~\log{|T|})$.
+\end{bthm}
+
+У описанного алгоритма есть узкие места. Одно из них проиллюстрируем примером.
+
+{\bf Пример.}
+Пусть $n > 0$. Рассмотрим строку $S = ba^{2^n}ba^{2^{n-1}} \dots ba$.
+$LZ77$-факторизация этой строки имеет вид: 
+$b \cdot a \cdot a \cdot a^2 \cdot a^4\cdot \dots \cdot a^{2^{n-1}-1} \cdot
+ba^{2^{n-1}} \cdot ba^{2^{n-2}}\cdot \dots \cdot ba$. Пусть
+$\mathcal{S}$~-- прямолинейная программа, построенная для строки $S_1
+= ba^{2^n}$. Оценим, сколько операций перебалансировки может произвести алгоритм
+Риттера в ходе построения прямолинейной программы для всей строки $S$. При обработке фактора
+$S_2 = ba^{2^{n-1}}$ алгоритм может произвести
+$h(\mathcal{S})-h(\mathcal{S}_2) \approx n - (n-1) = 1$ операций
+перебалансировки, при этом после конкатенации высота $\mathcal{S}$ увеличится
+на 1. Тогда при обработке строки $S_3 = ba^{2^{n-2}}$ может быть произведено
+$h(\mathcal{S})-h(\mathcal{S}_3) \approx n + 1 - (n-2) = 3$ перебалансировки.
+Таким образом, для общей оценки количества требуется посчитать сумму
+$\sum_{i=0}^{n-1}(n + (n-1-i) - (i)) = \sum_{i=0}^{n-1}(2n-2i-1) = n^2$.
+Заметим, что факторы $S_2,S_3,\dots,S_{n+1}$ независимы. То есть, все они входят
+в строку $S_1$. Это значит, что мы их могли обработать группой, то есть
+сконкатенировать, и только затем добавить к $S_1$. При этом мы могли
+конкатенировать данные правила с конца. 
+В этом случае общее количество операций перебалансировки было бы не больше $n$.
+Это наблюдение лежит в основе идеи улучшения алгоритма Риттера с точки зрения количества перебалансировок.
+
+\newpage
+\subsection{Модернизированный алгоритм Риттера}
+Алгоритм основан на простой идее: в ходе построения ПП можно обрабатывать не по
+одному фактору, а по нескольку факторов подряд, если это позволит уменьшить
+количество перебалансировок.
+
+Рассмотрим набор правил $\mathcal{F}_1,\mathcal{F}_2,\dots \mathcal{F}_k$. 
+Будем считать, что для любых двух правил $\mathcal{A}$ и $\mathcal{B}$ некоторой
+ПП время конкатенации равно $|h(\mathcal{A})-h(\mathcal{B})|$. В данном
+допущении мы отбросили константу в оценке времени алгоритма конкатенации и считаем, что всегда
+реализуется его худший случай. Будем также считать, что для
+любой строки $S$ высота правила, выводящего $S$, есть $\log{|S|}$. 
+Здесь тоже кроется некоторое допущение, однако оно незначительно, поскольку
+высота $AVL$-дерева близка к двоичному логарифму от числа листьев.  
+Мы хотим понять, в какой последовательности необходимо конкатенировать правила, 
+чтобы общее количество перебалансировок было
+минимальным (в рамках описанных выше допущений).Рассмотрим функцию
+$\varphi$, где $\varphi(i,j)$ равно минимальному количеству перебалансировок
+при конкатенации правил $\mathcal{F}_i,\mathcal{F}_{i+1},\dots,\mathcal{F}_j$.
+Выпишем формулу для функции $\varphi$.
+
+$$\varphi(i, j) = \left \{ \begin{array}{l}
+0, \mbox{если~} i=j \\
+\min_{r =
+i}^j(\varphi(i, r) + \varphi(r+1, j) + |\log(|F_{i}|+\dots+|F_{r}|) -\\-
+\log(|F_{r+1}|+\dots+|F_{j}|)|), \mbox{иначе}.
+\end{array}
+\right. $$
+
+Данную функцию можно рассчитать с помощью динамического программирования.
+Псевдокод для вычисления таблицы $\varphi(i,j)$ приведен ниже:
+
+\begin{codebox}
+\Procname{$\proc{Построение таблицы $\varphi(i,j)$}$}
+\li \For $i \gets 1$ \To $k$
+\li \Do $\varphi(i,i) \gets 0$ 
+\li \End
+\li \For $length \gets 1$ \To ${k-1}$
+\li \Do
+\li \For $i \gets 1$ \To ${k - length}$
+\li \Do
+\li $j \gets i+length$
+\li $result \gets \infty$
+\li $l \gets 0$
+\li $r \gets |F_i|+|F_{i+1}|+\dots +|F_j|$
+\li \For $t \gets i$ \To $j$
+\li \Do
+\li $l \gets l+|F_t|$
+\li $r \gets r-|F_t|$
+\li $tmp \gets \varphi(i,t) + \varphi(t+1,j) + \log{l} - \log{r}$
+\li $result \gets \min(result, tmp)$
+\li \End
+\li $\varphi(i,j) \gets result$ \End \End
+\end{codebox}
+
+Время работы вычисления таблицы $\varphi(i,j)$, очевидно, $O(k^3)$.
+Опишем моднизированный алгоритм Риттера формально.\\
+
+\noindent {\sc Вход:} Строка $T$ длины $n$, факторизация $F(T): T = f_1
+\cdot f_2\cdot \dots f_k$. Также для каждого фактора $f_i$, если он не
+однобуквенный, известна позиция его вхождения в строку $T_{i-1} = f_1 \cdot f_2
+\cdot~\dots~\cdot f_{i-1}$, то есть, известны числа $l_i$ и $t_i$ такие, что
+$f_i$ = $T[l_i \dots r_i]$.\\
+
+\noindent {\sc Выход:} ПП $\mathcal{T}$, выводящая $T$.\\
+
+\noindent {\sc Алгоритм:}\\
+
+\noindent {\sc База: } Построим тривиальную $AVL$-сбалансированную ПП
+$\mathcal{T}_1$ для однобуквенного фактора $f_1$.\\
+
+\noindent {\sc Шаг:}\\
+Пусть мы построили $AVL$-сбалансированную ПП $\mathcal{T}_i$ для строки $T_i =
+f_1~\cdot~f_2~\cdot~\dots~\cdot~f_i$.
+
+\begin{enumerate}
+  \item Возьмем факторы $f_{i+1},f_{i+1},\dots,f_{i+r}$, такие что, каждый из
+  них входит как подстрока в $T_i$, а $f_{i+r+1}$ уже не входит.
+  \item Для каждого фактора $f_{i+s}$ с помощью операции взятия
+  подстроки построим ПП $\mathcal{F}_s$, выводящую $f_{i+s}$.
+  \item Для полученного набора правил вычислим таблицу $\varphi(i,j)$.
+  \item Применим к набору правил алгоритм конкатенации в порядке, который
+  диктует функция $\varphi(i,j)$, то есть, другими словами, в порядке, дающем
+  минимальное число перебалансировок. Таким образом, построим ПП $\mathcal{S}$, 
+  выводящую $F_1 \cdot F_2\cdot \dots F_r$
+  \item С помощью алгоритма конкатенации построим ПП $\mathcal{T}_{i+r} =
+  \mathcal{T}_i \cdot \mathcal{S}$.\\
+\end{enumerate}
+
+\noindent {\sc Примечание}.\\
+Может получиться, что в ходе алгоритма размер очередной группы будет
+неприемлемым для вычисления функции $\varphi$ (например, сравнимым с
+количеством факторов в факторизации). Чтобы этого избежать, можно ограничить
+размер обрабатываемой группы некоторой константой. В ходе наших исследований мы
+использовали константу 128.\\
+
+Алгоритм отличается от классического алгоритма Риттера только тем, что
+обрабатывает, где это возможно, несколько факторов подряд, и вычисляет порядок
+конкатенаций с целью уменьшения числа перебалансировок. При этом с точки зрения
+размера результирующей ПП данный алгоритм имеет ту же асимптотику, что и
+классический. Для подтверждения этого сформулируем и докажем следующую теорему.
+
+\begin{bthm}
+Пусть задана строка $T$ и некоторая ее факторизация $f_1 \cdot f_2\cdot \dots
+f_k$. Тогда модернизированный алгоритм Риттера построит ПП $\mathcal{T}$,
+выводящую $T$, размером $O(k \cdot \log{|T|})$.
+\end{bthm}
+{\sc Доказательство:}
+Для доказательства достаточно заметить, что при построении правила, выводящего
+один фактор, по-прежнему, как и в алгоритме Риттера, порождается не более
+$O(\log{|T|})$ новых правил. При конкатенации двух факторов порождается также не
+более $\log{|T|}$ новых правил. Всего факторов $k$, конкатенаций между факторами
+не более ${k-1}$. Шаг 5 алгоритма также выполняется не более $k$ раз. Таким
+образом, количество новых правил есть $O(k \cdot \log{|T|})$. $\Box$
+
+\newpage
+
+\section{Практические результаты}
+Очевидно, что природа текстов влияет на степень и время сжатия.
+В данной работе рассматриваются следующие типы текстов:
+\begin{itemize}
+  \item {\bf ДНК}~-- строки, свойства которых интересны на практике и активно
+  изучаются;
+  \item {\bf случайные строки над алфавитом из 4 букв}~-- предположительно
+  худший вход для алгоритмов сжатия;
+  \item {\bf строки Фибоначчи}~-- предположительно один из лучших входов
+  алгоритмов сжатия.
+\end{itemize}
+
+В данном разделе мы приведем результаты тестирования следующих алгоритмов:
+\begin{enumerate}
+  \item Алгоритм Лемпеля-Зива преобразования строки в последовательность
+  факторов (см. раздел 3.2). Данный алгоритм мы будем обозначать {\bf lz77}.  
+  \item Алгоритм Риттера преобразования последовательности факторов в
+  прямолинейную программу (см. раздел 4.4). Обозначение ~-- {\bf SLPClassic}.
+  \item Модернизированный алгоритм Риттера преобразования последовательности факторов в
+  прямолинейную программу (см. раздел 4.5). Обозначение ~-- {\bf SLPnew}.
+\end{enumerate}
+
+Для изображения результатов работы алгоритмов на графиках мы будем использовать
+следующие обозначения:
+
+\algorithmNotations
+
+Под производительностью алгоритма мы будем понимать два параметра: время
+выполнения и {\it относительный размер}. Для алгоритмов построения ПП мы
+будем также считать количество перебалансировок. {\it Относительный размер}
+рассчитывается как отношение размера сжатого представления к длине исходного
+текста. Для алгоритма Лемпеля-Зива под размером сжатого
+представления будем понимать количество факторов в результате, для алгоритмов ПП
+-- размер получившейся прямолинейной программы. Наше понимание относительного
+размера может показаться непривычным, поскольку оно не учитывает, что для
+хранения как фактора, так и правила, требуется
+значительно больше памяти, чем для хранения одного символа строки. Но в данном
+случае это не важно, посколько нас интересует зависимость между длиной входной
+строки и размерами сжатых представлений.
+
+\newpage
+
+\subsection{Сравнение алгоритмов построения ПП}
+В данной главе мы приведем подробное сравнение двух алгоритмов построения
+прямолинейной программы.
+
+Оба алгоритма, как и ожидалось, работают очень быстро на строках Фибоначчи.
+Например, на 36 cтроке Фибоначчи длиной около $36.9 \cdot 10^6$ оба алгоритма
+укладываются в 1 миллисекунду и строят ПП размером 100. Данный тест доказывает,
+что существуют строки, для которых модель сжатия с помощью прямолинейных
+программ является очень эффективной.
+
+На следующем графике для обоих алгоритмов представлена зависимость количества
+перебалансировок от размера исходного текста.
+
+\DNARotations
+
+\newpage
+
+Для оценки того, насколько уменьшение количества перебалансировок влияет на
+реальное время выполнения алгоритма, мы представим два теста. В первом тесте
+$AVL$-дерево хранится в оперативной памяти. Во втором тесте $AVL$-дерево
+хранится во внешней памяти. То есть, каждая операция перебалансировки порождает
+обращение к жесткому диску. Ниже представлены графики зависимости времени
+выполнения алгоритма от размера исходного текста.
+
+\DNASpeedTestInMemory
+
+\DNASpeedTestInFile
+
+На следующих трех графиках представлено сравнения алгоритмов построения ПП для
+случайных строк.
+
+\RandomRotations
+
+\RandomSpeedTestInMemory
+
+\RandomSpeedTestInFile
+
+Приведенные графики показывают, что модернизированный алгоритм Риттера имеет ту
+же производительность, что и классический, если дерево хранится в оперативной
+памяти. Когда же дерево хранится во внешней памяти, то новый алгоритм становится
+в среднем в 2 раза быстрее.
+
+\newpage
+
+\subsection{Результаты по относительному размеру}
+Ниже приведены два графика, сравнивающие относительные размеры.
+
+\begin{center}
+\DNACompression
+\end{center}
+
+\begin{center}
+\RandomCompression
+\end{center}
+
+Из графиков видно, что относительные размеры классического и модернизированного
+алгоритмов Риттера практически одинаковы. Для строк небольшой длины новый
+алгоритм может сгенерировать несколько большую ПП. Это объясняется тем, что
+вначале новый алгоритм многократно конкатенирует небольшие по размеру ПП,
+порождая новые правила вывода. Также, анализируя графики, можно сделать
+интересное наблюдение: отношение размеров ПП к количеству факторов, генерируемых
+алгоритмом Лемпеля-Зива, ведет себя как константа, близкая к значению 2.
+Мы пока не можем дать объяснения этому наблюдению. 
+
+\newpage
+
+\section{Заключение}
+
+В данной работе мы представили практическую реализацию алгоритма Лемпеля-Зива,
+построенную на структуре данных суффиксный массив и более
+удобную для использования на практике в случае, когда не хватает оперативной
+памяти.
+
+Также мы представили алгоритм построения прямолинейных программ. Алгоритм
+построен на тех же идеях, что и классический алгоритм Риттера, но является более
+эффективным на практике с точки зрения производительности. При этом в новом
+алгоритме остается ряд открытых вопросов. В частности, не дана его
+теоретическая оценка сложности. Новый алгоритм совершает гораздо меньшее
+количество операций перебалансировки, однако это количество не оптимальное.
+
+В последней главы мы сравнили классический и модернизированный алгоритмы
+Риттера. Сравнение показало, что ПП, генерируемые данными алгоритмами, имеют
+практически одинаковые размеры. Также наши исследования показали, что отношение
+размеров ПП к размеру факторизации не меняется с увеличением длины исходной строки. Возможно,
+теоретические оценки размера ПП, генерируемой данными алгоритмами, являются
+оценками сверху и могут быть улучшены.
+
+\newpage
+
+\begin{thebibliography}{29}
+\bibitem{13} $P.\ Cegielski,\ I.\ Guessarian,\ Y.\ Lifshits\ and\ Y.\
+Matiyasevich$ Window sunsequence problems for compressed texts. In Proceedings of 1st International Symposium Computer Science in Russia (CSR 2006), pp.
+127-136. Springer-Verlag, 2006
+
+\bibitem{11} $Maxime\ Crochemore\ and\ Wojciech\ Rytter.$ Text Algorithms.
+Oxford University Press, New York, 1994.
+
+\bibitem{8} $Martin\ Farach\ and\ Mikkel\ Thorup$ String matching in Lempel-Ziv
+compressed strings. In Proceedings of the 27-th Annual ACM Symposium on Theory of Computing (STOC 1995), pp. 703-712, ACM Press, 1995.
+
+\bibitem{12} $Michael\ Garey\ and\ David\ Johnson$ Computers and Intractability:
+a Guide of the Theory of NP-completness. Freeman, 1979.
+
+\bibitem{4} $L.\ Gasieniec,\ M.\ Karpinski,\ W.\ Plandowski\ and\ W. Rytter$
+Efficient algorithms for Lempel-Ziv encoding (extended abstract). In Proceedings of the 5th Scandinavian Workshop on Algorithm Theory (SWAT
+1996), pp. 392-403. Springer-Verlag, 1996.
+
+\bibitem{1} $Dan\ Gusfield$ Algorithms on Strings, Trees and Sequences.
+Cambridge University Press, 1997.
+
+\bibitem{10} $M.\ Hirao,\ A.\ Shinohara,\ M.\ Takeda,\ and\ S.\ Arikawa$ Fully
+compressed pattern matching algorithm for balanced straight-line programs. In Proceedings of 7th International Symposium on String Processing and
+Information Retrieval (SPIRE 2000), pp. 132-138. IEEE Computer Society, 2000.
+
+\bibitem{15} $Y.\ Ishida,\ S.\ Inenaga,\ A.\ Shinohara, M.\ Takeda$ Full
+incremental LCS computation. In Proceedings of Fundamentals of Computation Theory (FCT 2005), pp. 563-574, Springer-Verlag 2005.
+
+\bibitem{suffix_array_linear} $Juha\ Karkkainen,\ Peter\ Sanders,\ Stefan\
+Burkhardt$ Linear Work Suffix Array Construction. Journal of the ACM (JACM), Volume 53 Issue 6,
+November 2006.
+
+\bibitem{5} $Marek\ Karpinski,\ Wojciech\ Rytter,\ Ayumi\ Shinohara$ An
+efficient pattern-matching algorithm for strings with short descriptions. Nordic Journal of Computing, pp. 172-186, 1997.
+
+\bibitem{lcp} $Toru\ Kasai,\ Gunho\ Lee,\ Hiroki\ Arimura,\ Setsuo\ Arikawa,
+Kunsoo\ Park$ 
+Linear-Time Longest-Common-Prefix Computation in Suffix Arrays and Its Applications. CPM '01 Proceedings of the 12th Annual Symposium on
+Combinatorial Pattern Matching, pp. 181-192. Springer-Verlag, 2001.
+
+\bibitem{lesha} $Lesha\ Khvorost$
+Seraching All Pure Squares. In Proc. Plenary Conference AutoMathA, 2009.
+
+\bibitem{14} $T.\ Kida,\ T.\ Matsumoto,\ Y.\ Shibata,\ M.\ Takeda,\ A.\
+Shinohara,\ S.\ Arikawa$ Collage system: a unifying framework for compressed pattern matching. Theoretical Computer Science Journal, pp.
+253-272, 2003.
+
+\bibitem{2} $Donald\ Knuth$ The Art of Computing Vol.II: Seminumerical
+Algorithms. Second Edition. Addison-Wesley 1981.
+
+\bibitem{17} $Yury\ Lifshits\ and\ Markus\ Lohrey$ Quering and embedding
+compressed texts. In Proceeding of International Symposium on Mathematical Foundations of Computer Science (MFCS 2006), pp. 681-692. Springer-Verlag, 2006.
+
+\bibitem{18} $Yury\ Lifshits.$ Processing Compressed Texts: A Tractability
+Border, In Proceedings of Symposium on Combinatorial Pattern Matching (CPM 2007), pp. 228-240. Springer 2007.
+
+\bibitem{6} $Markus\ Lohrey$ Word problems on compressed word. In Proceedings of
+the 31st International Colloquium on Automata, Languages and Programming (ICALP 2004), pp. 906-918. Springer-Verlag, 2004.
+
+\bibitem{7} $Markus\ Lohrey$ Word problems and membership problems on compressed
+words. Society of Industrial and Applied Mathematics Journal (SIAM), pp. 1210-1240, 2006.
+
+\bibitem{19} $W.\ Matsubara,\ S.\ Inenega,\ A.\ Ishino,\ A.\ Shinohara,\ T.\
+Nakamura,$ $\ K.\ Hashimoto$ Computing Longest Common Substring and All Palindromes from Compressed Strings. In Proceeding of Software Seminar (SOFSEM
+2008) 2008.
+
+\bibitem{9} $Masamichi\ Miyazaki,\ Ayumi\ Shinohara,\ and\ Masayuki\ Takeda$ An
+improved pattern matching algorithm for strings in terms of straight line programs. In Proceedings of the 8th Annual Symposium on Combinatorial Pattern
+Matching (CPM 1997), pp. 1-11. Springer-Verlag, 1997.
+
+\bibitem{20} $Wojciech\ Plandowski$ Testing equivalence of morphisms on
+context-free languages. In Proceedings of Second Annual European Symposium on Algorithms (ESA 1994), pp. 460-470. Springer-Verlag, 1994.
+
+\bibitem{21} $Wojciech\ Rytter$ Application of Lempel-Ziv factorization to the
+approximation of grammar-based compression. Theoretical Computer Science Journal, pp. 211-222, 2003.
+
+\bibitem{16} $Y.\ Shibata,\ M.\ Takeda,\ A.\ Shinohara,\ S.\ Arikawa$ Pattern
+matching in texts compressed by using antidictionaries. In Proceeding of Symposium on Combinatorial Pattern Matching (CPM 1999), pp. 37-49. Springer-Verlag, 1999.
+
+\bibitem{3} $Jacob\ Ziv\ and\ Abraham\ Lempel$ A universal algorithm for
+sequential data compression. IEEE Transactions on Information Theory, pp. 337-343, 1977.
+
+\end{thebibliography}
+\end{document}

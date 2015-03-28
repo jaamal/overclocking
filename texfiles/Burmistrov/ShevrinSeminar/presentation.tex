@@ -1,0 +1,543 @@
+%% LaTeX Beamer presentation template (requires beamer package)
+%% see http://latex-beamer.sourceforge.net/
+%% idea contributed by H. Turgut Uyar
+%% template based on a template by Till Tantau
+%% this template is still evolving - it might differ in future releases!
+
+\documentclass[cp1251]{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+} 
+
+\usepackage[english,russian]{babel}
+\usepackage{pgf}
+\usepackage{commands}
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage{clrscode}
+%\usepackage{pandora}
+%\usepackage[latin1]{inputenc}
+
+% font definitions, try \usepackage{ae} instead of the following
+% three lines if you don't like this look
+%\usepackage{mathptmx}
+%\usepackage[scaled=.90]{helvet}
+%\usepackage{courier}
+
+
+%\usepackage[T1]{fontenc}
+
+
+\title{Оптимизация алгоритма Риттера}
+\subtitle{Взгляд на сжатие как на предварительную обработку текста}
+
+\author{Алексей Хворост, Иван Бурмистров}
+
+\date{5 апреля 2012}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Введение}
+
+\begin{frame}
+
+\begin{block}{}
+С ростом размера входных данных для классических задач меняются алгоритмы,
+способные их эффективно решать.
+\end{block}
+Существует неколько подходов, например:
+\pause
+\begin{itemize}
+  \item Алгоритмы эффективного ввода вывода~-- алгоритмы, минимизирующие
+  чтение данных с жесткого диска. \pause  
+  \item Увеличение производительности за счет предварительной обработки.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Замечание}
+Предварительная обработка~-- это построение структур данных на основе 
+исходной информации.
+\end{block}
+Примеры:
+\begin{itemize}
+	\item Обратный индекс
+	\item Суффиксные структуры (суффиксный массив, суффиксное дерево, суффиксный автомат)
+	\item ...
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{<<Придумаем>> структуру данных}
+\begin{exampleblock}{}
+\picA
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{<<Придумаем>> структуру данных}
+\begin{exampleblock}{}
+\picB
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{<<Придумаем>> структуру данных}
+\begin{exampleblock}{}
+\picC
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{<<Придумаем>> структуру данных}
+\begin{exampleblock}{}
+\picD
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{<<Придумаем>> структуру данных}
+\begin{exampleblock}{}
+\picE
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{<<Придумаем>> структуру данных}
+\begin{exampleblock}{}
+\picF
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{<<Придумаем>> структуру данных}
+\begin{exampleblock}{}
+\picG
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Другое представление <<придуманной>> структуры данных}
+\begin{center}
+$\mathcal{X}_1 = b$\\
+$\mathcal{X}_2 = a$\\
+$\mathcal{X}_3 = \mathcal{X}_2 \cdot \mathcal{X}_1$\\
+$\mathcal{X}_4 = \mathcal{X}_3 \cdot \mathcal{X}_2$\\
+$\mathcal{X}_5 = \mathcal{X}_4 \cdot \mathcal{X}_3$\\
+$\mathcal{X}_6 = \mathcal{X}_5 \cdot \mathcal{X}_4$\\
+$\mathcal{X}_7 = \mathcal{X}_6 \cdot \mathcal{X}_5$
+\end{center}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{}
+Для данного текста описанная структура является способом сжатия
+\end{block}
+\pause
+
+\begin{alertblock}{Вывод}
+Сжатие~-- один из способов предварительной обработки, сохраняющий информацию о некоторых свойствах
+исходного текста
+\end{alertblock}
+
+\end{frame}
+
+\section{Прямолинейные программы}
+\subsection{Определение прямолинейной программы}
+
+\begin{frame}
+\frametitle{}
+
+\begin{block}{Определение}
+\textbf{Прямолинейная программа} (ПП) $\mathcal{X}$ размера $n$~-- это
+последовательность правил вывода
+\begin{center}
+$\mathcal{X}_1 = expr_1, \mathcal{X}_2 = expr_2,\dots,\mathcal{X}_n = expr_n$,
+\end{center}
+где $\mathcal{X}_i$~-- это \textbf{переменные}, а $expr_i$~-- это
+\textbf{выражения} вида:
+\begin{itemize}  
+  \item $expr_i$~-- символ из алфавита $\Sigma$ (\textbf{терминальные} правила).
+  \item $expr_i = \mathcal{X}_l \cdot \mathcal{X}_r$ ($l,r < i$)
+ (\textbf{нетерминальные} правила).
+\end{itemize}
+\end{block}
+
+\pause
+\begin{block}{}
+\textbf{Прямолинейная программа}~-- это грамматика, выводящая в точности одно
+слово.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{ПП $\mathcal{X}$, выводящая строку
+\textbf{$\mbox{<<}abaababaabaab\mbox{>>}$}}
+
+\begin{exampleblock}{Пример}
+\begin{center}
+$\mathcal{X}_1 = b$\\
+$\mathcal{X}_2 = a$\\
+$\mathcal{X}_3 = \mathcal{X}_2 \cdot \mathcal{X}_1$\\
+$\mathcal{X}_4 = \mathcal{X}_3 \cdot \mathcal{X}_2$\\
+$\mathcal{X}_5 = \mathcal{X}_4 \cdot \mathcal{X}_3$\\
+$\mathcal{X}_6 = \mathcal{X}_5 \cdot \mathcal{X}_4$\\
+$\mathcal{X}_7 = \mathcal{X}_6 \cdot \mathcal{X}_5$
+\end{center}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Дерево вывода $\mathcal{X}$}
+\begin{exampleblock}{Пример}
+\picOne
+
+
+\end{exampleblock}
+\end{frame}
+
+\subsection{Алгоритмы над ПП}
+
+\begin{frame}
+\begin{block}{Теорема}
+Пусть $\mathcal{T}$~-- ПП размера $n$, выводящая строку $T$, $\mathcal{P}$~-- ПП
+размера $m$, выводящая строку $P$.\\
+\textbf{\alert{Алгоритм Лившица}} позволяет найти все вхождения текста $P$ в
+текст $T$ за время $O(n^2m)$.
+\end{block}
+
+\pause
+\begin{exampleblock}{Пример}
+Если $T = a^{2^n}, P = a^{2^m}$, то алгоритм Лившица будет работать за время
+$O(n^2m)$ (при условии, что для этих текстов уже построены ПП), в то время как
+классический алгоритм КМП~-- за время $O(2^n + 2^m)$.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Преимущества ПП}
+\pause
+\begin{itemize}
+	\item Как правило, размер ПП меньше размера породившего ее текста \pause
+	\item Хорошо структурированы \pause
+  \begin{item}
+  	Полиномиально разрешимые классические строковые задачи, например:
+  	\begin{itemize}
+  	  \item Поиск сжатого образца в сжатом тексте
+  	  \item Поиск наибольшей общей подстроки двух сжатых строк
+  	  \item Поиск палиндромов в сжатой строке
+  	  \item Поиск квадратов в сжатой строке
+  	  \end{itemize}
+  \end{item}
+\end{itemize}
+\end{frame}
+
+\subsection{Как строить ПП?}
+
+\begin{frame}
+\begin{block}{Утверждение}
+Задача построения минимальной ПП, выводящей заданную строку $T$~-- NP-полная.
+\end{block}
+
+\pause
+
+\begin{center}
+$\Downarrow$
+\end{center}
+
+\begin{alertblock}{}
+Для построения ПП требуется использовать приближенные алгоритмы.
+\end{alertblock}
+\end{frame}
+
+\section{$LZ77$-факторизация}
+
+\begin{frame}
+\begin{block}{Идея}
+Строить ПП на основе классических алгоритмов сжатия.
+\end{block}
+\pause
+\begin{block}{Алгоритм Лемпеля-Зива}
+ВХОД: $T$~-- строка над некоторым конечным алфавитом $\Sigma$
+ВЫХОД: Набор объектов $m_1,m_2,\cdots,m_k$, где $m_i$ является либо символом 
+из алфавита $\Sigma$, либо парой чисел $(l,r), l < r$.
+АЛГОРИТМ:
+\begin{itemize}
+	\item $m_1 = T[1]$
+	\item Пусть алгоритм отработал для префикса строки длины $j$ и построил объекты $m_1,m_2,\cdots,m_i$. 
+Тогда алгоритм ищет наибольший префикс $T[j+1 \cdots |T|]$, входящий как подстрока в 
+$T[1 \cdots j]$. Если такой префикс есть и совпадает с подстрокой $T[l \cdots r]$, то
+$m_{i+1} = (l,r)$. Иначе, $m_{i+1} = T[j+1]$.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Пример}
+Пусть $T$~-- строка \textbf{$\mbox{<<}abaababaabaab\mbox{>>}$}.
+\begin{itemize}
+	\item $m_1$ = $a$
+	\item $m_2$ = $b$
+	\item $m_3$ = $(1,1)$
+	\item $m_4$ = $(1,3)$
+	\item $m_5$ = $(2,6)$
+	\item $m_6$ = $(1,2)$
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\subsection{Определение $LZ77$-факторизации}
+
+\begin{frame}
+\begin{block}{Определение}
+\textbf{LZ77-факторизация} строки $T$~-- это набор слов
+$f_1,f_2,\cdots,f_k$, который строится следующим образом:
+\begin{itemize}
+  \item $f_1 = T[1]$
+  \item Пусть $T[1 \cdots j] = f_1~\cdot~f_2~\cdot~\dots~\cdot~f_{i-1}$. Тогда
+  $f_i$~-- наибольший префикс $T[j+1 \cdots |T|]$, входящий как подстрока в 
+  $T[1 \cdots j]$. Если такого префикса нет, то $f_i = T[j+1]$.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Пример}
+$LZ77$-факторизация слова \textbf{$\mbox{<<}abaababaabaab\mbox{>>}$} имеет вид:
+\LARGE{$a \cdot b \cdot a \cdot aba \cdot baaba \cdot ab$}.
+\end{exampleblock}
+\end{frame}
+
+\section{Построение ПП}
+\subsection{AVL-сбалансированные ПП}
+
+\begin{frame}
+
+\begin{block}{Определение}
+Бинарное дерево называется $AVL$-{\it сбалансированным}, если
+для каждого его узла высоты левого и правого поддеревьев различаются не более, чем на 1.
+\end{block}
+
+\pause
+
+\begin{block}{Определение}
+Прямолинейную программу $T$ будем называть $AVL$-{\it сбалансированной}, 
+если ее дерево вывода является $AVL$-сбалансированным.
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Лемма}
+$AVL$-сбалансированное дерево из $n$ узлов имеет высоту порядка $O(\log{n})$.
+\end{block}
+
+\pause
+
+\begin{block}{Следствие}
+$AVL$-сбалансированная ПП $T$ имеет высоту порядка $O(\log{|T|})$.
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+\begin{block}{Операция конкатенации двух $AVL$-{\it сбалансированных} ПП}
+\noindent {\sc Вход:} $\mathcal{A}$, $\mathcal{B}$~-- $AVL$-сбалансированные ПП.\\ 
+
+\noindent {\sc Выход:} $AVL$-сбалансированная ПП $\mathcal{G}$, выводящая $A
+\cdot B$.\\
+\end{block}
+\end{frame}
+
+\begin{frame}
+\noindent {\sc Алгоритм:}
+
+\pause
+\begin{itemize}
+\item \AppropriateNode \pause
+\item \NewNode
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\noindent {\sc Операция перебалансировки:}
+\begin{center}
+\AVLrotations
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Асмптотическая сложность операции конкатенации}
+Операция конкатенации двух $AVL$-сбалансированных ПП $\mathcal{A}$ и $\mathcal{B}$
+выполняется за время $O(h(Tree(\mathcal{A})) - h(Tree(\mathcal{B})))$, 
+где $Tree(\mathcal{X}))$~-- дерево вывода ПП $\mathcal{X}$.
+Также в ходе операции порождается $O(h(Tree(\mathcal{A})) - h(Tree(\mathcal{B})))$ новых правил вывода.
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+\begin{block}{Операция взятия подстроки}
+\noindent {\sc Вход:} $\mathcal{T}$~-- $AVL$-сбалансированная ПП, выводящая строку $T$ и целые числа
+$l$ и $r$, такие, что $1 \le l < r \le |T|$.\\
+
+\noindent {\sc Выход:} $AVL$-сбалансированная ПП $\mathcal{S}$, выводящая
+строку $T[l \dots r]$.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Выбираем правила, составляющие подстроку}
+\picOneSubstring
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Утверждение}
+Выбранный набор правил всегда имеет вид:\\
+
+\SubstringNodes
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Асмптотическая сложность операции взятия подстроки}
+Для $AVL$-сбалансированной ПП $\mathcal{T}$, выводящей строку $T$, операция взятия подстроки выполняется за время $O(\log{|T|})$,
+при этом порождает не более $O(\log{|T|})$ новых правил вывода.
+\end{block}
+\end{frame}
+
+\subsection{Алгоритм Риттера}
+
+\begin{frame}
+\begin{block}{Алгоритм Риттера}
+\noindent \textbf{\sc Вход:} Строка $T$ длины $n$, факторизация $F(T): T = f_1
+\cdot f_2\cdot \dots f_k$. Также для каждого фактора $f_i$, если он не
+однобуквенный, известна позиция его вхождения в строку $T_{i-1} = f_1 \cdot f_2
+\cdot~\dots~\cdot f_{i-1}$, то есть, известны числа $l_i$ и $t_i$ такие, что
+$f_i$ = $T[l_i \dots r_i]$.\\
+
+\noindent \textbf{\sc Выход:} ПП $\mathcal{T}$, выводящая $T$.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\noindent {\sc Ход алгоритма:}
+\begin{itemize}
+	\item Строим тривиальную $AVL$-сбалансированную ПП $\mathcal{T}_1$, выводящую однобуквенный фактор $f_1$.\\
+	\item Возьмем фактор $f_{i+1}$. Пусть $f_{i+1} = T_i[l_i \dots r_i]$.
+    \item С помощью операции взятия подстроки построим ПП $\mathcal{S}$, выводящую строку $T_i[l_i \dots r_i]$.
+    \item С помощью алгоритма конкатенации построим ПП $\mathcal{T}_{i+1} = \mathcal{T}_i \cdot \mathcal{S}$.\\
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Теорема}
+Пусть дан текст $T$ и его $LZ77$-факторизация размера $k$.
+Тогда \textbf{\alert{алгоритм Риттера}} позволяет построить ПП $\mathcal{T}$
+размером $O(k \cdot \log{|T|})$ за время $O(k \cdot \log{|T|})$.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Узкое место алгоритма Риттера}
+$S = ba^{2^n}ba^{2^{n-1}} \dots ba$.\\
+$LZ77$-факторизация этой строки: 
+$b \cdot a \cdot a \cdot a^2 \cdot a^4\cdot \dots \cdot a^{2^{n-1}-1} \cdot
+ba^{2^{n-1}} \cdot ba^{2^{n-2}}\cdot \dots \cdot ba$.\\
+Число операций перебалансировки:\\
+$\sum_{i=0}^{n-1}(n + (n-1-i) - (i)) = \sum_{i=0}^{n-1}(2n-2i-1) = n^2$
+\end{block}
+\end{frame}
+
+\subsection{Модернизированный алгоритм Риттера}
+
+\begin{frame}
+
+\begin{block}{Функция минимального количества перебалансировок}
+Пусть есть набор правил $\mathcal{F}_1,\mathcal{F}_2,\dots \mathcal{F}_k$.\\
+$$\varphi(i, j) = \left \{ \begin{array}{l}
+0, \mbox{если~} i=j \\
+\min_{r =
+i}^j(\varphi(i, r) + \varphi(r+1, j) + |\log(|F_{i}|+\dots+|F_{r}|) -\\-
+\log(|F_{r+1}|+\dots+|F_{j}|)|), \mbox{иначе}.
+\end{array}
+\right. $$
+\end{block}
+
+\pause
+
+\begin{block}{Утверждение}
+Функция $\varphi(\cdot,\cdot)$ может быть вычислена за время $O(k^3)$.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Модернизированный алгоритм Риттера}
+\noindent {\sc Вход:} Строка $T$ длины $n$, факторизация $F(T): T = f_1
+\cdot f_2\cdot \dots f_k$. Также для каждого фактора $f_i$, если он не
+однобуквенный, известна позиция его вхождения в строку $T_{i-1} = f_1 \cdot f_2
+\cdot~\dots~\cdot f_{i-1}$, то есть, известны числа $l_i$ и $t_i$ такие, что
+$f_i$ = $T[l_i \dots r_i]$.\\
+
+\noindent {\sc Выход:} ПП $\mathcal{T}$, выводящая $T$.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\noindent {\sc Алгоритм:}\\
+
+\noindent {\sc База: } Построим тривиальную $AVL$-сбалансированную ПП
+$\mathcal{T}_1$ для однобуквенного фактора $f_1$.\\
+
+\pause
+
+\noindent {\sc Шаг: } Пусть мы построили $AVL$-сбалансированную ПП $\mathcal{T}_i$ для строки $T_i =
+f_1~\cdot~f_2~\cdot~\dots~\cdot~f_i$.
+
+\pause
+
+\begin{enumerate}
+  \item Возьмем факторы $f_{i+1},f_{i+1},\dots,f_{i+r}$, такие что, каждый из
+  них входит как подстрока в $T_i$, а $f_{i+r+1}$ уже не входит. \pause
+  \item Для каждого фактора $f_{i+s}$ с помощью операции взятия
+  подстроки построим ПП $\mathcal{F}_s$, выводящую $f_{i+s}$. \pause
+  \item Для полученного набора правил вычислим таблицу $\varphi(i,j)$. \pause
+  \item Применим к набору правил алгоритм конкатенации в порядке, который
+  диктует функция $\varphi(i,j)$. Таким образом, построим ПП $\mathcal{S}$, выводящую $F_1 \cdot F_2\cdot \dots F_r$ \pause
+  \item С помощью алгоритма конкатенации построим ПП $\mathcal{T}_{i+r} = \mathcal{T}_i \cdot \mathcal{S}$. \pause
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Теорема}
+Пусть дан текст $T$ и его $LZ77$-факторизация размера $k$.
+Тогда \textbf{\alert{модернизированный алгоритм Риттера}} позволяет построить ПП $\mathcal{T}$
+размером $O(k \cdot \log{|T|})$ за время $O(k \cdot \log{|T|})$.
+\end{block}
+\end{frame}
+
+\section{Практические результаты}
+\subsection{Сравнение алгоритмов построения ПП}
+
+\begin{frame}
+\frametitle{Число перебалансировок}
+
+\begin{center}
+    \DNARotations
+\end{center}
+
+\end{frame}
+\end{document}

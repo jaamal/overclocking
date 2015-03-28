@@ -1,0 +1,1 @@
+del *.aux *.dvi *.ps *.log *.toc *.nav *.out *.snm 

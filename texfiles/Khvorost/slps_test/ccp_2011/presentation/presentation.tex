@@ -1,0 +1,353 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+\usepackage{courier}
+\usepackage[T1]{fontenc}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{common}
+
+\pgfdeclareimage[width=8cm]{Raccoon}{zzz}
+
+\title{Straight-line Programs: A Practical Test}
+
+\author{Ivan Burmistrov \inst{\mbox{\textdagger}} and Lesha Khvorost
+\inst{\mbox{\textdagger}}}
+
+\institute
+{
+\inst{\mbox{\textdagger}}
+Department of Mathematics and Mechanics\\
+Ural State University}
+
+\date{22th June CCP 2011}
+\subject{Talks}
+
+\AtBeginSubsection[]
+{
+\begin{frame}<beamer>
+\frametitle{Outline}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+\frametitle{}
+
+\begin{block}{Observation}
+With growing input size of classic string algorithms (\textbf{Pattern
+Matching}, \textbf{Longest Common Substring}, etc.) changes the algorithms that
+efficiently process the input.
+\end{block}
+
+\pause
+There exist the following approaches:
+
+\begin{itemize}
+  \item Processing the input using a file system (\textbf{I/O efficient
+  algorithms});
+  \pause
+  \item Store and process the input as compressed  
+  representation (\textbf{algorithms on compressed representations});
+\end{itemize}
+\end{frame}
+
+\section{SLP Background}
+
+\begin{frame}
+\frametitle{Straight-line Program Definition}
+
+\begin{definition}
+	A \textbf{straight-line program} (SLP) $\slp{S}$ is a sequence of assignments
+	of the form:
+	
+	\begin{center}
+		$\slp{S}_1 = expr_1,\ \slp{S}_2 = expr_2, \dots, \slp{S}_n = expr_n,$
+	\end{center}
+	where $\slp{S}_i$ are \textbf{rules} and $expr_i$ are expressions of the form:
+	\begin{itemize}
+		\item $expr_i \in \Sigma$ (\textbf{terminal} rules), or
+		\item $expr_i = \slp{S}_\ell\cdot \slp{S}_r \ (\ell, r < i)$
+		(\textbf{nonterminal} rules).
+	\end{itemize}
+\end{definition}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Fibonacci Word SLP}
+
+\begin{example}[SLP for <<$abaababaabaab$>>]
+	\begin{center}
+		\FibonacciWordSLP
+	\end{center}
+\end{example}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Features of SLPs}
+
+\begin{block}{Positive features}
+	\begin{itemize}
+	  \item<1-> Well-structured data representation;
+	  \item<2-> Polynomial relation between the size of SLP for a given text and
+	  the size of LZ77-dictionary for the same text;
+	  \item<3-> There are classic string problems that have polynomial time
+	  algorithms depends on size of SLPs (\textbf{Pattern Matching},
+	  \textbf{Longest Common Substring}, \textbf{Computing All Squares}).
+	\end{itemize}
+\end{block}
+
+\begin{alertblock}{Negative features}<4->
+	\begin{itemize}
+	  \item<4-> Constants hidden in big-\emph{O} notation for algorithms on SLPs
+	  are often very big;
+	  \item<5-> Polynomial relation between the size of an SLP for a given text and
+	  the size of the LZ77-dictionary for the same text doesn't yet guarantee that
+	  SLPs provide good compression ratio in practice;
+	\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+
+\begin{alertblock}{Main Question}
+Whether or not there exist SLP-based compression models suitable
+to practical usage?
+\end{alertblock}
+
+\pause
+
+\begin{itemize}
+  \item<2-> How difficult is it to compress data to an SLP-representation?
+  \item<3-> How large compression ratio do SLPs provide as compared to classic
+  algorithms used in practice?
+\end{itemize}
+\end{frame}
+
+\section{Classic SLP Construction Approach}
+
+\begin{frame}
+\frametitle{SLP Construction Problem}
+
+\begin{block}{SLP Construction Problem}
+\textsc{Input:} A text $S$;
+
+\textsc{Output:} An SLP $\slp{S}$ that derives text $S$;
+\end{block}
+
+\pause
+
+\begin{theorem}
+The problem of constructing a minimal size grammar generating a given text is
+NP-hard.
+\end{theorem}
+\end{frame}
+
+\begin{frame}
+\frametitle{Idea of Factorization}
+
+\begin{definition}
+A \textbf{factorization} of a text $S$ is a set of strings $F_1, F_2,
+\dots F_k$ such that $S = F_1 \cdot F_2 \cdot \mbox{\dots} \cdot F_k$.
+\end{definition}
+
+\pause
+
+\begin{definition}
+The \textbf{LZ-factorization} of a text $S$ is set of strings: $F_1 \cdot F_2
+\cdot \mbox{\dots} \cdot F_k$, where
+
+\begin{itemize}
+  \item $F_1 = S[0]$;
+  \item $F_i$ is the longest prefix of $S\substr{|F_1\cdot \mbox{\dots} \cdot
+  F_{i-1}|}{|S|}$ which occurs earlier in the text \textbf{or} $S[|F_1\cdot
+\mbox{\dots} \cdot F_{i-1}|]$ in case this prefix is empty.
+\end{itemize}
+\end{definition}
+
+\pause
+
+\begin{example}[Factorizations of <<$abaababaabaab$>>]
+\begin{itemize}
+  \item $a \cdot b \cdot a \cdot a \cdot b \cdot a \cdot b \cdot a \cdot a
+  \cdot b \cdot a \cdot a \cdot b$;
+  \item $a \cdot b \cdot a \cdot aba \cdot baaba \cdot ab$;
+\end{itemize}
+\end{example}
+\end{frame}
+
+\begin{frame}
+\frametitle{Rytter's Approach}
+
+\begin{block}{SLP Construction Problem}
+\textsc{Input:} A text $S$ and its LZ-factorization $F_1, F_2, \dots, F_k$;
+
+\textsc{Output:} An SLP $\slp{S}$ that derives text $S$;
+\end{block}
+
+\pause
+
+\begin{example}
+	\begin{center}
+		\RytterExample
+	\end{center}
+\end{example}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{SLP Construction Example}
+
+\begin{theorem}[Rytter]
+Given a string $S$ of length $n$ and its LZ-factorization of length $k$, one
+can construct an SLP for $S$ of size $O(k \cdot \log n)$ in time $O(k \cdot \log
+n)$.
+\end{theorem}
+
+\pause
+
+\begin{block}{Features}
+	\begin{itemize}
+	  \item Sequential factors processing;
+	  \item Use AVL-trees as SLPs data representation;
+	\end{itemize}
+\end{block}
+\end{frame}
+
+\section{Modern Approach}
+\begin{frame}
+\frametitle{Bottleneck of The Algorithm}
+
+\begin{alertblock}{Sequential factors processing}<1->
+At every iteration the algorithm concatenates potentially huge and small
+AVL-trees.
+\end{alertblock}
+
+\begin{example}<2->
+	\begin{center}
+		\BottleneckExample
+	\end{center}
+\end{example}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Modern Approach}
+
+\begin{block}{Key idea}
+To optimize number of rotations by coupling factors into groups and calculating
+optimal concatenation order.
+\end{block}
+
+\pause
+
+\begin{theorem}
+Given a string $S$ of length $n$ and its LZ-factorization of length $k$, one
+can construct an SLP for $S$ of size $O(k \cdot \log n)$.
+\end{theorem}
+
+\pause
+
+\begin{lemma}
+Given sequence of SLPs of length $k$, one can compute optimal order of
+concatenation using $O(k^3)$ time.
+\end{lemma}
+\end{frame}
+
+\section{Results}
+
+\begin{frame}
+\frametitle{Types of Input Data}
+
+\begin{itemize}
+  \item Fibonacci words;
+  \item DNA sequences from DNA Data Bank of Japan (\url{http://www.ddbj.nig.ac.jp/});
+  \item Random texts on 4-letters alphabet; 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Number of Rotations Results}
+
+\begin{center}
+	\DNARotations
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Speed Results in Operational Memory}
+
+\begin{center}
+	\DNASpeedTestInMemory
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Speed Results on File System}
+
+\begin{center}
+	\DNASpeedTestInFile
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Compression Results}
+
+\begin{center}
+	\DNACompression
+\end{center}
+\end{frame}
+
+\section*{Conclusion}
+
+\begin{frame}
+\frametitle{Conclusion}
+
+\begin{itemize}
+  \item We present modification of the algorithm for SLP Construction Problem;
+  \item We compare performance of both algorithms on practise;
+  \item We compare compression ratio provided by classic encoding algorithms and
+  by two SLP-encoding algorithms;
+\end{itemize}
+
+\pause
+
+\begin{alertblock}{Open Problem}
+How to optimally choose size of a group of factors?
+\end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Questions?}
+
+\begin{center}
+	\begin{tikzpicture}
+		\draw (0,0) node {\pgfuseimage{Raccoon}};
+	\end{tikzpicture}
+\end{center}
+%TODO cool picture
+\end{frame}
+
+\end{document}

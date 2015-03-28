@@ -1,0 +1,343 @@
+%% LaTeX Beamer presentation template (requires beamer package)
+%% see http://latex-beamer.sourceforge.net/
+%% idea contributed by H. Turgut Uyar
+%% template based on a template by Till Tantau
+%% this template is still evolving - it might differ in future releases!
+
+\documentclass[cp1251]{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+} 
+
+\usepackage[english,russian]{babel}
+\usepackage{pgf}
+\usepackage{commands}
+\usepackage{tikz}
+\usepackage{multicol}
+%\usepackage{pandora}
+%\usepackage[latin1]{inputenc}
+
+% font definitions, try \usepackage{ae} instead of the following
+% three lines if you don't like this look
+%\usepackage{mathptmx}
+%\usepackage[scaled=.90]{helvet}
+%\usepackage{courier}
+
+
+%\usepackage[T1]{fontenc}
+
+
+\title{Прямолинейные программы: практический тест}
+
+\author{Иван Бурмистров}
+
+\date{8 июня 2011}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Введение}
+
+\begin{frame}
+
+\begin{block}{}
+С ростом размера входных данных для классических задач меняются алгоритмы,
+способные их эффективно решать.
+\end{block}
+Существует неколько подходов, например:
+\pause
+\begin{itemize}
+  \item Алгоритмы эффективного ввода вывода~-- алгоритмы, минимизирующие
+  чтение данных с жесткого диска. \pause  
+  \item Сокращение размера входа за счет предварительной обработки.
+\end{itemize}
+\end{frame}
+
+\section{Прямолинейные программы}
+\subsection{Определение прямолинейной программы}
+
+\begin{frame}
+\frametitle{}
+
+\begin{block}{Определение}
+\textbf{Прямолинейная программа} (ПП) $\mathcal{X}$ размера $n$~-- это
+последовательность правил вывода
+\begin{center}
+$\mathcal{X}_1 = expr_1, \mathcal{X}_2 = expr_2,\dots,\mathcal{X}_n = expr_n$,
+\end{center}
+где $\mathcal{X}_i$~-- это \textbf{переменные}, а $expr_i$~-- это
+\textbf{выражения} вида:
+\begin{itemize}  
+  \item $expr_i$~-- символ из алфавита $\Sigma$ (\textbf{терминальные} правила).
+  \item $expr_i = \mathcal{X}_l \cdot \mathcal{X}_r$ ($l,r < i$)
+ (\textbf{нетерминальные} правила).
+\end{itemize}
+\end{block}
+
+\pause
+\begin{block}{}
+\textbf{Прямолинейная программа}~-- это грамматика, выводящая в точности одно
+слово.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{ПП $\mathcal{X}$, выводящая строку
+\textbf{$\mbox{<<}abaababaabaab\mbox{>>}$}}
+
+\begin{exampleblock}{Пример}
+\begin{center}
+$\mathcal{X}_1 = b$\\
+$\mathcal{X}_2 = a$\\
+$\mathcal{X}_3 = \mathcal{X}_2 \cdot \mathcal{X}_1$\\
+$\mathcal{X}_4 = \mathcal{X}_3 \cdot \mathcal{X}_2$\\
+$\mathcal{X}_5 = \mathcal{X}_4 \cdot \mathcal{X}_3$\\
+$\mathcal{X}_6 = \mathcal{X}_5 \cdot \mathcal{X}_4$\\
+$\mathcal{X}_7 = \mathcal{X}_6 \cdot \mathcal{X}_5$
+\end{center}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Дерево вывода $\mathcal{X}$}
+\begin{exampleblock}{Пример}
+\picOne
+
+
+\end{exampleblock}
+\end{frame}
+
+\subsection{Алгоритмы над ПП}
+
+\begin{frame}
+\frametitle{Преимущества ПП}
+\pause
+\begin{itemize}
+  \item Хорошо структурированы \pause
+  \item Имеется связь с алгоритмами сжатия, использующимися на практике \pause   
+  \begin{item}
+  	Полиномиально разрешимые классические строковые задачи, например:
+  	\begin{itemize}
+  	  \item Поиск сжатого образца в сжатом тексте
+  	  \item Поиск наибольшей общей подстроки двух сжатых строк
+  	  \item Поиск палиндромов в сжатой строке
+  	  \item Поиск квадратов в сжатой строке
+  	  \end{itemize}
+  \end{item}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Теорема}
+Пусть $\mathcal{T}$~-- ПП размера $n$, выводящая строку $T$, $\mathcal{P}$~-- ПП
+размера $m$, выводящая строку $P$.\\
+\textbf{\alert{Алгоритм Лившица}} позволяет найти все вхождения текста $P$ в
+текст $T$ за время $O(n^2m)$.
+\end{block}
+
+\pause
+\begin{exampleblock}{Пример}
+Если $T = a^{2^n}, P = a^{2^m}$, то алгоритм Лившица будет работать за время
+$O(n^2m)$ (при условии, что для этих текстов уже построены ПП), в то время как
+классический алгоритм КМП~-- за время $O(2^n + 2^m)$.
+\end{exampleblock}
+\end{frame}
+
+\subsection{Как строить ПП?}
+
+\begin{frame}
+\begin{block}{Утверждение}
+Задача построения минимальной ПП, выводящей заданную строку $T$~-- NP-полная.
+\end{block}
+
+\pause
+
+\begin{center}
+$\Downarrow$
+\end{center}
+
+\begin{alertblock}{}
+Для построения ПП требуется использовать приближенные алгоритмы.
+\end{alertblock}
+\end{frame}
+
+\section{$LZ77$-факторизация}
+
+\begin{frame}
+\begin{block}{Идея}
+Строить ПП на основе некоторой \textbf{\alert{факторизации}} строки.
+\end{block}
+
+\pause
+\begin{block}{}
+Классический \textbf{\alert{алгоритм Лемпеля-Зива}} задает факторизацию
+естественным образом.
+\end{block}
+
+\end{frame}
+
+\subsection{Определение $LZ77$-факторизации}
+
+\begin{frame}
+\begin{block}{Определение}
+\textbf{LZ77-факторизация} строки $T$~-- это набор слов
+$f_1,f_2,\cdots,f_k$, который строится следующим образом:
+\begin{itemize}
+  \item $f_1 = T[1]$
+  \item Пусть $T[1 \cdots j] = f_1~\cdot~f_2~\cdot~\dots~\cdot~f_{i-1}$. Тогда
+  $f_i$~-- наибольший префикс $T[j+1 \cdots |T|]$, входящий как подстрока в 
+  $T[1 \cdots j]$. Если такого префикса нет, то $f_i = T[j+1]$.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{Пример}
+$LZ77$-факторизация слова \textbf{$\mbox{<<}abaababaabaab\mbox{>>}$} имеет вид:
+\LARGE{$a \cdot b \cdot a \cdot aba \cdot baaba \cdot ab$}.
+\end{exampleblock}
+\end{frame}
+
+\subsection{Построение $LZ77$-факторизации}
+\begin{frame}
+$LZ77$-факторизацию строки $T$ длины $n$ можно построить двумя способами:
+
+\pause
+\begin{itemize}
+  \item За $O(n)$ с использованием \textbf{\alert{суффиксного дерева}}. Тяжело
+  адаптируется на случай, когда заканчивается оперативная память. \pause
+  \item За $O(n\log{n})$ с использованием \textbf{\alert{суффиксного массива}}.
+  Проще в реализации, легко адаптируется на использование внешней памяти.
+\end{itemize}
+\end{frame}
+
+\section{Построение ПП}
+\subsection{Алгоритм Риттера}
+
+\begin{frame}
+\begin{block}{Теорема}
+Пусть дан текст $T$ и его $LZ77$-факторизация размера $k$.
+Тогда \textbf{\alert{алгоритм Риттера}} позволяет построить ПП $\mathcal{T}$
+размером $O(k \cdot \log{|T|})$ за время $O(k \cdot \log{|T|})$.
+\end{block}
+
+\pause
+\begin{block}{}
+Риттер рассматривает специальный класс ПП~--\\
+\textbf{\alert{$AVL$-сбалансированные ПП}}.
+\end{block} 
+\end{frame}
+
+\begin{frame}
+\frametitle{Перебалансировка правила}
+
+\begin{center}
+\AVLrotations
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\begin{block}{Идея}
+Когда для хранения дерева не хватает оперативной памяти, перебалансировка узла
+становится \textbf{\alert{дорогой операцией}}.
+\end{block}
+
+\pause
+\begin{center}
+$\Downarrow$
+
+\begin{alertblock}{}
+Оптимизируем алгоритм с целью уменьшения числа перебалансировок.
+\end{alertblock}
+\end{center}
+
+\end{frame}
+
+\section{Практические результаты}
+\begin{frame}
+\frametitle{Практические результаты}
+
+\begin{block}{}
+Природа текстов влияет на время обработки текстов и показатели сжатия. 
+\end{block}
+В данной работе были рассмотрены следующие типы текстов:
+
+\pause
+\begin{itemize}
+  \item \textbf{ДНК}~-- строки, которые используются на практике \pause
+  \item \textbf{случайные строки над 4-буквенным алфавитом}~-- предположительно
+  худший вход для алгоритмов сжатия \pause
+  \item \textbf{строки Фибоначчи}~-- предположительно один из лучших входов для
+  алгоритмов сжатия
+\end{itemize}
+
+\end{frame}
+
+\subsection{Сравнение алгоритмов построения ПП}
+
+\begin{frame}
+\frametitle{Число перебалансировок (строки ДНК)}
+
+\begin{center}
+    \DNARotations
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Скорость работы (случайные строки)}
+
+\begin{multicols}{2}
+   \begin{figure}[!ht]
+        \begin{center}
+        	\RandomSpeedTestInMemory
+        \end{center}
+   \end{figure}
+
+    \begin{figure}[!ht]
+        \begin{center}
+        	\RandomSpeedTestInFile
+        \end{center}
+    \end{figure}
+\end{multicols}
+
+\end{frame}
+
+\subsection{Сравнение сжатия}
+\begin{frame}
+\frametitle{Коэффициент сжатия (строки ДНК)}
+
+\begin{center}
+	\DNACompression
+\end{center} 
+
+\end{frame}
+
+\section{Заключение}
+\begin{frame}
+\frametitle{Результаты}
+
+\pause
+\begin{itemize}
+  \item Модернизированный алгоритм Риттера \pause
+  \item Тесты
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+\begin{center}
+Спасибо за внимание. Вопросы?
+\end{center}
+\end{block}
+\end{frame}
+
+\end{document}

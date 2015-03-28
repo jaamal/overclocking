@@ -1,0 +1,191 @@
+%% LaTeX Beamer presentation template (requires beamer package)
+%% see http://latex-beamer.sourceforge.net/
+%% idea contributed by H. Turgut Uyar
+%% template based on a template by Till Tantau
+%% this template is still evolving - it might differ in future releases!
+
+\documentclass[cp1251]{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+} 
+
+\usepackage[english,russian]{babel}
+\usepackage{pgf}
+\usepackage{commands}
+\usepackage{tikz}
+\usepackage{multicol}
+%\usepackage{pandora}
+%\usepackage[latin1]{inputenc}
+
+% font definitions, try \usepackage{ae} instead of the following
+% three lines if you don't like this look
+%\usepackage{mathptmx}
+%\usepackage[scaled=.90]{helvet}
+%\usepackage{courier}
+
+
+%\usepackage[T1]{fontenc}
+
+
+\title{Исследование алгоритмов поиска на сжатом представлении данных}
+
+\author{Плинер Юрий}
+
+\date{11 июня 2014}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Введение}
+
+\begin{frame}
+
+\begin{block}{}
+С ростом размера входных данных для классических задач меняются алгоритмы,
+способные их эффективно решать.
+\end{block}
+Существует неколько подходов, например:
+\pause
+\begin{itemize}
+  \item Алгоритмы эффективного ввода вывода~-- алгоритмы, минимизирующие
+  чтение данных с жесткого диска. \pause  
+  \item Сокращение размера входа за счет предварительной обработки.
+\end{itemize}
+\end{frame}
+
+\section{Прямолинейные программы}
+\subsection{Определение прямолинейной программы}
+
+\begin{frame}
+\frametitle{}
+
+\begin{block}{Определение}
+\textbf{Прямолинейная программа} (ПП) $\mathcal{X}$ размера $n$~-- это
+последовательность правил вывода
+\begin{center}
+$\mathcal{X}_1 = expr_1, \mathcal{X}_2 = expr_2,\dots,\mathcal{X}_n = expr_n$,
+\end{center}
+где $\mathcal{X}_i$~-- это \textbf{переменные}, а $expr_i$~-- это
+\textbf{выражения} вида:
+\begin{itemize}  
+  \item $expr_i$~-- символ из алфавита $\Sigma$ (\textbf{терминальные} правила).
+  \item $expr_i = \mathcal{X}_l \cdot \mathcal{X}_r$ ($l,r < i$)
+ (\textbf{нетерминальные} правила).
+\end{itemize}
+\end{block}
+
+\pause
+\begin{block}{}
+\textbf{Прямолинейная программа}~-- это грамматика, выводящая в точности одно
+слово.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{ПП $\mathcal{X}$, выводящая строку
+\textbf{$\mbox{<<}abaababaabaab\mbox{>>}$}}
+
+\begin{exampleblock}{Пример}
+\begin{center}
+$\mathcal{X}_1 = b$\\
+$\mathcal{X}_2 = a$\\
+$\mathcal{X}_3 = \mathcal{X}_2 \cdot \mathcal{X}_1$\\
+$\mathcal{X}_4 = \mathcal{X}_3 \cdot \mathcal{X}_2$\\
+$\mathcal{X}_5 = \mathcal{X}_4 \cdot \mathcal{X}_3$\\
+$\mathcal{X}_6 = \mathcal{X}_5 \cdot \mathcal{X}_4$\\
+$\mathcal{X}_7 = \mathcal{X}_6 \cdot \mathcal{X}_5$
+\end{center}
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Дерево вывода $\mathcal{X}$}
+\begin{exampleblock}{Пример}
+\picOne
+
+
+\end{exampleblock}
+\end{frame}
+
+\subsection{Алгоритмы над ПП}
+
+\begin{frame}
+\frametitle{Преимущества ПП}
+\pause
+\begin{itemize}
+  \item Хорошо структурированы \pause
+  \item Имеется связь с алгоритмами сжатия, использующимися на практике \pause   
+  \begin{item}
+  	Полиномиально разрешимые классические строковые задачи, например:
+  	\begin{itemize}
+  	  \item Поиск сжатого образца в сжатом тексте
+  	  \item Поиск наибольшей общей подстроки двух сжатых строк
+  	  \item Поиск палиндромов в сжатой строке
+  	  \item Поиск квадратов в сжатой строке
+  	  \end{itemize}
+  \end{item}
+\end{itemize}
+\end{frame}
+
+\section{Алгоритм Лифшица}
+\subsection{Описание}
+
+\begin{frame}
+\frametitle{}
+\begin{block}{На вход}
+ПП размером $n$ выводящая текст и ПП размером $m$ выводящая шаблон.
+\end{block}
+\pause
+\begin{block}{На выход}
+Позиции вхождения шаблона в текст.
+\end{block}
+\pause
+\begin{block}{Алгоритмическая сложность}
+Алгоритм работает за $O(n^2 \cdot m)$ по времени и за $O(n \cdot m)$ по памяти.
+\end{block}
+\end{frame}
+
+\subsection{Замечания}
+\begin{frame}
+\frametitle{}
+\begin{block}{Замечание 1}
+Если $T = a^{2^n}, P = a^{2^m}$, то алгоритм Лифшица будет работать за время
+$O(n^2m)$ (при условии, что для этих текстов уже построены ПП), в то время как
+классический алгоритм КМП~-- за время $O(2^n + 2^m)$.
+\end{block}
+\pause
+\begin{block}{Замечение 2}
+Если ПП сбалансированны, то сложность работы алгоритма $O(n \cdot log(n) \cdot m)$.
+\end{block}
+\end{frame}
+
+\section{Заключение}
+\subsection{Результаты}
+
+\begin{frame}
+\frametitle{}
+\pause
+\begin{itemize}
+  \item Наивная реализация алгоритма Лифшица\pause
+  \item Оптимизация алгоритма и его параллельная версия\pause
+  \item Произведено сравнение с алгоритмом КМП 
+\end{itemize}
+\end{frame}
+
+\subsection{Конец}
+\begin{frame}
+\begin{block}{}
+\begin{center}
+Спасибо за внимание.
+\end{center}
+\end{block}
+\end{frame}
+
+\end{document}

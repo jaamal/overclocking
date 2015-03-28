@@ -1,0 +1,32 @@
+\newtheorem{thm}{Теорема}[section]
+\newtheorem{lem}[thm]{Лемма}
+\newtheorem{notation}[thm]{Наблюдение}
+
+\newcommand{\example}{
+	\textbf{Пример:}
+}
+
+\newcommand{\substr}[2]{[#1\dots#2]}
+
+\newcommand{\slp}[1]{\mathbb{#1}}
+
+\newcommand{\tuple}[4]{
+	#1_{#2}, #1_{#3}, \dots, #1_{#4}
+}
+\newcommand{\concat}[4]{
+	#1_{#2} \cdot #1_{#3} \cdot \mbox{\dots} \cdot #1_{#4}
+}
+
+\newcommand{\proof}{
+	\textbf{Доказательство: }
+}
+
+\newcommand{\header}[1]{
+	\noindent \textsc{#1}
+}
+
+\newcommand{\problem}[3]{
+	\header{Задача:} \textbf{#1} \newline
+    \header{Вход:} #2 \newline
+    \header{Выход:} #3
+}

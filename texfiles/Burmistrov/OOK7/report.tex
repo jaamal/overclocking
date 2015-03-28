@@ -1,0 +1,94 @@
+\documentclass[cp1251,usehyperref,14pt]{G7-32}
+
+\usepackage[T2A]{fontenc}
+\usepackage[cp1251]{inputenc}
+\usepackage[russian]{babel} 
+\usepackage {listings}
+\usepackage{graphicx}
+\usepackage{lscape}
+\usepackage{rotating}
+\usepackage{indentfirst}
+\usepackage{float}
+\usepackage{morefloats}
+\usepackage{longtable}
+\usepackage{setspace}
+\usepackage{verbatim}
+\usepackage{hyperref}
+%\usepackage{textcomp}
+\usepackage{setspace}
+
+\onehalfspacing
+
+\usepackage{indentfirst}     
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+
+\DeclareCaptionLabelSeparator{dot}{. }
+\captionsetup{justification=centering,labelsep=dot}  
+
+\geometry{left=2cm}
+\geometry{right=1.5cm}
+\geometry{top=2cm}
+\geometry{bottom=2cm}
+
+\TableInChapter
+\PicInChapter
+
+\gdef\theequation{\arabic{chapter}.\arabic{equation}}
+
+% Определяем заголовки для титульной страницы
+
+\begin{document}
+
+\begin{center}
+\small{\textbf{
+Отчет научного руководителя о научно-исследовательской работе по проекту № ООК7 
+<<Создание средств для упрощения реализации трудоемких алгоритмов на языке Java и мониторинга их состояния>>
+в рамках Открытого окружного конкурса студенческих инициативных научных исследований в области информатики 
+и информационных технологий.}}\\
+\end{center}
+
+Данной научно-исследовательской работой занималась команда из трех студентов в составе:
+\begin{itemize}
+\item Мухаметьянов Денис Ильдарович
+\item Плинер Юрий Александрович
+\item Техажева София Андреевна
+\end{itemize}
+
+Команда проявила высокую степень ответственности и заинтересованности: еженедельно по субботам они собирались
+вместе на весь день для совместной работы и анализа текущих результатов.
+Студентам успешно удалось применить современные практики разработки, такие как:
+\begin{enumerate}
+\item большое количество автоматизированных тестов
+\item программирование в парах
+\item планирование разработки на некоторое время вперед, оценка сложности задач и примерного времени на каждую задачу
+\item визуализация процесса разработки с целью отслеживания текущего прогресса\\
+\end{enumerate}
+
+
+В процессе исследований все участники коллектива проявили упорство в изучении новых для них технологий, а именно:
+\begin{itemize}
+\begin{item}
+Техажева С. впервые познакомилась с сервис-ориентированной архитектурой приложений, с паттерном Model-View-Controller 
+и его реализацией в виде фрэймворка Spring MVC. Все трудности были ей успешно преодолены, результатом чего явилась реализация
+веб-приложения.
+\end{item}
+\begin{item}
+Плинер Ю. впервые познакомился с базой данных Apache Cassandra и принципами построения масштабируемых распределенных приложений.
+Результатом стал сервис по управлению исследованиями с хорошей, масштабируемой архитектурой.
+\end{item}
+\begin{item}
+Мухаметьянов Д. впервые узнал про принцип dependency inversion и о простом способе его придерживаться в 
+промышленном коде~-- dependency injection контейнере. Результатом стало большое исследование существующих dependency injection
+контейнеров, а также спроектированный интерфейс автоматизированного DI-контейнера, который по некоторым параметрам превосходит
+существующие аналоги.\\
+\end{item}
+
+Работу группы студентов в рамках данного исследования и полученные ими результаты можно оценить на <<отлично>>.\\
+
+Научный руководитель Бурмистров И.С.
+
+\end{itemize}
+
+\end{document}

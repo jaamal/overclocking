@@ -1,0 +1,59 @@
+\documentclass[12pt]{article}
+\usepackage{extsizes}
+\usepackage[cp1251]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{graphicx}
+
+%\usepackage{rusnotation}
+\usepackage{srcltx}
+
+\usepackage[left=3cm, right=2cm, top=20mm, bottom=25mm]{geometry}
+\pagestyle{plain}
+\baselineskip=1.5\baselineskip
+
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\aB}{\hat{a}_B}
+\newcommand{\strset}{\texttt{set}}
+\newcommand{\rootset}{\texttt{rooted\_set}}
+
+\newtheorem{teo}{Теорема}
+\newtheorem{pro}{Предложение}
+\newtheorem{lem}{Лемма}
+\newtheorem{cons}{Следствие}
+%\newtheorem{algo}{Алгоритм}
+%\newtheorem*{exa}{Пример}
+
+\theoremstyle{definition}
+\newtheorem{algo}{Алгоритм}
+\newtheorem*{exa}{Пример}
+
+\tolerance=1000
+
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+\textbf{Реферат}
+\end{center}
+Бурмистров И.С. Прямолинейные программы: практический тест, квалификационная работа: стр. 45, библ. 24 назв., рис. 11.\\
+
+\textbf{Ключевые слова}: прямолинейные программы, $AVL$-сбалансированные ПП, $LZ77$-факторизация, алгоритм Риттера.\\
+
+\textbf{Объект исследования}: прямолинейные программы.\\
+
+\textbf{Цель}: выяснить, насколько тяжело на практике строить прямолинейные программы и насколько размер ПП 
+отличается от количества факторов в $LZ77$-факторизации.\\
+
+В ходе исследований был разработан новый алгоритм, который оптимизирует одно из узких мест классического алгоритма Риттера
+и на практике работает в среднем в два раза быстрее. Проведены сравнения нового и классического алгоритмов на строках Фибоначчи,
+случайных строках и ДНК, а также сравнение алгоритмов построения ПП и алгоритма построения $LZ77$-факторизации.
+Также получено соотношение между размером построенной ПП и 
+количеством факторов $LZ77$-факторизации, которое на данных типах текстов оказалось константным.
+
+\end{document}

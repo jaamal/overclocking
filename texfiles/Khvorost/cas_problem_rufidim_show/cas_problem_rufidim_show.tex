@@ -1,0 +1,334 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+\usetheme{Darmstadt}
+\setbeamercovered{transparent}
+}
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+\usepackage{courier}
+\usepackage[T1]{fontenc}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{common}
+\usepackage[normalem]{ulem}
+
+\newcommand{\hcancel}[1]{
+    \tikz[baseline=(tocancel.base)]{
+        \node[inner sep=0pt,outer sep=0pt] (tocancel) {#1};
+        \draw[red] (tocancel.south west) -- (tocancel.north east);
+    }
+}
+
+\pgfdeclareimage[width=11cm,height=6cm]{any_questions}{any_questions}
+
+\title{Computing All Squares in Compressed Texts}
+
+\author{Lesha Khvorost\inst{\mbox{\textdagger}}}
+
+\institute
+{
+\inst{\mbox{\textdagger}}
+Institute of Mathematics and Computer Science\\
+Ural Federal University}
+
+\date{26th September RuFiDiM 2012}
+\logo{\includegraphics[height=0.8cm]{logo.jpg}}
+\subject{Talks}
+
+\AtBeginSubsection[]
+{
+\begin{frame}<beamer>
+\frametitle{Outline}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+\frametitle{}
+
+\begin{block}{}
+String algorithms are deeply explored.
+\end{block}
+
+\pause
+Two research directions are popular now:
+
+\begin{itemize}
+  \item To improve classic string algorithms to process huge inputs (\textbf{I/O efficient algorithms});
+\end{itemize}
+
+\pause
+
+\begin{block}{}
+ATLAS project at CERN produces 70Tb/s of valuable information.
+\end{block}
+
+\pause
+
+\begin{itemize}
+  \item To change data representation from the native to a more compact one (\textbf{algorithms on compressed representations}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Features of algorithms on compressed representations}
+
+\begin{itemize}
+  \item We save storage space and measure the complexity of the algorithm in terms of compressed input;
+  \pause
+  \item By default we work with preprocessed data.
+\end{itemize}
+
+\end{frame}
+
+\section{SLPs Background}
+
+\begin{frame}
+\frametitle{}
+
+\begin{definition}
+    A \textbf{straight-line program} (SLP) $\slp{S}$ is a sequence of assignments of the form:
+    
+    \begin{center}
+        $\slp{S}_1 = expr_1,\ \slp{S}_2 = expr_2, \dots, \slp{S}_n = expr_n,$
+    \end{center}
+    where $\slp{S}_i$ are \textbf{rules} and $expr_i$ are expressions of the form:
+    \begin{itemize}
+        \item $expr_i \in \Sigma$ (\textbf{terminal} rules), or
+        \item $expr_i = \slp{S}_\ell\cdot \slp{S}_r \ (\ell, r < i)$
+        (\textbf{nonterminal} rules).
+    \end{itemize}
+\end{definition}
+
+\pause
+
+\begin{example}[the SLP that derives the 6th Fibonacci word]
+    \begin{center}
+    $\slp{F}_0{\to} b,\ \slp{F}_1{\to} a,\ \slp{F}_2{\to} \slp{F}_1\cdot\slp{F}_0,\ \slp{F}_3{\to} \slp{F}_2\cdot\slp{F}_1,$ 
+    
+    $\slp{F}_4{\to} \slp{F}_3\cdot\slp{F}_2,\ \ \slp{F}_5{\to} \slp{F}_4\cdot\slp{F}_3,\ \ \slp{F}_6{\to} \slp{F}_5\cdot\slp{F}_4.$
+    \end{center}
+\end{example}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+
+\begin{example}[the parse of the SLP that derives the 6th Fibonacci word]
+    \begin{center}
+        \FibonacciWordSLP
+    \end{center}
+\end{example}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Tools}
+
+\begin{itemize}
+  \item Collecting some information from children (\textbf{Pattern Matching}, \textbf{Longest Common Substring});
+\end{itemize}
+
+\pause 
+
+\begin{center}
+    \collectingTool
+\end{center}
+
+\pause
+
+\begin{alertblock}{}
+Sometimes count operations are extremely expensive (\textbf{Hamming Distance}, \textbf{Levenstein Distance}).
+\end{alertblock}
+
+\pause
+
+\begin{block}{}
+Are there other tools for SLPs processing?
+\end{block}
+
+\end{frame}
+
+\section{CAS Problem}
+
+\begin{frame}
+\frametitle{}
+
+\begin{definition}
+A string is called a square if it can be obtained by concatenating two copies of some string.\newline
+For example, \emph{abc} $\cdot$ \emph{abc}. We say that \emph{abc} is the root of the square.
+\end{definition}
+
+\pause
+
+\begin{block}{CAS Problem}
+\textsc{Input:} an SLP $\slp{S}$ that derives the text $S$;
+
+\textsc{Output:} the $S$-table that holds information about all squares in $S$.
+\end{block}
+
+\pause
+
+Main difficulties:
+\begin{itemize}
+  \item The text may contains exponentially many squares (in length of a compressed representation) 
+  \newline ($a^n$ contains $O(n^2)$ squares and has a $\log n$ representation);
+  \pause
+  \item It is hard to collect information from children.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\begin{definition}
+A string S is called a palindrome if $S = S^R$ (for example \emph{ababa}).
+\end{definition}
+
+\pause
+
+\begin{block}{Computing All Palindromes Problem}
+\textsc{Input:} an SLP $\slp{S}$ that derives the text $S$;
+
+\textsc{Output:} a data structure that holds information about all palindromes in $S$.
+\end{block}
+
+\pause
+
+\begin{block}{Theorem [W. Matsubara, S. Inenaga et al] (2008)}
+Computing all palindromes problem can be solved in $O(|\slp{S}|^4)$ time with $O(|\slp{S}|^2)$ space.
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Main result}
+
+\begin{block}{Theorem}
+There is an algorithm that solves CAS using $O(|\slp{S}|^4 \cdot \log^2{|S|})$ time and $O(|\slp{S}| \cdot \max(|\slp{S}|, \log{|S|}))$ space.
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{S-table}
+
+\begin{block}{}
+The \emph{S-table} is a rectangular table $S(\slp{S})$ of size $(\lfloor\log |S|\rfloor+1) \times
+(|\slp{S}|+1)$ that stores families of squares. 
+
+\pause
+
+There are three types of families: 
+\begin{itemize}
+  \item Simple family, parameterized by $\{|x|, c_\ell, c_r\}$;
+  \pause
+  \item Two types of complex families.
+\end{itemize}
+\end{block}
+
+\pause 
+
+\begin{example}[Simple family of squares]
+$S = bbabbabb$, family: $\{3, 3, 5\}$, squares: $\{(bba)^2, (bab)^2, (abb)^2 \}$.
+\end{example}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Problems solvable by usage of $S$-table}
+
+For a given $\slp{S}$ that derives a text S
+\begin{itemize}
+  \item to check whether $S$ is a square or not ($O(1)$);
+  \pause
+  \item to find information about all squares of fixed length ($O(|\slp{S}|)$);
+  \pause
+  \item to check whether on not a text $S$ is square-free ($O(|\slp{S}| \log |S|)$);
+  \pause
+  \item to compute total number of squares that are contained in $S$ ($O(|\slp{S}| \log |S|)$);
+  \pause
+  \item to find a maximal by length square that occurs in $S$ ($O(|\slp{S}| \log |S|)$);
+  \pause
+  \item to find information about all squares that starts from a fixed position~$i$ ($O(|\slp{S}| \log |S|)$).
+\end{itemize}
+
+\pause
+
+\begin{alertblock}{Open problem}
+For a given $\slp{S}$ that derives a text $S$ to construct an SLP that derives concatenation of all squares that contain in $S$.
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Detecting squares}
+
+\begin{center}
+    \squaresDetecting
+\end{center}
+\end{frame}
+
+\section*{Conclusion}
+
+\begin{frame}
+\frametitle{Conclusion}
+
+\begin{itemize}
+  \item<1-> \sout{We present the algorithm of 6th power that solves CAS Problem}
+  \item<2-> We present the new way of SLPs processing
+\end{itemize}
+
+\pause
+
+\begin{alertblock}{Open problem}<3->
+Is it possible to improve the algorithm's complexity? 
+\end{alertblock}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+    \begin{tikzpicture}
+        \draw (0,0) node {\pgfuseimage{any_questions}};
+    \end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Serching squares}
+
+\begin{center}
+    \squaresAlgorithm
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Palindromes location}
+
+Let $\slp{S}$ be equal to $\slp{S}_\ell \cdot \slp{S}_r$
+
+\palindromesLocation
+
+\begin{alertblock}{}<5->
+How we can use infromation about squares from children?
+\end{alertblock}
+
+\end{frame}
+
+\end{document}
+
