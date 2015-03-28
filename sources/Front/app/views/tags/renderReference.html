@@ -1,0 +1,6 @@
+<li class="publications_item">
+	${_reference.getAuthors()}, ${_reference.getTitle()}, ${_reference.getMetainfo()} 
+	#{if _reference.getDownloadLink() != null && _reference.getDownloadLink().length() > 0} 
+	&nbsp;( <a href="${_reference.getDownloadLink()}" target="_blank">.pdf</a> )
+	#{/if}
+</li>

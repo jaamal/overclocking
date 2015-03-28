@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="overclocking.tests" default="run.unit.tests">
+
+    <condition property="ov.root.dir" value="..">
+        <not>
+            <isset property="ov.root.dir" />
+        </not>
+    </condition>
+
+    <target name="run.unit.tests">
+        <echo message="ov.root.dir is equal to ${ov.root.dir}" />
+        
+        <junit printsummary="yes" fork="yes" haltonfailure="no">
+            <jvmarg value="-Xverify:none"/>
+            <classpath>
+                <fileset dir="${ov.root.dir}/Deploy/assemblies">
+                    <include name="**/*.jar"/>
+                </fileset>
+                
+                <!--TODO: how to gather all bins of all projects universally -->
+                <pathelement path="${ov.root.dir}/AlgorithmsBot/bin" />
+                <pathelement path="${ov.root.dir}/BotCore/bin" />
+                <pathelement path="${ov.root.dir}/BusinessObjects/bin" />
+                <pathelement path="${ov.root.dir}/Caching/bin" />
+                <pathelement path="${ov.root.dir}/Commons/bin" />
+                <pathelement path="${ov.root.dir}/CompressingCore/bin" />
+                <pathelement path="${ov.root.dir}/CompressionService/bin" />
+                <pathelement path="${ov.root.dir}/Front/eclipse/classes" />
+                <pathelement path="${ov.root.dir}/SLP/bin" />
+                <pathelement path="${ov.root.dir}/StatisticsService/bin" />
+                <pathelement path="${ov.root.dir}/Storage/bin" />
+                <pathelement path="${ov.root.dir}/Trees/bin" />
+                <pathelement path="${ov.root.dir}/Tests/bin"/>
+            </classpath>
+
+            <formatter type="plain"/>
+            <test name="tests.UnitTests" todir="${ov.root.dir}/Tests/reports"/>
+        </junit>
+    </target>
+</project>

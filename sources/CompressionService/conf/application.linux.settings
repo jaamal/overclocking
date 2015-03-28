@@ -1,0 +1,13 @@
+server.port = 8080
+server.stop_timeout = 5000
+server.run_profile = dev
+server.working_dir = ../WorkingDirectory
+server.suffix_array_builder_path = ../ExternalSuffixArrayBuilder/suffixArrayBuilder.exe
+
+cassandra.version = 1.2
+cassandra.cql_version = 3.0.0
+cassandra.cluster_name = Test
+cassandra.seeds = 127.0.0.1:9160
+cassandra.max_connection_per_host = 10
+
+memory_mapped_file.batch_size = 1000000

@@ -1,0 +1,14 @@
+<div class="l-header g-safeContext">
+    <a class="l-logo g-inlineBlock" href="@{Main.run()}">Overcl<img src="@{'/public/images/clock.png'}" width="32" height="32" />cking</a>
+
+    <span class="l-slogan">intelligence data processing</span>
+
+    <ul class="l-menu g-safeContext g-large">
+        <li class="l-menu_item #{if _currentIdx == 2 }l-menu_item__current#{/if}">
+            <a class="l-menu_item_ref g-inlineBlock g-rounded g-rounded-bl g-rounded-br" href="@{Statistics.run()}">Statistics</a>
+        </li>
+        <li class="l-menu_item #{if _currentIdx == 1 }l-menu_item__current#{/if}">
+            <a class="l-menu_item_ref g-inlineBlock g-rounded g-rounded-bl g-rounded-br" href="@{TextsStorage.run()}">Data Storage</a>
+        </li>
+    </ul>
+</div>

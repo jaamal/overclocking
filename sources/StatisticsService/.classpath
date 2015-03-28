@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/log4j-1.2.15.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BusinessObjects"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Commons"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Storage"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/httpclient-4.1.2.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/httpclient-cache-4.1.2.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/httpcore-4.1.2.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/httpmime-4.1.2.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/jetty-http-9.0.4.v20130625.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/jetty-io-9.0.4.v20130625.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/jetty-server-9.0.4.v20130625.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/jetty-util-9.0.4.v20130625.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/bcel-5.2.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/ov.jrobocontainer.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/HttpService"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/slf4j-log4j12-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/joda-time-2.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

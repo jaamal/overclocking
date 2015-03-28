@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/commons-io-2.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BusinessObjects"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Caching"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Commons"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Storage"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

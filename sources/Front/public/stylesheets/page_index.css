@@ -1,0 +1,44 @@
+.indexText {
+    padding: 40px 300px 0px;
+    color: #fffbf2;
+    text-align: center;
+    }
+    .indexText_more {
+        margin: 0 0 0 5px;
+        }
+
+.singularities {
+    text-align: justify;
+    margin: 70px auto 0px;
+    }
+    .singularities_item {
+        text-align: center;
+        text-decoration: none;
+        }
+        .singularities_item_icon {
+            width: 360px;
+            height: 261px;
+            }
+        .singularities_item_icon__research {
+            background: url('../images/research.png')
+            }
+        .singularities_item_icon__dataStorage {
+            background: url('../images/data_storage.png')
+            }
+        .singularities_item_icon__source {
+            background: url('../images/source.png')
+            }
+    .singularities_forJustify {
+        width: 100%;
+        height: 0;
+        font-size: 0px;
+        }
+
+.mainRef {
+    width: 224px;
+    height: 41px;
+    background: url('../images/ref.png');
+    text-align: center;
+    text-decoration: none;
+    line-height: 36px;
+    }

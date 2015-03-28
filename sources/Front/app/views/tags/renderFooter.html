@@ -1,0 +1,38 @@
+<div class="l-footer l-width"><div class="l-footer_in">
+    <ul class="l-footer_nav">
+        <li class="l-footer_nav_item g-inlineBlock feedbackPopupWrap">
+            <a class="g-lightLink showFeedbackPopup" href="#">Feedback</a>
+
+            <div class="feedbackPopup g-rounded">
+                <form class="feedbackPopup_form">
+                    <p class="feedbackPopup_form_field g-safeContext">
+                    	<span class="feedbackPopup_form_title g-inlineBlock">from:</span>
+                    	<input id="feedbackFrom" class="feedbackPopup_form_textInput g-textInput" type="text" maxlength="50"/>
+                    </p>
+                    <textarea id="feedbackMessage" class="feedbackPopup_form_textarea g-textarea"></textarea>
+                    <p class="g-checkbox"><input id="wantRespond" class="g-checkboxInput" type="checkbox" />
+                    	<label for="wantRespond">I want respond</label>
+                    </p>
+                    <p id="wantRespondField" class="feedbackPopup_form_field g-safeContext" style="display: none;">
+                    	<span class="feedbackPopup_form_title g-inlineBlock">email:</span>
+                    	<input id="feederEmail" class="feedbackPopup_form_textInput g-textInput" type="text" />
+                    </p>
+                    <input id="feedbackSendBtn" class="feedbackPopup_form_submit g-button" type="submit" value="Send" />
+                </form>
+            </div>
+        </li>
+        <li class="l-footer_nav_item g-inlineBlock #{if _currentIdx == 3 }l-menu_item__current#{/if}">
+            <a class="g-lightLink" href="@{Team.run()}">Our Team</a>
+        </li>
+        <li class="l-footer_nav_item g-inlineBlock #{if _currentIdx == 0 }l-menu_item__current#{/if}">
+            <a class="g-lightLink" href="@{About.run()}">About Project</a>
+        </li>
+    </ul>
+
+    <a class="partnerUstu g-inlineBlock g-lightLink" href="http://urfu.ru/en/home/" target="_blank">
+        Ural<br>Federal<br>University<ins class="partnerUstu_icon"></ins>
+    </a>
+    <a class="partnerKontur g-inlineBlock g-lightLink" href="http://www.skbkontur.ru/eng" target="_blank">
+        SKB Kontur
+    </a>
+</div></div>

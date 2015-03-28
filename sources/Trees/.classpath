@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/guava-16.0.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BusinessObjects"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Caching"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CompressingCore"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Commons"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

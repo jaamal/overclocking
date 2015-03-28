@@ -1,0 +1,45 @@
+.master {
+    margin: 0 0 30px;
+    padding: 5px 0 0;
+    }
+    .master_axis {
+        margin: 0 0 6px;
+        }
+        .master_axis_label {
+
+            }
+        .master_axis_factors {
+            margin: 0 0 0 5px;
+            }
+            .master_axis_factors_item {
+                padding: 4px 7px 6px;
+
+                color: #893000;
+                cursor: pointer;
+                }
+                .master_axis_factors_item_unit {
+                    color: #9A8073;
+                    }
+            .master_axis_factors_item:hover {
+                background: #cce0e2;
+                }
+            .master_axis_factors_item__current,
+            .master_axis_factors_item__current:hover {
+                background: #0075a3;
+                color: #FFFBF2;
+                cursor: default;
+                }
+                .master_axis_factors_item__current .master_axis_factors_item_unit {
+                    color: #FFFBF2;
+                    }
+            .master_axis__y .master_axis_factors_item:hover {
+                background: #f2dfda;
+                }
+            .master_axis__y .master_axis_factors_item__current,
+            .master_axis__y .master_axis_factors_item__current:hover {
+                background: #bf6f7c;
+                }
+
+.masterButton {
+    margin: 5px 0 0;
+    }

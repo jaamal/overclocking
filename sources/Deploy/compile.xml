@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="compile">
+  <import file="common.xml"/>
+    
+  <target name="compile.proj">
+    <antcall target="compile">
+      <param name="proj.name" value="${proj.name}"/>
+      <param name="proj.bin.dir" value="${ov.root.dir}/${proj.name}/bin"/>
+      <param name="proj.src.dir" value="${ov.root.dir}/${proj.name}/src"/>
+    </antcall>
+  </target>
+  
+  <target name="compile" depends="common.cleanup">
+    <echo message="Compile project ${proj.name} from proj.src.dir=${proj.src.dir} to proj.bin.dir=${proj.bin.dir}"/>
+
+    <antcall target="common.copy.libs">
+      <param name="proj.name" value="${proj.name}"/>
+      <param name="includeProjectJars" value="true"/>
+    </antcall>
+    
+    <path id="proj.classpath">
+      <fileset dir="${ov.root.dir}/Deploy/temp/libs"/>
+    </path>
+    
+    <delete dir="${proj.bin.dir}"/>
+    <mkdir dir="${proj.bin.dir}"/>
+    
+    <javac destdir="${proj.bin.dir}" srcdir="${proj.src.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args}"/>
+      <classpath refid="proj.classpath"/>
+      <patternset refid="ignored.files"/>
+    </javac>
+
+    <copy todir="${proj.bin.dir}">
+      <fileset dir="${proj.src.dir}">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+</project>

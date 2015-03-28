@@ -1,0 +1,47 @@
+package SLPs;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import avlTree.slpBuilders.SLPBuilder;
+import dataContracts.Product;
+import tree.ITree;
+import tree.ITreeNode;
+
+import java.util.HashMap;
+
+public class SLPExtractor implements ISLPExtractor {
+    @Override
+    public <TNode extends ITreeNode> SLPBuilder getSLP(ITree<TNode> tree) {
+        SLPBuilder slp = new SLPBuilder();
+        if (tree.isEmpty())
+            return slp;
+        HashMap<Long, Long> used = new HashMap<Long, Long>();
+        log.info(String.format("Count of nodes approximate %d", tree.getRoot().getNumber()));
+        long start = System.currentTimeMillis();
+        dfs(tree, used, slp);
+        long end = System.currentTimeMillis();
+        log.info(String.format("Total time of SLP extracting is %dms", end - start));
+        return slp;
+    }
+
+    private static <TNode extends ITreeNode> long dfs(ITree<TNode> tree, HashMap<Long, Long> used, SLPBuilder slp) {
+        long rootNumber = tree.getRoot().getNumber();
+        Long mapValue = used.get(rootNumber);
+        if (mapValue != null)
+            return mapValue;
+        ITree<TNode> leftSubTree = tree.getLeftSubTree();
+        ITree<TNode> rightSubTree = tree.getRightSubTree();
+        Product product;
+        boolean isTerminal = leftSubTree.isEmpty() && rightSubTree.isEmpty();
+        if (isTerminal)
+            product = new Product((char) tree.getRoot().getValue());
+        else
+            product = new Product(dfs(leftSubTree, used, slp), dfs(rightSubTree, used, slp));
+        long fromNumber = slp.addRule(product);
+        used.put(rootNumber, fromNumber);
+        return fromNumber;
+    }
+
+    private Logger log = LogManager.getLogger(SLPExtractor.class);
+}

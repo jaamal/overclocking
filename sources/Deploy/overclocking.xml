@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="overclocking" default="run">
+  <import file="common.xml"/>
+  <import file="compile.xml"/>
+  <import file="deploy.xml"/>
+  <include file="unit_tests_runner.xml" as="testrunner"/>
+
+  <property name="proj.list" value="BusinessObjects,Algorithms,Commons,Caching,Storage,CompressingCore,Trees,HttpService"/>
+  
+  <target name="run">
+    <for list="${proj.list}" param="proj.name">
+      <sequential>
+        <antcall target="compile.proj">
+          <param name="proj.name" value="@{proj.name}"/>
+        </antcall>
+        
+        <antcall target="deploy.proj">
+          <param name="proj.name" value="@{proj.name}"/>
+        </antcall>
+      </sequential>
+    </for>
+    
+    <antcall target="compile.proj">
+      <param name="proj.name" value="CompressionService"/>
+    </antcall>
+    <antcall target="deploy.proj">
+      <param name="proj.name" value="CompressionService"/>
+      <param name="proj.entry" value="compressionservice.EntryPoint"/>
+    </antcall>
+    
+    <antcall target="compile.proj">
+      <param name="proj.name" value="StatisticsService"/>
+    </antcall>
+    <antcall target="deploy.proj">
+      <param name="proj.name" value="StatisticsService"/>
+      <param name="proj.entry" value="statisticsservice.EntryPoint"/>
+    </antcall>
+    
+    <antcall target="compile">
+      <param name="proj.name" value="Front"/>
+      <param name="proj.bin.dir" value="${ov.root.dir}/Front/eclipse/classes"/>
+      <param name="proj.src.dir" value="${ov.root.dir}/Front/app"/>
+    </antcall>
+    <antcall target="deploy.proj">
+      <param name="proj.name" value="Front"/>
+    </antcall>
+  </target>
+
+  <target name="run.unit.tests" depends="run">
+    <antcall target="testrunner.run.unit.tests">
+        <param name="ov.root.dir" value="${ov.root.dir}"/>
+    </antcall>
+  </target>
+</project>

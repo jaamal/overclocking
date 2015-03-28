@@ -1,0 +1,55 @@
+package statisticsservice.export;
+
+import storage.factorsRepository.IFactorsRepository;
+import storage.factorsRepository.IFactorsRepositoryFactory;
+import storage.filesRepository.IFilesRepository;
+import storage.statistics.IStatisticsRepository;
+import dataContracts.FactorDef;
+import dataContracts.LZFactorDef;
+import dataContracts.statistics.StatisticsObject;
+
+
+public class StatsExporter implements IStatsExporter {
+
+    private IFilesRepository filesRepository;
+    private IStatisticsRepository statisticsRepository;
+    private IStatisticsConverterFactory statisticsConverterFactory;
+    private IFactorsRepositoryFactory factorsRepositoryFactory;
+
+    public StatsExporter(IFilesRepository filesRepository,
+                         IFactorsRepositoryFactory factorsRepositoryFactory,
+                         IStatisticsRepository statisticsRepository, 
+                         IStatisticsConverterFactory statisticsConverterFactory) {
+        this.filesRepository = filesRepository;
+        this.factorsRepositoryFactory = factorsRepositoryFactory;
+        this.statisticsRepository = statisticsRepository;
+        this.statisticsConverterFactory = statisticsConverterFactory;
+    }
+    
+    @Override
+    public String exportAll() {
+        IStatisticsConverter statisticsConverter = statisticsConverterFactory.create();
+        String[] fileIds = filesRepository.getAllIds();
+        for (String fileId : fileIds) {
+            StatisticsObject[] stats = statisticsRepository.readAll(fileId);
+            statisticsConverter.append(stats);
+        }
+        
+        IFactorsRepository<LZFactorDef> lzFactorsRepository = factorsRepositoryFactory.getLZRepository();
+        Iterable<String> factorizationIds = lzFactorsRepository.getDoneStatisticIds();
+        for (String factorizationId : factorizationIds) {
+            StatisticsObject[] stats = statisticsRepository.readAll(factorizationId);
+            statisticsConverter.append(stats);
+        }
+        
+        IFactorsRepository<FactorDef> lz77FactorsRepository = factorsRepositoryFactory.getLZ77Repository();
+        factorizationIds = lz77FactorsRepository.getDoneStatisticIds();
+        for (String factorizationId : factorizationIds) {
+            StatisticsObject[] stats = statisticsRepository.readAll(factorizationId);
+            statisticsConverter.append(stats);
+        }
+        
+        return statisticsConverter.run();
+    }
+
+}

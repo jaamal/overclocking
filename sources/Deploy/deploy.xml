@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="deploy">
+  <import file="common.xml"/>
+  
+  <target name="deploy.proj" depends="common.cleanup">
+    <echo>Deploying of project ${proj.name}</echo>
+            
+    <antcall target="deploy.copy.bins">
+      <param name="proj.name" value="${proj.name}" />
+    </antcall>
+    
+    <antcall target="common.copy.libs">
+      <param name="proj.name" value="${proj.name}" />
+      <param name="includeProjectJars" value="false"/>
+    </antcall>
+    
+    <var name="jars.list" value="./"/>
+    <for param="file">
+      <path>
+        <fileset dir="${ov.root.dir}/Deploy/temp/libs" includes="**/*.jar" />
+      </path>
+      <sequential>
+        <local name="filename" />
+        <basename property="filename" file="@{file}"/>
+        <var name="jars.list" value="${jars.list} ${filename}"/>
+      </sequential>
+    </for>
+    
+    <if>
+      <isset property="proj.entry"/>
+      <then>
+        <jar destfile="${ov.root.dir}\Deploy\assemblies\ov\${proj.name}.jar">
+          <manifest>
+            <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+            <attribute name="Rsrc-Main-Class" value="${proj.entry}"/>
+            <attribute name="Class-Path" value="."/>
+            <attribute name="Rsrc-Class-Path" value="${jars.list}"/>
+          </manifest>
+          
+          <zipfileset src="${ov.root.dir}\Deploy\assemblies\ant\jar-in-jar-loader.zip"/>
+          <zipfileset dir="${ov.root.dir}/Deploy/temp/libs"/>
+          <fileset dir="${ov.root.dir}/Deploy/temp/bin" />
+        </jar>
+      </then>
+      <else>
+        <jar destfile="${ov.root.dir}\Deploy\assemblies\ov\${proj.name}.jar">
+          <manifest>
+            <attribute name="Class-Path" value="."/>
+            <attribute name="Rsrc-Class-Path" value="${jars.list}"/>
+          </manifest>
+          
+          <zipfileset src="${ov.root.dir}\Deploy\assemblies\ant\jar-in-jar-loader.zip"/>
+          <zipfileset dir="${ov.root.dir}/Deploy/temp/libs"/>
+          <fileset dir="${ov.root.dir}/Deploy/temp/bin" />
+        </jar>
+      </else>
+    </if>
+  </target>
+  
+  <target name="deploy.copy.bins">
+    <mkdir dir="${ov.root.dir}/Deploy/temp/bin"/>
+    <ovProjectRefs dir="${ov.root.dir}" projName="${proj.name}" to="ref.list"/>
+    
+    <echo message="${ref.list}"/>
+    
+    <for list="${ref.list}" param="project">
+      <sequential>
+        <if>
+          <available file="${ov.root.dir}/@{project}/bin" type="dir" />
+          <then>
+            <copy todir="${ov.root.dir}/Deploy/temp/bin">
+              <fileset dir="${ov.root.dir}/@{project}/bin"/>
+            </copy>
+          </then>
+        </if>
+        
+        <if>
+          <available file="${ov.root.dir}/@{project}/eclipse/classes" type="dir" />
+          <then>
+            <copy todir="${ov.root.dir}/Deploy/temp/bin">
+              <fileset dir="${ov.root.dir}/@{project}/eclipse/classes"/>
+            </copy>
+          </then>
+        </if>
+      </sequential>
+    </for>
+  </target>
+</project>

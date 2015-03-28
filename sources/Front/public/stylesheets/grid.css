@@ -1,0 +1,133 @@
+﻿/** @todo add calculations */
+.g-12 {
+	margin-right: 57.47%;
+	position: relative;
+}
+
+/** @section spans */
+.g-span-1, .g-span-2, .g-span-3, .g-span-4,
+.g-span-5, .g-span-6, .g-span-7, .g-span-8,
+.g-span-9, .g-span-10, .g-span-11, .g-span-12 {
+	display: inline;
+	float: left;
+	position: relative;
+}
+
+.g-span-1 {
+	width: 15%;
+	margin-right: -15%;
+}
+
+.g-span-2 {
+	width: 35%;
+	margin-right: -35%;
+}
+
+.g-span-3 {
+	width: 55%;
+	margin-right: -55%;
+}
+
+.g-span-4 {
+	width: 75%;
+	margin-right: -75%;
+}
+
+.g-span-5 {
+	width: 95%;
+	margin-right: -95%;
+}
+
+.g-span-6 {
+	width: 115%;
+	margin-right: -115%;
+}
+
+.g-span-7 {
+	width: 135%;
+	margin-right: -135%;
+}
+
+.g-span-8 {
+	width: 155%;
+	margin-right: -155%;
+}
+
+.g-span-9 {
+	width: 175%;
+	margin-right: -175%;
+}
+
+.g-span-10 {
+	width: 195%;
+	margin-right: -195%;
+}
+
+.g-span-11 {
+	width: 215%;
+	margin-right: -215%;
+}
+
+.g-span-12 {
+	width: 235%;
+	margin-right: -235%;
+}
+
+/** @subsection restore */
+/** (100% + (<col margin (5%)>*100/<col width (15%)>)) * (12/<col number (1)>) - (<col margin (5%)>*100/<col width (15%)>) */
+.g-span-1 .g-restore {
+	width: 1566.67%;
+}
+
+.g-span-5 .g-restore {
+	width: 247.37%;
+}
+
+.g-span-6 .g-restore {
+	width: 204.35%;
+}
+
+/** @section cols */
+.g-col-1 {
+	left: 0;
+}
+
+.g-col-2 {
+	left: 20%;
+}
+
+.g-col-3 {
+	left: 40%;
+}
+
+.g-col-4 {
+	left: 60%;
+}
+
+.g-col-5 {
+	left: 80%;
+}
+
+.g-col-6 {
+	left: 100%;
+}
+
+.g-col-7 {
+	left: 120%;
+}
+
+.g-col-8 {
+	left: 140%;
+}
+
+.g-col-9 {
+	left: 160%;
+}
+
+.g-col-10 {
+	left: 180%;
+}
+
+.g-col-11 {
+	left: 200%;
+}

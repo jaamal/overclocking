@@ -1,0 +1,22 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+        version="2.0">
+    <persistence-unit name="overclocking">
+        <class>models.FileInfo</class>
+        <class>models.statistics.LZ77Statistics</class>
+        <class>models.statistics.LZMAStatistics</class>
+        <class>models.statistics.LZWStatistics</class>
+        <class>models.statistics.SLPCartesianStatistics</class>
+        <class>models.statistics.SLPClassicStatistics</class>
+        <class>models.statistics.SLPOptimalStatistics</class>
+        <class>models.FeedbackMessage</class>
+        <properties>
+            <property name="hibernate.connection.driver_class" value="org.sqlite.JDBC"/>
+            <property name="hibernate.connection.url" value="jdbc:sqlite:C:\overclocking\jspace\overclocking.db"/>
+            <property name="hibernate.dialect" value="database.SQLiteDialect"/>
+            <property name="current_session_context_class" value="thread"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+</persistence>

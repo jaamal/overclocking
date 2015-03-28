@@ -1,0 +1,13 @@
+cassandra.version = 1.2
+cassandra.cql_version = 3.0.0
+cassandra.cluster_name = Overclocking
+cassandra.seeds = nv-ur-054:9160
+cassandra.max_connection_per_host = 10
+
+server.working_dir = ..\\WorkingDirectory
+server.suffix_array_builder_path = ..\\ExternalSuffixArrayBuilder\\suffixArrayBuilder.exe
+
+memory_mapped_file.batch_size = 1000000
+
+
+FileBatchSize = 1048576

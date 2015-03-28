@@ -1,0 +1,39 @@
+\colorlet{shaded}{white!60!black}
+
+\newcommand{\drawLz}[2]{
+    \draw (#1-0.05,#2-0.05) rectangle +(0.1,0.1);
+}
+
+\newcommand{\drawLzInf}[2]{
+    \filldraw[fill=black] (#1-0.05,#2-0.05) rectangle +(0.1,0.1);
+}
+
+\newcommand{\drawLzw}[2]{
+	\filldraw[fill=shaded] (#1-0.05,#2-0.05) rectangle +(0.1,0.1);
+}
+
+\newcommand{\drawRytter}[2]{
+    \draw (#1, #2) circle (1.5pt);
+}
+
+\newcommand{\drawModernFirstRytter}[2]{
+    \filldraw[fill=shaded] (#1, #2) circle (1.5pt);
+}
+
+\newcommand{\drawModernSecondRytter}[2]{
+    \filldraw[fill=black] (#1, #2) circle (1.5pt);
+}
+
+\newcommand{\drawCartesian}[2]{
+    \draw (#1-0.08,#2-0.07) -- +(0.08, 0.15) -- +(0.16, 0) -- +(0.0,0.0); 
+}
+
+\newcommand{\drawLcaOnline}[3]{
+    \filldraw[fill=black] (#1-0.08,#2-0.07) -- +(0.08, 0.15) -- +(0.16, 0) -- +(0.0,0.0); 
+}
+
+\newcommand{\drawAvlConcurrentFour}[3]{
+    \filldraw[fill=shaded] (#1-0.08,#2-0.07) -- +(0.08, 0.15) -- +(0.16, 0) -- +(0.0,0.0); 
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
