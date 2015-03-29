@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cstring>
 
 using namespace std;
 
@@ -136,11 +137,10 @@ void suffixArray(int* T, int* SA, int n, int K)
 	delete [] R; delete [] SA12; delete [] SA0; delete [] R0;
 }
 
-int main(int argc, char * argv[]){	
+int main(int argc, char * argv[]){
 	freopen(argv[1],"r",stdin);
-	int n = atoi(argv[2]);	
+	int n = std::stoi(argv[2]);	
 	char * arr = new char[n];
-	//scanf("%s",arr);
 	for (int i = 0; i < n; i++)
 		scanf("%c",&arr[i]);	
 	int * T = new int[n+3];
@@ -155,11 +155,8 @@ int main(int argc, char * argv[]){
 	if (n >= 2)
 		suffixArray(T,SA,n,1024);
 
-	ofstream result;
-	result.open(argv[3],ios::out | ios::binary);
-	result.write((char*)SA,n * 4);
-	result.flush();
-	result.close();
+    for (int i = 0; i < n; i++)
+        cout << to_string(SA[i]) << ",";
 
 	delete [] T;
 	delete [] SA;

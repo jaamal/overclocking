@@ -10,7 +10,7 @@ public class FileManager implements IFileManager
     public IFile createTempFile(String workFolder)
     {
         String localFileName = UUID.randomUUID().toString();
-        String fullFileName = workFolder + "\\\\" + localFileName;
+        String fullFileName = workFolder + File.separator + localFileName;
         forceFullFilePath(fullFileName);
         return new FileImpl(fullFileName);
     }

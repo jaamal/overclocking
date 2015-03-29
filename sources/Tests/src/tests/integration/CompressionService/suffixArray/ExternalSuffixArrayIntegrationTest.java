@@ -5,27 +5,29 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
+
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.lzInf.suffixArray.ExternalSuffixArrayFactory;
+import compressionservice.compression.algorithms.lzInf.suffixArray.SuffixArrayBuilder;
 import compressionservice.compression.algorithms.lzInf.suffixArray.ISuffixArray;
+
 import dataContracts.DataFactoryType;
 
 public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
 {
-    private ExternalSuffixArrayFactory suffixArrayFactory;
+    private SuffixArrayBuilder suffixArrayFactory;
 
     @Override
     public void setUp()
     {
         super.setUp();
         
-        suffixArrayFactory = container.get(ExternalSuffixArrayFactory.class);
+        suffixArrayFactory = container.get(SuffixArrayBuilder.class);
     }
 
     @Test
     public void testOneSymbol()
     {
-        ISuffixArray suffixArray = suffixArrayFactory.create(DataFactoryType.memory, new MemoryReadableCharArray("a"));
+        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, new MemoryReadableCharArray("a"));
         doAssert(new long[]{0}, suffixArray);
         suffixArray.dispose();
     }
@@ -33,7 +35,7 @@ public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
     @Test
     public void testAaaaa()
     {
-        ISuffixArray suffixArray = suffixArrayFactory.create(DataFactoryType.memory, new MemoryReadableCharArray("aaaaa"));
+        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, new MemoryReadableCharArray("aaaaa"));
         doAssert(new long[]{4, 3, 2, 1, 0}, suffixArray);
         suffixArray.dispose();
     }
@@ -41,7 +43,7 @@ public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
     @Test
     public void testMissisipi()
     {
-        ISuffixArray suffixArray = suffixArrayFactory.create(DataFactoryType.memory, new MemoryReadableCharArray("missisipi"));
+        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, new MemoryReadableCharArray("missisipi"));
         doAssert(new long[]{8, 6, 4, 1, 0, 7, 5, 3, 2}, suffixArray);
         suffixArray.dispose();
     }

@@ -5,6 +5,6 @@ cassandra.seeds = 127.0.0.1:9160
 cassandra.max_connection_per_host = 10
 
 server.working_dir = ../WorkingDirectory
-server.suffix_array_builder_path = ../ExternalSuffixArrayBuilder/suffixArrayBuilder.exe
+server.suffix_array_builder_path = ../ExternalSuffixArrayBuilder/suffixArrayBuilder
 
 memory_mapped_file.batch_size = 1000000

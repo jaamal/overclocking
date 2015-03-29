@@ -19,9 +19,9 @@ import compressionservice.compression.algorithms.lzInf.LZFactorIteratorFactory;
 import compressionservice.compression.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
 import compressionservice.compression.algorithms.lzInf.arrayMinSearching.IArrayMinSearcherFactory;
 import compressionservice.compression.algorithms.lzInf.suffixArray.ExternalProcessExecutor;
-import compressionservice.compression.algorithms.lzInf.suffixArray.ExternalSuffixArrayFactory;
+import compressionservice.compression.algorithms.lzInf.suffixArray.SuffixArrayBuilder;
 import compressionservice.compression.algorithms.lzInf.suffixArray.IExternalProcessExecutor;
-import compressionservice.compression.algorithms.lzInf.suffixArray.ISuffixArrayFactory;
+import compressionservice.compression.algorithms.lzInf.suffixArray.ISuffixArrayBuilder;
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.IOnlineSuffixTreeFactory;
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.OnLineSuffixTreeFactory;
 import dataContracts.AvlMergePattern;
@@ -64,7 +64,7 @@ public class SLPBuildHelper {
     private LZFactorDef[] getFactorization(ISettings settings, String text) {
         IFileManager fileManager = new FileManager();
         IExternalProcessExecutor externalProcessExecutor = new ExternalProcessExecutor();
-        ISuffixArrayFactory suffixArrayFactory = new ExternalSuffixArrayFactory(dataFactory, fileManager, externalProcessExecutor, settings);
+        ISuffixArrayBuilder suffixArrayFactory = new SuffixArrayBuilder(dataFactory, fileManager, externalProcessExecutor, settings);
         IArrayMinSearcherFactory arrayMinSearcherFactory = new ArrayMinSearcherFactory(dataFactory);
         IOnlineSuffixTreeFactory onlineSuffixTreeFactory = new OnLineSuffixTreeFactory(suffixArrayFactory, arrayMinSearcherFactory);
         ILZFactorIterator iterator = new LZFactorIteratorFactory(onlineSuffixTreeFactory).create(DataFactoryType.memory, new MemoryReadableCharArray(text));

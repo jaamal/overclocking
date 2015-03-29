@@ -2,7 +2,7 @@ server.port = 8080
 server.stop_timeout = 5000
 server.run_profile = dev
 server.working_dir = ../WorkingDirectory
-server.suffix_array_builder_path = ../ExternalSuffixArrayBuilder/suffixArrayBuilder.exe
+server.suffix_array_builder_path = ../ExternalSuffixArrayBuilder/suffixArrayBuilder
 
 cassandra.version = 1.2
 cassandra.cql_version = 3.0.0

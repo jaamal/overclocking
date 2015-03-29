@@ -2,22 +2,23 @@ package compressionservice.compression.algorithms.lzInf.suffixArray;
 
 import java.io.InputStream;
 
+import org.apache.commons.lang.ArrayUtils;
+
 public class ExternalProcessExecutor implements IExternalProcessExecutor
 {
     @Override
-    public int execute(String commandLine)
-    {
+    public InputStream execute(String command, String[] args) {
         try {
-            Process process = Runtime.getRuntime().exec(commandLine);
-            InputStream inputStream = process.getInputStream();
-
-            while (inputStream.available() > 0)
-                inputStream.read();
-
-            return process.waitFor();
-        }
-        catch (Exception e) {
-            throw new ExternalProcessCrashesException(e);
+            String[] cmdArray = (String[]) ArrayUtils.addAll(new String[] {command}, args);
+            Process process = Runtime.getRuntime().exec(cmdArray);
+            
+            int exitValue = process.waitFor();
+            if (exitValue == -1)
+                throw new RuntimeException(String.format("fail to execute command %s, exit code -1", command));
+            
+            return process.getInputStream();
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("fail to execute command %s", command), e);
         }
     }
 }

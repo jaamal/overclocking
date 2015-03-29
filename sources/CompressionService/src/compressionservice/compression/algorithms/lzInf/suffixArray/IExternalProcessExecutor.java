@@ -1,6 +1,8 @@
 package compressionservice.compression.algorithms.lzInf.suffixArray;
 
+import java.io.InputStream;
+
 public interface IExternalProcessExecutor
 {
-    int execute(String commandLine);
+    InputStream execute(String command, String[] args);
 }
