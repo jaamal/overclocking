@@ -184,8 +184,15 @@ public class FactorsRepositoryTest extends StorageTestBase {
     private static FactorDef[] genLZ77Factorization(Random random) {
         int length = random.nextInt(2000) + 1;
         FactorDef[] result = new FactorDef[length];
-        for (int j = 0; j < length; ++j)
-            result[j] = new FactorDef(random.nextBoolean(), random.nextLong(), random.nextLong(), (char)(random.nextInt(26) + 'a'));
+        result[0] = new FactorDef((char)(random.nextInt(26) + 'a'));
+        for (int j = 1; j < length; ++j){
+            if (random.nextBoolean()) {
+                result[j] = new FactorDef((char)(random.nextInt(26) + 'a'));
+            }
+            else {
+                result[j] = new FactorDef(random.nextLong(), random.nextLong());
+            }
+        }
         return result;
     }
 }

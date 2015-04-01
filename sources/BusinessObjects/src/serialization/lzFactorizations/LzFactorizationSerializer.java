@@ -44,9 +44,9 @@ public class LzFactorizationSerializer implements ILzFactorizationSerializer {
         FactorDef[] factors = new FactorDef[intArray.length / 2];
         for (int index = 0; index < factors.length; ++index) {
             if (intArray[2 * index + 1] == 0)
-                factors[index] = new FactorDef(true, -1, -1, intArray[2 * index]);
+                factors[index] = new FactorDef((char) intArray[2 * index]);
             else
-                factors[index] = new FactorDef(false, intArray[2 * index], intArray[2 * index + 1], 0);
+                factors[index] = new FactorDef(intArray[2 * index], intArray[2 * index + 1]);
         }
         return factors;
     }

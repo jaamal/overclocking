@@ -71,7 +71,7 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
                 }
             }
             suffixArrayStream.close();
-            return new ExternalSuffixArray(suffixArray, source);
+            return new SuffixArray(suffixArray, source);
         }
         catch (IOException e)
         {

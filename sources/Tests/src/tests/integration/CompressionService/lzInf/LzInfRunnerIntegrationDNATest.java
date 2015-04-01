@@ -82,7 +82,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
 
     @Test
     public void testGZippedFile() {
-        String fileId = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.GZip, filesRepository).getId();
+        String fileId = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository).getId();
 
         CompressionRunParams runParams = new CompressionRunParams();
         lzInfRunner.checkAndRefillParams(runParams);

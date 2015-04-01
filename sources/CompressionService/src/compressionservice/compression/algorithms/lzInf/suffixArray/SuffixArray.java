@@ -4,13 +4,13 @@ import compressingCore.dataAccess.ILongArray;
 import compressingCore.dataAccess.IReadableCharArray;
 
 //TODO it seems its obsolete abstraction
-public class ExternalSuffixArray implements ISuffixArray
+public class SuffixArray implements ISuffixArray
 {
     private ILongArray suffixArray;
     private IReadableCharArray charArray;
     private long length;
 
-    public ExternalSuffixArray(
+    public SuffixArray(
             ILongArray suffixArray,
             IReadableCharArray source)
     {
