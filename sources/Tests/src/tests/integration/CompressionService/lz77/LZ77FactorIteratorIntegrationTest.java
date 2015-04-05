@@ -14,10 +14,15 @@ import org.junit.Test;
 import tests.integration.IntegrationTestBase;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.lz77.LZ77FactorIterator;
+import compressionservice.compression.algorithms.factorization.IFactorIterator;
+import compressionservice.compression.algorithms.factorization.LZ77FactorIterator;
 import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
 import compressionservice.compression.algorithms.lz77.windows.WindowsFactory;
+import compressionservice.compression.parameters.CompressionRunParams;
+import compressionservice.compression.parameters.ICompressionRunParams;
+import dataContracts.AlgorithmType;
 import dataContracts.FactorDef;
+import dataContracts.statistics.CompressionRunKeys;
 
 public class LZ77FactorIteratorIntegrationTest extends IntegrationTestBase
 {
@@ -112,11 +117,18 @@ public class LZ77FactorIteratorIntegrationTest extends IntegrationTestBase
 
     private static ArrayList<FactorDef> getFactors(IWindowFactory windowFactory, IReadableCharArray charArray, int windowSize)
     {
-        LZ77FactorIterator lz77Factorizator = new LZ77FactorIterator(windowFactory, charArray, windowSize);
-        ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
-        while (lz77Factorizator.hasFactors())
-            factors.add(lz77Factorizator.getNextFactor());
-        return factors;
+        ICompressionRunParams runParams = new CompressionRunParams();
+        runParams.putParam(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.putParam(CompressionRunKeys.WindowSize, windowSize);
+        
+        try(IFactorIterator factorIterator = new LZ77FactorIterator(new WindowsFactory(), charArray, windowSize)){
+            ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
+            while (factorIterator.any())
+                factors.add(factorIterator.next());
+            return factors;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void doTest(String string, int windowSize)

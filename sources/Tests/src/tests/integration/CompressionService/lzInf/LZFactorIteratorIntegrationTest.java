@@ -12,15 +12,16 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.compression.algorithms.factorization.FactorIteratorFactory;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
-
+import compressionservice.compression.parameters.CompressionRunParams;
+import compressionservice.compression.parameters.ICompressionRunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
+import dataContracts.statistics.CompressionRunKeys;
 
 public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
 {
@@ -110,9 +111,12 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
 
     private ArrayList<FactorDef> getFactors(IReadableCharArray charArray)
     {
+        ICompressionRunParams runParams = new CompressionRunParams();
+        runParams.putParam(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.putParam(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
+        
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
-
-        try(IFactorIterator lzFactorizator = factorIteratorFactory.create(AlgorithmType.lzInf, DataFactoryType.memory, charArray);)  {
+        try(IFactorIterator lzFactorizator = factorIteratorFactory.create(runParams, charArray);)  {
             while (lzFactorizator.any())
                 factors.add(lzFactorizator.next());
         } catch (Exception e) {

@@ -10,7 +10,7 @@ import org.junit.Test;
 import tests.unit.UnitTestBase;
 
 import compressingCore.dataAccess.IReadableCharArray;
-import compressionservice.compression.algorithms.lz77.LZ77FactorIterator;
+import compressionservice.compression.algorithms.factorization.LZ77FactorIterator;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.IPlace;
 import compressionservice.compression.algorithms.lz77.windows.IStringWindow;
 import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
@@ -44,7 +44,7 @@ public class LZ77FactorIteratorTest extends UnitTestBase
         replayAll();
 
         this.factorIterator = new LZ77FactorIterator(windowFactory, this.charArray, WINDOW_SIZE);
-        assertFalse(this.factorIterator.hasFactors());
+        assertFalse(this.factorIterator.any());
     }
 
     @Test(expected = IllegalAccessError.class)
@@ -56,7 +56,7 @@ public class LZ77FactorIteratorTest extends UnitTestBase
         replayAll();
 
         this.factorIterator = new LZ77FactorIterator(windowFactory, this.charArray, WINDOW_SIZE);
-        this.factorIterator.getNextFactor();
+        this.factorIterator.next();
     }
 
     @Test
@@ -75,11 +75,11 @@ public class LZ77FactorIteratorTest extends UnitTestBase
         replayAll();
 
         this.factorIterator = new LZ77FactorIterator(windowFactory, this.charArray, WINDOW_SIZE);
-        assertTrue(this.factorIterator.hasFactors());
-        FactorDef actual = this.factorIterator.getNextFactor();
+        assertTrue(this.factorIterator.any());
+        FactorDef actual = this.factorIterator.next();
         assertTrue(actual.isTerminal);
         assertEquals('a', actual.symbol);
-        assertFalse(this.factorIterator.hasFactors());
+        assertFalse(this.factorIterator.any());
     }
 
     @Test
@@ -99,11 +99,11 @@ public class LZ77FactorIteratorTest extends UnitTestBase
         replayAll();
 
         this.factorIterator = new LZ77FactorIterator(windowFactory, this.charArray, WINDOW_SIZE);
-        assertTrue(this.factorIterator.hasFactors());
-        FactorDef actual = this.factorIterator.getNextFactor();
+        assertTrue(this.factorIterator.any());
+        FactorDef actual = this.factorIterator.next();
         assertEquals(0, actual.beginPosition);
         assertEquals(10, actual.length);
-        assertTrue(this.factorIterator.hasFactors());
+        assertTrue(this.factorIterator.any());
     }
 
     private void expectToString(int start, int end, IReadableCharArray charArray, String str)

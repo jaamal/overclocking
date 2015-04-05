@@ -20,10 +20,7 @@ import compressionservice.compression.algorithms.factorization.IFactorIterator;
 import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.compression.parameters.ICompressionRunParams;
 
-import dataContracts.AlgorithmType;
-import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
@@ -56,12 +53,11 @@ public class LzInfAlgorithm implements ISlpBuildAlgorithm {
 
     @Override
     public StatisticsObject build(ICompressionRunParams runParams) {
-        DataFactoryType dataFactoryType = runParams.getEnumValue(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
         try (IReadableCharArray source = resourceProvider.getText(runParams)) {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
             ArrayList<FactorDef> factors = new ArrayList<>();
-            try (IFactorIterator factorIterator = factorIteratorFactory.create(AlgorithmType.lzInf, dataFactoryType, source)) {
+            try (IFactorIterator factorIterator = factorIteratorFactory.create(runParams, source)) {
                 while (factorIterator.any()) {
                     if (factors.size() % 10000 == 0)
                         logger.info(String.format("Produced %d factors", factors.size()));

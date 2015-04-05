@@ -15,12 +15,11 @@ import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.compression.algorithms.analysator.IAnalysator;
-import compressionservice.compression.algorithms.lz77.LZ77FactorIterator;
-import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
+import compressionservice.compression.algorithms.factorization.IFactorIterator;
+import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.compression.parameters.ICompressionRunParams;
 
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.CompressionStatistics;
 import dataContracts.statistics.ICompressionStatistics;
@@ -33,21 +32,21 @@ public class Lz77Algorithm implements ISlpBuildAlgorithm {
 
     private final IFactorsRepository<FactorDef> factorsRepotisory;
     private final IResourceProvider resourceProvider;
-    private final IWindowFactory windowFactory;
     private final IStatisticsObjectFactory statisticsObjectFactory;
     private final IFilesRepository filesRepository;
     private final IAnalysator analysator;
+    private final IFactorIteratorFactory factorIteratorFactory;
 
     public Lz77Algorithm(
             IResourceProvider resourceProvider,
             IFilesRepository filesRepository,
-            IWindowFactory windowFactory,
             IFactorsRepositoryFactory factorsRepositoryFactory,
+            IFactorIteratorFactory factorIteratorFactory,
             IAnalysator analysator,
             IStatisticsObjectFactory statisticsObjectFactory) {
         this.resourceProvider = resourceProvider;
         this.filesRepository = filesRepository;
-        this.windowFactory = windowFactory;
+        this.factorIteratorFactory = factorIteratorFactory;
         this.factorsRepotisory = factorsRepositoryFactory.getLZ77Repository();
         this.analysator = analysator;
         this.statisticsObjectFactory = statisticsObjectFactory;
@@ -59,14 +58,12 @@ public class Lz77Algorithm implements ISlpBuildAlgorithm {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
 
-            int windowSize = runParams.getIntValue(CompressionRunKeys.WindowSize);
-            LZ77FactorIterator lz77FactorIterator = new LZ77FactorIterator(windowFactory, charArray, windowSize);
+            IFactorIterator factorIterator = factorIteratorFactory.create(runParams, charArray);
             ArrayList<FactorDef> factors = new ArrayList<>();
-            while (lz77FactorIterator.hasFactors()) {
+            while (factorIterator.any()) {
                 if (factors.size() % 10000 == 0)
                     logger.info(String.format("Produced %d factors", factors.size()));
-
-                factors.add(lz77FactorIterator.getNextFactor());
+                factors.add(factorIterator.next());
             }
             timeCounter.end();
 

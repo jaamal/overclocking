@@ -1,10 +1,9 @@
 package compressionservice.compression.algorithms.factorization;
 
 import compressingCore.dataAccess.IReadableCharArray;
-import dataContracts.AlgorithmType;
-import dataContracts.DataFactoryType;
+import compressionservice.compression.parameters.ICompressionRunParams;
 
 public interface IFactorIteratorFactory
 {
-    IFactorIterator create(AlgorithmType algorithmType, DataFactoryType dataFactoryType, IReadableCharArray charArray);
+    IFactorIterator create(ICompressionRunParams runParams, IReadableCharArray charArray);
 }

@@ -28,7 +28,6 @@ import commons.settings.ISettings;
 import compressionservice.compression.algorithms.analysator.Analysator;
 import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.compression.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
-import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
 import compressionservice.compression.algorithms.lzw.ILZWFactorsAnalyzer;
 import compressionservice.compression.parameters.ICompressionRunParams;
 
@@ -50,7 +49,6 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
     private IFactorsRepositoryFactory factorsRepositoryFactory;
     private IFilesRepository filesRepository;
     private ILZWFactorsAnalyzer lzwFactorsAnalyzer;
-    private IWindowFactory windowFactory;
     private IFactorIteratorFactory factorIteratorFactory;
     private IStatisticsObjectFactory statisticsObjectFactory;
 
@@ -64,7 +62,6 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
             IFactorsRepositoryFactory factorsRepositoryFactory,
             IFilesRepository filesRepository,
             ILZWFactorsAnalyzer lzwFactorsAnalyzer,
-            IWindowFactory windowFactory,
             IFactorIteratorFactory factorIteratorFactory,
             IStatisticsObjectFactory statisticsObjectFactory) {
         this.settings = settings;
@@ -76,7 +73,6 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
         this.factorsRepositoryFactory = factorsRepositoryFactory;
         this.filesRepository = filesRepository;
         this.lzwFactorsAnalyzer = lzwFactorsAnalyzer;
-        this.windowFactory = windowFactory;
         this.factorIteratorFactory = factorIteratorFactory;
         this.statisticsObjectFactory = statisticsObjectFactory;
     }
@@ -121,7 +117,7 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
                 return new LzwAlgorithm(lzwFactorsAnalyzer, resourceProvider, filesRepository, statisticsObjectFactory);
             }
             case lz77: {
-                return new Lz77Algorithm(resourceProvider, filesRepository, windowFactory, factorsRepositoryFactory, new Analysator(), statisticsObjectFactory);
+                return new Lz77Algorithm(resourceProvider, filesRepository, factorsRepositoryFactory, factorIteratorFactory, new Analysator(), statisticsObjectFactory);
             }
             case lzInf: {
                 return new LzInfAlgorithm(resourceProvider, filesRepository, factorIteratorFactory, factorsRepositoryFactory, new Analysator(), statisticsObjectFactory);
