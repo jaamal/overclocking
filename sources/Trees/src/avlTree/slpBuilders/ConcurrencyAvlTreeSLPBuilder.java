@@ -2,11 +2,11 @@ package avlTree.slpBuilders;
 
 import java.util.List;
 
-import SLPs.*;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import SLPs.ISLPExtractor;
+import SLPs.SlpByteSizeCounter;
 import avlTree.IAvlTree;
 import avlTree.IAvlTreeManager;
 import avlTree.IAvlTreeManagerFactory;
@@ -16,8 +16,11 @@ import avlTree.helpers.IAvlTreeArrayMergeCounter;
 import avlTree.helpers.IRebalancingCounter;
 import avlTree.treeSets.IAvlTreeSet;
 import avlTree.treeSets.IAvlTreeSetFactory;
+
 import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
+
+import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
 import dataContracts.SLPStatistics;
 import dataContracts.statistics.CompressionStatisticKeys;
@@ -50,19 +53,21 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 
 
 	@Override
-	public ISLPBuilder buildSlp(LZFactorDef[] factors, ICompressionStatistics statistics)
+	public ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics)
     {
         return buildSlp(factors, statistics, new ConcurrentAvlBuilderStopwatches());
     }
 
 	@Override
-	public ISLPBuilder buildSlp(LZFactorDef[] factors, ICompressionStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches)
+	public ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches)
 	{
+	    LZFactorDef[] clonedFactorization = cloneFactorization(factors);
+	    
         ITimeCounter timeCounter = new TimeCounter();
         timeCounter.start();
 
         stopwatches.totalStopwatch.start();
-        IAvlTree resultTree = buildAvlTree(factors, statistics, stopwatches);
+        IAvlTree resultTree = buildAvlTree(clonedFactorization, statistics, stopwatches);
 
         stopwatches.minimizeTreeStopwatch.start();
         ISLPBuilder slp = slpExtractor.getSLP(resultTree);
@@ -81,6 +86,15 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
         statistics.putParam(CompressionStatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slp));
 
         return slp;
+	}
+	
+	//TODO: cheat, we should found the way to store factors and its offest's separately.
+	private LZFactorDef[] cloneFactorization(FactorDef[] factors) {
+	    LZFactorDef[] result = new LZFactorDef[factors.length];
+	    for (int i = 0; i < factors.length; i++) {
+	        result[i] = new LZFactorDef(factors[i].isTerminal, factors[i].beginPosition, factors[i].length, (char)factors[i].symbol);
+	    }
+	    return result;
 	}
 
     private IAvlTree buildAvlTree(LZFactorDef[] factors, ICompressionStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches) {

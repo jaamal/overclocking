@@ -16,10 +16,10 @@ import tests.integration.IntegrationTestBase;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.compression.algorithms.lzInf.ILZFactorIterator;
-import compressionservice.compression.algorithms.lzInf.LZFactor;
 import compressionservice.compression.algorithms.lzInf.LZFactorIteratorFactory;
 
 import dataContracts.DataFactoryType;
+import dataContracts.FactorDef;
 
 public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
 {
@@ -107,9 +107,9 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
         }
     }
 
-    private ArrayList<LZFactor> getFactors(IReadableCharArray charArray)
+    private ArrayList<FactorDef> getFactors(IReadableCharArray charArray)
     {
-        ArrayList<LZFactor> factors = new ArrayList<LZFactor>();
+        ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
 
         try(ILZFactorIterator lzFactorizator = lzFactorIteratorFactory.create(DataFactoryType.memory, charArray);)  {
             while (lzFactorizator.hasFactors())
@@ -121,25 +121,24 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
     private void doTest(String string)
     {
         IReadableCharArray charArray = new MemoryReadableCharArray(string);
-        ArrayList<LZFactor> factors = getFactors(charArray);
+        ArrayList<FactorDef> factors = getFactors(charArray);
         System.out.println("Factors count = " + factors.size());
         Assert.assertEquals(string, unpack(factors));
     }
 
-    private static String unpack(ArrayList<LZFactor> factors)
+    private static String unpack(ArrayList<FactorDef> factors)
     {
         StringBuffer result = new StringBuffer();
         for (int index = 0; index < factors.size(); ++index)
         {
-            LZFactor factor = factors.get(index);
+            FactorDef factor = factors.get(index);
             if (factor.isTerminal)
             {
-                result.append(factor.value);
+                result.append((char)factor.symbol);
             }
             else
             {
-                String subString = result.substring(
-                        (int) factor.startPosition, (int) (factor.endPosition));
+                String subString = result.substring((int) factor.beginPosition, (int) (factor.getEndPosition()));
                 result.append(subString);
             }
         }

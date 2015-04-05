@@ -35,4 +35,8 @@ public class FactorDef
         this.beginPosition = -1;
         this.length = -1;
     }
+    
+    public long getEndPosition() {
+        return beginPosition + length;
+    }
 }

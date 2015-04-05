@@ -29,6 +29,7 @@ import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
 import avlTree.slpBuilders.SLPBuilder;
+
 import commons.settings.ISettings;
 import compressingCore.dataAccess.IDataFactory;
 import compressingCore.dataAccess.IReadableCharArray;
@@ -36,11 +37,11 @@ import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressingCore.dataFiltering.FileFilter;
 import compressionservice.compression.algorithms.lzInf.ILZFactorIterator;
 import compressionservice.compression.algorithms.lzInf.ILZFactorIteratorFactory;
-import compressionservice.compression.algorithms.lzInf.LZFactor;
+
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
-import dataContracts.LZFactorDef;
+import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.files.FileType;
 import dataContracts.statistics.CompressionStatistics;
@@ -119,13 +120,12 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
         try (IReadableCharArray source = new MemoryReadableCharArray(text)) {
             ILZFactorIteratorFactory lzFactorIteratorFactory = container.get(ILZFactorIteratorFactory.class);
 
-            ArrayList<LZFactorDef> factorization;
+            ArrayList<FactorDef> factorization;
             try (ILZFactorIterator lzFactorIterator = lzFactorIteratorFactory.create(DataFactoryType.memory, source)) {
-                factorization = new ArrayList<LZFactorDef>();
+                factorization = new ArrayList<FactorDef>();
                 while (lzFactorIterator.hasFactors()) {
-                    LZFactor factor = lzFactorIterator.getNextFactor();
-                    long length = factor.endPosition - factor.startPosition;
-                    factorization.add(new LZFactorDef(factor.isTerminal, factor.startPosition, length, factor.value));
+                    FactorDef factor = lzFactorIterator.getNextFactor();
+                    factorization.add(factor);
                 }
             }
 
@@ -133,7 +133,7 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
             AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.sequential, AvlSplitPattern.fromMerged);
             SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
             AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
-            ISLPBuilder slp = builder.buildSlp(factorization.toArray(new LZFactorDef[0]), new CompressionStatistics());
+            ISLPBuilder slp = builder.buildSlp(factorization.toArray(new FactorDef[0]), new CompressionStatistics());
 
             Assert.assertEquals(text, slp.getProductString());
             return slp;

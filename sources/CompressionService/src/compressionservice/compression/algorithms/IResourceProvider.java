@@ -2,9 +2,10 @@ package compressionservice.compression.algorithms;
 
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.compression.parameters.ICompressionRunParams;
-import dataContracts.LZFactorDef;
+
+import dataContracts.FactorDef;
 
 public interface IResourceProvider {
-    LZFactorDef[] getFactorization(ICompressionRunParams runParams);
+    FactorDef[] getFactorization(ICompressionRunParams runParams);
     IReadableCharArray getText(ICompressionRunParams runParams);
 }

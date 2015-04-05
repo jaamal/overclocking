@@ -1,19 +1,21 @@
 package cartesianTree.slpBuilders;
 
+import org.apache.log4j.Logger;
+
 import SLPs.ISLPExtractor;
 import SLPs.SlpByteSizeCounter;
 import avlTree.slpBuilders.ISLPBuilder;
 import cartesianTree.ICartesianTree;
 import cartesianTree.ICartesianTreeManager;
 import cartesianTree.ICartesianTreeManagerFactory;
+
 import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
-import dataContracts.LZFactorDef;
+
+import dataContracts.FactorDef;
 import dataContracts.SLPStatistics;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.ICompressionStatistics;
-
-import org.apache.log4j.Logger;
 
 public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     private static Logger logger = Logger.getLogger(CartesianSlpTreeBuilder.class);
@@ -31,7 +33,7 @@ public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     }
 
     @Override
-    public ISLPBuilder buildSlp(LZFactorDef[] factors, ICompressionStatistics statistics) {
+    public ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics) {
         ITimeCounter timeCounter = new TimeCounter();
         timeCounter.start();
         ICartesianTree resultTree = buildCartesianTree(factors);
@@ -51,13 +53,13 @@ public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
         return slp;
     }
 
-    private ICartesianTree buildCartesianTree(LZFactorDef[] factors) {
+    private ICartesianTree buildCartesianTree(FactorDef[] factors) {
         ICartesianTreeManager treeManager = treeManagerFactory.create();
         ICartesianTree currentTree = treeManager.getEmptyTree();
         for (int i = 0; i < factors.length; ++i) {
             if (i % 100000 == 0)
                 logger.info(String.format("Processed %d factors...", i));
-            LZFactorDef factor = factors[i];
+            FactorDef factor = factors[i];
             ICartesianTree newTree;
             if (factor.isTerminal)
                 newTree = treeManager.createNewTree((long) factor.symbol);

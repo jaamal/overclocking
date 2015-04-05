@@ -1,5 +1,11 @@
 package tests.integration.Trees;
 
+import java.util.ArrayList;
+
+import org.junit.Test;
+
+import serialization.products.ProductsSerializer4;
+import tests.integration.IntegrationTestBase;
 import SLPs.SLPExtractor;
 import SLPs.SlpByteSizeCounter;
 import avlTree.AvlTreeManagerFactory;
@@ -8,23 +14,17 @@ import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
+
 import commons.settings.ISettings;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.compression.algorithms.lzInf.ILZFactorIterator;
 import compressionservice.compression.algorithms.lzInf.ILZFactorIteratorFactory;
-import compressionservice.compression.algorithms.lzInf.LZFactor;
+
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
-import dataContracts.LZFactorDef;
+import dataContracts.FactorDef;
 import dataContracts.statistics.CompressionStatistics;
-
-import org.junit.Test;
-
-import serialization.products.ProductsSerializer4;
-import tests.integration.IntegrationTestBase;
-
-import java.util.ArrayList;
 
 public class AvlSlpBuildTest extends IntegrationTestBase {
 
@@ -39,14 +39,14 @@ public class AvlSlpBuildTest extends IntegrationTestBase {
         System.out.println(slp.getStatistics().countRules);
     }
 
-    private LZFactorDef[] getFactorization(String text) {
+    private FactorDef[] getFactorization(String text) {
         ILZFactorIterator iterator = container.get(ILZFactorIteratorFactory.class).create(DataFactoryType.memory, new MemoryReadableCharArray(text));
-        ArrayList<LZFactorDef> factors = new ArrayList<LZFactorDef>();
+        ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
         while(iterator.hasFactors())
         {
-            LZFactor nextFactor = iterator.getNextFactor();
-            factors.add(new LZFactorDef(nextFactor.isTerminal, nextFactor.startPosition, nextFactor.endPosition - nextFactor.startPosition, nextFactor.value));
+            FactorDef nextFactor = iterator.getNextFactor();
+            factors.add(nextFactor);
         }
-        return factors.toArray(new LZFactorDef[0]);
+        return factors.toArray(new FactorDef[0]);
     }
 }

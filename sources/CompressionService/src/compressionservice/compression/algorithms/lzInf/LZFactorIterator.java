@@ -4,6 +4,8 @@ import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.IOnLineSuffixTree;
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.ISuffixTreeNavigator;
 
+import dataContracts.FactorDef;
+
 public class LZFactorIterator implements ILZFactorIterator
 {
     private IOnLineSuffixTree suffixTree;
@@ -26,18 +28,31 @@ public class LZFactorIterator implements ILZFactorIterator
     }
 
     @Override
-    public LZFactor getNextFactor()
+    public FactorDef getNextFactor()
     {
         if (!hasFactors())
             throw new IllegalAccessError("The method called when all factors scanned.");
-        return extractFactor();
+        return extractFactor(arrayLength);
     }
 
     @Override
     public void close() {
         suffixTree.close();
     }
-
+    
+    private FactorDef extractFactor(long maxPosition)
+    {
+        ISuffixTreeNavigator navigator = moveNavigatorWhileCan(maxPosition);
+        long length = navigator.pathLength();
+        if (length <= 1)
+        {
+            addChars(1L);
+            return new FactorDef(charArray.get(currentPosition - 1));
+        }
+        addChars(length);
+        long leftmostPosition = navigator.getLeftmostPosition();
+        return new FactorDef(leftmostPosition - length, length);
+    }
 
     private ISuffixTreeNavigator moveNavigatorWhileCan(long maxPosition)
     {
@@ -48,34 +63,9 @@ public class LZFactorIterator implements ILZFactorIterator
         return navigator;
     }
 
-    protected void addChars(long charsCount)
+    private void addChars(long charsCount)
     {
         suffixTree.addCharsToPrefix(charsCount);
         currentPosition += charsCount;
-    }
-
-    protected void removeChars(long charsCount)
-    {
-        suffixTree.removeCharsFromPrefix(charsCount);
-        currentPosition -= charsCount;
-    }
-
-    protected LZFactor extractFactor()
-    {
-        return extractFactor(arrayLength);
-    }
-
-    protected LZFactor extractFactor(long maxPosition)
-    {
-        ISuffixTreeNavigator navigator = moveNavigatorWhileCan(maxPosition);
-        long length = navigator.pathLength();
-        if (length <= 1)
-        {
-            addChars(1L);
-            return new LZFactor(charArray.get(currentPosition - 1));
-        }
-        addChars(length);
-        long leftmostPosition = navigator.getLeftmostPosition();
-        return new LZFactor(leftmostPosition - length, leftmostPosition);
     }
 }

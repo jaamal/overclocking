@@ -1,5 +1,8 @@
 package avlTree.slpBuilders;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import SLPs.ISLPExtractor;
 import SLPs.SlpByteSizeCounter;
 import avlTree.IAvlTree;
@@ -7,16 +10,19 @@ import avlTree.IAvlTreeManager;
 import avlTree.IAvlTreeManagerFactory;
 import avlTree.buffers.IAvlTreeBuffer;
 import avlTree.buffers.IAvlTreeBufferFactory;
-import avlTree.helpers.*;
+import avlTree.helpers.AvlTreeArrayMergeCounter;
+import avlTree.helpers.IAvlTreeArrayMergeCounter;
+import avlTree.helpers.IRebalancingCounter;
+import avlTree.helpers.NodesCacheStatisticsCounter;
+import avlTree.helpers.RebalancingCounter;
+
 import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
-import dataContracts.LZFactorDef;
+
+import dataContracts.FactorDef;
 import dataContracts.SLPStatistics;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.ICompressionStatistics;
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     private static final Logger log = LogManager.getLogger(AvlTreeSLPBuilder.class);
@@ -38,7 +44,9 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     }
 
     @Override
-    public ISLPBuilder buildSlp(LZFactorDef[] factors, ICompressionStatistics statistics) {
+    public ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics) {
+        
+        
         ITimeCounter timeCounter = new TimeCounter();
         timeCounter.start();
         IAvlTree resultTree = buildAvlTree(factors, statistics);
@@ -57,8 +65,8 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
 
         return slp;
     }
-
-    private IAvlTree buildAvlTree(LZFactorDef[] factors, ICompressionStatistics statistics) {
+    
+    private IAvlTree buildAvlTree(FactorDef[] factors, ICompressionStatistics statistics) {
         NodesCacheStatisticsCounter nodesCacheStatisticsCounter = new NodesCacheStatisticsCounter();
         IRebalancingCounter rebalancingCounter = new RebalancingCounter();
         IAvlTreeArrayMergeCounter avlTreeArrayMergeCounter = new AvlTreeArrayMergeCounter();
@@ -66,7 +74,7 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
         IAvlTreeManager avlTreeManager = avlTreeManagerFactory.create();
         IAvlTreeBuffer buffer = avlTreeBufferFactory.create(rebalancingCounter, nodesCacheStatisticsCounter, avlTreeArrayMergeCounter, avlTreeManager.createEmptyTree());
         for (int i = 0; i < factors.length; i++) {
-            LZFactorDef factor = factors[i];
+            FactorDef factor = factors[i];
             if (factor.isTerminal)
                 buffer.append(avlTreeManager.createNewTree((long) factor.symbol));
             else

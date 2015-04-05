@@ -6,8 +6,10 @@ import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.IAvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
+
 import compressionservice.compression.parameters.ICompressionRunParams;
-import dataContracts.LZFactorDef;
+
+import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.statistics.CompressionStatistics;
 import dataContracts.statistics.ICompressionStatistics;
@@ -19,7 +21,7 @@ public class AvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
     private IAvlTreeSLPBuilder avlTreeSLPBuilder;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
-    private IFactorsRepository<LZFactorDef> factorsRepository;
+    private IFactorsRepository<FactorDef> factorsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
 
     public AvlSlpBuildAlgorithm(
@@ -38,7 +40,7 @@ public class AvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
 
     @Override
     public StatisticsObject build(ICompressionRunParams runParams) {
-        LZFactorDef[] factorization = resourceProvider.getFactorization(runParams);
+        FactorDef[] factorization = resourceProvider.getFactorization(runParams);
         ICompressionStatistics statistics = new CompressionStatistics();
 
         ISLPBuilder slp = avlTreeSLPBuilder.buildSlp(factorization, statistics);

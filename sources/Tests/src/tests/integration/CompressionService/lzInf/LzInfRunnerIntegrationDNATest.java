@@ -14,20 +14,18 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
-
 import compressionservice.compression.parameters.CompressionRunParams;
 import compressionservice.compression.running.LzInfRunner;
-
 import dataContracts.ContentType;
-import dataContracts.LZFactorDef;
+import dataContracts.FactorDef;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
-//TODO: LzInf integration tests doesnt work at linux since we use windows program to build suffix tree
 public class LzInfRunnerIntegrationDNATest extends StorageTestBase
 {
     private IStatisticsRepository statisticsRepository;
-    private IFactorsRepository<LZFactorDef> factorsRepository;
+    private IFactorsRepository<FactorDef> factorsRepository;
     private LzInfRunner lzInfRunner;
 
     @Override
@@ -55,6 +53,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository).getId();
         
         CompressionRunParams runParams = new CompressionRunParams();
+        runParams.putParam(CompressionRunKeys.SourceId, fileId);
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
         
@@ -70,6 +69,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository).getId();
         
         CompressionRunParams runParams = new CompressionRunParams();
+        runParams.putParam(CompressionRunKeys.SourceId, fileId);
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
         
@@ -85,6 +85,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository).getId();
 
         CompressionRunParams runParams = new CompressionRunParams();
+        runParams.putParam(CompressionRunKeys.SourceId, fileId);
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
 
@@ -95,10 +96,10 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
     }
 
 
-    private static String unpack(List<LZFactorDef> factors)
+    private static String unpack(List<FactorDef> factors)
     {
         StringBuffer result = new StringBuffer();
-        for (LZFactorDef factor : factors)
+        for (FactorDef factor : factors)
         {
             if (factor.isTerminal)
             {
@@ -106,8 +107,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
             }
             else
             {
-                String subString = result.substring(
-                        (int) factor.beginPosition, (int) (factor.beginPosition + factor.length));
+                String subString = result.substring((int) factor.beginPosition, (int) (factor.beginPosition + factor.length));
                 result.append(subString);
             }
         }

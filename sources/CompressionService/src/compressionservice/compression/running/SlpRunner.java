@@ -31,30 +31,19 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
     public void run(ICompressionRunParams runParams) {
         try {
             ISlpBuildAlgorithm buildAlgorithm = buildAlgorithmsFactory.create(runParams);
-            Iterable<String> sourceIds = buildAlgorithm.getAllSourceIds();
             ArrayList<Exception> unhandledExceptions = new ArrayList<>();
-            for (String sourceId : sourceIds) {
-                try {
-                    runParams.putParam(CompressionRunKeys.SourceId, sourceId);
-
-                    if (statisticsRepository.exists(sourceId, statisticsObjectFactory.getStatisticsObjectId(runParams.toMap()))) {
-                        logger.info("Skip sourceId = " + sourceId + ", because it was been processed early");
-                        continue;
-                    }
-
-                    logger.info("Start building slp on source with id = " + sourceId);
-                    StatisticsObject statisticsObject = buildAlgorithm.build(runParams);
-                    logger.info("End building.");
-
-                    logger.info("Start saving statistics");
-                    statisticsRepository.write(sourceId, statisticsObject);
-                    logger.info("Statistics saved.");
-                } catch (Exception e) {
-                    unhandledExceptions.add(e);
-                    logger.error("Unhandled exception", e);
-                }
-                System.gc();
+            
+            if (runParams.contains(CompressionRunKeys.SourceId)){
+                run(buildAlgorithm, unhandledExceptions, runParams);
             }
+            else {
+                Iterable<String> sourceIds = buildAlgorithm.getAllSourceIds();
+                for (String sourceId : sourceIds) {
+                    runParams.putParam(CompressionRunKeys.SourceId, sourceId);
+                    run(buildAlgorithm, unhandledExceptions, runParams);
+                }
+            }
+            
             if (unhandledExceptions.isEmpty())
                 logger.info("Done.");
             else
@@ -76,6 +65,28 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
             runParams.putParam(CompressionRunKeys.AlgorithmType, getAlgorithmType());
 
         return checkAndRefillParamsInternal(runParams);
+    }
+    
+    private void run(ISlpBuildAlgorithm buildAlgorithm, ArrayList<Exception> unhandledExceptions, ICompressionRunParams runParams) {
+        try {
+            String sourceId = runParams.getStrValue(CompressionRunKeys.SourceId);
+            if (statisticsRepository.exists(sourceId, statisticsObjectFactory.getStatisticsObjectId(runParams.toMap()))) {
+                logger.info("Skip sourceId = " + sourceId + ", because it was been processed early");
+                return;
+            }
+
+            logger.info("Start building slp on source with id = " + sourceId);
+            StatisticsObject statisticsObject = buildAlgorithm.build(runParams);
+            logger.info("End building.");
+
+            logger.info("Start saving statistics");
+            statisticsRepository.write(sourceId, statisticsObject);
+            logger.info("Statistics saved.");
+        } catch (Exception e) {
+            unhandledExceptions.add(e);
+            logger.error("Unhandled exception", e);
+        }
+        System.gc();
     }
 
     protected abstract CheckParamsResult checkAndRefillParamsInternal(ICompressionRunParams runParams);

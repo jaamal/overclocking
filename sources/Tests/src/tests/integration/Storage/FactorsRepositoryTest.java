@@ -77,14 +77,14 @@ public class FactorsRepositoryTest extends StorageTestBase {
     public void TestWriteLZFactorization() {
         String factorizationId = "fhfhf";
         LZFactorDef[] factorization = genLZFactorization(random);
-        final IFactorsRepository<LZFactorDef> lzFactorsRepository = container.create(LZFactorsRepository.class);
+        final IFactorsRepository<FactorDef> lzFactorsRepository = container.create(LZFactorsRepository.class);
         writeItems(lzFactorsRepository, factorizationId, factorization);
 
         String[] statistics = Iterables.toArray(lzFactorsRepository.getDoneStatisticIds(), String.class);
         Assert.assertEquals(1, statistics.length);
         Assert.assertEquals(factorizationId, statistics[0]);
         
-        List<LZFactorDef> actualFactorization = lzFactorsRepository.readItems(factorizationId);
+        List<FactorDef> actualFactorization = lzFactorsRepository.readItems(factorizationId);
         Assert.assertEquals(factorization.length, actualFactorization.size());
         for (int i = 0; i < factorization.length; i++) {
             String expectedFactorStr = serializer.stringify(factorization[i]);

@@ -1,19 +1,8 @@
 package compressionservice.compression.algorithms;
 
-import commons.utils.ITimeCounter;
-import commons.utils.TimeCounter;
-import compressingCore.dataAccess.IReadableCharArray;
-import compressionservice.compression.algorithms.analysator.IAnalysator;
-import compressionservice.compression.algorithms.lzInf.ILZFactorIterator;
-import compressionservice.compression.algorithms.lzInf.ILZFactorIteratorFactory;
-import compressionservice.compression.algorithms.lzInf.LZFactor;
-import compressionservice.compression.parameters.ICompressionRunParams;
-import dataContracts.DataFactoryType;
-import dataContracts.LZFactorDef;
-import dataContracts.statistics.CompressionRunKeys;
-import dataContracts.statistics.CompressionStatisticKeys;
-import dataContracts.statistics.IStatisticsObjectFactory;
-import dataContracts.statistics.StatisticsObject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,9 +12,20 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import commons.utils.ITimeCounter;
+import commons.utils.TimeCounter;
+import compressingCore.dataAccess.IReadableCharArray;
+import compressionservice.compression.algorithms.analysator.IAnalysator;
+import compressionservice.compression.algorithms.lzInf.ILZFactorIterator;
+import compressionservice.compression.algorithms.lzInf.ILZFactorIteratorFactory;
+import compressionservice.compression.parameters.ICompressionRunParams;
+
+import dataContracts.DataFactoryType;
+import dataContracts.FactorDef;
+import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.IStatisticsObjectFactory;
+import dataContracts.statistics.StatisticsObject;
 
 public class LzInfAlgorithm implements ISlpBuildAlgorithm {
 
@@ -34,7 +34,7 @@ public class LzInfAlgorithm implements ISlpBuildAlgorithm {
     private final IResourceProvider resourceProvider;
     private final ILZFactorIteratorFactory lzFactorIteratorFactory;
     private final IFilesRepository filesRepository;
-    private final IFactorsRepository<LZFactorDef> factorsRepository;
+    private final IFactorsRepository<FactorDef> factorsRepository;
     private final IStatisticsObjectFactory statisticsObjectFactory;
     private final IAnalysator analysator;
 
@@ -59,15 +59,14 @@ public class LzInfAlgorithm implements ISlpBuildAlgorithm {
         try (IReadableCharArray source = resourceProvider.getText(runParams)) {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
-            ArrayList<LZFactorDef> factors = new ArrayList<>();
+            ArrayList<FactorDef> factors = new ArrayList<>();
             try (ILZFactorIterator factorIterator = lzFactorIteratorFactory.create(dataFactoryType, source)) {
                 while (factorIterator.hasFactors()) {
                     if (factors.size() % 10000 == 0)
                         logger.info(String.format("Produced %d factors", factors.size()));
 
-                    LZFactor factor = factorIterator.getNextFactor();
-                    long length = factor.endPosition - factor.startPosition;
-                    factors.add(new LZFactorDef(factor.isTerminal, factor.startPosition, length, factor.value));
+                    FactorDef factor = factorIterator.getNextFactor();
+                    factors.add(factor);
                 }
             }
             timeCounter.end();
@@ -79,8 +78,8 @@ public class LzInfAlgorithm implements ISlpBuildAlgorithm {
             statistics.put(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
             StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics);
 
-            IArrayItemsWriter<LZFactorDef> writer = factorsRepository.getWriter(result.getId());
-            for (LZFactorDef factor : factors) {
+            IArrayItemsWriter<FactorDef> writer = factorsRepository.getWriter(result.getId());
+            for (FactorDef factor : factors) {
                 writer.add(factor);
             }
             writer.done();

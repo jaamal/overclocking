@@ -19,14 +19,14 @@ import compressingCore.dataFiltering.IFileFilter;
 import compressionservice.compression.parameters.ICompressionRunParams;
 
 import dataContracts.DataFactoryType;
-import dataContracts.LZFactorDef;
+import dataContracts.FactorDef;
 import dataContracts.files.FileMetadata;
 import dataContracts.statistics.CompressionRunKeys;
 
 public class ResourceProvider implements IResourceProvider {
     private static Logger logger = Logger.getLogger(ResourceProvider.class);
     
-    private IFactorsRepository<LZFactorDef> factorsRepository;
+    private IFactorsRepository<FactorDef> factorsRepository;
     private IDataFactory dataFactory;
     private IFilesRepository filesRepository;
     private IFileFilter fileFilter;
@@ -43,12 +43,12 @@ public class ResourceProvider implements IResourceProvider {
     }
     
     @Override
-    public LZFactorDef[] getFactorization(ICompressionRunParams runParams) {
+    public FactorDef[] getFactorization(ICompressionRunParams runParams) {
         String sourceId = runParams.getStrValue(CompressionRunKeys.SourceId);
         logger.info("Start read factors from factorization with id = " + sourceId);
-        List<LZFactorDef> lzFactors = factorsRepository.readItems(sourceId);
+        List<FactorDef> lzFactors = factorsRepository.readItems(sourceId);
         logger.info("End read factors. Factors count = " + lzFactors.size());
-        return lzFactors.toArray(new LZFactorDef[0]);
+        return lzFactors.toArray(new FactorDef[0]);
     }
 
     @Override

@@ -1,10 +1,10 @@
 package cartesianTree.slpBuilders;
 
 import avlTree.slpBuilders.ISLPBuilder;
-import dataContracts.LZFactorDef;
+import dataContracts.FactorDef;
 import dataContracts.statistics.ICompressionStatistics;
 
 public interface ICartesianSlpTreeBuilder
 {
-    ISLPBuilder buildSlp(LZFactorDef[] factors, ICompressionStatistics statistics);
+    ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics);
 }

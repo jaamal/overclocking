@@ -29,7 +29,6 @@ import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.LZFactorDef;
 import dataContracts.files.FileMetadata;
 import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
@@ -38,7 +37,7 @@ import dataContracts.statistics.StatisticsObject;
 public class ReadStatisticsFromProductionTest extends ProductionTestBase {
     private IStatisticsRepository statisticsRepository;
     private IFilesRepository fileRepository;
-    private IFactorsRepository<LZFactorDef> factorsRepository;
+    private IFactorsRepository<FactorDef> factorsRepository;
     private SlpProductsRepository slpProductsRepository;
     private LZ77FactorsRepository lz77FactorsRepository;
 
@@ -91,7 +90,7 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
                     obj.statistics.put(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
                     statisticsRepository.write(fileId, obj);
                 } else if (algorithmKey.equals(Algorithms.LZInfInMemory.key)) {
-                    List<LZFactorDef> factors = factorsRepository.readItems(obj.getId());
+                    List<FactorDef> factors = factorsRepository.readItems(obj.getId());
                     long byteSize = analysator.countByteSize(factors);
                     obj.statistics.put(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
                     statisticsRepository.write(fileId, obj);

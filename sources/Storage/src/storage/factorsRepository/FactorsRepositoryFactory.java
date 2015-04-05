@@ -3,7 +3,6 @@ package storage.factorsRepository;
 import serialization.ISerializer;
 import storage.cassandraClient.ICassandraConnectionFactory;
 import dataContracts.FactorDef;
-import dataContracts.LZFactorDef;
 
 public class FactorsRepositoryFactory implements IFactorsRepositoryFactory {
 
@@ -16,7 +15,7 @@ public class FactorsRepositoryFactory implements IFactorsRepositoryFactory {
     }
     
     @Override
-    public IFactorsRepository<LZFactorDef> getLZRepository() {
+    public IFactorsRepository<FactorDef> getLZRepository() {
         return lzFactorsRepository;
     }
 
