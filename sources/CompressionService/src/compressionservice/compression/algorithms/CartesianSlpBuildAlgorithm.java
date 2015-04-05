@@ -21,7 +21,7 @@ public class CartesianSlpBuildAlgorithm implements ISlpBuildAlgorithm {
     private ICartesianSlpTreeBuilder cartesianSLPTreeBuilder;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
-    private IFactorsRepository<FactorDef> factorsRepository;
+    private IFactorsRepository factorsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
 
     public CartesianSlpBuildAlgorithm(

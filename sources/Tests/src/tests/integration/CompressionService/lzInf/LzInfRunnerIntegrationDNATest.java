@@ -25,7 +25,7 @@ import dataContracts.statistics.StatisticsObject;
 public class LzInfRunnerIntegrationDNATest extends StorageTestBase
 {
     private IStatisticsRepository statisticsRepository;
-    private IFactorsRepository<FactorDef> factorsRepository;
+    private IFactorsRepository factorsRepository;
     private LzInfRunner lzInfRunner;
 
     @Override

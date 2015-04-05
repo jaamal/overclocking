@@ -32,7 +32,7 @@ public class LzInfAlgorithm implements ISlpBuildAlgorithm {
     private final IResourceProvider resourceProvider;
     private final IFactorIteratorFactory factorIteratorFactory;
     private final IFilesRepository filesRepository;
-    private final IFactorsRepository<FactorDef> factorsRepository;
+    private final IFactorsRepository factorsRepository;
     private final IStatisticsObjectFactory statisticsObjectFactory;
     private final IAnalysator analysator;
 

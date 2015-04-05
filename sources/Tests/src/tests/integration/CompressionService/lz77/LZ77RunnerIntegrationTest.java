@@ -26,7 +26,7 @@ import dataContracts.statistics.StatisticsObject;
 public class LZ77RunnerIntegrationTest extends StorageTestBase
 {
     private IStatisticsRepository staisticsRepository;
-    private IFactorsRepository<FactorDef> factorsRepository;
+    private IFactorsRepository factorsRepository;
     private Lz77Runner lz77Runner;
 
     @Override

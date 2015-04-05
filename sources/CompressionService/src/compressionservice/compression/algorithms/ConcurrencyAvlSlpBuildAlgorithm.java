@@ -22,7 +22,7 @@ public class ConcurrencyAvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
     private IConcurrencyAvlTreeSLPBuilder avlTreeSLPBuilder;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
-    private IFactorsRepository<FactorDef> factorsRepository;
+    private IFactorsRepository factorsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
 
     public ConcurrencyAvlSlpBuildAlgorithm(

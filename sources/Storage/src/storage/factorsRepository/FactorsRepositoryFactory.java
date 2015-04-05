@@ -2,7 +2,6 @@ package storage.factorsRepository;
 
 import serialization.ISerializer;
 import storage.cassandraClient.ICassandraConnectionFactory;
-import dataContracts.FactorDef;
 
 public class FactorsRepositoryFactory implements IFactorsRepositoryFactory {
 
@@ -15,12 +14,12 @@ public class FactorsRepositoryFactory implements IFactorsRepositoryFactory {
     }
     
     @Override
-    public IFactorsRepository<FactorDef> getLZRepository() {
+    public IFactorsRepository getLZRepository() {
         return lzFactorsRepository;
     }
 
     @Override
-    public IFactorsRepository<FactorDef> getLZ77Repository() {
+    public IFactorsRepository getLZ77Repository() {
         return lz77FactorsRepository;
     }
 

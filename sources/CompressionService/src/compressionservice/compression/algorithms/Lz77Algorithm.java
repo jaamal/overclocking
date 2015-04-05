@@ -30,7 +30,7 @@ public class Lz77Algorithm implements ISlpBuildAlgorithm {
 
     private static Logger logger = LogManager.getLogger(Lz77Algorithm.class);
 
-    private final IFactorsRepository<FactorDef> factorsRepotisory;
+    private final IFactorsRepository factorsRepotisory;
     private final IResourceProvider resourceProvider;
     private final IStatisticsObjectFactory statisticsObjectFactory;
     private final IFilesRepository filesRepository;

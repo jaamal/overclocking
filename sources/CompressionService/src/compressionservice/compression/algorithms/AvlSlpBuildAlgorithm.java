@@ -21,7 +21,7 @@ public class AvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
     private IAvlTreeSLPBuilder avlTreeSLPBuilder;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
-    private IFactorsRepository<FactorDef> factorsRepository;
+    private IFactorsRepository factorsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
 
     public AvlSlpBuildAlgorithm(

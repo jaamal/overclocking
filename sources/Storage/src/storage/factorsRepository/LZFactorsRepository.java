@@ -7,7 +7,7 @@ import storage.cassandraClient.ColumnFamilies;
 import storage.cassandraClient.ICassandraConnectionFactory;
 import dataContracts.FactorDef;
 
-public class LZFactorsRepository extends CassandraArrayItemsRepositoryBase<FactorDef> implements IFactorsRepository<FactorDef>
+public class LZFactorsRepository extends CassandraArrayItemsRepositoryBase<FactorDef> implements IFactorsRepository
 {
     public LZFactorsRepository(ISerializer serializer, ICassandraConnectionFactory cassandraConnectionFactory)
     {

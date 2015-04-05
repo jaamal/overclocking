@@ -4,7 +4,6 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
 import storage.statistics.IStatisticsRepository;
-import dataContracts.FactorDef;
 import dataContracts.statistics.StatisticsObject;
 
 
@@ -34,14 +33,14 @@ public class StatsExporter implements IStatsExporter {
             statisticsConverter.append(stats);
         }
         
-        IFactorsRepository<FactorDef> lzFactorsRepository = factorsRepositoryFactory.getLZRepository();
+        IFactorsRepository lzFactorsRepository = factorsRepositoryFactory.getLZRepository();
         Iterable<String> factorizationIds = lzFactorsRepository.getDoneStatisticIds();
         for (String factorizationId : factorizationIds) {
             StatisticsObject[] stats = statisticsRepository.readAll(factorizationId);
             statisticsConverter.append(stats);
         }
         
-        IFactorsRepository<FactorDef> lz77FactorsRepository = factorsRepositoryFactory.getLZ77Repository();
+        IFactorsRepository lz77FactorsRepository = factorsRepositoryFactory.getLZ77Repository();
         factorizationIds = lz77FactorsRepository.getDoneStatisticIds();
         for (String factorizationId : factorizationIds) {
             StatisticsObject[] stats = statisticsRepository.readAll(factorizationId);

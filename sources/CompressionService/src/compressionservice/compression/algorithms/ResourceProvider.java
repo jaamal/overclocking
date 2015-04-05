@@ -26,7 +26,7 @@ import dataContracts.statistics.CompressionRunKeys;
 public class ResourceProvider implements IResourceProvider {
     private static Logger logger = Logger.getLogger(ResourceProvider.class);
     
-    private IFactorsRepository<FactorDef> factorsRepository;
+    private IFactorsRepository factorsRepository;
     private IDataFactory dataFactory;
     private IFilesRepository filesRepository;
     private IFileFilter fileFilter;

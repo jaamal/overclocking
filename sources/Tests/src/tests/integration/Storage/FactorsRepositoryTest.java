@@ -77,7 +77,7 @@ public class FactorsRepositoryTest extends StorageTestBase {
     public void TestWriteLZFactorization() {
         String factorizationId = "fhfhf";
         LZFactorDef[] factorization = genLZFactorization(random);
-        final IFactorsRepository<FactorDef> lzFactorsRepository = container.create(LZFactorsRepository.class);
+        final IFactorsRepository lzFactorsRepository = container.create(LZFactorsRepository.class);
         writeItems(lzFactorsRepository, factorizationId, factorization);
 
         String[] statistics = Iterables.toArray(lzFactorsRepository.getDoneStatisticIds(), String.class);
@@ -97,7 +97,7 @@ public class FactorsRepositoryTest extends StorageTestBase {
 	public void TestWriteLZ77Factorization() {
         String factorizationId = "zzzz";
         FactorDef[] factorization = genLZ77Factorization(random);
-        final IFactorsRepository<FactorDef> lz77FactorsRepository = container.create(LZ77FactorsRepository.class);
+        final IFactorsRepository lz77FactorsRepository = container.create(LZ77FactorsRepository.class);
         writeItems(lz77FactorsRepository, factorizationId, factorization);
 
         String[] statistics = Iterables.toArray(lz77FactorsRepository.getDoneStatisticIds(), String.class);
@@ -121,7 +121,7 @@ public class FactorsRepositoryTest extends StorageTestBase {
 		    testFactorizations[i] = genLZ77Factorization(random);
 		}
 		
-		final IFactorsRepository<FactorDef> lz77FactorsRepository = container.create(LZ77FactorsRepository.class);
+		final IFactorsRepository lz77FactorsRepository = container.create(LZ77FactorsRepository.class);
 		ExecutorService executorService = Executors.newFixedThreadPool(4);
 		for (int i = 0; i < ids.length; ++i) {
 		    executorService.execute(createWriteFactorizationTask(lz77FactorsRepository, ids[i], testFactorizations[i]));
@@ -157,7 +157,7 @@ public class FactorsRepositoryTest extends StorageTestBase {
         writer.done();
     }
     
-    private static <T extends FactorDef> Runnable createWriteFactorizationTask(final IFactorsRepository<T> factorsRepository, final String factorizationId, final T[] factorization) {
+    private static Runnable createWriteFactorizationTask(final IFactorsRepository factorsRepository, final String factorizationId, final FactorDef[] factorization) {
         return new Runnable() {
             public void run() {
                 writeItems(factorsRepository, factorizationId, factorization);

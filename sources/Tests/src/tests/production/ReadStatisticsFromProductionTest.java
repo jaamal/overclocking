@@ -37,7 +37,7 @@ import dataContracts.statistics.StatisticsObject;
 public class ReadStatisticsFromProductionTest extends ProductionTestBase {
     private IStatisticsRepository statisticsRepository;
     private IFilesRepository fileRepository;
-    private IFactorsRepository<FactorDef> factorsRepository;
+    private IFactorsRepository factorsRepository;
     private SlpProductsRepository slpProductsRepository;
     private LZ77FactorsRepository lz77FactorsRepository;
 
