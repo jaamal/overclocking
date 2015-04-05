@@ -24,8 +24,8 @@ import commons.files.IFileManager;
 import commons.settings.ISettings;
 import compressingCore.dataAccess.IDataFactory;
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.lzInf.ILZFactorIterator;
-import compressionservice.compression.algorithms.lzInf.LZFactorIteratorFactory;
+import compressionservice.compression.algorithms.factorization.FactorIteratorFactory;
+import compressionservice.compression.algorithms.factorization.IFactorIterator;
 import compressionservice.compression.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
 import compressionservice.compression.algorithms.lzInf.arrayMinSearching.IArrayMinSearcherFactory;
 import compressionservice.compression.algorithms.lzInf.suffixArray.ExternalProcessExecutor;
@@ -35,6 +35,7 @@ import compressionservice.compression.algorithms.lzInf.suffixArray.SuffixArrayBu
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.IOnlineSuffixTreeFactory;
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.OnLineSuffixTreeFactory;
 
+import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
@@ -68,10 +69,10 @@ public class SLPBuildHelper {
         ISuffixArrayBuilder suffixArrayFactory = new SuffixArrayBuilder(dataFactory, fileManager, externalProcessExecutor, settings);
         IArrayMinSearcherFactory arrayMinSearcherFactory = new ArrayMinSearcherFactory(dataFactory);
         IOnlineSuffixTreeFactory onlineSuffixTreeFactory = new OnLineSuffixTreeFactory(suffixArrayFactory, arrayMinSearcherFactory);
-        ILZFactorIterator iterator = new LZFactorIteratorFactory(onlineSuffixTreeFactory).create(DataFactoryType.memory, new MemoryReadableCharArray(text));
+        IFactorIterator iterator = new FactorIteratorFactory(onlineSuffixTreeFactory).create(AlgorithmType.lzInf, DataFactoryType.memory, new MemoryReadableCharArray(text));
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
-        while (iterator.hasFactors()) {
-            FactorDef nextFactor = iterator.getNextFactor();
+        while (iterator.any()) {
+            FactorDef nextFactor = iterator.next();
             factors.add(nextFactor);
         }
         return factors.toArray(new LZFactorDef[0]);

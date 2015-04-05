@@ -35,9 +35,10 @@ import compressingCore.dataAccess.IDataFactory;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressingCore.dataFiltering.FileFilter;
-import compressionservice.compression.algorithms.lzInf.ILZFactorIterator;
-import compressionservice.compression.algorithms.lzInf.ILZFactorIteratorFactory;
+import compressionservice.compression.algorithms.factorization.IFactorIterator;
+import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 
+import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
@@ -118,15 +119,17 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
 
     private ISLPBuilder buildSLPFromFile(String text) {
         try (IReadableCharArray source = new MemoryReadableCharArray(text)) {
-            ILZFactorIteratorFactory lzFactorIteratorFactory = container.get(ILZFactorIteratorFactory.class);
+            IFactorIteratorFactory factorIteratorFactory = container.get(IFactorIteratorFactory.class);
 
             ArrayList<FactorDef> factorization;
-            try (ILZFactorIterator lzFactorIterator = lzFactorIteratorFactory.create(DataFactoryType.memory, source)) {
+            try (IFactorIterator lzFactorIterator = factorIteratorFactory.create(AlgorithmType.lzInf, DataFactoryType.memory, source)) {
                 factorization = new ArrayList<FactorDef>();
-                while (lzFactorIterator.hasFactors()) {
-                    FactorDef factor = lzFactorIterator.getNextFactor();
+                while (lzFactorIterator.any()) {
+                    FactorDef factor = lzFactorIterator.next();
                     factorization.add(factor);
                 }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
 
             IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);

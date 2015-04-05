@@ -1,7 +1,6 @@
 package patternMatching.fcpm.localsearch;
 
 import patternMatching.fcpm.arithmeticProgression.ArithmeticProgression;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public final class LocalSearchResult implements IEditableLocalSearchResult
 {

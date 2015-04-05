@@ -15,21 +15,22 @@ import tests.integration.IntegrationTestBase;
 
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.lzInf.ILZFactorIterator;
-import compressionservice.compression.algorithms.lzInf.LZFactorIteratorFactory;
+import compressionservice.compression.algorithms.factorization.FactorIteratorFactory;
+import compressionservice.compression.algorithms.factorization.IFactorIterator;
 
+import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 
 public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
 {
-    private LZFactorIteratorFactory lzFactorIteratorFactory;
+    private FactorIteratorFactory factorIteratorFactory;
 
     @Override
     public void setUp()
     {
         super.setUp();
-        lzFactorIteratorFactory = container.get(LZFactorIteratorFactory.class);
+        factorIteratorFactory = container.get(FactorIteratorFactory.class);
     }
 
     @Test
@@ -111,9 +112,11 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
     {
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
 
-        try(ILZFactorIterator lzFactorizator = lzFactorIteratorFactory.create(DataFactoryType.memory, charArray);)  {
-            while (lzFactorizator.hasFactors())
-                factors.add(lzFactorizator.getNextFactor());
+        try(IFactorIterator lzFactorizator = factorIteratorFactory.create(AlgorithmType.lzInf, DataFactoryType.memory, charArray);)  {
+            while (lzFactorizator.any())
+                factors.add(lzFactorizator.next());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return factors;
     }

@@ -23,13 +23,15 @@ import avlTree.slpBuilders.ParallelExecutorFactory;
 import avlTree.treeSets.AvlTreeSetFactory;
 import cartesianTree.CartesianTreeManagerFactory;
 import cartesianTree.slpBuilders.CartesianSlpTreeBuilder;
+
 import commons.settings.ISettings;
 import compressionservice.compression.algorithms.analysator.Analysator;
+import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.compression.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
 import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
-import compressionservice.compression.algorithms.lzInf.ILZFactorIteratorFactory;
 import compressionservice.compression.algorithms.lzw.ILZWFactorsAnalyzer;
 import compressionservice.compression.parameters.ICompressionRunParams;
+
 import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
@@ -49,7 +51,7 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
     private IFilesRepository filesRepository;
     private ILZWFactorsAnalyzer lzwFactorsAnalyzer;
     private IWindowFactory windowFactory;
-    private ILZFactorIteratorFactory lzFactorIteratorFactory;
+    private IFactorIteratorFactory factorIteratorFactory;
     private IStatisticsObjectFactory statisticsObjectFactory;
 
     public SlpBuildAlgorithmFactory(
@@ -63,7 +65,7 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
             IFilesRepository filesRepository,
             ILZWFactorsAnalyzer lzwFactorsAnalyzer,
             IWindowFactory windowFactory,
-            ILZFactorIteratorFactory lzFactorIteratorFactory,
+            IFactorIteratorFactory factorIteratorFactory,
             IStatisticsObjectFactory statisticsObjectFactory) {
         this.settings = settings;
         this.avlTreeArrayMergerFactory = avlTreeArrayMergerFactory;
@@ -75,7 +77,7 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
         this.filesRepository = filesRepository;
         this.lzwFactorsAnalyzer = lzwFactorsAnalyzer;
         this.windowFactory = windowFactory;
-        this.lzFactorIteratorFactory = lzFactorIteratorFactory;
+        this.factorIteratorFactory = factorIteratorFactory;
         this.statisticsObjectFactory = statisticsObjectFactory;
     }
 
@@ -122,7 +124,7 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
                 return new Lz77Algorithm(resourceProvider, filesRepository, windowFactory, factorsRepositoryFactory, new Analysator(), statisticsObjectFactory);
             }
             case lzInf: {
-                return new LzInfAlgorithm(resourceProvider, filesRepository, lzFactorIteratorFactory, factorsRepositoryFactory, new Analysator(), statisticsObjectFactory);
+                return new LzInfAlgorithm(resourceProvider, filesRepository, factorIteratorFactory, factorsRepositoryFactory, new Analysator(), statisticsObjectFactory);
             }
             default:
                 throw new RuntimeException(String.format("Slp building algorithm of type %s is not supported", algorithmType));

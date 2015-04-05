@@ -6,9 +6,10 @@ import org.apache.log4j.Logger;
 import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
-
 import compressingCore.dataAccess.IReadableCharArray;
-
+import compressionservice.compression.algorithms.factorization.IFactorIterator;
+import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
+import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 
@@ -17,12 +18,12 @@ public class LZFactorizationProducer implements ILZFactorizationProducer
     private static Logger logger = LogManager.getLogger(LZFactorizationProducer.class);
     
     private IFactorsRepository<FactorDef> factorsRepository;
-    private ILZFactorIteratorFactory lzFactorIteratorFactory;
+    private IFactorIteratorFactory factorIteratorFactory;
 
-    public LZFactorizationProducer(IFactorsRepositoryFactory factorsRepositoryFactory, ILZFactorIteratorFactory lzFactorIteratorFactory)
+    public LZFactorizationProducer(IFactorsRepositoryFactory factorsRepositoryFactory, IFactorIteratorFactory factorIteratorFactory)
     {
         this.factorsRepository = factorsRepositoryFactory.getLZRepository();
-        this.lzFactorIteratorFactory = lzFactorIteratorFactory;
+        this.factorIteratorFactory = factorIteratorFactory;
     }
 
     @Override
@@ -30,18 +31,20 @@ public class LZFactorizationProducer implements ILZFactorizationProducer
     {
         logger.info("Start produce factors for statisticsId = " + statisticsId);
 
-        try(ILZFactorIterator factorIterator = lzFactorIteratorFactory.create(dataFactoryType, source);) {
+        try(IFactorIterator factorIterator = factorIteratorFactory.create(AlgorithmType.lzInf, dataFactoryType, source);) {
             IArrayItemsWriter<FactorDef> writer = factorsRepository.getWriter(statisticsId);
             int index = 0;
-            while (factorIterator.hasFactors())
+            while (factorIterator.any())
             {
                 if (index % 100000 == 0 && index > 0)
                     logger.info("Produced " + index + " factors");
                 index++;
-                FactorDef factor = factorIterator.getNextFactor();
+                FactorDef factor = factorIterator.next();
                 writer.add(factor);
             }
             writer.done();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         logger.info("Finish produce factors for statisticsId = " + statisticsId);
     }

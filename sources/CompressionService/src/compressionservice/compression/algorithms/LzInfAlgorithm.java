@@ -16,10 +16,11 @@ import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.compression.algorithms.analysator.IAnalysator;
-import compressionservice.compression.algorithms.lzInf.ILZFactorIterator;
-import compressionservice.compression.algorithms.lzInf.ILZFactorIteratorFactory;
+import compressionservice.compression.algorithms.factorization.IFactorIterator;
+import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.compression.parameters.ICompressionRunParams;
 
+import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.CompressionRunKeys;
@@ -32,7 +33,7 @@ public class LzInfAlgorithm implements ISlpBuildAlgorithm {
     private static Logger logger = LogManager.getLogger(LzInfAlgorithm.class);
 
     private final IResourceProvider resourceProvider;
-    private final ILZFactorIteratorFactory lzFactorIteratorFactory;
+    private final IFactorIteratorFactory factorIteratorFactory;
     private final IFilesRepository filesRepository;
     private final IFactorsRepository<FactorDef> factorsRepository;
     private final IStatisticsObjectFactory statisticsObjectFactory;
@@ -41,13 +42,13 @@ public class LzInfAlgorithm implements ISlpBuildAlgorithm {
     public LzInfAlgorithm(
             IResourceProvider resourceProvider,
             IFilesRepository filesRepository,
-            ILZFactorIteratorFactory lzFactorIteratorFactory,
+            IFactorIteratorFactory factorIteratorFactory,
             IFactorsRepositoryFactory factorsRepositoryFactory,
             IAnalysator analysator,
             IStatisticsObjectFactory statisticsObjectFactory) {
         this.resourceProvider = resourceProvider;
         this.filesRepository = filesRepository;
-        this.lzFactorIteratorFactory = lzFactorIteratorFactory;
+        this.factorIteratorFactory = factorIteratorFactory;
         this.factorsRepository = factorsRepositoryFactory.getLZRepository();
         this.analysator = analysator;
         this.statisticsObjectFactory = statisticsObjectFactory;
@@ -60,14 +61,16 @@ public class LzInfAlgorithm implements ISlpBuildAlgorithm {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
             ArrayList<FactorDef> factors = new ArrayList<>();
-            try (ILZFactorIterator factorIterator = lzFactorIteratorFactory.create(dataFactoryType, source)) {
-                while (factorIterator.hasFactors()) {
+            try (IFactorIterator factorIterator = factorIteratorFactory.create(AlgorithmType.lzInf, dataFactoryType, source)) {
+                while (factorIterator.any()) {
                     if (factors.size() % 10000 == 0)
                         logger.info(String.format("Produced %d factors", factors.size()));
 
-                    FactorDef factor = factorIterator.getNextFactor();
+                    FactorDef factor = factorIterator.next();
                     factors.add(factor);
                 }
+            } catch (Exception e) {
+                logger.error(String.format("Fail to run lzInf algorithm."), e);
             }
             timeCounter.end();
 
