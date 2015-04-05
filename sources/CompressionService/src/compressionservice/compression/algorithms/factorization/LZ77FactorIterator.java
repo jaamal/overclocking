@@ -40,13 +40,13 @@ public class LZ77FactorIterator implements IFactorIterator
         if (place.getLength() > 0)
         {
             result = new FactorDef(place.getPosition(), place.getLength());
-            string = toString(this.charArray, this.arrayPosition, this.arrayPosition + place.getLength());
+            string = charArray.toString(this.arrayPosition, this.arrayPosition + place.getLength());
             this.arrayPosition += place.getLength();
         }
         else
         {
             result = new FactorDef(this.charArray.get(this.arrayPosition));
-            string = toString(this.charArray, this.arrayPosition, this.arrayPosition + 1);
+            string = charArray.toString(this.arrayPosition, this.arrayPosition + 1);
             ++this.arrayPosition;
         }
         this.window.append(string);
@@ -58,16 +58,6 @@ public class LZ77FactorIterator implements IFactorIterator
     public boolean any()
     {
         return this.arrayPosition < this.arrayLength;
-    }
-
-    // TODO: it seems that this method should be at IReadableCharArray since
-    // it's realization should know how to get substring
-    private static String toString(IReadableCharArray readableCharArray, long start, long end)
-    {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (long i = start; i < end; i++)
-            stringBuffer.append(readableCharArray.get(i));
-        return stringBuffer.toString();
     }
 
     @Override
