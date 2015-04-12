@@ -8,6 +8,8 @@
   <property name="proj.list" value="BusinessObjects,Algorithms,Commons,Caching,Storage,CompressingCore,Trees,HttpService"/>
   
   <target name="run">
+    <echo message="Deploying project from ${ov.root.dir}."/>
+    
     <for list="${proj.list}" param="proj.name">
       <sequential>
         <antcall target="compile.proj">
@@ -44,6 +46,8 @@
     <antcall target="deploy.proj">
       <param name="proj.name" value="Front"/>
     </antcall>
+    
+    <echo message="Deploy finished."/>
   </target>
 
   <target name="run.unit.tests" depends="run">
