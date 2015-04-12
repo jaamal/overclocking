@@ -1,28 +1,16 @@
 package tests.production;
 
-import java.awt.datatransfer.FlavorEvent;
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.*;
-import java.util.Locale;
-import java.util.Random;
+import java.nio.file.Paths;
 
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 import overclocking.jrobocontainer.classpathscanning.IClassPathScannerConfiguration;
 import overclocking.jrobocontainer.container.Container;
 import overclocking.jrobocontainer.container.IContainer;
-import storage.cassandraClient.ISchemeInitializer;
-import commons.files.IFile;
-import commons.files.IFileManager;
+import tests.TestBase;
+
 import commons.settings.ISettings;
 import commons.settings.Settings;
-import compressionservice.upload.IFileUploader;
-import dataContracts.ContentType;
-import dataContracts.files.FileType;
-import tests.TestBase;
 
 public abstract class ProductionTestBase extends TestBase {
 

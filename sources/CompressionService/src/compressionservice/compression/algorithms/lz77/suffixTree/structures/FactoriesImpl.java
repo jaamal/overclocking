@@ -21,14 +21,11 @@ import compressionservice.compression.algorithms.lz77.suffixTree.searchingInTree
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.EdgeFactory;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.INodeFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.IPlaceFactory;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.NodeFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.PlaceFactory;
 
 
 public class FactoriesImpl implements IFactories
 {
-
     private INodeFactory nodeFactory;
     private IEdgeFactory edgeFactory;
     private INavigatorFactory navigatorFactory;
@@ -40,7 +37,6 @@ public class FactoriesImpl implements IFactories
     private ISuffixPlaceFactory suffixPlaceFactory;
     private IFinderFactory finderFactory;
     private IFindingSearcherFactory findingSearcherFactory;
-    private IPlaceFactory placeFactory;
 
     public FactoriesImpl()
     {
@@ -55,7 +51,6 @@ public class FactoriesImpl implements IFactories
         this.suffixPlaceFactory = new SuffixPlaceFactory();
         this.finderFactory = new FinderFactory();
         this.findingSearcherFactory = new FindingSearcherFactory();
-        this.placeFactory = new PlaceFactory();
     }
 
     @Override
@@ -123,11 +118,4 @@ public class FactoriesImpl implements IFactories
     {
         return this.findingSearcherFactory;
     }
-
-    @Override
-    public IPlaceFactory getPlaceFactory()
-    {
-        return this.placeFactory;
-    }
-
 }

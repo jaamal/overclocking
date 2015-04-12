@@ -1,10 +1,8 @@
 package avlTree.helpers;
 
-import avlTree.IAvlTree;
-
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Stack;
+
+import avlTree.IAvlTree;
 
 public class AvlTreeHelpers {
     public static Stack<IAvlTree> getRightmostPathToNodeOfFixedHeight(IAvlTree tree, long height) {

@@ -11,7 +11,6 @@ import compressionservice.compression.algorithms.lz77.suffixTree.searchingInTree
 import compressionservice.compression.algorithms.lz77.suffixTree.searchingInTree.factories.IFindingSearcherFactory;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.INodeFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.IPlaceFactory;
 
 public interface IFactories
 {
@@ -36,6 +35,4 @@ public interface IFactories
     IFinderFactory getFinderFactory();
 
     IFindingSearcherFactory getFindingSearcherFactory();
-
-    IPlaceFactory getPlaceFactory();
 }

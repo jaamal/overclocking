@@ -1,9 +1,10 @@
 package compressionservice.compression.algorithms.factorization;
 
 import compressingCore.dataAccess.IReadableCharArray;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IPlace;
+import compressionservice.compression.algorithms.lz77.suffixTree.structures.Location;
 import compressionservice.compression.algorithms.lz77.windows.IStringWindow;
 import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
+
 import dataContracts.FactorDef;
 
 public class LZ77FactorIterator implements IFactorIterator
@@ -34,19 +35,20 @@ public class LZ77FactorIterator implements IFactorIterator
                 ? this.arrayLength
                 : this.arrayPosition + this.windowSize;
         IReadableCharArray subString = this.charArray.subArray(this.arrayPosition, endPosition);
-        IPlace place = this.window.search(subString);
+        Location location = this.window.search(subString);
         FactorDef result;
         String string;
-        if (place.getLength() > 0)
+        if (location.length > 0)
         {
-            result = new FactorDef(place.getPosition(), place.getLength());
-            string = charArray.toString(this.arrayPosition, this.arrayPosition + place.getLength());
-            this.arrayPosition += place.getLength();
+            result = new FactorDef(location.beginPosition, location.length);
+            string = charArray.toString(this.arrayPosition, this.arrayPosition + location.length);
+            this.arrayPosition += location.length;
         }
         else
         {
-            result = new FactorDef(this.charArray.get(this.arrayPosition));
-            string = charArray.toString(this.arrayPosition, this.arrayPosition + 1);
+            char symbol = this.charArray.get(this.arrayPosition);
+            result = new FactorDef(symbol);
+            string = String.valueOf(symbol);
             ++this.arrayPosition;
         }
         this.window.append(string);

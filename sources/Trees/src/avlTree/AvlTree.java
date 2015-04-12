@@ -1,11 +1,10 @@
 package avlTree;
 
-import java.util.Queue;
 import java.util.Stack;
 
-import avlTree.helpers.AvlTreeHelpers;
 import tree.ITree;
 import tree.nodeProviders.ITreeNodeProvider;
+import avlTree.helpers.AvlTreeHelpers;
 import avlTree.helpers.IRebalancingCounter;
 import avlTree.nodes.AvlTreeNode;
 

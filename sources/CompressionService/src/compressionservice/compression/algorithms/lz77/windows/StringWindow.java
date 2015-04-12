@@ -5,9 +5,7 @@ import compressionservice.compression.algorithms.lz77.suffixTree.ITree;
 import compressionservice.compression.algorithms.lz77.suffixTree.Tree;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.FactoriesImpl;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.IFactories;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IPlace;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.IPlaceFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.PlaceFactory;
+import compressionservice.compression.algorithms.lz77.suffixTree.structures.Location;
 
 public class StringWindow implements IStringWindow
 {
@@ -15,7 +13,6 @@ public class StringWindow implements IStringWindow
     private String content;
     private ITree tree;
     private IFactories factories;
-    private IPlaceFactory placeFactory;
     private long globalContentPosition;
 
     public StringWindow(int limitLength)
@@ -25,7 +22,6 @@ public class StringWindow implements IStringWindow
         this.globalContentPosition = 0;
 
         this.factories = new FactoriesImpl();
-        this.placeFactory = new PlaceFactory();
     }
 
     @Override
@@ -60,11 +56,11 @@ public class StringWindow implements IStringWindow
     }
 
     @Override
-    public IPlace search(IReadableCharArray string)
+    public Location search(IReadableCharArray string)
     {
         if (this.content == null || this.content.length() == 0)
-            return this.placeFactory.create(0, 0);
-        IPlace localPlace = tree.stringInformation(string);
-        return placeFactory.create(localPlace.getPosition() + globalContentPosition, localPlace.getLength());
+            return Location.create(0, 0);
+        Location localLocation = tree.stringInformation(string);
+        return Location.create(localLocation.beginPosition + globalContentPosition, localLocation.length);
     }
 }

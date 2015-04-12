@@ -6,20 +6,18 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
+
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.compression.algorithms.lz77.suffixTree.searchingInTree.Finder;
 import compressionservice.compression.algorithms.lz77.suffixTree.searchingInTree.IFindingSearcher;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.INode;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IPlace;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.IPlaceFactory;
+import compressionservice.compression.algorithms.lz77.suffixTree.structures.Location;
 
 public class FinderTest extends UnitTestBase
 {
     private IFindingSearcher mockFindingSearcher;
-    private IPlaceFactory mockPlaceFactory;
-    private IPlace mockPlace;
     private Finder finder;
     private String text;
     private IReadableCharArray string;
@@ -29,8 +27,6 @@ public class FinderTest extends UnitTestBase
     {
         super.setUp();
         this.mockFindingSearcher = newMock(IFindingSearcher.class);
-        this.mockPlaceFactory = newMock(IPlaceFactory.class);
-        this.mockPlace = newMock(IPlace.class);
     }
 
     @Test
@@ -38,14 +34,13 @@ public class FinderTest extends UnitTestBase
     {
         this.text = "text";
         this.string = new MemoryReadableCharArray("");
-        this.finder = new Finder(this.text, this.string, this.mockFindingSearcher, this.mockPlaceFactory);
+        this.finder = new Finder(this.text, this.string, this.mockFindingSearcher);
         INode mockNode = newMock(INode.class);
-
-        expect(mockPlaceFactory.create(0, 0)).andReturn(mockPlace);
 
         replayAll();
 
-        Assert.assertEquals(this.mockPlace, this.finder.search(mockNode));
+        Location actual = this.finder.search(mockNode);
+        Assert.assertEquals(Location.create(0, 0), actual);
     }
 
     @Test
@@ -53,15 +48,14 @@ public class FinderTest extends UnitTestBase
     {
         this.text = "text";
         this.string = new MemoryReadableCharArray("aaa");
-        this.finder = new Finder(this.text, this.string, mockFindingSearcher, this.mockPlaceFactory);
+        this.finder = new Finder(this.text, this.string, mockFindingSearcher);
         INode mockNode = newMock(INode.class);
 
         expect(mockFindingSearcher.search(this.text, this.string, mockNode, 0)).andReturn(null);
-        expect(mockPlaceFactory.create(0, 0)).andReturn(mockPlace);
 
         replayAll();
 
-        Assert.assertEquals(this.mockPlace, this.finder.search(mockNode));
+        Assert.assertEquals(Location.create(0, 0), this.finder.search(mockNode));
     }
 
     @Test
@@ -69,7 +63,7 @@ public class FinderTest extends UnitTestBase
     {
         this.text = "text";
         this.string = new MemoryReadableCharArray("tex");
-        this.finder = new Finder(this.text, this.string, this.mockFindingSearcher, this.mockPlaceFactory);
+        this.finder = new Finder(this.text, this.string, this.mockFindingSearcher);
         INode mockNode = newMock(INode.class);
         IEdge mockEdge = newMock(IEdge.class);
 
@@ -78,11 +72,10 @@ public class FinderTest extends UnitTestBase
         expect(mockEdge.endPosition()).andReturn(3).anyTimes();
         expect(mockEdge.endNode()).andReturn(null).anyTimes();
         expect(mockEdge.getNumber()).andReturn(0).anyTimes();
-        expect(mockPlaceFactory.create(0, 3)).andReturn(mockPlace);
 
         replayAll();
 
-        Assert.assertEquals(this.mockPlace, this.finder.search(mockNode));
+        Assert.assertEquals(Location.create(0, 3), this.finder.search(mockNode));
     }
 
     @Test
@@ -90,7 +83,7 @@ public class FinderTest extends UnitTestBase
     {
         this.text = "abcdefabcuvw";
         this.string = new MemoryReadableCharArray("bcdef");
-        finder = new Finder(this.text, this.string, this.mockFindingSearcher, this.mockPlaceFactory);
+        finder = new Finder(this.text, this.string, this.mockFindingSearcher);
         INode[] mockNodes = new INode[]{newMock(INode.class), newMock(INode.class)};
         IEdge[] mockEdges = new IEdge[]{newMock(IEdge.class), newMock(IEdge.class)};
 
@@ -104,11 +97,10 @@ public class FinderTest extends UnitTestBase
         expect(mockEdges[1].endPosition()).andReturn(5).anyTimes();
         expect(mockEdges[1].endNode()).andReturn(null).anyTimes();
         expect(mockEdges[1].getNumber()).andReturn(1).anyTimes();
-        expect(mockPlaceFactory.create(1, 5)).andReturn(mockPlace);
 
         replayAll();
 
-        Assert.assertEquals(this.mockPlace, finder.search(mockNodes[0]));
+        Assert.assertEquals(Location.create(1, 5), finder.search(mockNodes[0]));
     }
 
     @Test
@@ -116,7 +108,7 @@ public class FinderTest extends UnitTestBase
     {
         this.text = "abcdefabcuvw";
         this.string = new MemoryReadableCharArray("bcdqf");
-        this.finder = new Finder(this.text, this.string, this.mockFindingSearcher, this.mockPlaceFactory);
+        this.finder = new Finder(this.text, this.string, this.mockFindingSearcher);
         INode[] mockNodes = new INode[]{newMock(INode.class), newMock(INode.class), newMock(INode.class)};
         IEdge[] mockEdges = new IEdge[]{newMock(IEdge.class), newMock(IEdge.class)};
 
@@ -130,10 +122,9 @@ public class FinderTest extends UnitTestBase
         expect(mockEdges[1].endPosition()).andReturn(5).anyTimes();
         expect(mockEdges[1].endNode()).andReturn(mockNodes[2]).anyTimes();
         expect(mockEdges[1].getNumber()).andReturn(1).anyTimes();
-        expect(mockPlaceFactory.create(1, 3)).andReturn(mockPlace);
 
         replayAll();
 
-        Assert.assertEquals(this.mockPlace, this.finder.search(mockNodes[0]));
+        Assert.assertEquals(Location.create(1, 3), this.finder.search(mockNodes[0]));
     }
 }

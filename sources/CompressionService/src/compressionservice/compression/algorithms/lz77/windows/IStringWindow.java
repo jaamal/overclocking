@@ -1,11 +1,11 @@
 package compressionservice.compression.algorithms.lz77.windows;
 
 import compressingCore.dataAccess.IReadableCharArray;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IPlace;
+import compressionservice.compression.algorithms.lz77.suffixTree.structures.Location;
 
 public interface IStringWindow
 {
-    IPlace search(IReadableCharArray string);
+    Location search(IReadableCharArray string);
 
     void append(String string);
 }

@@ -11,7 +11,7 @@ import tests.unit.UnitTestBase;
 
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.compression.algorithms.factorization.LZ77FactorIterator;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IPlace;
+import compressionservice.compression.algorithms.lz77.suffixTree.structures.Location;
 import compressionservice.compression.algorithms.lz77.windows.IStringWindow;
 import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
 
@@ -23,7 +23,6 @@ public class LZ77FactorIteratorTest extends UnitTestBase
     private IReadableCharArray charArray;
     private IWindowFactory windowFactory;
     private IStringWindow window;
-    private IPlace place;
     private LZ77FactorIterator factorIterator;
 
     public void setUp()
@@ -32,7 +31,6 @@ public class LZ77FactorIteratorTest extends UnitTestBase
         this.windowFactory = newMock(IWindowFactory.class);
         this.charArray = newMock(IReadableCharArray.class);
         this.window = newMock(IStringWindow.class);
-        this.place = newMock(IPlace.class);
     }
 
     @Test
@@ -63,12 +61,12 @@ public class LZ77FactorIteratorTest extends UnitTestBase
     public void testSingleFactor()
     {
         IReadableCharArray subString = newMock(IReadableCharArray.class);
+        Location location = Location.create(0, 0);
 
         expect(windowFactory.create(WINDOW_SIZE)).andReturn(window);
         expect(charArray.length()).andReturn(1L).anyTimes();
         expect(charArray.subArray(0, 1)).andReturn(subString);
-        expect(window.search(subString)).andReturn(place);
-        expect(place.getLength()).andReturn(0L);
+        expect(window.search(subString)).andReturn(location);
         expect(charArray.get(0)).andReturn('a').anyTimes();
         window.append("a");
 
@@ -86,14 +84,13 @@ public class LZ77FactorIteratorTest extends UnitTestBase
     public void testNotSingleFactor()
     {
         IReadableCharArray subString = newMock(IReadableCharArray.class);
+        Location location = Location.create(0, 10);
+        
         expect(windowFactory.create(WINDOW_SIZE)).andReturn(window);
         expect(charArray.length()).andReturn(11L).anyTimes();
         expect(charArray.subArray(0, 10)).andReturn(subString).anyTimes();
-        expect(window.search(subString)).andReturn(place);
-        expect(place.getLength()).andReturn(10L).anyTimes();
-        expect(place.getPosition()).andReturn(0L).anyTimes();
-
-        expectToString(0, 10, charArray, "asdfgasdfg");
+        expect(window.search(subString)).andReturn(location);
+        expect(charArray.toString(0, 10)).andReturn("asdfgasdfg");
         window.append("asdfgasdfg");
 
         replayAll();
@@ -104,13 +101,5 @@ public class LZ77FactorIteratorTest extends UnitTestBase
         assertEquals(0, actual.beginPosition);
         assertEquals(10, actual.length);
         assertTrue(this.factorIterator.any());
-    }
-
-    private void expectToString(int start, int end, IReadableCharArray charArray, String str)
-    {
-        for (int i = start; i < end; i++)
-        {
-            expect(charArray.get(i)).andReturn(str.charAt(i)).anyTimes();
-        }
     }
 }

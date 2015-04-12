@@ -21,11 +21,10 @@ import compressionservice.compression.algorithms.lz77.suffixTree.searchingInTree
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.IFactories;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.INode;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IPlace;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.Leaf;
+import compressionservice.compression.algorithms.lz77.suffixTree.structures.Location;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.INodeFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.IPlaceFactory;
 
 public class Tree implements ITree
 {
@@ -43,7 +42,6 @@ public class Tree implements ITree
     private final ISuffixPlaceFactory suffixPlaceFactory;
     private final IFindingSearcherFactory findingSearcherFactory;
     private final IFinderFactory finderFactory;
-    private final IPlaceFactory placeFactory;
 
     private int phaseIndex;
     private int extension;
@@ -66,7 +64,6 @@ public class Tree implements ITree
         this.suffixPlaceFactory = factories.getSuffixPlaceFactory();
         this.finderFactory = factories.getFinderFactory();
         this.findingSearcherFactory = factories.getFindingSearcherFactory();
-        this.placeFactory = factories.getPlaceFactory();
 
         this.text = text;
         this.phaseIndex = 0;
@@ -120,9 +117,9 @@ public class Tree implements ITree
     }
 
     @Override
-    public IPlace stringInformation(IReadableCharArray string)
+    public Location stringInformation(IReadableCharArray string)
     {
-        IFinder finder = this.finderFactory.create(this.text, string, this.findingSearcherFactory.create(), this.placeFactory);
+        IFinder finder = this.finderFactory.create(this.text, string, this.findingSearcherFactory.create());
         return finder.search(this.root);
     }
 
