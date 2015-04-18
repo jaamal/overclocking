@@ -8,52 +8,47 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.compression.algorithms.factorization.LZ77FactorIterator;
+import compressionservice.compression.algorithms.lz77.ITextWindow;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.Location;
-import compressionservice.compression.algorithms.lz77.windows.IStringWindow;
-import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
-
 import dataContracts.FactorDef;
 
 public class LZ77FactorIteratorTest extends UnitTestBase
 {
     private final static int WINDOW_SIZE = 10;
     private IReadableCharArray charArray;
-    private IWindowFactory windowFactory;
-    private IStringWindow window;
+    private ITextWindow window;
     private LZ77FactorIterator factorIterator;
 
     public void setUp()
     {
         super.setUp();
-        this.windowFactory = newMock(IWindowFactory.class);
         this.charArray = newMock(IReadableCharArray.class);
-        this.window = newMock(IStringWindow.class);
+        this.window = newMock(ITextWindow.class);
+        
+        expect(window.size()).andStubReturn(WINDOW_SIZE);
     }
 
     @Test
     public void testEmptyFactorizator()
     {
-        expect(windowFactory.create(WINDOW_SIZE)).andReturn(window);
         expect(charArray.length()).andReturn(0L);
 
         replayAll();
 
-        this.factorIterator = new LZ77FactorIterator(windowFactory, this.charArray, WINDOW_SIZE);
+        this.factorIterator = new LZ77FactorIterator(window, this.charArray);
         assertFalse(this.factorIterator.any());
     }
 
     @Test(expected = IllegalAccessError.class)
     public void testNextFactorWithException()
     {
-        expect(windowFactory.create(WINDOW_SIZE)).andReturn(window);
         expect(charArray.length()).andReturn(0L);
 
         replayAll();
 
-        this.factorIterator = new LZ77FactorIterator(windowFactory, this.charArray, WINDOW_SIZE);
+        this.factorIterator = new LZ77FactorIterator(window, this.charArray);
         this.factorIterator.next();
     }
 
@@ -63,7 +58,6 @@ public class LZ77FactorIteratorTest extends UnitTestBase
         IReadableCharArray subString = newMock(IReadableCharArray.class);
         Location location = Location.create(0, 0);
 
-        expect(windowFactory.create(WINDOW_SIZE)).andReturn(window);
         expect(charArray.length()).andReturn(1L).anyTimes();
         expect(charArray.subArray(0, 1)).andReturn(subString);
         expect(window.search(subString)).andReturn(location);
@@ -72,7 +66,7 @@ public class LZ77FactorIteratorTest extends UnitTestBase
 
         replayAll();
 
-        this.factorIterator = new LZ77FactorIterator(windowFactory, this.charArray, WINDOW_SIZE);
+        this.factorIterator = new LZ77FactorIterator(window, this.charArray);
         assertTrue(this.factorIterator.any());
         FactorDef actual = this.factorIterator.next();
         assertTrue(actual.isTerminal);
@@ -86,7 +80,6 @@ public class LZ77FactorIteratorTest extends UnitTestBase
         IReadableCharArray subString = newMock(IReadableCharArray.class);
         Location location = Location.create(0, 10);
         
-        expect(windowFactory.create(WINDOW_SIZE)).andReturn(window);
         expect(charArray.length()).andReturn(11L).anyTimes();
         expect(charArray.subArray(0, 10)).andReturn(subString).anyTimes();
         expect(window.search(subString)).andReturn(location);
@@ -95,7 +88,7 @@ public class LZ77FactorIteratorTest extends UnitTestBase
 
         replayAll();
 
-        this.factorIterator = new LZ77FactorIterator(windowFactory, this.charArray, WINDOW_SIZE);
+        this.factorIterator = new LZ77FactorIterator(window, this.charArray);
         assertTrue(this.factorIterator.any());
         FactorDef actual = this.factorIterator.next();
         assertEquals(0, actual.beginPosition);

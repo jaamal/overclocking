@@ -1,7 +1,8 @@
 package compressionservice.compression.algorithms.factorization;
 
 import compressingCore.dataAccess.IReadableCharArray;
-import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
+import compressionservice.compression.algorithms.lz77.ITextWindow;
+import compressionservice.compression.algorithms.lz77.TextWindow;
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.IOnlineSuffixTreeFactory;
 import compressionservice.compression.parameters.ICompressionRunParams;
 import dataContracts.AlgorithmType;
@@ -11,13 +12,10 @@ import dataContracts.statistics.CompressionRunKeys;
 public class FactorIteratorFactory implements IFactorIteratorFactory
 {
     private IOnlineSuffixTreeFactory suffixTreeFactory;
-    private IWindowFactory windowFactory;
 
     public FactorIteratorFactory(
-            IOnlineSuffixTreeFactory suffixTreeFactory,
-            IWindowFactory windowFactory) {
+            IOnlineSuffixTreeFactory suffixTreeFactory) {
         this.suffixTreeFactory = suffixTreeFactory;
-        this.windowFactory = windowFactory;
     }
 
     @Override
@@ -29,7 +27,8 @@ public class FactorIteratorFactory implements IFactorIteratorFactory
             return new LzInfFactorIterator(suffixTreeFactory.create(dataFactoryType, charArray), charArray);
         case lz77:
             int windowSize = runParams.getIntValue(CompressionRunKeys.WindowSize);
-            return new LZ77FactorIterator(windowFactory, charArray, windowSize);
+            ITextWindow textWindow = TextWindow.create(windowSize);
+            return new LZ77FactorIterator(textWindow, charArray);
         default:
             throw new RuntimeException(String.format("Factorization for algorithm type %s is not supported.", algorithmType));
         }

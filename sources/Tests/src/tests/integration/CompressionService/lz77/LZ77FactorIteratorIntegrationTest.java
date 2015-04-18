@@ -16,13 +16,8 @@ import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
 import compressionservice.compression.algorithms.factorization.LZ77FactorIterator;
-import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
-import compressionservice.compression.algorithms.lz77.windows.WindowsFactory;
-import compressionservice.compression.parameters.CompressionRunParams;
-import compressionservice.compression.parameters.ICompressionRunParams;
-import dataContracts.AlgorithmType;
+import compressionservice.compression.algorithms.lz77.TextWindow;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionRunKeys;
 
 public class LZ77FactorIteratorIntegrationTest extends IntegrationTestBase
 {
@@ -115,13 +110,9 @@ public class LZ77FactorIteratorIntegrationTest extends IntegrationTestBase
         }
     }
 
-    private static ArrayList<FactorDef> getFactors(IWindowFactory windowFactory, IReadableCharArray charArray, int windowSize)
+    private static ArrayList<FactorDef> getFactors(IReadableCharArray charArray, int windowSize)
     {
-        ICompressionRunParams runParams = new CompressionRunParams();
-        runParams.putParam(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.putParam(CompressionRunKeys.WindowSize, windowSize);
-        
-        try(IFactorIterator factorIterator = new LZ77FactorIterator(new WindowsFactory(), charArray, windowSize)){
+        try(IFactorIterator factorIterator = new LZ77FactorIterator(TextWindow.create(windowSize), charArray)){
             ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
             while (factorIterator.any())
                 factors.add(factorIterator.next());
@@ -134,7 +125,7 @@ public class LZ77FactorIteratorIntegrationTest extends IntegrationTestBase
     private static void doTest(String string, int windowSize)
     {
         IReadableCharArray charArray = new MemoryReadableCharArray(string);
-        ArrayList<FactorDef> factors = getFactors(new WindowsFactory(), charArray, windowSize);
+        ArrayList<FactorDef> factors = getFactors(charArray, windowSize);
         System.out.println("Factors count = " + factors.size());
         Assert.assertEquals(string, unpack(factors));
     }

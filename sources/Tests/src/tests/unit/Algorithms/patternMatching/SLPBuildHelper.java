@@ -18,6 +18,7 @@ import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
+
 import commons.files.FileManager;
 import commons.files.IFileManager;
 import commons.settings.ISettings;
@@ -25,8 +26,6 @@ import compressingCore.dataAccess.IDataFactory;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.compression.algorithms.factorization.FactorIteratorFactory;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
-import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
-import compressionservice.compression.algorithms.lz77.windows.WindowsFactory;
 import compressionservice.compression.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
 import compressionservice.compression.algorithms.lzInf.arrayMinSearching.IArrayMinSearcherFactory;
 import compressionservice.compression.algorithms.lzInf.suffixArray.ExternalProcessExecutor;
@@ -37,6 +36,7 @@ import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.IOnli
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.OnLineSuffixTreeFactory;
 import compressionservice.compression.parameters.CompressionRunParams;
 import compressionservice.compression.parameters.ICompressionRunParams;
+
 import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
@@ -72,13 +72,12 @@ public class SLPBuildHelper {
         ISuffixArrayBuilder suffixArrayFactory = new SuffixArrayBuilder(dataFactory, fileManager, externalProcessExecutor, settings);
         IArrayMinSearcherFactory arrayMinSearcherFactory = new ArrayMinSearcherFactory(dataFactory);
         IOnlineSuffixTreeFactory onlineSuffixTreeFactory = new OnLineSuffixTreeFactory(suffixArrayFactory, arrayMinSearcherFactory);
-        IWindowFactory windowFactory = new WindowsFactory();
-        
+
         ICompressionRunParams runParams = new CompressionRunParams();
         runParams.putParam(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
         runParams.putParam(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
         
-        IFactorIterator iterator = new FactorIteratorFactory(onlineSuffixTreeFactory, windowFactory).create(runParams, new MemoryReadableCharArray(text));
+        IFactorIterator iterator = new FactorIteratorFactory(onlineSuffixTreeFactory).create(runParams, new MemoryReadableCharArray(text));
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
         while (iterator.any()) {
             FactorDef nextFactor = iterator.next();

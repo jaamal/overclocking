@@ -1,27 +1,23 @@
 package compressionservice.compression.algorithms.factorization;
 
 import compressingCore.dataAccess.IReadableCharArray;
+import compressionservice.compression.algorithms.lz77.ITextWindow;
 import compressionservice.compression.algorithms.lz77.suffixTree.structures.Location;
-import compressionservice.compression.algorithms.lz77.windows.IStringWindow;
-import compressionservice.compression.algorithms.lz77.windows.IWindowFactory;
-
 import dataContracts.FactorDef;
 
 public class LZ77FactorIterator implements IFactorIterator
 {
     private IReadableCharArray charArray;
-    private IStringWindow window;
     private long arrayPosition;
     private final long arrayLength;
-    private final long windowSize;
+    private ITextWindow textWindow;
 
-    public LZ77FactorIterator(IWindowFactory windowFactory, IReadableCharArray charArray, int windowSize)
+    public LZ77FactorIterator(ITextWindow textWindow, IReadableCharArray charArray)
     {
+        this.textWindow = textWindow;
         this.charArray = charArray;
         this.arrayPosition = 0;
         this.arrayLength = charArray.length();
-        this.windowSize = windowSize;
-        this.window = windowFactory.create(windowSize);
         this.arrayPosition = 0;
     }
 
@@ -31,11 +27,11 @@ public class LZ77FactorIterator implements IFactorIterator
         if (!any())
             throw new IllegalAccessError("The method called when all factors scanned.");
 
-        long endPosition = (this.arrayLength < this.arrayPosition + this.windowSize)
+        long endPosition = (this.arrayLength < this.arrayPosition + this.textWindow.size())
                 ? this.arrayLength
-                : this.arrayPosition + this.windowSize;
+                : this.arrayPosition + this.textWindow.size();
         IReadableCharArray subString = this.charArray.subArray(this.arrayPosition, endPosition);
-        Location location = this.window.search(subString);
+        Location location = this.textWindow.search(subString);
         FactorDef result;
         String string;
         if (location.length > 0)
@@ -51,7 +47,7 @@ public class LZ77FactorIterator implements IFactorIterator
             string = String.valueOf(symbol);
             ++this.arrayPosition;
         }
-        this.window.append(string);
+        this.textWindow.append(string);
 
         return result;
     }
