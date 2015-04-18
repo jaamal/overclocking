@@ -1,7 +1,7 @@
 package compressionservice.compression.running;
 
-import compressionservice.compression.algorithms.ISlpBuildAlgorithm;
-import compressionservice.compression.algorithms.ISlpBuildAlgorithmsFactory;
+import compressionservice.compression.algorithms.IAlgorithmRunner;
+import compressionservice.compression.algorithms.IAlgorithmRunnersFactory;
 import compressionservice.compression.parameters.ICompressionRunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.statistics.CompressionRunKeys;
@@ -15,11 +15,11 @@ import java.util.ArrayList;
 public abstract class SlpRunner implements ITypedCompressionRunner {
     private static Logger logger = Logger.getLogger(SlpRunner.class);
 
-    private final ISlpBuildAlgorithmsFactory buildAlgorithmsFactory;
+    private final IAlgorithmRunnersFactory buildAlgorithmsFactory;
     private final IStatisticsRepository statisticsRepository;
     private final IStatisticsObjectFactory statisticsObjectFactory;
 
-    protected SlpRunner(ISlpBuildAlgorithmsFactory buildAlgorithmsFactory,
+    protected SlpRunner(IAlgorithmRunnersFactory buildAlgorithmsFactory,
                         IStatisticsRepository statisticsRepository,
                         IStatisticsObjectFactory statisticsObjectFactory) {
         this.buildAlgorithmsFactory = buildAlgorithmsFactory;
@@ -30,7 +30,7 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
     @Override
     public void run(ICompressionRunParams runParams) {
         try {
-            ISlpBuildAlgorithm buildAlgorithm = buildAlgorithmsFactory.create(runParams);
+            IAlgorithmRunner buildAlgorithm = buildAlgorithmsFactory.create(runParams);
             ArrayList<Exception> unhandledExceptions = new ArrayList<>();
             
             if (runParams.contains(CompressionRunKeys.SourceId)){
@@ -67,7 +67,7 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
         return checkAndRefillParamsInternal(runParams);
     }
     
-    private void run(ISlpBuildAlgorithm buildAlgorithm, ArrayList<Exception> unhandledExceptions, ICompressionRunParams runParams) {
+    private void run(IAlgorithmRunner buildAlgorithm, ArrayList<Exception> unhandledExceptions, ICompressionRunParams runParams) {
         try {
             String sourceId = runParams.getStrValue(CompressionRunKeys.SourceId);
             if (statisticsRepository.exists(sourceId, statisticsObjectFactory.getStatisticsObjectId(runParams.toMap()))) {
@@ -76,7 +76,7 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
             }
 
             logger.info("Start building slp on source with id = " + sourceId);
-            StatisticsObject statisticsObject = buildAlgorithm.build(runParams);
+            StatisticsObject statisticsObject = buildAlgorithm.run(runParams);
             logger.info("End building.");
 
             logger.info("Start saving statistics");

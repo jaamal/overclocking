@@ -21,9 +21,9 @@ import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
-public class LCAOnlineSlpBuildAlgorithm implements ISlpBuildAlgorithm {
+public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
-    private static Logger logger = Logger.getLogger(LCAOnlineSlpBuildAlgorithm.class);
+    private static Logger logger = Logger.getLogger(LCAOnlineSlpBuildAlgorithmRunner.class);
 
     private ILCAOnlineCompressor lcaOnlineCompressor;
     private ISlpProductsRepository slpProductsRepository;
@@ -32,7 +32,7 @@ public class LCAOnlineSlpBuildAlgorithm implements ISlpBuildAlgorithm {
     private IStatisticsObjectFactory statisticsObjectFactory;
     private final SlpByteSizeCounter slpByteSizeCounter;
 
-    public LCAOnlineSlpBuildAlgorithm(
+    public LCAOnlineSlpBuildAlgorithmRunner(
             ILCAOnlineCompressor lcaOnlineCompressor,
             ISlpProductsRepository slpProductsRepository,
             IResourceProvider resourceProvider,
@@ -48,7 +48,7 @@ public class LCAOnlineSlpBuildAlgorithm implements ISlpBuildAlgorithm {
     }
 
     @Override
-    public StatisticsObject build(ICompressionRunParams runParams) {
+    public StatisticsObject run(ICompressionRunParams runParams) {
         try (IReadableCharArray source = resourceProvider.getText(runParams)) {
             logger.info("Source file size is " + source.length());
             ITimeCounter timeCounter = new TimeCounter();

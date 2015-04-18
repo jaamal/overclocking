@@ -2,7 +2,6 @@ package compressionservice.compression.algorithms;
 
 import compressionservice.compression.parameters.ICompressionRunParams;
 
-
-public interface ISlpBuildAlgorithmsFactory {
-    ISlpBuildAlgorithm create(ICompressionRunParams runParams);
+public interface IAlgorithmRunnersFactory {
+    IAlgorithmRunner create(ICompressionRunParams runParams);
 }

@@ -1,6 +1,6 @@
 package compressionservice.compression.running;
 
-import compressionservice.compression.algorithms.ISlpBuildAlgorithmsFactory;
+import compressionservice.compression.algorithms.IAlgorithmRunnersFactory;
 import compressionservice.compression.parameters.ICompressionRunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
@@ -13,7 +13,7 @@ public class CartesianSlpRunner extends SlpRunner implements ITypedCompressionRu
     private final static DataFactoryType DefaultDataFactoryType = DataFactoryType.memory;
 
     public CartesianSlpRunner(
-            ISlpBuildAlgorithmsFactory slpBuildAlgorithmsFactory,
+            IAlgorithmRunnersFactory slpBuildAlgorithmsFactory,
             IStatisticsRepository statisticsRepository,
             IStatisticsObjectFactory statisticsObjectFactory) {
         super(slpBuildAlgorithmsFactory, statisticsRepository, statisticsObjectFactory);

@@ -3,7 +3,7 @@ package compressionservice.compression.running;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import storage.statistics.IStatisticsRepository;
 
-import compressionservice.compression.algorithms.ISlpBuildAlgorithmsFactory;
+import compressionservice.compression.algorithms.IAlgorithmRunnersFactory;
 import compressionservice.compression.parameters.ICompressionRunParams;
 
 import dataContracts.AlgorithmType;
@@ -15,7 +15,7 @@ public class LCAOnlineRunner extends SlpRunner implements ITypedCompressionRunne
     private final static DataFactoryType DefaultDataFactoryType = DataFactoryType.memory;
 
     public LCAOnlineRunner(
-            ISlpBuildAlgorithmsFactory slpBuildAlgorithmsFactory,
+            IAlgorithmRunnersFactory slpBuildAlgorithmsFactory,
             IStatisticsRepository statisticsRepository,
             IStatisticsObjectFactory statisticsObjectFactory) {
         super(slpBuildAlgorithmsFactory, statisticsRepository, statisticsObjectFactory);

@@ -2,7 +2,6 @@ package compressionservice.compression.algorithms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -22,65 +21,63 @@ import compressionservice.compression.parameters.ICompressionRunParams;
 
 import dataContracts.FactorDef;
 import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.CompressionStatistics;
+import dataContracts.statistics.ICompressionStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
-public class LzInfAlgorithm implements ISlpBuildAlgorithm {
+public class Lz77AlgorithmRunner implements IAlgorithmRunner {
 
-    private static Logger logger = LogManager.getLogger(LzInfAlgorithm.class);
+    private static Logger logger = LogManager.getLogger(Lz77AlgorithmRunner.class);
 
+    private final IFactorsRepository factorsRepotisory;
     private final IResourceProvider resourceProvider;
-    private final IFactorIteratorFactory factorIteratorFactory;
-    private final IFilesRepository filesRepository;
-    private final IFactorsRepository factorsRepository;
     private final IStatisticsObjectFactory statisticsObjectFactory;
+    private final IFilesRepository filesRepository;
     private final IAnalysator analysator;
+    private final IFactorIteratorFactory factorIteratorFactory;
 
-    public LzInfAlgorithm(
+    public Lz77AlgorithmRunner(
             IResourceProvider resourceProvider,
             IFilesRepository filesRepository,
-            IFactorIteratorFactory factorIteratorFactory,
             IFactorsRepositoryFactory factorsRepositoryFactory,
+            IFactorIteratorFactory factorIteratorFactory,
             IAnalysator analysator,
             IStatisticsObjectFactory statisticsObjectFactory) {
         this.resourceProvider = resourceProvider;
         this.filesRepository = filesRepository;
         this.factorIteratorFactory = factorIteratorFactory;
-        this.factorsRepository = factorsRepositoryFactory.getLZRepository();
+        this.factorsRepotisory = factorsRepositoryFactory.getLZ77Repository();
         this.analysator = analysator;
         this.statisticsObjectFactory = statisticsObjectFactory;
     }
 
     @Override
-    public StatisticsObject build(ICompressionRunParams runParams) {
-        try (IReadableCharArray source = resourceProvider.getText(runParams)) {
+    public StatisticsObject run(ICompressionRunParams runParams) {
+        try (IReadableCharArray charArray = resourceProvider.getText(runParams)) {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
-            ArrayList<FactorDef> factors = new ArrayList<>();
-            try (IFactorIterator factorIterator = factorIteratorFactory.create(runParams, source)) {
-                while (factorIterator.any()) {
-                    if (factors.size() % 10000 == 0)
-                        logger.info(String.format("Produced %d factors", factors.size()));
 
-                    FactorDef factor = factorIterator.next();
-                    factors.add(factor);
-                }
-            } catch (Exception e) {
-                logger.error(String.format("Fail to run lzInf algorithm."), e);
+            IFactorIterator factorIterator = factorIteratorFactory.create(runParams, charArray);
+            ArrayList<FactorDef> factors = new ArrayList<>();
+            while (factorIterator.any()) {
+                if (factors.size() % 10000 == 0)
+                    logger.info(String.format("Produced %d factors", factors.size()));
+                factors.add(factorIterator.next());
             }
             timeCounter.end();
 
-            HashMap<CompressionStatisticKeys, String> statistics = new HashMap<>();
-            statistics.put(CompressionStatisticKeys.SourceLength, String.valueOf(source.length()));
-            statistics.put(CompressionStatisticKeys.FactorizationLength, String.valueOf(factors.size()));
-            statistics.put(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getTime()));
-            statistics.put(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
-            StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics);
+            ICompressionStatistics statistics = new CompressionStatistics();
+            statistics.putParam(CompressionStatisticKeys.SourceLength, String.valueOf(charArray.length()));
+            statistics.putParam(CompressionStatisticKeys.FactorizationLength, String.valueOf(factors.size()));
+            statistics.putParam(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
+            statistics.putParam(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getTime()));
 
-            IArrayItemsWriter<FactorDef> writer = factorsRepository.getWriter(result.getId());
-            for (FactorDef factor : factors) {
+            StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics.toMap());
+
+            IArrayItemsWriter<FactorDef> writer = factorsRepotisory.getWriter(result.getId());
+            for (FactorDef factor : factors)
                 writer.add(factor);
-            }
             writer.done();
 
             return result;
@@ -92,4 +89,3 @@ public class LzInfAlgorithm implements ISlpBuildAlgorithm {
         return Arrays.asList(filesRepository.getAllIds());
     }
 }
-

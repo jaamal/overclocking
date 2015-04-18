@@ -17,7 +17,7 @@ import dataContracts.statistics.ICompressionStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
-public class ConcurrencyAvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
+public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
     private IConcurrencyAvlTreeSLPBuilder avlTreeSLPBuilder;
     private ISlpProductsRepository slpProductsRepository;
@@ -25,7 +25,7 @@ public class ConcurrencyAvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
     private IFactorsRepository factorsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
 
-    public ConcurrencyAvlSlpBuildAlgorithm(
+    public ConcurrencyAvlSlpBuildAlgorithmRunner(
             IConcurrencyAvlTreeSLPBuilder avlTreeSLPBuilder,
             ISlpProductsRepository slpProductsRepository,
             IResourceProvider resourceProvider,
@@ -39,7 +39,7 @@ public class ConcurrencyAvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
     }
 
     @Override
-    public StatisticsObject build(ICompressionRunParams runParams) {
+    public StatisticsObject run(ICompressionRunParams runParams) {
         FactorDef[] factorization = resourceProvider.getFactorization(runParams);
         ICompressionStatistics statistics = new CompressionStatistics();
 

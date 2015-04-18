@@ -38,7 +38,7 @@ import dataContracts.DataFactoryType;
 import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 
-public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
+public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
 
     private ISettings settings;
     private final IAvlTreeArrayMergerFactory avlTreeArrayMergerFactory;
@@ -52,7 +52,7 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
     private IFactorIteratorFactory factorIteratorFactory;
     private IStatisticsObjectFactory statisticsObjectFactory;
 
-    public SlpBuildAlgorithmFactory(
+    public AlgorithmRunnersFactory(
             ISettings settings,
             IAvlTreeArrayMergerFactory avlTreeArrayMergerFactory,
             ISlpProductsRepository slpProductsRepository,
@@ -78,7 +78,7 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
     }
 
     @Override
-    public ISlpBuildAlgorithm create(ICompressionRunParams runParams) {
+    public IAlgorithmRunner create(ICompressionRunParams runParams) {
         AlgorithmType algorithmType = runParams.getEnumValue(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
         switch (algorithmType) {
             case avlSlpConcurrent: {
@@ -90,7 +90,7 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
                 SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
                 ConcurrentSLPExtractor slpExtractor = new ConcurrentSLPExtractor(runParams.getIntValue(CompressionRunKeys.ThreadCount));
                 IConcurrencyAvlTreeSLPBuilder concurrencyAvlTreeSLPBuilder = new ConcurrencyAvlTreeSLPBuilder(avlTreeManagerFactory, new AvlTreeSetFactory(avlTreeArrayMerger), parallelExecutorFactory, factorizationIndexer, slpExtractor, slpByteSizeCounter);
-                return new ConcurrencyAvlSlpBuildAlgorithm(concurrencyAvlTreeSLPBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory);
+                return new ConcurrencyAvlSlpBuildAlgorithmRunner(concurrencyAvlTreeSLPBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory);
             }
             case avlSlp: {
                 DataFactoryType dataFactoryType = runParams.getEnumValue(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
@@ -100,27 +100,27 @@ public class SlpBuildAlgorithmFactory implements ISlpBuildAlgorithmsFactory {
                 AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(avlTreeArrayMergerFactory, avlMergePattern, avlSplitPattern);
                 SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
                 IAvlTreeSLPBuilder avlTreeSLPBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
-                return new AvlSlpBuildAlgorithm(avlTreeSLPBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory);
+                return new AvlSlpBuildAlgorithmRunner(avlTreeSLPBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory);
             }
             case cartesianSlp: {
                 DataFactoryType dataFactoryType = runParams.getEnumValue(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
                 CartesianTreeManagerFactory cartesianTreeManagerFactory = new CartesianTreeManagerFactory(settings, dataFactoryType);
                 SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
                 CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), slpByteSizeCounter);
-                return new CartesianSlpBuildAlgorithm(cartesianSLPTreeBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory);
+                return new CartesianSlpBuildAlgorithmRunner(cartesianSLPTreeBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory);
             }
             case lcaOnlineSlp: {
                 SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
-                return new LCAOnlineSlpBuildAlgorithm(lcaOnlineCompressor, slpProductsRepository, resourceProvider, filesRepository, statisticsObjectFactory, slpByteSizeCounter);
+                return new LCAOnlineSlpBuildAlgorithmRunner(lcaOnlineCompressor, slpProductsRepository, resourceProvider, filesRepository, statisticsObjectFactory, slpByteSizeCounter);
             }
             case lzw: {
-                return new LzwAlgorithm(lzwFactorsAnalyzer, resourceProvider, filesRepository, statisticsObjectFactory);
+                return new LzwAlgorithmRunner(lzwFactorsAnalyzer, resourceProvider, filesRepository, statisticsObjectFactory);
             }
             case lz77: {
-                return new Lz77Algorithm(resourceProvider, filesRepository, factorsRepositoryFactory, factorIteratorFactory, new Analysator(), statisticsObjectFactory);
+                return new Lz77AlgorithmRunner(resourceProvider, filesRepository, factorsRepositoryFactory, factorIteratorFactory, new Analysator(), statisticsObjectFactory);
             }
             case lzInf: {
-                return new LzInfAlgorithm(resourceProvider, filesRepository, factorIteratorFactory, factorsRepositoryFactory, new Analysator(), statisticsObjectFactory);
+                return new LzInfAlgorithmRunner(resourceProvider, filesRepository, factorIteratorFactory, factorsRepositoryFactory, new Analysator(), statisticsObjectFactory);
             }
             default:
                 throw new RuntimeException(String.format("Slp building algorithm of type %s is not supported", algorithmType));

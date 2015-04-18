@@ -4,8 +4,8 @@ import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.slpProductsRepository.ISlpProductsRepository;
-import avlTree.slpBuilders.IAvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
+import cartesianTree.slpBuilders.ICartesianSlpTreeBuilder;
 
 import compressionservice.compression.parameters.ICompressionRunParams;
 
@@ -16,22 +16,22 @@ import dataContracts.statistics.ICompressionStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
-public class AvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
+public class CartesianSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
-    private IAvlTreeSLPBuilder avlTreeSLPBuilder;
+    private ICartesianSlpTreeBuilder cartesianSLPTreeBuilder;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
     private IFactorsRepository factorsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
 
-    public AvlSlpBuildAlgorithm(
-            IAvlTreeSLPBuilder avlTreeSLPBuilder,
+    public CartesianSlpBuildAlgorithmRunner(
+            ICartesianSlpTreeBuilder cartesianSLPTreeBuilder,
             ISlpProductsRepository slpProductsRepository,
-            IResourceProvider resourceProvider,
-            IFactorsRepositoryFactory factorsRepositoryFactory,
+            IResourceProvider resourceProvider, 
+            IFactorsRepositoryFactory factorsRepositoryFactory, 
             IStatisticsObjectFactory statisticsObjectFactory)
     {
-        this.avlTreeSLPBuilder = avlTreeSLPBuilder;
+        this.cartesianSLPTreeBuilder = cartesianSLPTreeBuilder;
         this.slpProductsRepository = slpProductsRepository;
         this.resourceProvider = resourceProvider;
         this.statisticsObjectFactory = statisticsObjectFactory;
@@ -39,11 +39,11 @@ public class AvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
     }
 
     @Override
-    public StatisticsObject build(ICompressionRunParams runParams) {
+    public StatisticsObject run(ICompressionRunParams runParams) {
         FactorDef[] factorization = resourceProvider.getFactorization(runParams);
         ICompressionStatistics statistics = new CompressionStatistics();
 
-        ISLPBuilder slp = avlTreeSLPBuilder.buildSlp(factorization, statistics);
+        ISLPBuilder slp = cartesianSLPTreeBuilder.buildSlp(factorization, statistics);
 
         StatisticsObject statisticsObject = statisticsObjectFactory.create(runParams.toMap(), statistics.toMap());
 
@@ -55,7 +55,7 @@ public class AvlSlpBuildAlgorithm implements ISlpBuildAlgorithm {
 
         return statisticsObject;
     }
-
+    
     @Override
     public Iterable<String> getAllSourceIds() {
         return factorsRepository.getDoneStatisticIds();

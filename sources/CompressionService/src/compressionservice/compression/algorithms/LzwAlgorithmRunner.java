@@ -13,14 +13,14 @@ import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
-public class LzwAlgorithm implements ISlpBuildAlgorithm {
+public class LzwAlgorithmRunner implements IAlgorithmRunner {
     
     private IResourceProvider resourceProvider;
     private ILZWFactorsAnalyzer lzwFactorsAnalyzer;
     private IFilesRepository filesRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
     
-    public LzwAlgorithm(
+    public LzwAlgorithmRunner(
             ILZWFactorsAnalyzer lzwFactorsAnalyzer,
             IResourceProvider resourceProvider,
             IFilesRepository filesRepository, 
@@ -33,7 +33,7 @@ public class LzwAlgorithm implements ISlpBuildAlgorithm {
     
     //TODO: this algorithm only counts number of factors, but doesnt create any factorization
     @Override
-    public StatisticsObject build(ICompressionRunParams runParams) {
+    public StatisticsObject run(ICompressionRunParams runParams) {
         try(IReadableCharArray charArray = resourceProvider.getText(runParams))
         {
             ITimeCounter timeCounter = new TimeCounter();
