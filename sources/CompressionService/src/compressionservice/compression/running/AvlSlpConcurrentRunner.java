@@ -4,7 +4,7 @@ import dataContracts.statistics.IStatisticsObjectFactory;
 import storage.statistics.IStatisticsRepository;
 
 import compressionservice.compression.algorithms.IAlgorithmRunnersFactory;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 
 import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
@@ -25,13 +25,13 @@ public class AvlSlpConcurrentRunner extends SlpRunner implements ITypedCompressi
     }
 
     @Override
-    protected CheckParamsResult checkAndRefillParamsInternal(ICompressionRunParams runParams) {
+    protected CheckParamsResult checkAndRefillParamsInternal(IRunParams runParams) {
         if (!runParams.contains(CompressionRunKeys.AvlMergePattern))
-            runParams.putParam(CompressionRunKeys.AvlMergePattern, DefaultAVLMergePattern);
+            runParams.put(CompressionRunKeys.AvlMergePattern, DefaultAVLMergePattern);
         if (!runParams.contains(CompressionRunKeys.DataFactoryType))
-            runParams.putParam(CompressionRunKeys.DataFactoryType, DefaultDataFactoryType);
+            runParams.put(CompressionRunKeys.DataFactoryType, DefaultDataFactoryType);
         if (!runParams.contains(CompressionRunKeys.ThreadCount))
-            runParams.putParam(CompressionRunKeys.ThreadCount, DefaultThreadCount);
+            runParams.put(CompressionRunKeys.ThreadCount, DefaultThreadCount);
         return CheckParamsResult.OK;
     }
 

@@ -1,7 +1,7 @@
 package compressionservice.compression.algorithms;
 
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 
 public interface IAlgorithmRunnersFactory {
-    IAlgorithmRunner create(ICompressionRunParams runParams);
+    IAlgorithmRunner create(IRunParams runParams);
 }

@@ -18,8 +18,8 @@ import commons.settings.ISettings;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
 import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
-import compressionservice.compression.parameters.CompressionRunParams;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.RunParams;
+import compressionservice.compression.parameters.IRunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
@@ -42,9 +42,9 @@ public class AvlSlpBuildTest extends IntegrationTestBase {
     }
 
     private FactorDef[] getFactorization(String text) {
-        ICompressionRunParams runParams = new CompressionRunParams();
-        runParams.putParam(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.putParam(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
+        IRunParams runParams = new RunParams();
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
         
         IFactorIterator iterator = container.get(IFactorIteratorFactory.class).create(runParams, new MemoryReadableCharArray(text));
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();

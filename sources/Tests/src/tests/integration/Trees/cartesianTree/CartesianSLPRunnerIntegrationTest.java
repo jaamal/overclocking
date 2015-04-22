@@ -15,7 +15,7 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
 
-import compressionservice.compression.parameters.CompressionRunParams;
+import compressionservice.compression.parameters.RunParams;
 import compressionservice.compression.running.CartesianSlpRunner;
 import compressionservice.compression.running.LzInfRunner;
 
@@ -56,7 +56,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     public void testBigDNA() {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AATT.gz", ContentType.GZip, filesRepository);
 
-        CompressionRunParams runParams = new CompressionRunParams();
+        RunParams runParams = new RunParams();
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
 
@@ -75,7 +75,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         FileMetadata simpleDnaFile = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository);
         FileMetadata twoSectionsDnaFile = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
 
-        CompressionRunParams runParams = new CompressionRunParams();
+        RunParams runParams = new RunParams();
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
 
@@ -99,7 +99,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     }
 
     private void BuildSLPs() {
-        CompressionRunParams runParams = new CompressionRunParams();
+        RunParams runParams = new RunParams();
         cartesianSlpRunner.checkAndRefillParams(runParams);
         cartesianSlpRunner.run(runParams);
     }

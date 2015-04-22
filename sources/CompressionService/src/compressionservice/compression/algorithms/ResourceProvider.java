@@ -16,7 +16,7 @@ import storage.filesRepository.IFilesRepository;
 import compressingCore.dataAccess.IDataFactory;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataFiltering.IFileFilter;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
@@ -43,8 +43,8 @@ public class ResourceProvider implements IResourceProvider {
     }
     
     @Override
-    public FactorDef[] getFactorization(ICompressionRunParams runParams) {
-        String sourceId = runParams.getStrValue(CompressionRunKeys.SourceId);
+    public FactorDef[] getFactorization(IRunParams runParams) {
+        String sourceId = runParams.get(CompressionRunKeys.SourceId);
         logger.info("Start read factors from factorization with id = " + sourceId);
         List<FactorDef> lzFactors = factorsRepository.readItems(sourceId);
         logger.info("End read factors. Factors count = " + lzFactors.size());
@@ -52,9 +52,9 @@ public class ResourceProvider implements IResourceProvider {
     }
 
     @Override
-    public IReadableCharArray getText(ICompressionRunParams runParams) {
-        String sourceId = runParams.getStrValue(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getEnumValue(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+    public IReadableCharArray getText(IRunParams runParams) {
+        String sourceId = runParams.get(CompressionRunKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
         
         logger.info(String.format("Start filtering of file %s...", sourceId));
         FileMetadata fileMetadata = filesRepository.getMetadata(sourceId);

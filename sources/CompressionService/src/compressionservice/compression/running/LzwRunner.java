@@ -4,7 +4,7 @@ import dataContracts.statistics.IStatisticsObjectFactory;
 import storage.statistics.IStatisticsRepository;
 
 import compressionservice.compression.algorithms.IAlgorithmRunnersFactory;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 
 import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
@@ -22,9 +22,9 @@ public class LzwRunner extends SlpRunner implements ITypedCompressionRunner {
     }
 
     @Override
-    protected CheckParamsResult checkAndRefillParamsInternal(ICompressionRunParams runParams) {
+    protected CheckParamsResult checkAndRefillParamsInternal(IRunParams runParams) {
         if (!runParams.contains(CompressionRunKeys.DataFactoryType))
-            runParams.putParam(CompressionRunKeys.DataFactoryType, DefaultDataFactoryType);
+            runParams.put(CompressionRunKeys.DataFactoryType, DefaultDataFactoryType);
         return CheckParamsResult.OK;
     }
 

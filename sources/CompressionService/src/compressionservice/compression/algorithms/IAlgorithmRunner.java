@@ -1,10 +1,10 @@
 package compressionservice.compression.algorithms;
 
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 import dataContracts.statistics.StatisticsObject;
 
 public interface IAlgorithmRunner {
     
-    StatisticsObject run(ICompressionRunParams runParams);
+    StatisticsObject run(IRunParams runParams);
     Iterable<String> getAllSourceIds();
 }

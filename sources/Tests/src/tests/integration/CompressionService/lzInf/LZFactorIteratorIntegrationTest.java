@@ -16,8 +16,8 @@ import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.compression.algorithms.factorization.FactorIteratorFactory;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
-import compressionservice.compression.parameters.CompressionRunParams;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.RunParams;
+import compressionservice.compression.parameters.IRunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
@@ -111,9 +111,9 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
 
     private ArrayList<FactorDef> getFactors(IReadableCharArray charArray)
     {
-        ICompressionRunParams runParams = new CompressionRunParams();
-        runParams.putParam(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.putParam(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
+        IRunParams runParams = new RunParams();
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
         
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
         try(IFactorIterator lzFactorizator = factorIteratorFactory.create(runParams, charArray);)  {

@@ -16,8 +16,8 @@ import storage.slpProductsRepository.SlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
 
-import compressionservice.compression.parameters.CompressionRunParams;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.RunParams;
+import compressionservice.compression.parameters.IRunParams;
 import compressionservice.compression.running.AvlSlpConcurrentRunner;
 import compressionservice.compression.running.LzInfRunner;
 
@@ -57,7 +57,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
         FileMetadata simpleDnaFile = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository);
         FileMetadata twoSectionsDnaFile = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
 
-        CompressionRunParams runParams = new CompressionRunParams();
+        RunParams runParams = new RunParams();
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
 
@@ -87,7 +87,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
     public void testBig() {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AAOO.gz", ContentType.GZip, filesRepository);
 
-        CompressionRunParams runParams = new CompressionRunParams();
+        RunParams runParams = new RunParams();
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
 
@@ -102,7 +102,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
     }
 
     private void BuildSLPs() {
-        ICompressionRunParams runParams = new CompressionRunParams();
+        IRunParams runParams = new RunParams();
         avlConcurentRunner.checkAndRefillParams(runParams);
         avlConcurentRunner.run(runParams);
     }

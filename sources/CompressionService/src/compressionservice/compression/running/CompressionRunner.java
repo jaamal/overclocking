@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import compressionservice.businessObjects.CompressionRunnerState;
 import compressionservice.compression.ICompressionStatesKeeper;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 
 import dataContracts.AlgorithmType;
 import dataContracts.statistics.CompressionRunKeys;
@@ -28,14 +28,14 @@ public class CompressionRunner implements ICompressionRunner {
     }
 
     @Override
-    public CompressionRunnerState run(final ICompressionRunParams runParams) {
+    public CompressionRunnerState run(final IRunParams runParams) {
         if (!isAvailable())
             throw new CompresionRunnerException("Compression runner is busy at now.");
         
         if (!runParams.contains(CompressionRunKeys.AlgorithmType))
             throw new CompresionRunnerException("Unable to run compression algorithm since algorithm type parameter was not passed.");
         
-        AlgorithmType algorithmType = runParams.getEnumValue(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
+        AlgorithmType algorithmType = runParams.getEnum(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
         for (int i = 0; i < runners.length; i++) {
             if (runners[i].getAlgorithmType() == algorithmType) {
                 final ITypedCompressionRunner runner = runners[i];

@@ -7,7 +7,7 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.IAvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
 
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 
 import dataContracts.FactorDef;
 import dataContracts.Product;
@@ -39,7 +39,7 @@ public class AvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     }
 
     @Override
-    public StatisticsObject run(ICompressionRunParams runParams) {
+    public StatisticsObject run(IRunParams runParams) {
         FactorDef[] factorization = resourceProvider.getFactorization(runParams);
         ICompressionStatistics statistics = new CompressionStatistics();
 

@@ -1,14 +1,14 @@
 package compressionservice.compression.running;
 
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 
 import dataContracts.AlgorithmType;
 
 public interface ITypedCompressionRunner {
     AlgorithmType getAlgorithmType();
 
-    CheckParamsResult checkAndRefillParams(ICompressionRunParams runParams);
+    CheckParamsResult checkAndRefillParams(IRunParams runParams);
 
-    void run(ICompressionRunParams runParams);
+    void run(IRunParams runParams);
 }
 

@@ -8,7 +8,7 @@ import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.compression.algorithms.lzw.ILZWFactorsAnalyzer;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
@@ -33,7 +33,7 @@ public class LzwAlgorithmRunner implements IAlgorithmRunner {
     
     //TODO: this algorithm only counts number of factors, but doesnt create any factorization
     @Override
-    public StatisticsObject run(ICompressionRunParams runParams) {
+    public StatisticsObject run(IRunParams runParams) {
         try(IReadableCharArray charArray = resourceProvider.getText(runParams))
         {
             ITimeCounter timeCounter = new TimeCounter();

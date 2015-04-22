@@ -29,7 +29,7 @@ import compressionservice.compression.algorithms.analysator.Analysator;
 import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.compression.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
 import compressionservice.compression.algorithms.lzw.ILZWFactorsAnalyzer;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 
 import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
@@ -78,24 +78,24 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
     }
 
     @Override
-    public IAlgorithmRunner create(ICompressionRunParams runParams) {
-        AlgorithmType algorithmType = runParams.getEnumValue(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
+    public IAlgorithmRunner create(IRunParams runParams) {
+        AlgorithmType algorithmType = runParams.getEnum(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
         switch (algorithmType) {
             case avlSlpConcurrent: {
-                DataFactoryType dataFactoryType = runParams.getEnumValue(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
-                AvlMergePattern avlMergePattern = runParams.getEnumValue(AvlMergePattern.class, CompressionRunKeys.AvlMergePattern);
+                DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+                AvlMergePattern avlMergePattern = runParams.getEnum(AvlMergePattern.class, CompressionRunKeys.AvlMergePattern);
                 IAvlTreeArrayMerger avlTreeArrayMerger = avlTreeArrayMergerFactory.create(avlMergePattern);
                 IAvlTreeManagerFactory avlTreeManagerFactory = new ConcurrentAvlTreeManagerFactory(dataFactoryType);
-                IParallelExecutorFactory parallelExecutorFactory = new ParallelExecutorFactory(runParams.getIntValue(CompressionRunKeys.ThreadCount));
+                IParallelExecutorFactory parallelExecutorFactory = new ParallelExecutorFactory(runParams.getInt(CompressionRunKeys.ThreadCount));
                 SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
-                ConcurrentSLPExtractor slpExtractor = new ConcurrentSLPExtractor(runParams.getIntValue(CompressionRunKeys.ThreadCount));
+                ConcurrentSLPExtractor slpExtractor = new ConcurrentSLPExtractor(runParams.getInt(CompressionRunKeys.ThreadCount));
                 IConcurrencyAvlTreeSLPBuilder concurrencyAvlTreeSLPBuilder = new ConcurrencyAvlTreeSLPBuilder(avlTreeManagerFactory, new AvlTreeSetFactory(avlTreeArrayMerger), parallelExecutorFactory, factorizationIndexer, slpExtractor, slpByteSizeCounter);
                 return new ConcurrencyAvlSlpBuildAlgorithmRunner(concurrencyAvlTreeSLPBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory);
             }
             case avlSlp: {
-                DataFactoryType dataFactoryType = runParams.getEnumValue(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
-                AvlMergePattern avlMergePattern = runParams.getEnumValue(AvlMergePattern.class, CompressionRunKeys.AvlMergePattern);
-                AvlSplitPattern avlSplitPattern = runParams.getEnumValue(AvlSplitPattern.class, CompressionRunKeys.AvlSplitPattern);
+                DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+                AvlMergePattern avlMergePattern = runParams.getEnum(AvlMergePattern.class, CompressionRunKeys.AvlMergePattern);
+                AvlSplitPattern avlSplitPattern = runParams.getEnum(AvlSplitPattern.class, CompressionRunKeys.AvlSplitPattern);
                 IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(settings, dataFactoryType);
                 AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(avlTreeArrayMergerFactory, avlMergePattern, avlSplitPattern);
                 SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
@@ -103,7 +103,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
                 return new AvlSlpBuildAlgorithmRunner(avlTreeSLPBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory);
             }
             case cartesianSlp: {
-                DataFactoryType dataFactoryType = runParams.getEnumValue(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+                DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
                 CartesianTreeManagerFactory cartesianTreeManagerFactory = new CartesianTreeManagerFactory(settings, dataFactoryType);
                 SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
                 CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), slpByteSizeCounter);

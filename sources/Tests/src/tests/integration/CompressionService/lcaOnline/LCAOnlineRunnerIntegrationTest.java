@@ -14,7 +14,7 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
 
-import compressionservice.compression.parameters.CompressionRunParams;
+import compressionservice.compression.parameters.RunParams;
 import compressionservice.compression.running.LCAOnlineRunner;
 
 import dataContracts.ContentType;
@@ -53,7 +53,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
     public void testSimpleDNASquared() {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
         
-        CompressionRunParams runParams = new CompressionRunParams();
+        RunParams runParams = new RunParams();
         lcaOnlineRunner.checkAndRefillParams(runParams);
         lcaOnlineRunner.run(runParams);
         
@@ -69,7 +69,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
     {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository);
 
-        CompressionRunParams runParams = new CompressionRunParams();
+        RunParams runParams = new RunParams();
         lcaOnlineRunner.checkAndRefillParams(runParams);
         lcaOnlineRunner.run(runParams);
         
@@ -85,7 +85,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
     {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository);
 
-        CompressionRunParams runParams = new CompressionRunParams();
+        RunParams runParams = new RunParams();
         lcaOnlineRunner.checkAndRefillParams(runParams);
         lcaOnlineRunner.run(runParams);
 

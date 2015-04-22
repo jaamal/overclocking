@@ -14,7 +14,7 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
-import compressionservice.compression.parameters.CompressionRunParams;
+import compressionservice.compression.parameters.RunParams;
 import compressionservice.compression.running.LzInfRunner;
 import dataContracts.ContentType;
 import dataContracts.FactorDef;
@@ -52,8 +52,8 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
     public void testSimpleDNASquared() {
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository).getId();
         
-        CompressionRunParams runParams = new CompressionRunParams();
-        runParams.putParam(CompressionRunKeys.SourceId, fileId);
+        RunParams runParams = new RunParams();
+        runParams.put(CompressionRunKeys.SourceId, fileId);
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
         
@@ -68,8 +68,8 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
     public void testSimpleDNA() {
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository).getId();
         
-        CompressionRunParams runParams = new CompressionRunParams();
-        runParams.putParam(CompressionRunKeys.SourceId, fileId);
+        RunParams runParams = new RunParams();
+        runParams.put(CompressionRunKeys.SourceId, fileId);
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
         
@@ -84,8 +84,8 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
     public void testGZippedFile() {
         String fileId = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository).getId();
 
-        CompressionRunParams runParams = new CompressionRunParams();
-        runParams.putParam(CompressionRunKeys.SourceId, fileId);
+        RunParams runParams = new RunParams();
+        runParams.put(CompressionRunKeys.SourceId, fileId);
         lzInfRunner.checkAndRefillParams(runParams);
         lzInfRunner.run(runParams);
 

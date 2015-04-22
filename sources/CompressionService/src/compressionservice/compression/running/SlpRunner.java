@@ -2,7 +2,7 @@ package compressionservice.compression.running;
 
 import compressionservice.compression.algorithms.IAlgorithmRunner;
 import compressionservice.compression.algorithms.IAlgorithmRunnersFactory;
-import compressionservice.compression.parameters.ICompressionRunParams;
+import compressionservice.compression.parameters.IRunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
@@ -28,7 +28,7 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
     }
 
     @Override
-    public void run(ICompressionRunParams runParams) {
+    public void run(IRunParams runParams) {
         try {
             IAlgorithmRunner buildAlgorithm = buildAlgorithmsFactory.create(runParams);
             ArrayList<Exception> unhandledExceptions = new ArrayList<>();
@@ -39,7 +39,7 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
             else {
                 Iterable<String> sourceIds = buildAlgorithm.getAllSourceIds();
                 for (String sourceId : sourceIds) {
-                    runParams.putParam(CompressionRunKeys.SourceId, sourceId);
+                    runParams.put(CompressionRunKeys.SourceId, sourceId);
                     run(buildAlgorithm, unhandledExceptions, runParams);
                 }
             }
@@ -54,22 +54,22 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
     }
 
     @Override
-    public CheckParamsResult checkAndRefillParams(ICompressionRunParams runParams) {
+    public CheckParamsResult checkAndRefillParams(IRunParams runParams) {
         if (runParams.contains(CompressionRunKeys.AlgorithmType)) {
-            AlgorithmType currentAlgorithmType = runParams.getEnumValue(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
+            AlgorithmType currentAlgorithmType = runParams.getEnum(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
             if (currentAlgorithmType != getAlgorithmType()) {
                 String message = String.format("Parameter '%s' equals to '%s', but it must be equal to '%s'", CompressionRunKeys.AlgorithmType, currentAlgorithmType.name(), getAlgorithmType().name());
                 return CheckParamsResult.failed(message);
             }
         } else
-            runParams.putParam(CompressionRunKeys.AlgorithmType, getAlgorithmType());
+            runParams.put(CompressionRunKeys.AlgorithmType, getAlgorithmType());
 
         return checkAndRefillParamsInternal(runParams);
     }
     
-    private void run(IAlgorithmRunner buildAlgorithm, ArrayList<Exception> unhandledExceptions, ICompressionRunParams runParams) {
+    private void run(IAlgorithmRunner buildAlgorithm, ArrayList<Exception> unhandledExceptions, IRunParams runParams) {
         try {
-            String sourceId = runParams.getStrValue(CompressionRunKeys.SourceId);
+            String sourceId = runParams.get(CompressionRunKeys.SourceId);
             if (statisticsRepository.exists(sourceId, statisticsObjectFactory.getStatisticsObjectId(runParams.toMap()))) {
                 logger.info("Skip sourceId = " + sourceId + ", because it was been processed early");
                 return;
@@ -89,5 +89,5 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
         System.gc();
     }
 
-    protected abstract CheckParamsResult checkAndRefillParamsInternal(ICompressionRunParams runParams);
+    protected abstract CheckParamsResult checkAndRefillParamsInternal(IRunParams runParams);
 }
