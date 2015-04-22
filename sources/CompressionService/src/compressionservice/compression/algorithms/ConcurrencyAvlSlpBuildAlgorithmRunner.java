@@ -7,11 +7,10 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.ConcurrentAvlBuilderStopwatches;
 import avlTree.slpBuilders.IConcurrencyAvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
-
 import compressionservice.compression.parameters.IRunParams;
-
 import dataContracts.FactorDef;
 import dataContracts.Product;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatistics;
 import dataContracts.statistics.ICompressionStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
@@ -40,7 +39,8 @@ public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
     @Override
     public StatisticsObject run(IRunParams runParams) {
-        FactorDef[] factorization = resourceProvider.getFactorization(runParams);
+        String sourceId = runParams.get(CompressionRunKeys.SourceId);
+        FactorDef[] factorization = resourceProvider.getFactorization(sourceId);
         ICompressionStatistics statistics = new CompressionStatistics();
 
         ConcurrentAvlBuilderStopwatches stopwatches = new ConcurrentAvlBuilderStopwatches();

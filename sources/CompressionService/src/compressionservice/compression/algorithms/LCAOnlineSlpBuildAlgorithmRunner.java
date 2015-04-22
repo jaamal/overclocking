@@ -15,8 +15,10 @@ import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.compression.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
 import compressionservice.compression.parameters.IRunParams;
+import dataContracts.DataFactoryType;
 import dataContracts.Product;
 import dataContracts.SLPStatistics;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
@@ -49,7 +51,9 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
     @Override
     public StatisticsObject run(IRunParams runParams) {
-        try (IReadableCharArray source = resourceProvider.getText(runParams)) {
+        String sourceId = runParams.get(CompressionRunKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+        try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             logger.info("Source file size is " + source.length());
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();

@@ -53,11 +53,12 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
 
     @Override
     public StatisticsObject run(IRunParams runParams) {
-        try (IReadableCharArray source = resourceProvider.getText(runParams)) {
+        String sourceId = runParams.get(CompressionRunKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+        try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
             ArrayList<FactorDef> factors = new ArrayList<>();
-            DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
             try (IFactorIterator factorIterator = factorIteratorFactory.createInfiniteIterator(source, dataFactoryType)) {
                 while (factorIterator.any()) {
                     if (factors.size() % 10000 == 0)

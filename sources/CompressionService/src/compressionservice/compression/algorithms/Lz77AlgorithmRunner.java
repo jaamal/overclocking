@@ -17,6 +17,7 @@ import compressionservice.compression.algorithms.analysator.IAnalysator;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
 import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.compression.parameters.IRunParams;
+import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
@@ -52,8 +53,10 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
     }
 
     @Override
-    public StatisticsObject run(IRunParams runParams) {        
-        try (IReadableCharArray charArray = resourceProvider.getText(runParams)) {
+    public StatisticsObject run(IRunParams runParams) {
+        String sourceId = runParams.get(CompressionRunKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+        try (IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType)) {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
 
