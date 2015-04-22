@@ -34,16 +34,12 @@ import compressionservice.compression.algorithms.lzInf.suffixArray.ISuffixArrayB
 import compressionservice.compression.algorithms.lzInf.suffixArray.SuffixArrayBuilder;
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.IOnlineSuffixTreeFactory;
 import compressionservice.compression.algorithms.lzInf.suffixTreeImitation.OnLineSuffixTreeFactory;
-import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.parameters.IRunParams;
 
-import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
-import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatistics;
 
 public class SLPBuildHelper {
@@ -72,12 +68,8 @@ public class SLPBuildHelper {
         ISuffixArrayBuilder suffixArrayFactory = new SuffixArrayBuilder(dataFactory, fileManager, externalProcessExecutor, settings);
         IArrayMinSearcherFactory arrayMinSearcherFactory = new ArrayMinSearcherFactory(dataFactory);
         IOnlineSuffixTreeFactory onlineSuffixTreeFactory = new OnLineSuffixTreeFactory(suffixArrayFactory, arrayMinSearcherFactory);
-
-        IRunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
+        IFactorIterator iterator = new FactorIteratorFactory(onlineSuffixTreeFactory).createInfiniteIterator(new MemoryReadableCharArray(text), DataFactoryType.memory);
         
-        IFactorIterator iterator = new FactorIteratorFactory(onlineSuffixTreeFactory).create(runParams, new MemoryReadableCharArray(text));
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
         while (iterator.any()) {
             FactorDef nextFactor = iterator.next();

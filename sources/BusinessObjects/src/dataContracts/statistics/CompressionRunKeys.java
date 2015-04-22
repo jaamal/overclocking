@@ -1,5 +1,6 @@
 package dataContracts.statistics;
 
+//TODO: rename it to RunParamKeys
 public enum CompressionRunKeys
 {
     AlgorithmType,

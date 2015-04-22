@@ -29,6 +29,7 @@ import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
 import avlTree.slpBuilders.SLPBuilder;
+
 import commons.settings.ISettings;
 import compressingCore.dataAccess.IDataFactory;
 import compressingCore.dataAccess.IReadableCharArray;
@@ -36,16 +37,13 @@ import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressingCore.dataFiltering.FileFilter;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
 import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
-import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.parameters.IRunParams;
-import dataContracts.AlgorithmType;
+
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.files.FileType;
-import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatistics;
 
 public class BuildSLPFromFileTest extends IntegrationTestBase {
@@ -122,12 +120,8 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
         try (IReadableCharArray source = new MemoryReadableCharArray(text)) {
             IFactorIteratorFactory factorIteratorFactory = container.get(IFactorIteratorFactory.class);
 
-            IRunParams runParams = new RunParams();
-            runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-            runParams.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
-            
             ArrayList<FactorDef> factorization;
-            try (IFactorIterator lzFactorIterator = factorIteratorFactory.create(runParams, source)) {
+            try (IFactorIterator lzFactorIterator = factorIteratorFactory.createInfiniteIterator(source, DataFactoryType.memory)) {
                 factorization = new ArrayList<FactorDef>();
                 while (lzFactorIterator.any()) {
                     FactorDef factor = lzFactorIterator.next();

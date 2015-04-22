@@ -111,12 +111,8 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
 
     private ArrayList<FactorDef> getFactors(IReadableCharArray charArray)
     {
-        IRunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
-        
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
-        try(IFactorIterator lzFactorizator = factorIteratorFactory.create(runParams, charArray);)  {
+        try(IFactorIterator lzFactorizator = factorIteratorFactory.createInfiniteIterator(charArray, DataFactoryType.memory);)  {
             while (lzFactorizator.any())
                 factors.add(lzFactorizator.next());
         } catch (Exception e) {

@@ -10,7 +10,6 @@ import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
-
 import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
@@ -18,8 +17,8 @@ import compressionservice.compression.algorithms.analysator.IAnalysator;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
 import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.compression.parameters.IRunParams;
-
 import dataContracts.FactorDef;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.CompressionStatistics;
 import dataContracts.statistics.ICompressionStatistics;
@@ -53,12 +52,13 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
     }
 
     @Override
-    public StatisticsObject run(IRunParams runParams) {
+    public StatisticsObject run(IRunParams runParams) {        
         try (IReadableCharArray charArray = resourceProvider.getText(runParams)) {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
 
-            IFactorIterator factorIterator = factorIteratorFactory.create(runParams, charArray);
+            int windowSize = runParams.getInt(CompressionRunKeys.WindowSize);
+            IFactorIterator factorIterator = factorIteratorFactory.createWindowIterator(charArray, windowSize);
             ArrayList<FactorDef> factors = new ArrayList<>();
             while (factorIterator.any()) {
                 if (factors.size() % 10000 == 0)

@@ -11,7 +11,6 @@ import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
-
 import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
@@ -19,8 +18,9 @@ import compressionservice.compression.algorithms.analysator.IAnalysator;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
 import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.compression.parameters.IRunParams;
-
+import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
@@ -57,7 +57,8 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
             ArrayList<FactorDef> factors = new ArrayList<>();
-            try (IFactorIterator factorIterator = factorIteratorFactory.create(runParams, source)) {
+            DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+            try (IFactorIterator factorIterator = factorIteratorFactory.createInfiniteIterator(source, dataFactoryType)) {
                 while (factorIterator.any()) {
                     if (factors.size() % 10000 == 0)
                         logger.info(String.format("Produced %d factors", factors.size()));

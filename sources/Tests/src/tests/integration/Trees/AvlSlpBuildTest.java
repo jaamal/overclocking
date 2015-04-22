@@ -14,18 +14,16 @@ import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
+
 import commons.settings.ISettings;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.compression.algorithms.factorization.IFactorIterator;
 import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
-import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.parameters.IRunParams;
-import dataContracts.AlgorithmType;
+
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatistics;
 
 public class AvlSlpBuildTest extends IntegrationTestBase {
@@ -42,11 +40,7 @@ public class AvlSlpBuildTest extends IntegrationTestBase {
     }
 
     private FactorDef[] getFactorization(String text) {
-        IRunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory);
-        
-        IFactorIterator iterator = container.get(IFactorIteratorFactory.class).create(runParams, new MemoryReadableCharArray(text));
+        IFactorIterator iterator = container.get(IFactorIteratorFactory.class).createInfiniteIterator(new MemoryReadableCharArray(text), DataFactoryType.memory);
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
         while(iterator.any())
         {
