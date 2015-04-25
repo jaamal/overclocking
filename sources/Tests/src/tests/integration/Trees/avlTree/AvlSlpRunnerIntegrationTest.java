@@ -8,14 +8,13 @@ import java.util.List;
 
 import org.junit.Test;
 
-import storage.KeySpaces;
-import storage.cassandraClient.ISchemeInitializer;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
+
 import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.running.AvlSlpRunner;
-import compressionservice.compression.running.LzInfRunner;
+import compressionservice.compression.running.IWorker;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
@@ -27,34 +26,15 @@ import dataContracts.statistics.StatisticsObject;
 public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     private ISlpProductsRepository slpProductsRepository;
     private IStatisticsRepository statisticsRepository;
-    private AvlSlpRunner avlSlpRunner;
-    private LzInfRunner lzInfRunner;
+    private IWorker worker;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        container.get(ISchemeInitializer.class).setUpCluster();
-
         statisticsRepository = container.get(IStatisticsRepository.class);
-        lzInfRunner = container.get(LzInfRunner.class);
-        avlSlpRunner = container.get(AvlSlpRunner.class);
+        worker = container.get(IWorker.class);
         slpProductsRepository = container.get(ISlpProductsRepository.class);
-
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.statistics.name());
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.files.name());
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.factorizations.name());
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.slps.name());
-        container.get(ISchemeInitializer.class).setUpCluster();
-    }
-
-    @Override
-    public void tearDown() {
-//        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.statistics.name());
-//        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.files.name());
-//        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.factorizations.name());
-//        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.slps.name());
-        super.tearDown();
     }
 
     @Test
@@ -64,7 +44,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        lzInfRunner.run(runParams);
+        worker.process(runParams);
 
         BuildSLPs();
 
@@ -95,7 +75,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        lzInfRunner.run(runParams);
+        worker.process(runParams);
 
         BuildSLPs();
 
@@ -112,7 +92,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     private void BuildSLPs() {
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.avlSlp);
-        avlSlpRunner.run(runParams);
+        worker.process(runParams);
     }
 
     private String getText(List<Product> products) {

@@ -9,16 +9,15 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import storage.KeySpaces;
-import storage.cassandraClient.ISchemeInitializer;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.slpProductsRepository.SlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
-import compressionservice.compression.parameters.RunParams;
+
 import compressionservice.compression.parameters.IRunParams;
-import compressionservice.compression.running.AvlSlpConcurrentRunner;
-import compressionservice.compression.running.LzInfRunner;
+import compressionservice.compression.parameters.RunParams;
+import compressionservice.compression.running.IWorker;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
@@ -29,27 +28,16 @@ import dataContracts.statistics.StatisticsObject;
 
 public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     private ISlpProductsRepository slpProductsRepository;
-    private AvlSlpConcurrentRunner avlConcurentRunner;
     private IStatisticsRepository statisticsRepository;
-    private LzInfRunner lzInfRunner;
+    private IWorker worker;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        lzInfRunner = container.get(LzInfRunner.class);
-        avlConcurentRunner = container.create(AvlSlpConcurrentRunner.class);
+        worker = container.get(IWorker.class);
         slpProductsRepository = container.create(SlpProductsRepository.class);
         statisticsRepository = container.get(IStatisticsRepository.class);
-    }
-
-    @Override
-    public void tearDown() {
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.statistics.name());
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.files.name());
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.factorizations.name());
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.slps.name());
-        super.tearDown();
     }
 
     @Test
@@ -59,7 +47,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        lzInfRunner.run(runParams);
+        worker.process(runParams);
 
         BuildSLPs();
 
@@ -89,7 +77,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        lzInfRunner.run(runParams);
+        worker.process(runParams);
 
         BuildSLPs();
 
@@ -104,7 +92,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
     private void BuildSLPs() {
         IRunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.avlSlpConcurrent);
-        avlConcurentRunner.run(runParams);
+        worker.process(runParams);
     }
 
     private String getText(List<Product> products) {

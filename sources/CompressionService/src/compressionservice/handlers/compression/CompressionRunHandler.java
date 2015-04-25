@@ -13,15 +13,15 @@ import org.eclipse.jetty.server.Request;
 import compressionservice.businessObjects.CompressionRunnerState;
 import compressionservice.compression.parameters.IRunParams;
 import compressionservice.compression.parameters.IRunParamsFactory;
-import compressionservice.compression.running.ICompressionRunner;
+import compressionservice.compression.running.ITaskRunner;
 import compressionservice.handlers.binding.Binder;
 
 public class CompressionRunHandler extends BaseHandler {
 
-    private ICompressionRunner compressionRunner;
+    private ITaskRunner compressionRunner;
     private IRunParamsFactory paramsFactory;
 
-    public CompressionRunHandler(ICompressionRunner compressionRunner, IRunParamsFactory paramsFactory) {
+    public CompressionRunHandler(ITaskRunner compressionRunner, IRunParamsFactory paramsFactory) {
         this.compressionRunner = compressionRunner;
         this.paramsFactory = paramsFactory;
     }

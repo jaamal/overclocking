@@ -9,8 +9,10 @@ import storage.KeySpaces;
 import storage.cassandraClient.ISchemeInitializer;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
+
 import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.running.LzwRunner;
+import compressionservice.compression.running.IWorker;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.statistics.CompressionRunKeys;
@@ -20,7 +22,7 @@ import dataContracts.statistics.StatisticsObject;
 public class LZWRunnerIntegrationTest extends StorageTestBase
 {
     private IStatisticsRepository statisticsRepository;
-    private LzwRunner lzwRunner;
+    private IWorker worker;
 
     @Override
     public void setUp()
@@ -28,7 +30,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         super.setUp();
         container.get(ISchemeInitializer.class).setUpCluster();
         
-        lzwRunner = container.get(LzwRunner.class);
+        worker = container.get(IWorker.class);
         statisticsRepository = container.get(IStatisticsRepository.class);
     }
     
@@ -46,7 +48,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzw);
-        lzwRunner.run(runParams);
+        worker.process(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
@@ -60,7 +62,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzw);
-        lzwRunner.run(runParams);
+        worker.process(runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);

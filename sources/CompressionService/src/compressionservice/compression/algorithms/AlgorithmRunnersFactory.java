@@ -123,7 +123,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
                 return new LzInfAlgorithmRunner(resourceProvider, filesRepository, factorIteratorFactory, factorsRepositoryFactory, new Analysator(), statisticsObjectFactory);
             }
             default:
-                throw new RuntimeException(String.format("Slp building algorithm of type %s is not supported", algorithmType));
+                throw new RuntimeException(String.format("Algorithm of type %s is not supported", algorithmType));
         }
     }
 

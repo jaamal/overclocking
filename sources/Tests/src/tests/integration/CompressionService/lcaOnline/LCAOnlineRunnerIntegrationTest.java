@@ -8,13 +8,14 @@ import java.util.List;
 
 import org.junit.Test;
 
-import storage.KeySpaces;
 import storage.cassandraClient.ISchemeInitializer;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
+
 import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.running.LCAOnlineRunner;
+import compressionservice.compression.running.IWorker;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
@@ -27,7 +28,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
 {
     private ISlpProductsRepository slpProductsRepository;
     private IStatisticsRepository statisticsRepository;
-    private LCAOnlineRunner lcaOnlineRunner;
+    private IWorker worker;
 
     @Override
     public void setUp()
@@ -37,16 +38,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         
         statisticsRepository = container.get(IStatisticsRepository.class);
         slpProductsRepository = container.get(ISlpProductsRepository.class);
-        lcaOnlineRunner = container.get(LCAOnlineRunner.class);
-    }
-    
-    @Override
-    public void tearDown() {
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.statistics.name());
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.files.name());
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.factorizations.name());
-        container.get(ISchemeInitializer.class).truncateKeyspace(KeySpaces.slps.name());
-        super.tearDown();
+        worker = container.get(IWorker.class);
     }
 
     @Test
@@ -55,7 +47,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
-        lcaOnlineRunner.run(runParams);
+        worker.process(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
@@ -71,7 +63,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
-        lcaOnlineRunner.run(runParams);
+        worker.process(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
@@ -87,7 +79,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
-        lcaOnlineRunner.run(runParams);
+        worker.process(runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);

@@ -14,8 +14,10 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
+
 import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.running.Lz77Runner;
+import compressionservice.compression.running.IWorker;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.FactorDef;
@@ -27,7 +29,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
 {
     private IStatisticsRepository staisticsRepository;
     private IFactorsRepository factorsRepository;
-    private Lz77Runner lz77Runner;
+    private IWorker worker;
 
     @Override
     public void setUp()
@@ -38,7 +40,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         
         staisticsRepository = container.get(IStatisticsRepository.class);
         factorsRepository = container.get(IFactorsRepositoryFactory.class).getLZ77Repository();
-        lz77Runner = container.get(Lz77Runner.class);
+        worker = container.get(IWorker.class);
     }
     
     @Override
@@ -55,7 +57,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
-        lz77Runner.run(runParams);
+        worker.process(runParams);
         
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
         assertEquals(1, actuals.length);
@@ -70,7 +72,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
-        lz77Runner.run(runParams);
+        worker.process(runParams);
 
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
         assertEquals(1, actuals.length);
@@ -87,7 +89,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
-        lz77Runner.run(runParams);
+        worker.process(runParams);
         
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
         assertEquals(1, actuals.length);

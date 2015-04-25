@@ -14,9 +14,10 @@ import storage.cassandraClient.ISchemeInitializer;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
+
 import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.running.CartesianSlpRunner;
-import compressionservice.compression.running.LzInfRunner;
+import compressionservice.compression.running.IWorker;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
@@ -28,18 +29,16 @@ import dataContracts.statistics.StatisticsObject;
 public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     private IStatisticsRepository statisticsRepository;
     private ISlpProductsRepository slpProductsRepository;
-    private CartesianSlpRunner cartesianSlpRunner;
-    private LzInfRunner lzInfRunner;
+    private IWorker worker;
 
     @Override
     public void setUp() {
         super.setUp();
         container.get(ISchemeInitializer.class).setUpCluster();
 
-        lzInfRunner = container.get(LzInfRunner.class);
+        worker = container.get(IWorker.class);
         statisticsRepository = container.get(IStatisticsRepository.class);
         slpProductsRepository = container.get(ISlpProductsRepository.class);
-        cartesianSlpRunner = container.get(CartesianSlpRunner.class);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        lzInfRunner.run(runParams);
+        worker.process(runParams);
 
         BuildSLPs();
 
@@ -77,7 +76,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        lzInfRunner.run(runParams);
+        worker.process(runParams);
 
         BuildSLPs();
 
@@ -101,7 +100,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     private void BuildSLPs() {
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.cartesianSlp);
-        cartesianSlpRunner.run(runParams);
+        worker.process(runParams);
     }
 
     private String getText(List<Product> products) {

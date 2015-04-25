@@ -14,8 +14,10 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
+
 import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.running.LzInfRunner;
+import compressionservice.compression.running.IWorker;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.FactorDef;
@@ -27,7 +29,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
 {
     private IStatisticsRepository statisticsRepository;
     private IFactorsRepository factorsRepository;
-    private LzInfRunner lzInfRunner;
+    private IWorker worker;
 
     @Override
     public void setUp()
@@ -38,7 +40,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         statisticsRepository = container.get(IStatisticsRepository.class);
         factorsRepository = container.get(IFactorsRepositoryFactory.class).getLZRepository();
         
-        lzInfRunner = container.get(LzInfRunner.class);
+        worker = container.get(IWorker.class);
     }
     
     @Override
@@ -56,7 +58,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.SourceId, fileId);
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        lzInfRunner.run(runParams);
+        worker.process(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
@@ -72,7 +74,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.SourceId, fileId);
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
-        lzInfRunner.run(runParams);
+        worker.process(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
@@ -88,7 +90,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.SourceId, fileId);
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
-        lzInfRunner.run(runParams);
+        worker.process(runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
