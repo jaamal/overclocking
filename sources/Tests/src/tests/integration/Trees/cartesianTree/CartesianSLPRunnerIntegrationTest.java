@@ -14,10 +14,8 @@ import storage.cassandraClient.ISchemeInitializer;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
-
-import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.running.IWorker;
-
+import compressionservice.runner.IWorker;
+import compressionservice.runner.parameters.RunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;

@@ -21,9 +21,7 @@ import storage.factorsRepository.LZFactorsRepository;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.SlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
-
-import compressionservice.compression.algorithms.analysator.Analysator;
-
+import compressionservice.profile.Analysator;
 import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;

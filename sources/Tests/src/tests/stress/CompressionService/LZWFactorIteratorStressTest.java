@@ -8,7 +8,7 @@ import org.junit.Test;
 import tests.stress.StressTestBase;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.lzw.LZWFactorIterator;
+import compressionservice.algorithms.lzw.LZWFactorIterator;
 
 public class LZWFactorIteratorStressTest extends StressTestBase
 {

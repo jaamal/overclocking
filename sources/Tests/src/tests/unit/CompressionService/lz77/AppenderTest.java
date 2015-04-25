@@ -5,14 +5,14 @@ import static org.easymock.EasyMock.expect;
 
 import org.junit.Test;
 
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.Appender;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.IInsertPlace;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.ISearcher;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IEdge;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.INode;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.factories.INodeFactory;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.Appender;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.IInsertPlace;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.ISearcher;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
+import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
+import compressionservice.algorithms.lz77.suffixTree.structures.INode;
+import compressionservice.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
+import compressionservice.algorithms.lz77.suffixTree.structures.factories.INodeFactory;
 import tests.unit.UnitTestBase;
 
 public class AppenderTest extends UnitTestBase

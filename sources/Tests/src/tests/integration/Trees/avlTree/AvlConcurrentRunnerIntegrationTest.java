@@ -13,11 +13,9 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.slpProductsRepository.SlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
-
-import compressionservice.compression.parameters.IRunParams;
-import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.running.IWorker;
-
+import compressionservice.runner.IWorker;
+import compressionservice.runner.parameters.IRunParams;
+import compressionservice.runner.parameters.RunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;

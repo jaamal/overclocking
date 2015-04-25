@@ -5,11 +5,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.lzInf.suffixArray.SuffixArrayBuilder;
-import compressionservice.compression.algorithms.lzInf.suffixArray.ISuffixArray;
-
+import compressionservice.algorithms.lzInf.suffixArray.ISuffixArray;
+import compressionservice.algorithms.lzInf.suffixArray.SuffixArrayBuilder;
 import dataContracts.DataFactoryType;
 
 public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase

@@ -5,14 +5,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.IBeginPlace;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.IInsertPlace;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.ISearcher;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.Navigator;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.factories.IIInsertPlaceFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IEdge;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.INode;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.IBeginPlace;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.IInsertPlace;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.ISearcher;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.Navigator;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IIInsertPlaceFactory;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
+import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
+import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import tests.unit.UnitTestBase;
 
 public class NavigatorTest extends UnitTestBase

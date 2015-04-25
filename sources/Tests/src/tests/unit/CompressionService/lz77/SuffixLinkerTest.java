@@ -5,12 +5,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.IInsertPlace;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.ISuffixPlace;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.SuffixLinker;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixPlaceFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IEdge;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.INode;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.IInsertPlace;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.ISuffixPlace;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.SuffixLinker;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixPlaceFactory;
+import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
+import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import tests.unit.UnitTestBase;
 
 public class SuffixLinkerTest extends UnitTestBase

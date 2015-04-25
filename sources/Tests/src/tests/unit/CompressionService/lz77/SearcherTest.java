@@ -6,11 +6,11 @@ import static org.easymock.EasyMock.expect;
 import org.junit.Before;
 import org.junit.Test;
 
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.IBeginPlace;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.Searcher;
-import compressionservice.compression.algorithms.lz77.suffixTree.creatingTree.factories.IBeginPlaceFactory;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.IEdge;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.INode;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.IBeginPlace;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.Searcher;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IBeginPlaceFactory;
+import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
+import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import tests.unit.UnitTestBase;
 
 

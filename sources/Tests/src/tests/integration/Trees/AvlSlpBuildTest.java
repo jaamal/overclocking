@@ -14,12 +14,10 @@ import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
-
 import commons.settings.ISettings;
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.factorization.IFactorIterator;
-import compressionservice.compression.algorithms.factorization.IFactorIteratorFactory;
-
+import compressionservice.algorithms.factorization.IFactorIterator;
+import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;

@@ -11,10 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 
-import compressionservice.businessObjects.TaskRunnerState;
-import compressionservice.compression.ITasksRunnerStatesStorage;
 import compressionservice.handlers.binding.Binder;
-
+import compressionservice.runner.state.ITasksRunnerStatesStorage;
+import compressionservice.runner.state.TaskRunnerState;
 import dataContracts.IIDFactory;
 
 public class TaskStateHandler extends BaseHandler {

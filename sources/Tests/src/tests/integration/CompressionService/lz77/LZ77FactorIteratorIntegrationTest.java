@@ -14,9 +14,9 @@ import org.junit.Test;
 import tests.integration.IntegrationTestBase;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.factorization.IFactorIterator;
-import compressionservice.compression.algorithms.factorization.LZ77FactorIterator;
-import compressionservice.compression.algorithms.lz77.TextWindow;
+import compressionservice.algorithms.factorization.IFactorIterator;
+import compressionservice.algorithms.factorization.LZ77FactorIterator;
+import compressionservice.algorithms.lz77.TextWindow;
 import dataContracts.FactorDef;
 
 public class LZ77FactorIteratorIntegrationTest extends IntegrationTestBase

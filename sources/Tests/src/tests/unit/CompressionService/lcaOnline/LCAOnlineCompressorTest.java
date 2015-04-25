@@ -8,7 +8,7 @@ import org.junit.Test;
 import avlTree.slpBuilders.SLPBuilder;
 import tests.unit.UnitTestBase;
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.lcaOnlineSlp.LCAOnlineCompressor;
+import compressionservice.algorithms.lcaOnlineSlp.LCAOnlineCompressor;
 import dataContracts.SLPStatistics;
 
 public class LCAOnlineCompressorTest extends UnitTestBase{

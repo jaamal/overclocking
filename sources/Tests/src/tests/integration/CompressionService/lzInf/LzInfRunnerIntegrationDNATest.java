@@ -14,10 +14,8 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
-
-import compressionservice.compression.parameters.RunParams;
-import compressionservice.compression.running.IWorker;
-
+import compressionservice.runner.IWorker;
+import compressionservice.runner.parameters.RunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.FactorDef;

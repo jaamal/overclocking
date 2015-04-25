@@ -6,9 +6,9 @@ import org.junit.Test;
 
 import tests.unit.UnitTestBase;
 import compressingCore.dataAccess.MemoryReadableCharArray;
-import compressionservice.compression.algorithms.lz77.ITextWindow;
-import compressionservice.compression.algorithms.lz77.TextWindow;
-import compressionservice.compression.algorithms.lz77.suffixTree.structures.Location;
+import compressionservice.algorithms.lz77.ITextWindow;
+import compressionservice.algorithms.lz77.TextWindow;
+import compressionservice.algorithms.lz77.suffixTree.structures.Location;
 
 public class StringWindowTest extends UnitTestBase
 {

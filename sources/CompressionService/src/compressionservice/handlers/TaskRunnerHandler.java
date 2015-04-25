@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 
-import compressionservice.businessObjects.TaskRunnerState;
-import compressionservice.compression.parameters.IRunParams;
-import compressionservice.compression.parameters.IRunParamsFactory;
-import compressionservice.compression.running.ITaskRunner;
 import compressionservice.handlers.binding.Binder;
+import compressionservice.runner.ITaskRunner;
+import compressionservice.runner.parameters.IRunParams;
+import compressionservice.runner.parameters.IRunParamsFactory;
+import compressionservice.runner.state.TaskRunnerState;
 
 public class TaskRunnerHandler extends BaseHandler {
 

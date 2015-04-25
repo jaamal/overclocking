@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
 import compressingCore.dataAccess.MemoryLongArray;
-import compressionservice.compression.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
-import compressionservice.compression.algorithms.lzInf.arrayMinSearching.IArrayMinSearcher;
+import compressionservice.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
+import compressionservice.algorithms.lzInf.arrayMinSearching.IArrayMinSearcher;
 import dataContracts.DataFactoryType;
 
 public class ArrayMinSearcherIntegrationTest extends IntegrationTestBase
