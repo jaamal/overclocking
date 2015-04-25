@@ -17,6 +17,8 @@ import dataContracts.statistics.StatisticsObject;
 
 public class LzwAlgorithmRunner implements IAlgorithmRunner {
     
+    private final static DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
+    
     private IResourceProvider resourceProvider;
     private ILZWFactorsAnalyzer lzwFactorsAnalyzer;
     private IFilesRepository filesRepository;
@@ -37,7 +39,8 @@ public class LzwAlgorithmRunner implements IAlgorithmRunner {
     @Override
     public StatisticsObject run(IRunParams runParams) {
         String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
+        
         try(IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType))
         {
             ITimeCounter timeCounter = new TimeCounter();

@@ -41,10 +41,6 @@ public class CompressionRunner implements ICompressionRunner {
                 final ITypedCompressionRunner runner = runners[i];
                 final CompressionRunnerState result = compressionStatesKeeper.registerNew();
                 
-                CheckParamsResult checkParamsResult = runners[i].checkAndRefillParams(runParams);
-                if (checkParamsResult.state == CheckParamsResult.State.failed)
-                    return compressionStatesKeeper.setFailed(result.requestId, result.message);
-                
                 try {
                     threadPoolExecutor.submit(new Runnable() {
                         @Override

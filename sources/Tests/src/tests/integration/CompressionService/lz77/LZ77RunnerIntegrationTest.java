@@ -14,12 +14,12 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
-
 import compressionservice.compression.parameters.RunParams;
 import compressionservice.compression.running.Lz77Runner;
-
+import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.FactorDef;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -54,7 +54,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository).getId();
         
         RunParams runParams = new RunParams();
-        lz77Runner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
         lz77Runner.run(runParams);
         
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
@@ -69,7 +69,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository).getId();
         
         RunParams runParams = new RunParams();
-        lz77Runner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
         lz77Runner.run(runParams);
 
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
@@ -84,10 +84,9 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
     @Test
     public void testGZippedFile() {
         String fileId = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository).getId();
-        
-        Lz77Runner lz77Runner = container.get(Lz77Runner.class);
+
         RunParams runParams = new RunParams();
-        lz77Runner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
         lz77Runner.run(runParams);
         
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);

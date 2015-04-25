@@ -15,15 +15,15 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.slpProductsRepository.SlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
-
 import compressionservice.compression.parameters.RunParams;
 import compressionservice.compression.parameters.IRunParams;
 import compressionservice.compression.running.AvlSlpConcurrentRunner;
 import compressionservice.compression.running.LzInfRunner;
-
+import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -58,7 +58,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
         FileMetadata twoSectionsDnaFile = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
 
         RunParams runParams = new RunParams();
-        lzInfRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
         lzInfRunner.run(runParams);
 
         BuildSLPs();
@@ -88,7 +88,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AAOO.gz", ContentType.GZip, filesRepository);
 
         RunParams runParams = new RunParams();
-        lzInfRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
         lzInfRunner.run(runParams);
 
         BuildSLPs();
@@ -103,7 +103,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
 
     private void BuildSLPs() {
         IRunParams runParams = new RunParams();
-        avlConcurentRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.avlSlpConcurrent);
         avlConcurentRunner.run(runParams);
     }
 

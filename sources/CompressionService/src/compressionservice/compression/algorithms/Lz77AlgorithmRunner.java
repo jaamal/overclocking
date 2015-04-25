@@ -29,6 +29,9 @@ import dataContracts.statistics.StatisticsObject;
 public class Lz77AlgorithmRunner implements IAlgorithmRunner {
 
     private static Logger logger = LogManager.getLogger(Lz77AlgorithmRunner.class);
+    
+    private final static DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
+    private final static int defaultWindowSize = 32 * 1024;
 
     private final IFactorsRepository factorsRepotisory;
     private final IResourceProvider resourceProvider;
@@ -55,12 +58,13 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
     @Override
     public StatisticsObject run(IRunParams runParams) {
         String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
+        int windowSize = runParams.getOrDefaultInt(CompressionRunKeys.WindowSize, defaultWindowSize);
+        
         try (IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType)) {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();
 
-            int windowSize = runParams.getInt(CompressionRunKeys.WindowSize);
             IFactorIterator factorIterator = factorIteratorFactory.createWindowIterator(charArray, windowSize);
             ArrayList<FactorDef> factors = new ArrayList<>();
             while (factorIterator.any()) {

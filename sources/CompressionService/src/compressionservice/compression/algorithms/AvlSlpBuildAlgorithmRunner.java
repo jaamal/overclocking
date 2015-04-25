@@ -7,6 +7,9 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.IAvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
 import compressionservice.compression.parameters.IRunParams;
+import dataContracts.AvlMergePattern;
+import dataContracts.AvlSplitPattern;
+import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.statistics.CompressionRunKeys;
@@ -17,6 +20,11 @@ import dataContracts.statistics.StatisticsObject;
 
 public class AvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
+    //TODO: check where we should use it
+    private final static AvlMergePattern defaultAvlMergePattern = AvlMergePattern.block;
+    private final static AvlSplitPattern defaultAvlSplitPattern = AvlSplitPattern.fromMerged;
+    private final static DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
+    
     private IAvlTreeSLPBuilder avlTreeSLPBuilder;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
@@ -40,6 +48,8 @@ public class AvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     @Override
     public StatisticsObject run(IRunParams runParams) {
         String sourceId = runParams.get(CompressionRunKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
+        
         FactorDef[] factorization = resourceProvider.getFactorization(sourceId);
         ICompressionStatistics statistics = new CompressionStatistics();
 

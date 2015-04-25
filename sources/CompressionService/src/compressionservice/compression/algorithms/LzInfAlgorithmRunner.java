@@ -28,6 +28,8 @@ import dataContracts.statistics.StatisticsObject;
 public class LzInfAlgorithmRunner implements IAlgorithmRunner {
 
     private static Logger logger = LogManager.getLogger(LzInfAlgorithmRunner.class);
+    
+    private final static DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
 
     private final IResourceProvider resourceProvider;
     private final IFactorIteratorFactory factorIteratorFactory;
@@ -54,7 +56,8 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
     @Override
     public StatisticsObject run(IRunParams runParams) {
         String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
+        
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             ITimeCounter timeCounter = new TimeCounter();
             timeCounter.start();

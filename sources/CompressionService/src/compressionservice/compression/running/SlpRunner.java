@@ -1,16 +1,18 @@
 package compressionservice.compression.running;
 
+import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
+
+import storage.statistics.IStatisticsRepository;
+
 import compressionservice.compression.algorithms.IAlgorithmRunner;
 import compressionservice.compression.algorithms.IAlgorithmRunnersFactory;
 import compressionservice.compression.parameters.IRunParams;
-import dataContracts.AlgorithmType;
+
 import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
-import org.apache.log4j.Logger;
-import storage.statistics.IStatisticsRepository;
-
-import java.util.ArrayList;
 
 public abstract class SlpRunner implements ITypedCompressionRunner {
     private static Logger logger = Logger.getLogger(SlpRunner.class);
@@ -52,20 +54,6 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
             logger.error(String.format("'%s' fails with unhandled exception.", this.getClass().getName()), e);
         }
     }
-
-    @Override
-    public CheckParamsResult checkAndRefillParams(IRunParams runParams) {
-        if (runParams.contains(CompressionRunKeys.AlgorithmType)) {
-            AlgorithmType currentAlgorithmType = runParams.getEnum(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
-            if (currentAlgorithmType != getAlgorithmType()) {
-                String message = String.format("Parameter '%s' equals to '%s', but it must be equal to '%s'", CompressionRunKeys.AlgorithmType, currentAlgorithmType.name(), getAlgorithmType().name());
-                return CheckParamsResult.failed(message);
-            }
-        } else
-            runParams.put(CompressionRunKeys.AlgorithmType, getAlgorithmType());
-
-        return checkAndRefillParamsInternal(runParams);
-    }
     
     private void run(IAlgorithmRunner buildAlgorithm, ArrayList<Exception> unhandledExceptions, IRunParams runParams) {
         try {
@@ -88,6 +76,4 @@ public abstract class SlpRunner implements ITypedCompressionRunner {
         }
         System.gc();
     }
-
-    protected abstract CheckParamsResult checkAndRefillParamsInternal(IRunParams runParams);
 }

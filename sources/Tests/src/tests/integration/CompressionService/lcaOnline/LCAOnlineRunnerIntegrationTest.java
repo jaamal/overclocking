@@ -13,13 +13,13 @@ import storage.cassandraClient.ISchemeInitializer;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
-
 import compressionservice.compression.parameters.RunParams;
 import compressionservice.compression.running.LCAOnlineRunner;
-
+import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -54,7 +54,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
         
         RunParams runParams = new RunParams();
-        lcaOnlineRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
         lcaOnlineRunner.run(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
@@ -70,7 +70,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository);
 
         RunParams runParams = new RunParams();
-        lcaOnlineRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
         lcaOnlineRunner.run(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
@@ -86,7 +86,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository);
 
         RunParams runParams = new RunParams();
-        lcaOnlineRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
         lcaOnlineRunner.run(runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());

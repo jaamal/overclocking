@@ -9,11 +9,11 @@ import storage.KeySpaces;
 import storage.cassandraClient.ISchemeInitializer;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
-
 import compressionservice.compression.parameters.RunParams;
 import compressionservice.compression.running.LzwRunner;
-
+import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -45,7 +45,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository).getId();
         
         RunParams runParams = new RunParams();
-        lzwRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzw);
         lzwRunner.run(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
@@ -59,7 +59,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository).getId();
         
         RunParams runParams = new RunParams();
-        lzwRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzw);
         lzwRunner.run(runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);

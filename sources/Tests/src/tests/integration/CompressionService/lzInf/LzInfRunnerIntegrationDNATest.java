@@ -16,6 +16,7 @@ import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
 import compressionservice.compression.parameters.RunParams;
 import compressionservice.compression.running.LzInfRunner;
+import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.CompressionRunKeys;
@@ -54,7 +55,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.SourceId, fileId);
-        lzInfRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
         lzInfRunner.run(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
@@ -70,7 +71,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.SourceId, fileId);
-        lzInfRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
         lzInfRunner.run(runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
@@ -86,7 +87,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.SourceId, fileId);
-        lzInfRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
         lzInfRunner.run(runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);

@@ -7,6 +7,7 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.ISLPBuilder;
 import cartesianTree.slpBuilders.ICartesianSlpTreeBuilder;
 import compressionservice.compression.parameters.IRunParams;
+import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.statistics.CompressionRunKeys;
@@ -17,6 +18,9 @@ import dataContracts.statistics.StatisticsObject;
 
 public class CartesianSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
+    //TODO: checkout where we should use it
+    private final static DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
+    
     private ICartesianSlpTreeBuilder cartesianSLPTreeBuilder;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
@@ -40,6 +44,7 @@ public class CartesianSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     @Override
     public StatisticsObject run(IRunParams runParams) {
         String sourceId = runParams.get(CompressionRunKeys.SourceId);
+        
         FactorDef[] factorization = resourceProvider.getFactorization(sourceId);
         ICompressionStatistics statistics = new CompressionStatistics();
 

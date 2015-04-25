@@ -27,6 +27,8 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
     private static Logger logger = Logger.getLogger(LCAOnlineSlpBuildAlgorithmRunner.class);
 
+    private final static DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
+    
     private ILCAOnlineCompressor lcaOnlineCompressor;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
@@ -52,7 +54,8 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     @Override
     public StatisticsObject run(IRunParams runParams) {
         String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
+        
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             logger.info("Source file size is " + source.length());
             ITimeCounter timeCounter = new TimeCounter();

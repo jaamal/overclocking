@@ -8,6 +8,8 @@ import avlTree.slpBuilders.ConcurrentAvlBuilderStopwatches;
 import avlTree.slpBuilders.IConcurrencyAvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
 import compressionservice.compression.parameters.IRunParams;
+import dataContracts.AvlMergePattern;
+import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.statistics.CompressionRunKeys;
@@ -18,6 +20,11 @@ import dataContracts.statistics.StatisticsObject;
 
 public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
+    //TODO: check where we should use it
+    private final static AvlMergePattern defaultAVLMergePattern = AvlMergePattern.sequential;
+    private final static DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
+    private final static int defaultThreadCount = 4;
+    
     private IConcurrencyAvlTreeSLPBuilder avlTreeSLPBuilder;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;

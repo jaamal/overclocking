@@ -14,14 +14,14 @@ import storage.cassandraClient.ISchemeInitializer;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
-
 import compressionservice.compression.parameters.RunParams;
 import compressionservice.compression.running.CartesianSlpRunner;
 import compressionservice.compression.running.LzInfRunner;
-
+import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
+import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -57,7 +57,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AATT.gz", ContentType.GZip, filesRepository);
 
         RunParams runParams = new RunParams();
-        lzInfRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
         lzInfRunner.run(runParams);
 
         BuildSLPs();
@@ -76,7 +76,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         FileMetadata twoSectionsDnaFile = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
 
         RunParams runParams = new RunParams();
-        lzInfRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
         lzInfRunner.run(runParams);
 
         BuildSLPs();
@@ -100,7 +100,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
     private void BuildSLPs() {
         RunParams runParams = new RunParams();
-        cartesianSlpRunner.checkAndRefillParams(runParams);
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.cartesianSlp);
         cartesianSlpRunner.run(runParams);
     }
 

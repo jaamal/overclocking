@@ -7,8 +7,6 @@ import dataContracts.AlgorithmType;
 public interface ITypedCompressionRunner {
     AlgorithmType getAlgorithmType();
 
-    CheckParamsResult checkAndRefillParams(IRunParams runParams);
-
     void run(IRunParams runParams);
 }
 
