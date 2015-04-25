@@ -5,6 +5,7 @@ import helpers.FileHelpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();
 
@@ -73,7 +74,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();
 
@@ -90,7 +91,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     private void BuildSLPs() {
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.avlSlp);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
     }
 
     private String getText(List<Product> products) {

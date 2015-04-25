@@ -5,6 +5,7 @@ import helpers.FileHelpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
@@ -61,7 +62,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
@@ -77,7 +78,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);

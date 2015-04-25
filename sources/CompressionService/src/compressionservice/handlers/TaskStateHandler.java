@@ -12,32 +12,41 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 
 import compressionservice.handlers.binding.Binder;
-import compressionservice.runner.state.ITasksRunnerStatesStorage;
-import compressionservice.runner.state.TaskRunnerState;
-import dataContracts.IIDFactory;
+import compressionservice.handlers.models.TaskStateExtendedModel;
+import compressionservice.runner.state.ITaskOperationalLog;
+import compressionservice.runner.state.ITaskStatesStorage;
+import compressionservice.runner.state.TaskStateModel;
+
+import dataContracts.IDFactory;
 
 public class TaskStateHandler extends BaseHandler {
 
     private final static String requestIdKey = "requestId";
-    private IIDFactory idFactory;
-    private ITasksRunnerStatesStorage statesKeeper;
+    private final UUID defaultRequestId;
+    
+    private ITaskStatesStorage statesStorage;
+    private ITaskOperationalLog taskOperationalLog;
 
-    public TaskStateHandler(ITasksRunnerStatesStorage statesKeeper, IIDFactory idFactory) {
-        this.statesKeeper = statesKeeper;
-        this.idFactory = idFactory;
+    public TaskStateHandler(
+            IDFactory idFactory,
+            ITaskStatesStorage statesStorage,
+            ITaskOperationalLog taskOperationalLog) {
+        this.statesStorage = statesStorage;
+        this.taskOperationalLog = taskOperationalLog;
+        defaultRequestId = idFactory.getEmpty();
     }
     
     @Override
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        UUID defaultRequestId = idFactory.getEmpty();
         UUID requestId = Binder.getUUID(request, requestIdKey, defaultRequestId);
         if (requestId == defaultRequestId) {
-            TaskRunnerState[] result = statesKeeper.getAll();
-            respondJson(baseRequest, response, result);
+            TaskStateModel[] taskStateModels = statesStorage.getAll();
+            respondJson(baseRequest, response, taskStateModels);
         }
         else {
-            TaskRunnerState result = statesKeeper.getState(requestId);
-            respondJson(baseRequest, response, result);
+            TaskStateModel taskStateModel = statesStorage.getState(requestId);
+            String opLog = taskOperationalLog.get(requestId);
+            respondJson(baseRequest, response, new TaskStateExtendedModel(taskStateModel, opLog));
         }
     }
 

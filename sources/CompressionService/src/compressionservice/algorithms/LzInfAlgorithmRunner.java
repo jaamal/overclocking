@@ -11,13 +11,14 @@ import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
-import commons.utils.ITimeCounter;
+
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.profile.IAnalysator;
 import compressionservice.runner.parameters.IRunParams;
+
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.CompressionRunKeys;
@@ -59,8 +60,7 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
         DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
         
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
-            ITimeCounter timeCounter = new TimeCounter();
-            timeCounter.start();
+            TimeCounter timeCounter = TimeCounter.start();
             ArrayList<FactorDef> factors = new ArrayList<>();
             try (IFactorIterator factorIterator = factorIteratorFactory.createInfiniteIterator(source, dataFactoryType)) {
                 while (factorIterator.any()) {
@@ -73,12 +73,12 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
             } catch (Exception e) {
                 logger.error(String.format("Fail to run lzInf algorithm."), e);
             }
-            timeCounter.end();
+            timeCounter.finish();
 
             HashMap<CompressionStatisticKeys, String> statistics = new HashMap<>();
             statistics.put(CompressionStatisticKeys.SourceLength, String.valueOf(source.length()));
             statistics.put(CompressionStatisticKeys.FactorizationLength, String.valueOf(factors.size()));
-            statistics.put(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getTime()));
+            statistics.put(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
             statistics.put(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
             StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics);
 

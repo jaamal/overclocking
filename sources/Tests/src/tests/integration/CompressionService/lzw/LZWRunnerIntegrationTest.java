@@ -1,6 +1,9 @@
 package tests.integration.CompressionService.lzw;
 
 import static junit.framework.Assert.assertEquals;
+
+import java.util.UUID;
+
 import helpers.FileHelpers;
 
 import org.junit.Test;
@@ -46,7 +49,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzw);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
@@ -60,7 +63,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzw);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);

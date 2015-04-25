@@ -1,13 +1,16 @@
 package compressionservice.runner;
 
-import java.util.ArrayList;
+import java.time.Duration;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
 import storage.statistics.IStatisticsRepository;
+import commons.utils.TimeCounter;
 import compressionservice.algorithms.IAlgorithmRunner;
 import compressionservice.algorithms.IAlgorithmRunnersFactory;
 import compressionservice.runner.parameters.IRunParams;
+import compressionservice.runner.state.ITaskOperationalLog;
 import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
@@ -19,61 +22,57 @@ public class Worker implements IWorker
     private IAlgorithmRunnersFactory algorithmRunnersFactory;
     private IStatisticsRepository statisticsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
+    private ITaskOperationalLog operationalLog;
 
     public Worker(
             IAlgorithmRunnersFactory algorithmRunnersFactory,
             IStatisticsRepository statisticsRepository,
-            IStatisticsObjectFactory statisticsObjectFactory) {
+            IStatisticsObjectFactory statisticsObjectFactory,
+            ITaskOperationalLog operationalLog) {
         this.algorithmRunnersFactory = algorithmRunnersFactory;
         this.statisticsRepository = statisticsRepository;
         this.statisticsObjectFactory = statisticsObjectFactory;
+        this.operationalLog = operationalLog;
     }
     
-    
     @Override
-    public void process(IRunParams runParams) {
+    public void process(UUID requestId, IRunParams runParams) {
         try {
-            ArrayList<Exception> unhandledExceptions = new ArrayList<>();
-            
             if (runParams.contains(CompressionRunKeys.SourceId)){
-                processItem(runParams.get(CompressionRunKeys.SourceId), runParams, unhandledExceptions);
+                processItem(requestId, runParams.get(CompressionRunKeys.SourceId), runParams);
             }
             else {
                 Iterable<String> sourceIds = algorithmRunnersFactory.create(runParams).getAllSourceIds();
                 for (String sourceId : sourceIds) {
                     runParams.put(CompressionRunKeys.SourceId, sourceId);
-                    processItem(sourceId, runParams, unhandledExceptions);
+                    processItem(requestId, sourceId, runParams);
                 }
             }
-            
-            if (unhandledExceptions.isEmpty())
-                logger.info("Done.");
-            else
-                logger.error(String.format("Done with %d exceptions.", unhandledExceptions.size()));
         } catch (Exception e) {
             logger.error("Runner fails with unhandled exception.", e);
         }
     }
 
-    private void processItem(String sourceId, IRunParams runParams, ArrayList<Exception> unhandledExceptions) {
+    private void processItem(UUID requestId, String sourceId, IRunParams runParams) {
         try {
+            operationalLog.append(requestId, sourceId, "Start processing.");
             if (statisticsRepository.exists(sourceId, statisticsObjectFactory.getStatisticsObjectId(runParams.toMap()))) {
-                logger.info("Skip sourceId = " + sourceId + ", because it was been processed early");
+                operationalLog.append(requestId, sourceId, "Skip it since it has been already processed.");
                 return;
             }
 
-            logger.info("Begin working on input with id = " + sourceId);
-            IAlgorithmRunner algorithmRunner = algorithmRunnersFactory.create(runParams);
             runParams.put(CompressionRunKeys.SourceId, sourceId);
+            IAlgorithmRunner algorithmRunner = algorithmRunnersFactory.create(runParams);
+            TimeCounter timeCounter = TimeCounter.start();
             StatisticsObject statisticsObject = algorithmRunner.run(runParams);
-            logger.info("End working on input with id = " + sourceId);
-
-            logger.info("Start saving statistics");
+            Duration duration = timeCounter.finish();
             statisticsRepository.write(sourceId, statisticsObject);
-            logger.info("End saving statistics.");
+            
+            operationalLog.append(requestId, sourceId, String.format("End processing. Duration: %s.", duration));
         } catch (Exception e) {
-            unhandledExceptions.add(e);
-            logger.error("Unhandled exception", e);
+            String message = String.format("Process finished with unhandled exception. Message: %s.", e.getMessage());
+            operationalLog.append(requestId, sourceId, message);
+            logger.error(message, e);
         }
         System.gc();
     }

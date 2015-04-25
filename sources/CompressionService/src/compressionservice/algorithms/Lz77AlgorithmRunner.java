@@ -10,13 +10,14 @@ import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
-import commons.utils.ITimeCounter;
+
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.profile.IAnalysator;
 import compressionservice.runner.parameters.IRunParams;
+
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.CompressionRunKeys;
@@ -62,8 +63,7 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
         int windowSize = runParams.getOrDefaultInt(CompressionRunKeys.WindowSize, defaultWindowSize);
         
         try (IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType)) {
-            ITimeCounter timeCounter = new TimeCounter();
-            timeCounter.start();
+            TimeCounter timeCounter = TimeCounter.start();
 
             IFactorIterator factorIterator = factorIteratorFactory.createWindowIterator(charArray, windowSize);
             ArrayList<FactorDef> factors = new ArrayList<>();
@@ -72,13 +72,13 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
                     logger.info(String.format("Produced %d factors", factors.size()));
                 factors.add(factorIterator.next());
             }
-            timeCounter.end();
+            timeCounter.finish();
 
             ICompressionStatistics statistics = new CompressionStatistics();
             statistics.putParam(CompressionStatisticKeys.SourceLength, String.valueOf(charArray.length()));
             statistics.putParam(CompressionStatisticKeys.FactorizationLength, String.valueOf(factors.size()));
             statistics.putParam(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
-            statistics.putParam(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getTime()));
+            statistics.putParam(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
 
             StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics.toMap());
 

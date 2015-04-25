@@ -5,16 +5,17 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import avlTree.slpBuilders.ISLPBuilder;
 import storage.IArrayItemsWriter;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import SLPs.SlpByteSizeCounter;
-import commons.utils.ITimeCounter;
+import avlTree.slpBuilders.ISLPBuilder;
+
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
 import compressionservice.runner.parameters.IRunParams;
+
 import dataContracts.DataFactoryType;
 import dataContracts.Product;
 import dataContracts.SLPStatistics;
@@ -58,15 +59,14 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
         
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             logger.info("Source file size is " + source.length());
-            ITimeCounter timeCounter = new TimeCounter();
-            timeCounter.start();
+            TimeCounter timeCounter = TimeCounter.start();
             ISLPBuilder slp = lcaOnlineCompressor.buildSLP(source);
-            timeCounter.end();
+            timeCounter.finish();
 
-            logger.info(String.format("Finish slpBuilding. Total time is about %d minutes", timeCounter.getTime() / 60 / 1000));
+            logger.info(String.format("Finish slpBuilding. Total time is about %d minutes", timeCounter.getMillis() / 60 / 1000));
             SLPStatistics slpStatistics = slp.getStatistics();
             HashMap<CompressionStatisticKeys, String> statisitcs = new HashMap<>();
-            statisitcs.put(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getTime()));
+            statisitcs.put(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
             statisitcs.put(CompressionStatisticKeys.SlpWidth, String.valueOf(slpStatistics.length));
             statisitcs.put(CompressionStatisticKeys.SlpCountRules, String.valueOf(slpStatistics.countRules));
             statisitcs.put(CompressionStatisticKeys.SlpHeight, String.valueOf(slpStatistics.height));

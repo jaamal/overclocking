@@ -5,6 +5,7 @@ import helpers.FileHelpers;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Test;
 
@@ -56,7 +57,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.SourceId, fileId);
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
@@ -72,7 +73,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.SourceId, fileId);
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
@@ -88,7 +89,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.SourceId, fileId);
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);

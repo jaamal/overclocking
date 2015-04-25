@@ -16,7 +16,6 @@ import avlTree.helpers.IRebalancingCounter;
 import avlTree.helpers.NodesCacheStatisticsCounter;
 import avlTree.helpers.RebalancingCounter;
 
-import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
 
 import dataContracts.FactorDef;
@@ -47,15 +46,14 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     public ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics) {
         
         
-        ITimeCounter timeCounter = new TimeCounter();
-        timeCounter.start();
+        TimeCounter timeCounter = TimeCounter.start();
         IAvlTree resultTree = buildAvlTree(factors, statistics);
         ISLPBuilder slp = slpExtractor.getSLP(resultTree);
-        timeCounter.end();
+        timeCounter.finish();
         resultTree.dispose();
 
         statistics.putParam(CompressionStatisticKeys.FactorizationLength, factors.length);
-        statistics.putParam(CompressionStatisticKeys.RunningTime, timeCounter.getTime());
+        statistics.putParam(CompressionStatisticKeys.RunningTime, timeCounter.getMillis());
 
         SLPStatistics slpStatistics = slp.getStatistics();
         statistics.putParam(CompressionStatisticKeys.SourceLength, slpStatistics.length);

@@ -9,7 +9,6 @@ import cartesianTree.ICartesianTree;
 import cartesianTree.ICartesianTreeManager;
 import cartesianTree.ICartesianTreeManagerFactory;
 
-import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
 
 import dataContracts.FactorDef;
@@ -34,15 +33,14 @@ public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
 
     @Override
     public ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics) {
-        ITimeCounter timeCounter = new TimeCounter();
-        timeCounter.start();
+        TimeCounter timeCounter = TimeCounter.start();
         ICartesianTree resultTree = buildCartesianTree(factors);
         ISLPBuilder slp = slpExtractor.getSLP(resultTree);
-        timeCounter.end();
+        timeCounter.finish();
         resultTree.dispose();
 
         statistics.putParam(CompressionStatisticKeys.FactorizationLength, factors.length);
-        statistics.putParam(CompressionStatisticKeys.RunningTime, timeCounter.getTime());
+        statistics.putParam(CompressionStatisticKeys.RunningTime, timeCounter.getMillis());
 
         SLPStatistics slpStatistics = slp.getStatistics();
         statistics.putParam(CompressionStatisticKeys.SourceLength, slpStatistics.length);

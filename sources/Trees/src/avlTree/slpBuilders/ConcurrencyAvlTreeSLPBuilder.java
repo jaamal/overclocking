@@ -17,7 +17,6 @@ import avlTree.helpers.IRebalancingCounter;
 import avlTree.treeSets.IAvlTreeSet;
 import avlTree.treeSets.IAvlTreeSetFactory;
 
-import commons.utils.ITimeCounter;
 import commons.utils.TimeCounter;
 
 import dataContracts.FactorDef;
@@ -63,8 +62,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 	{
 	    LZFactorDef[] clonedFactorization = cloneFactorization(factors);
 	    
-        ITimeCounter timeCounter = new TimeCounter();
-        timeCounter.start();
+        TimeCounter timeCounter = TimeCounter.start();
 
         stopwatches.totalStopwatch.start();
         IAvlTree resultTree = buildAvlTree(clonedFactorization, statistics, stopwatches);
@@ -73,11 +71,11 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
         ISLPBuilder slp = slpExtractor.getSLP(resultTree);
         stopwatches.minimizeTreeStopwatch.stop();
         stopwatches.totalStopwatch.stop();
-        timeCounter.end();
+        timeCounter.finish();
         resultTree.dispose();
 
         statistics.putParam(CompressionStatisticKeys.FactorizationLength, factors.length);
-        statistics.putParam(CompressionStatisticKeys.RunningTime, timeCounter.getTime());
+        statistics.putParam(CompressionStatisticKeys.RunningTime, timeCounter.getMillis());
 
         SLPStatistics slpStatistics = slp.getStatistics();
         statistics.putParam(CompressionStatisticKeys.SourceLength, slpStatistics.length);

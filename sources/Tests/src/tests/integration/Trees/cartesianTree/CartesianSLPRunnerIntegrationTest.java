@@ -5,6 +5,7 @@ import helpers.FileHelpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();
 
@@ -74,7 +75,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();
 
@@ -98,7 +99,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     private void BuildSLPs() {
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.cartesianSlp);
-        worker.process(runParams);
+        worker.process(UUID.randomUUID(), runParams);
     }
 
     private String getText(List<Product> products) {

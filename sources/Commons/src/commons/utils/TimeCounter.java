@@ -1,31 +1,28 @@
 package commons.utils;
 
-public class TimeCounter implements ITimeCounter
+import java.time.Duration;
+
+public class TimeCounter
 {
-    private long startTime;
-    private long endTime;
+    private final long beginMillis;
+    private long endMillis = 0;
     
-    public TimeCounter()
-    {
-        startTime = 0;
-        endTime = 0;
+    private TimeCounter() {
+        beginMillis = System.currentTimeMillis();
     }
-
-    @Override
-    public void start()
-    {
-        startTime = System.currentTimeMillis();
+    
+    public static TimeCounter start() {
+        return new TimeCounter();
     }
-
-    @Override
-    public void end()
-    {
-        endTime = System.currentTimeMillis();
+    
+    public Duration finish() {
+        endMillis = System.currentTimeMillis();
+        return Duration.ofMillis(getMillis());
     }
-
-    @Override
-    public long getTime()
-    {
-        return endTime - startTime;
+    
+    public long getMillis() {
+        if (endMillis == 0)
+            throw new RuntimeException("Fail to get counter value since it has not been finished.");
+        return endMillis - beginMillis;
     }
 }

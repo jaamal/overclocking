@@ -14,15 +14,15 @@ import compressionservice.handlers.binding.Binder;
 import compressionservice.runner.ITaskRunner;
 import compressionservice.runner.parameters.IRunParams;
 import compressionservice.runner.parameters.IRunParamsFactory;
-import compressionservice.runner.state.TaskRunnerState;
+import compressionservice.runner.state.TaskStateModel;
 
 public class TaskRunnerHandler extends BaseHandler {
 
-    private ITaskRunner compressionRunner;
+    private ITaskRunner taskRunner;
     private IRunParamsFactory paramsFactory;
 
     public TaskRunnerHandler(ITaskRunner compressionRunner, IRunParamsFactory paramsFactory) {
-        this.compressionRunner = compressionRunner;
+        this.taskRunner = compressionRunner;
         this.paramsFactory = paramsFactory;
     }
     
@@ -30,12 +30,12 @@ public class TaskRunnerHandler extends BaseHandler {
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         IRunParams runParams = paramsFactory.create(Binder.getAllParams(request));
         
-        if (!compressionRunner.isAvailable()) {
+        if (!taskRunner.isAvailable()) {
             respondText(baseRequest, response, "Compression service is busy at now.");
         }
         else {
             
-            TaskRunnerState result = compressionRunner.run(runParams);
+            TaskStateModel result = taskRunner.run(runParams);
             respondJson(baseRequest, response, result);
         }
     }
