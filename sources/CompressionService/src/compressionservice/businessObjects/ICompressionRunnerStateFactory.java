@@ -4,8 +4,8 @@ import java.util.UUID;
 
 
 public interface ICompressionRunnerStateFactory {
-    CompressionRunnerState createNew();
-    CompressionRunnerState createFailed(String message);
-    CompressionRunnerState createFailed(UUID requestId, String message);
-    CompressionRunnerState createComplete(UUID requestId);
+    TaskRunnerState createNew();
+    TaskRunnerState createFailed(String message);
+    TaskRunnerState createFailed(UUID requestId, String message);
+    TaskRunnerState createComplete(UUID requestId);
 }

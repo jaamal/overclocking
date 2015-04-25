@@ -4,8 +4,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import compressionservice.businessObjects.CompressionRunnerState;
-import compressionservice.compression.ICompressionStatesKeeper;
+import compressionservice.businessObjects.TaskRunnerState;
+import compressionservice.compression.ITasksRunnerStatesStorage;
 import compressionservice.compression.parameters.IRunParams;
 
 import dataContracts.statistics.CompressionRunKeys;
@@ -14,11 +14,11 @@ public class TaskRunner implements ITaskRunner {
 
     private static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(4, 32, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(20));
     
-    private ICompressionStatesKeeper compressionStatesKeeper;
+    private ITasksRunnerStatesStorage compressionStatesKeeper;
     private IWorker worker;
 
     public TaskRunner(
-            ICompressionStatesKeeper compressionStatesKeeper,
+            ITasksRunnerStatesStorage compressionStatesKeeper,
             IWorker worker) {
         this.compressionStatesKeeper = compressionStatesKeeper;
         this.worker = worker;
@@ -30,14 +30,14 @@ public class TaskRunner implements ITaskRunner {
     }
 
     @Override
-    public CompressionRunnerState run(final IRunParams runParams) {
+    public TaskRunnerState run(final IRunParams runParams) {
         if (!isAvailable())
             throw new TaskRunnerException("Compression runner is busy at now.");
         
         if (!runParams.contains(CompressionRunKeys.AlgorithmType))
             throw new TaskRunnerException("Unable to run compression algorithm since algorithm type parameter was not passed.");
         
-        final CompressionRunnerState result = compressionStatesKeeper.registerNew();
+        final TaskRunnerState result = compressionStatesKeeper.registerNew();
         try {
             threadPoolExecutor.submit(new Runnable() {
                 @Override

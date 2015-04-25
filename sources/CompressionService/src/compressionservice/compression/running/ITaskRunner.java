@@ -1,9 +1,9 @@
 package compressionservice.compression.running;
 
-import compressionservice.businessObjects.CompressionRunnerState;
+import compressionservice.businessObjects.TaskRunnerState;
 import compressionservice.compression.parameters.IRunParams;
 
 public interface ITaskRunner {
-    CompressionRunnerState run(IRunParams runParams);
+    TaskRunnerState run(IRunParams runParams);
     boolean isAvailable();
 }

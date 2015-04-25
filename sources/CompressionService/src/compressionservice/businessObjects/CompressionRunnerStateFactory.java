@@ -13,23 +13,23 @@ public class CompressionRunnerStateFactory implements ICompressionRunnerStateFac
     }
     
     @Override
-    public CompressionRunnerState createNew() {
-        return new CompressionRunnerState(idFactory.create(), CompressionState.InProgress, "");
+    public TaskRunnerState createNew() {
+        return new TaskRunnerState(idFactory.create(), TaskState.InProgress, "");
     }
 
     @Override
-    public CompressionRunnerState createFailed(String message) {
+    public TaskRunnerState createFailed(String message) {
         return createFailed(idFactory.getEmpty(), message);
     }
 
     @Override
-    public CompressionRunnerState createFailed(UUID requestId, String message) {
-        return new CompressionRunnerState(requestId, CompressionState.Failed, message);
+    public TaskRunnerState createFailed(UUID requestId, String message) {
+        return new TaskRunnerState(requestId, TaskState.Failed, message);
     }
     
     @Override
-    public CompressionRunnerState createComplete(UUID requestId) {
-        return new CompressionRunnerState(requestId, CompressionState.Complete, "");
+    public TaskRunnerState createComplete(UUID requestId) {
+        return new TaskRunnerState(requestId, TaskState.Complete, "");
     }
 
 }

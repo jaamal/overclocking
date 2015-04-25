@@ -1,4 +1,4 @@
-package compressionservice.handlers.compression;
+package compressionservice.handlers;
 
 import httpservice.handlers.BaseHandler;
 
@@ -10,18 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 
-import compressionservice.businessObjects.CompressionRunnerState;
+import compressionservice.businessObjects.TaskRunnerState;
 import compressionservice.compression.parameters.IRunParams;
 import compressionservice.compression.parameters.IRunParamsFactory;
 import compressionservice.compression.running.ITaskRunner;
 import compressionservice.handlers.binding.Binder;
 
-public class CompressionRunHandler extends BaseHandler {
+public class TaskRunnerHandler extends BaseHandler {
 
     private ITaskRunner compressionRunner;
     private IRunParamsFactory paramsFactory;
 
-    public CompressionRunHandler(ITaskRunner compressionRunner, IRunParamsFactory paramsFactory) {
+    public TaskRunnerHandler(ITaskRunner compressionRunner, IRunParamsFactory paramsFactory) {
         this.compressionRunner = compressionRunner;
         this.paramsFactory = paramsFactory;
     }
@@ -35,14 +35,14 @@ public class CompressionRunHandler extends BaseHandler {
         }
         else {
             
-            CompressionRunnerState result = compressionRunner.run(runParams);
+            TaskRunnerState result = compressionRunner.run(runParams);
             respondJson(baseRequest, response, result);
         }
     }
 
     @Override
     public String getRoute() {
-        return "/compression/run";
+        return "/task/run";
     }
 
 }

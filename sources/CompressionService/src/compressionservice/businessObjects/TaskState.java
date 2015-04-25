@@ -1,6 +1,6 @@
 package compressionservice.businessObjects;
 
-public enum CompressionState {
+public enum TaskState {
     InProgress,
     Complete,
     Failed

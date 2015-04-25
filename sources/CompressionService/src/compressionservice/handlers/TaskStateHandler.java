@@ -1,4 +1,4 @@
-package compressionservice.handlers.compression;
+package compressionservice.handlers;
 
 import httpservice.handlers.BaseHandler;
 
@@ -11,19 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 
-import compressionservice.businessObjects.CompressionRunnerState;
-import compressionservice.compression.ICompressionStatesKeeper;
+import compressionservice.businessObjects.TaskRunnerState;
+import compressionservice.compression.ITasksRunnerStatesStorage;
 import compressionservice.handlers.binding.Binder;
 
 import dataContracts.IIDFactory;
 
-public class CompressionStateHandler extends BaseHandler {
+public class TaskStateHandler extends BaseHandler {
 
     private final static String requestIdKey = "requestId";
     private IIDFactory idFactory;
-    private ICompressionStatesKeeper statesKeeper;
+    private ITasksRunnerStatesStorage statesKeeper;
 
-    public CompressionStateHandler(ICompressionStatesKeeper statesKeeper, IIDFactory idFactory) {
+    public TaskStateHandler(ITasksRunnerStatesStorage statesKeeper, IIDFactory idFactory) {
         this.statesKeeper = statesKeeper;
         this.idFactory = idFactory;
     }
@@ -33,18 +33,18 @@ public class CompressionStateHandler extends BaseHandler {
         UUID defaultRequestId = idFactory.getEmpty();
         UUID requestId = Binder.getUUID(request, requestIdKey, defaultRequestId);
         if (requestId == defaultRequestId) {
-            CompressionRunnerState[] result = statesKeeper.getAll();
+            TaskRunnerState[] result = statesKeeper.getAll();
             respondJson(baseRequest, response, result);
         }
         else {
-            CompressionRunnerState result = statesKeeper.getState(requestId);
+            TaskRunnerState result = statesKeeper.getState(requestId);
             respondJson(baseRequest, response, result);
         }
     }
 
     @Override
     public String getRoute() {
-        return "/compression/state";
+        return "/task/state";
     }
 
 }
