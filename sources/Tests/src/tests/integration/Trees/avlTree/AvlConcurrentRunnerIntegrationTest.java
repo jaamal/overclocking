@@ -46,6 +46,12 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(CompressionRunKeys.SourceId, simpleDnaFile.getId());
+        worker.process(UUID.randomUUID(), runParams);
+        
+        runParams = new RunParams();
+        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(CompressionRunKeys.SourceId, twoSectionsDnaFile.getId());
         worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();
@@ -76,6 +82,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
 
         RunParams runParams = new RunParams();
         runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(CompressionRunKeys.SourceId, fileMetadata.getId());
         worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();

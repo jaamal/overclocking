@@ -42,7 +42,7 @@ public class Worker implements IWorker
                 processItem(requestId, runParams.get(CompressionRunKeys.SourceId), runParams);
             }
             else {
-                Iterable<String> sourceIds = algorithmRunnersFactory.create(runParams).getAllSourceIds();
+                Iterable<String> sourceIds = algorithmRunnersFactory.getAllSourceIds((runParams));
                 for (String sourceId : sourceIds) {
                     runParams.put(CompressionRunKeys.SourceId, sourceId);
                     processItem(requestId, sourceId, runParams);

@@ -1,14 +1,12 @@
 package compressionservice.algorithms;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
-import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
 
 import commons.utils.TimeCounter;
@@ -20,7 +18,6 @@ import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.CompressionStatistics;
 import dataContracts.statistics.ICompressionStatistics;
@@ -30,38 +27,39 @@ import dataContracts.statistics.StatisticsObject;
 public class Lz77AlgorithmRunner implements IAlgorithmRunner {
 
     private static Logger logger = LogManager.getLogger(Lz77AlgorithmRunner.class);
-    
-    private final static DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
-    private final static int defaultWindowSize = 32 * 1024;
 
     private final IFactorsRepository factorsRepotisory;
     private final IResourceProvider resourceProvider;
     private final IStatisticsObjectFactory statisticsObjectFactory;
-    private final IFilesRepository filesRepository;
     private final IAnalysator analysator;
     private final IFactorIteratorFactory factorIteratorFactory;
+
+    private String sourceId;
+    private DataFactoryType dataFactoryType;
+    private int windowSize;
 
     public Lz77AlgorithmRunner(
             IResourceProvider resourceProvider,
             IFilesRepository filesRepository,
-            IFactorsRepositoryFactory factorsRepositoryFactory,
+            IFactorsRepository factorsRepository,
             IFactorIteratorFactory factorIteratorFactory,
             IAnalysator analysator,
-            IStatisticsObjectFactory statisticsObjectFactory) {
+            IStatisticsObjectFactory statisticsObjectFactory,
+            String sourceId, 
+            DataFactoryType dataFactoryType,
+            int windowSize) {
         this.resourceProvider = resourceProvider;
-        this.filesRepository = filesRepository;
         this.factorIteratorFactory = factorIteratorFactory;
-        this.factorsRepotisory = factorsRepositoryFactory.getLZ77Repository();
+        this.sourceId = sourceId;
+        this.dataFactoryType = dataFactoryType;
+        this.windowSize = windowSize;
+        this.factorsRepotisory = factorsRepository;
         this.analysator = analysator;
         this.statisticsObjectFactory = statisticsObjectFactory;
     }
 
     @Override
     public StatisticsObject run(IRunParams runParams) {
-        String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
-        int windowSize = runParams.getOrDefaultInt(CompressionRunKeys.WindowSize, defaultWindowSize);
-        
         try (IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType)) {
             TimeCounter timeCounter = TimeCounter.start();
 
@@ -89,10 +87,5 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
 
             return result;
         }
-    }
-
-    @Override
-    public Iterable<String> getAllSourceIds() {
-        return Arrays.asList(filesRepository.getAllIds());
     }
 }

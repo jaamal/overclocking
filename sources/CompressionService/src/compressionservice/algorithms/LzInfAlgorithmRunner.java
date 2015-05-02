@@ -1,7 +1,6 @@
 package compressionservice.algorithms;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.log4j.LogManager;
@@ -9,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
-import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
 
 import commons.utils.TimeCounter;
@@ -21,7 +19,6 @@ import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionRunKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
@@ -29,36 +26,35 @@ import dataContracts.statistics.StatisticsObject;
 public class LzInfAlgorithmRunner implements IAlgorithmRunner {
 
     private static Logger logger = LogManager.getLogger(LzInfAlgorithmRunner.class);
-    
-    private final static DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
 
     private final IResourceProvider resourceProvider;
     private final IFactorIteratorFactory factorIteratorFactory;
-    private final IFilesRepository filesRepository;
     private final IFactorsRepository factorsRepository;
     private final IStatisticsObjectFactory statisticsObjectFactory;
     private final IAnalysator analysator;
+    private String sourceId;
+    private DataFactoryType dataFactoryType;
 
     public LzInfAlgorithmRunner(
             IResourceProvider resourceProvider,
             IFilesRepository filesRepository,
             IFactorIteratorFactory factorIteratorFactory,
-            IFactorsRepositoryFactory factorsRepositoryFactory,
+            IFactorsRepository factorsRepository,
             IAnalysator analysator,
-            IStatisticsObjectFactory statisticsObjectFactory) {
+            IStatisticsObjectFactory statisticsObjectFactory,
+            String sourceId,
+            DataFactoryType dataFactoryType) {
         this.resourceProvider = resourceProvider;
-        this.filesRepository = filesRepository;
         this.factorIteratorFactory = factorIteratorFactory;
-        this.factorsRepository = factorsRepositoryFactory.getLZRepository();
+        this.factorsRepository = factorsRepository;
         this.analysator = analysator;
         this.statisticsObjectFactory = statisticsObjectFactory;
+        this.sourceId = sourceId;
+        this.dataFactoryType = dataFactoryType;
     }
 
     @Override
     public StatisticsObject run(IRunParams runParams) {
-        String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
-        
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             TimeCounter timeCounter = TimeCounter.start();
             ArrayList<FactorDef> factors = new ArrayList<>();
@@ -90,11 +86,6 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
 
             return result;
         }
-    }
-
-    @Override
-    public Iterable<String> getAllSourceIds() {
-        return Arrays.asList(filesRepository.getAllIds());
     }
 }
 
