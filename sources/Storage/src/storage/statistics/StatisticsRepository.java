@@ -14,7 +14,7 @@ import com.netflix.astyanax.model.ColumnList;
 import com.netflix.astyanax.model.Row;
 import com.netflix.astyanax.model.Rows;
 
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.StatisticsObject;
 
 public class StatisticsRepository implements IStatisticsRepository {
@@ -57,7 +57,7 @@ public class StatisticsRepository implements IStatisticsRepository {
     }
 
     @Override
-    public boolean contains(String textId, Map<CompressionRunKeys, String> configuration) {
+    public boolean contains(String textId, Map<RunParamKeys, String> configuration) {
         StatisticsObject[] allStats = readAll(textId);
         for (int i = 0; i < allStats.length; i++) {
             if (areConfiguratonsEqual(configuration, allStats[i].runningParameters))
@@ -66,11 +66,11 @@ public class StatisticsRepository implements IStatisticsRepository {
         return false;
     }
 
-    private static boolean areConfiguratonsEqual(Map<CompressionRunKeys, String> config1, Map<CompressionRunKeys, String> config2) {
+    private static boolean areConfiguratonsEqual(Map<RunParamKeys, String> config1, Map<RunParamKeys, String> config2) {
         if (config1.size() != config2.size())
             return false;
 
-        for (Map.Entry<CompressionRunKeys, String> entry : config1.entrySet()) {
+        for (Map.Entry<RunParamKeys, String> entry : config1.entrySet()) {
             if (!config2.containsKey(entry.getKey()))
                 return false;
 

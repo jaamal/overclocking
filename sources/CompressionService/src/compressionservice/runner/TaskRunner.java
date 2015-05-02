@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import compressionservice.runner.parameters.IRunParams;
 import compressionservice.runner.state.ITaskStatesStorage;
 import compressionservice.runner.state.TaskStateModel;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 
 public class TaskRunner implements ITaskRunner {
 
@@ -34,7 +34,7 @@ public class TaskRunner implements ITaskRunner {
         if (!isAvailable())
             throw new TaskRunnerException("Compression runner is busy at now.");
         
-        if (!runParams.contains(CompressionRunKeys.AlgorithmType))
+        if (!runParams.contains(RunParamKeys.AlgorithmType))
             throw new TaskRunnerException("Unable to run compression algorithm since algorithm type parameter was not passed.");
         
         final UUID requestId = statesStorage.registerNew();

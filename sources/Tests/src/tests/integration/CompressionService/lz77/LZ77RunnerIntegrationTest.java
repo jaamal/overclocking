@@ -20,7 +20,7 @@ import compressionservice.runner.parameters.RunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -55,7 +55,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository).getId();
         
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lz77);
         worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
@@ -70,7 +70,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository).getId();
         
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lz77);
         worker.process(UUID.randomUUID(), runParams);
 
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
@@ -87,7 +87,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository).getId();
 
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lz77);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lz77);
         worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);

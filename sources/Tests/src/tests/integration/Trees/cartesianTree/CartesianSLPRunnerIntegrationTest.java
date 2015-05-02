@@ -21,7 +21,7 @@ import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -55,8 +55,8 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AATT.gz", ContentType.GZip, filesRepository);
 
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(CompressionRunKeys.SourceId, fileMetadata.getId());
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(RunParamKeys.SourceId, fileMetadata.getId());
         worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();
@@ -75,13 +75,13 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         FileMetadata twoSectionsDnaFile = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
 
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(CompressionRunKeys.SourceId, simpleDnaFile.getId());
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(RunParamKeys.SourceId, simpleDnaFile.getId());
         worker.process(UUID.randomUUID(), runParams);
         
         runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(CompressionRunKeys.SourceId, twoSectionsDnaFile.getId());
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(RunParamKeys.SourceId, twoSectionsDnaFile.getId());
         worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();
@@ -105,7 +105,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
     private void BuildSLPs() {
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.cartesianSlp);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.cartesianSlp);
         worker.process(UUID.randomUUID(), runParams);
     }
 

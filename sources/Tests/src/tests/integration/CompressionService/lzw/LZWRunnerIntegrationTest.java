@@ -16,7 +16,7 @@ import compressionservice.runner.IWorker;
 import compressionservice.runner.parameters.RunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -48,7 +48,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository).getId();
         
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzw);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzw);
         worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
@@ -62,7 +62,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository).getId();
         
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzw);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzw);
         worker.process(UUID.randomUUID(), runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);

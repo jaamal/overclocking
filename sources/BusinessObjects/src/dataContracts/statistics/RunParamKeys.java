@@ -1,7 +1,6 @@
 package dataContracts.statistics;
 
-//TODO: rename it to RunParamKeys
-public enum CompressionRunKeys
+public enum RunParamKeys
 {
     AlgorithmType,
     AvlMergePattern,

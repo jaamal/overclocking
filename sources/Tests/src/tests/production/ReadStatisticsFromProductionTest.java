@@ -28,7 +28,7 @@ import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.files.FileMetadata;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -155,7 +155,7 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
         for (Map.Entry<String, FileType> entry : sourceFileTypeByStatsId.entrySet()) {
             String statisticsId = entry.getKey();
             StatisticsObject statisticsObject = statsById.get(statisticsId);
-            String algorithmType = statisticsObject.runningParameters.get(CompressionRunKeys.AlgorithmType);
+            String algorithmType = statisticsObject.runningParameters.get(RunParamKeys.AlgorithmType);
             if (algorithmType.contains("lz")) continue;
 
             long textSize = (long) Extractors.BuildingSlpTime.getX(statisticsObject);
@@ -165,7 +165,7 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
                             && sourceFileTypeByStatsId.get(statisticsId) == FileType.Bad
                     )) {
                 System.out.println(String.format("Deleting slp-statistics %s...", statisticsId));
-                String sourceId = statisticsObject.runningParameters.get(CompressionRunKeys.SourceId);
+                String sourceId = statisticsObject.runningParameters.get(RunParamKeys.SourceId);
                 slpProductsRepository.remove(statisticsId);
                 statisticsRepository.remove(sourceId, statisticsId);
             }
@@ -173,13 +173,13 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
         for (Map.Entry<String, FileType> entry : sourceFileTypeByStatsId.entrySet()) {
             String statisticsId = entry.getKey();
             StatisticsObject statisticsObject = statsById.get(statisticsId);
-            String algorithmType = statisticsObject.runningParameters.get(CompressionRunKeys.AlgorithmType);
+            String algorithmType = statisticsObject.runningParameters.get(RunParamKeys.AlgorithmType);
             if (!algorithmType.contains("lz")) continue;
 
             if (//entry.getValue() == FileType.Obsolete
                     false) {
                 System.out.println(String.format("Deleting lz-statistics %s...", statisticsId));
-                String sourceId = statisticsObject.runningParameters.get(CompressionRunKeys.SourceId);
+                String sourceId = statisticsObject.runningParameters.get(RunParamKeys.SourceId);
                 lz77FactorsRepository.remove(statisticsId);
                 factorsRepository.remove(statisticsId);
                 statisticsRepository.remove(sourceId, statisticsId);
@@ -229,7 +229,7 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
             FileType fileType;
             String textId = sourceId;
             while (!fileTypeByFileId.containsKey(textId))
-                textId = statsById.get(textId).runningParameters.get(CompressionRunKeys.SourceId);
+                textId = statsById.get(textId).runningParameters.get(RunParamKeys.SourceId);
             fileType = fileTypeByFileId.get(textId);
             for (StatisticsObject obj : entry.getValue()) {
                 fileTypeByStatsId.put(obj.getId(), fileType);
@@ -238,15 +238,15 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
         return fileTypeByStatsId;
     }
 
-    private static String getAlgorithmKey(Map<CompressionRunKeys, String> runningParameters) {
-        String algorithmType = runningParameters.get(CompressionRunKeys.AlgorithmType);
+    private static String getAlgorithmKey(Map<RunParamKeys, String> runningParameters) {
+        String algorithmType = runningParameters.get(RunParamKeys.AlgorithmType);
         if (algorithmType.equals(AlgorithmType.avlSlp.toString())) {
-            String mergePattern = runningParameters.get(CompressionRunKeys.AvlMergePattern);
-            String splitPattern = runningParameters.get(CompressionRunKeys.AvlSplitPattern);
-            String dataFactory = runningParameters.get(CompressionRunKeys.DataFactoryType);
+            String mergePattern = runningParameters.get(RunParamKeys.AvlMergePattern);
+            String splitPattern = runningParameters.get(RunParamKeys.AvlSplitPattern);
+            String dataFactory = runningParameters.get(RunParamKeys.DataFactoryType);
             return String.format("%s, mergePattern %s, splitPattern %s, dataFactory %s", algorithmType, mergePattern, splitPattern, dataFactory);
         } else {
-            String dataFactory = runningParameters.get(CompressionRunKeys.DataFactoryType);
+            String dataFactory = runningParameters.get(RunParamKeys.DataFactoryType);
             return String.format("%s, dataFactory %s", algorithmType, dataFactory);
         }
     }
@@ -301,52 +301,52 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
                 Algorithms.Modern2RytterInMemory};
 
 
-        private static Map<CompressionRunKeys, String> getRytterParams(AvlMergePattern avlMergePattern, AvlSplitPattern avlSplitPattern) {
-            HashMap<CompressionRunKeys, String> params = new HashMap<>();
-            params.put(CompressionRunKeys.AlgorithmType, AlgorithmType.avlSlp.toString());
-            params.put(CompressionRunKeys.AvlMergePattern, avlMergePattern.toString());
-            params.put(CompressionRunKeys.AvlSplitPattern, avlSplitPattern.toString());
-            params.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory.toString());
+        private static Map<RunParamKeys, String> getRytterParams(AvlMergePattern avlMergePattern, AvlSplitPattern avlSplitPattern) {
+            HashMap<RunParamKeys, String> params = new HashMap<>();
+            params.put(RunParamKeys.AlgorithmType, AlgorithmType.avlSlp.toString());
+            params.put(RunParamKeys.AvlMergePattern, avlMergePattern.toString());
+            params.put(RunParamKeys.AvlSplitPattern, avlSplitPattern.toString());
+            params.put(RunParamKeys.DataFactoryType, DataFactoryType.memory.toString());
             return params;
         }
 
-        private static Map<CompressionRunKeys, String> getLcaOnlineParams() {
-            HashMap<CompressionRunKeys, String> params = new HashMap<>();
-            params.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp.toString());
-            params.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory.toString());
+        private static Map<RunParamKeys, String> getLcaOnlineParams() {
+            HashMap<RunParamKeys, String> params = new HashMap<>();
+            params.put(RunParamKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp.toString());
+            params.put(RunParamKeys.DataFactoryType, DataFactoryType.memory.toString());
             return params;
         }
 
-        private static Map<CompressionRunKeys, String> getAvlConcurrentFourParams() {
-            HashMap<CompressionRunKeys, String> params = new HashMap<>();
-            params.put(CompressionRunKeys.AlgorithmType, AlgorithmType.avlSlpConcurrent.toString());
-            params.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory.toString());
-            params.put(CompressionRunKeys.ThreadCount, "4");
-            params.put(CompressionRunKeys.AvlMergePattern, AvlMergePattern.sequential.toString());
+        private static Map<RunParamKeys, String> getAvlConcurrentFourParams() {
+            HashMap<RunParamKeys, String> params = new HashMap<>();
+            params.put(RunParamKeys.AlgorithmType, AlgorithmType.avlSlpConcurrent.toString());
+            params.put(RunParamKeys.DataFactoryType, DataFactoryType.memory.toString());
+            params.put(RunParamKeys.ThreadCount, "4");
+            params.put(RunParamKeys.AvlMergePattern, AvlMergePattern.sequential.toString());
             return params;
         }
 
-        private static Map<CompressionRunKeys, String> getLzFactorizationParams(AlgorithmType algorithmType) {
-            HashMap<CompressionRunKeys, String> params = new HashMap<>();
-            params.put(CompressionRunKeys.AlgorithmType, algorithmType.toString());
-            params.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory.toString());
+        private static Map<RunParamKeys, String> getLzFactorizationParams(AlgorithmType algorithmType) {
+            HashMap<RunParamKeys, String> params = new HashMap<>();
+            params.put(RunParamKeys.AlgorithmType, algorithmType.toString());
+            params.put(RunParamKeys.DataFactoryType, DataFactoryType.memory.toString());
             return params;
         }
 
-        private static Map<CompressionRunKeys, String> getCartesianParams() {
-            HashMap<CompressionRunKeys, String> params = new HashMap<>();
-            params.put(CompressionRunKeys.AlgorithmType, AlgorithmType.cartesianSlp.toString());
-            params.put(CompressionRunKeys.DataFactoryType, DataFactoryType.memory.toString());
+        private static Map<RunParamKeys, String> getCartesianParams() {
+            HashMap<RunParamKeys, String> params = new HashMap<>();
+            params.put(RunParamKeys.AlgorithmType, AlgorithmType.cartesianSlp.toString());
+            params.put(RunParamKeys.DataFactoryType, DataFactoryType.memory.toString());
             return params;
         }
 
         public static class Algorithm {
             public final String key;
             public final String value;
-            private final Map<CompressionRunKeys, String> params;
+            private final Map<RunParamKeys, String> params;
             private final String texPointTemplate;
 
-            public Algorithm(Map<CompressionRunKeys, String> params, String value, String texPointTemplate) {
+            public Algorithm(Map<RunParamKeys, String> params, String value, String texPointTemplate) {
                 this.params = params;
                 this.texPointTemplate = texPointTemplate;
                 this.key = getAlgorithmKey(params);

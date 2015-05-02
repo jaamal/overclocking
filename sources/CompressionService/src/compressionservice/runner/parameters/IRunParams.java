@@ -2,20 +2,20 @@ package compressionservice.runner.parameters;
 
 import java.util.Map;
 
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 
 public interface IRunParams {
-    void put(CompressionRunKeys key, String value);
-    <T extends Enum<T>> void put(CompressionRunKeys key, Enum<T> value);
-    void put(CompressionRunKeys key, int value);
+    void put(RunParamKeys key, String value);
+    <T extends Enum<T>> void put(RunParamKeys key, Enum<T> value);
+    void put(RunParamKeys key, int value);
 
-    boolean contains(CompressionRunKeys key);
+    boolean contains(RunParamKeys key);
     
-    String get(CompressionRunKeys key) throws RuntimeException;
-    int getInt(CompressionRunKeys key) throws RuntimeException;
-    <T extends Enum<T>> T getEnum(Class<T> enumClass, CompressionRunKeys key) throws RuntimeException;
+    String get(RunParamKeys key) throws RuntimeException;
+    int getInt(RunParamKeys key) throws RuntimeException;
+    <T extends Enum<T>> T getEnum(Class<T> enumClass, RunParamKeys key) throws RuntimeException;
     
-    default String getOrDefault(CompressionRunKeys key, String defaultValue) {
+    default String getOrDefault(RunParamKeys key, String defaultValue) {
         try {
             return get(key);
         }
@@ -24,7 +24,7 @@ public interface IRunParams {
         }
     }
 
-    default int getOrDefaultInt(CompressionRunKeys key, int defaultValue) {
+    default int getOrDefaultInt(RunParamKeys key, int defaultValue) {
         try {
             return getInt(key);
         }
@@ -33,7 +33,7 @@ public interface IRunParams {
         }
     }
     
-    default <T extends Enum<T>> T getOrDefaultEnum(Class<T> enumClass, CompressionRunKeys key, T defaultValue) {
+    default <T extends Enum<T>> T getOrDefaultEnum(Class<T> enumClass, RunParamKeys key, T defaultValue) {
         try {
             return getEnum(enumClass, key);
         }
@@ -42,5 +42,5 @@ public interface IRunParams {
         }
     }
     
-    Map<CompressionRunKeys, String> toMap();
+    Map<RunParamKeys, String> toMap();
 }

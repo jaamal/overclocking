@@ -35,7 +35,7 @@ import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 
 public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
@@ -79,7 +79,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
 
     @Override
     public Iterable<String> getAllSourceIds(IRunParams runParams) {
-        AlgorithmType algorithmType = runParams.getEnum(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
+        AlgorithmType algorithmType = runParams.getEnum(AlgorithmType.class, RunParamKeys.AlgorithmType);
         switch (algorithmType) {
             case avlSlpConcurrent: 
             case avlSlp:
@@ -99,7 +99,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
     
     @Override
     public IAlgorithmRunner create(IRunParams runParams) {
-        AlgorithmType algorithmType = runParams.getEnum(AlgorithmType.class, CompressionRunKeys.AlgorithmType);
+        AlgorithmType algorithmType = runParams.getEnum(AlgorithmType.class, RunParamKeys.AlgorithmType);
         switch (algorithmType) {
             case avlSlpConcurrent: {
                 return createAvlSlpConcurrent(runParams);
@@ -132,10 +132,10 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         final AvlMergePattern defaultAvlMergePattern = AvlMergePattern.sequential;
         final int defaultThreadCount = 4;
         
-        String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
-        AvlMergePattern avlMergePattern = runParams.getOrDefaultEnum(AvlMergePattern.class, CompressionRunKeys.AvlMergePattern, defaultAvlMergePattern);
-        int threadCount = runParams.getOrDefaultInt(CompressionRunKeys.ThreadCount, defaultThreadCount);
+        String sourceId = runParams.get(RunParamKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
+        AvlMergePattern avlMergePattern = runParams.getOrDefaultEnum(AvlMergePattern.class, RunParamKeys.AvlMergePattern, defaultAvlMergePattern);
+        int threadCount = runParams.getOrDefaultInt(RunParamKeys.ThreadCount, defaultThreadCount);
         
         IAvlTreeArrayMerger avlTreeArrayMerger = avlTreeArrayMergerFactory.create(avlMergePattern);
         IAvlTreeManagerFactory avlTreeManagerFactory = new ConcurrentAvlTreeManagerFactory(dataFactoryType);
@@ -152,10 +152,10 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         final AvlMergePattern defaultAvlMergePattern = AvlMergePattern.block;
         final AvlSplitPattern defaultAvlSplitPattern = AvlSplitPattern.fromMerged;
         
-        String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
-        AvlMergePattern avlMergePattern = runParams.getOrDefaultEnum(AvlMergePattern.class, CompressionRunKeys.AvlMergePattern, defaultAvlMergePattern);
-        AvlSplitPattern avlSplitPattern = runParams.getOrDefaultEnum(AvlSplitPattern.class, CompressionRunKeys.AvlSplitPattern, defaultAvlSplitPattern);
+        String sourceId = runParams.get(RunParamKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
+        AvlMergePattern avlMergePattern = runParams.getOrDefaultEnum(AvlMergePattern.class, RunParamKeys.AvlMergePattern, defaultAvlMergePattern);
+        AvlSplitPattern avlSplitPattern = runParams.getOrDefaultEnum(AvlSplitPattern.class, RunParamKeys.AvlSplitPattern, defaultAvlSplitPattern);
         
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(settings, dataFactoryType);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(avlTreeArrayMergerFactory, avlMergePattern, avlSplitPattern);
@@ -167,8 +167,8 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
     private IAlgorithmRunner createCartesianSlpRunner(IRunParams runParams) {
         final DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
         
-        String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
+        String sourceId = runParams.get(RunParamKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
         
         CartesianTreeManagerFactory cartesianTreeManagerFactory = new CartesianTreeManagerFactory(settings, dataFactoryType);
         SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
@@ -181,9 +181,9 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         final DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
         final int defaultWindowSize = 32 * 1024;
         
-        String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
-        int windowSize = runParams.getOrDefaultInt(CompressionRunKeys.WindowSize, defaultWindowSize);
+        String sourceId = runParams.get(RunParamKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
+        int windowSize = runParams.getOrDefaultInt(RunParamKeys.WindowSize, defaultWindowSize);
         
         return new Lz77AlgorithmRunner(resourceProvider, filesRepository, factorsRepositoryFactory.getLZ77Repository(), factorIteratorFactory, 
                 new Analysator(), statisticsObjectFactory, sourceId, dataFactoryType, windowSize);
@@ -192,8 +192,8 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
     private IAlgorithmRunner createLZInfRunner(IRunParams runParams) {
         final DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
         
-        String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
+        String sourceId = runParams.get(RunParamKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
         
         return new LzInfAlgorithmRunner(resourceProvider, filesRepository, factorIteratorFactory, factorsRepositoryFactory.getLZRepository(), 
                 new Analysator(), statisticsObjectFactory, sourceId, dataFactoryType);
@@ -202,8 +202,8 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
     private IAlgorithmRunner createLZWRunner(IRunParams runParams) {
         final DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
         
-        String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
+        String sourceId = runParams.get(RunParamKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
         
         return new LzwAlgorithmRunner(lzwFactorsAnalyzer, resourceProvider, filesRepository, statisticsObjectFactory, sourceId, dataFactoryType);
     }
@@ -211,8 +211,8 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
     private IAlgorithmRunner createLCAOnlineRunner(IRunParams runParams) {
         final DataFactoryType defaultDataFactoryType = DataFactoryType.memory;
         
-        String sourceId = runParams.get(CompressionRunKeys.SourceId);
-        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, CompressionRunKeys.DataFactoryType, defaultDataFactoryType);
+        String sourceId = runParams.get(RunParamKeys.SourceId);
+        DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
         
         SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
         return new LCAOnlineSlpBuildAlgorithmRunner(lcaOnlineCompressor, slpProductsRepository, resourceProvider, filesRepository, 

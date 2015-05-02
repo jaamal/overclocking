@@ -19,7 +19,7 @@ import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -45,7 +45,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
         
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
         worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
@@ -61,7 +61,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository);
 
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
         worker.process(UUID.randomUUID(), runParams);
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
@@ -77,7 +77,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository);
 
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
         worker.process(UUID.randomUUID(), runParams);
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());

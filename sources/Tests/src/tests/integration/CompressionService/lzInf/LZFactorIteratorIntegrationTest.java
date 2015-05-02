@@ -21,7 +21,7 @@ import compressionservice.runner.parameters.RunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 
 public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
 {

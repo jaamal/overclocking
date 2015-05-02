@@ -11,7 +11,7 @@ import compressionservice.algorithms.IAlgorithmRunner;
 import compressionservice.algorithms.IAlgorithmRunnersFactory;
 import compressionservice.runner.parameters.IRunParams;
 import compressionservice.runner.state.ITaskOperationalLog;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
@@ -38,13 +38,13 @@ public class Worker implements IWorker
     @Override
     public void process(UUID requestId, IRunParams runParams) {
         try {
-            if (runParams.contains(CompressionRunKeys.SourceId)){
-                processItem(requestId, runParams.get(CompressionRunKeys.SourceId), runParams);
+            if (runParams.contains(RunParamKeys.SourceId)){
+                processItem(requestId, runParams.get(RunParamKeys.SourceId), runParams);
             }
             else {
                 Iterable<String> sourceIds = algorithmRunnersFactory.getAllSourceIds((runParams));
                 for (String sourceId : sourceIds) {
-                    runParams.put(CompressionRunKeys.SourceId, sourceId);
+                    runParams.put(RunParamKeys.SourceId, sourceId);
                     processItem(requestId, sourceId, runParams);
                 }
             }
@@ -61,7 +61,7 @@ public class Worker implements IWorker
                 return;
             }
 
-            runParams.put(CompressionRunKeys.SourceId, sourceId);
+            runParams.put(RunParamKeys.SourceId, sourceId);
             IAlgorithmRunner algorithmRunner = algorithmRunnersFactory.create(runParams);
             TimeCounter timeCounter = TimeCounter.start();
             StatisticsObject statisticsObject = algorithmRunner.run(runParams);

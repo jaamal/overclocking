@@ -3,7 +3,7 @@ package statisticsservice.export;
 import java.util.ArrayList;
 import java.util.List;
 
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -11,7 +11,7 @@ public class StatisticsConverter implements IStatisticsConverter {
     
     List<StatisticsObject> stats = new ArrayList<StatisticsObject>();
     
-    CompressionRunKeys[] runKeys = CompressionRunKeys.values();
+    RunParamKeys[] runKeys = RunParamKeys.values();
     CompressionStatisticKeys[] statsKeys = CompressionStatisticKeys.values();
     
     @Override
@@ -25,7 +25,7 @@ public class StatisticsConverter implements IStatisticsConverter {
     public String run() {
         StringBuilder builder = new StringBuilder();
         
-        for (CompressionRunKeys runKey : runKeys) {
+        for (RunParamKeys runKey : runKeys) {
             builder.append(runKey);
             builder.append(";");
         }
@@ -36,7 +36,7 @@ public class StatisticsConverter implements IStatisticsConverter {
         builder.append("\r\n");
         
         for (StatisticsObject statisticsObject : stats) {
-            for (CompressionRunKeys runKey : runKeys) {
+            for (RunParamKeys runKey : runKeys) {
                 if (statisticsObject.runningParameters.containsKey(runKey))
                     builder.append(statisticsObject.runningParameters.get(runKey));
                 builder.append(";");

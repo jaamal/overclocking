@@ -18,7 +18,7 @@ import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
-import dataContracts.statistics.CompressionRunKeys;
+import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.CompressionStatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -42,13 +42,13 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         FileMetadata twoSectionsDnaFile = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
 
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(CompressionRunKeys.SourceId, simlpeDnaFile.getId());
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(RunParamKeys.SourceId, simlpeDnaFile.getId());
         worker.process(UUID.randomUUID(), runParams);
         
         runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(CompressionRunKeys.SourceId, twoSectionsDnaFile.getId());
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(RunParamKeys.SourceId, twoSectionsDnaFile.getId());
         worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();
@@ -79,8 +79,8 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository);
 
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(CompressionRunKeys.SourceId, fileMetadata.getId());
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
+        runParams.put(RunParamKeys.SourceId, fileMetadata.getId());
         worker.process(UUID.randomUUID(), runParams);
 
         BuildSLPs();
@@ -97,7 +97,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
     private void BuildSLPs() {
         RunParams runParams = new RunParams();
-        runParams.put(CompressionRunKeys.AlgorithmType, AlgorithmType.avlSlp);
+        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.avlSlp);
         worker.process(UUID.randomUUID(), runParams);
     }
 
