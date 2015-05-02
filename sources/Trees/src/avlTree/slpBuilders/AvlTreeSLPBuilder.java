@@ -45,7 +45,6 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     @Override
     public ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics) {
         
-        
         TimeCounter timeCounter = TimeCounter.start();
         IAvlTree resultTree = buildAvlTree(factors, statistics);
         ISLPBuilder slp = slpExtractor.getSLP(resultTree);

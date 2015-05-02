@@ -43,4 +43,6 @@ public interface IRunParams {
     }
     
     Map<RunParamKeys, String> toMap();
+    
+    String getHashId();
 }

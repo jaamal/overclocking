@@ -1,9 +1,8 @@
 package compressionservice.algorithms;
 
-import compressionservice.runner.parameters.IRunParams;
-import dataContracts.statistics.StatisticsObject;
+import dataContracts.statistics.IStatistics;
 
 public interface IAlgorithmRunner {
     
-    StatisticsObject run(IRunParams runParams);
+    IStatistics run(String resultId);
 }

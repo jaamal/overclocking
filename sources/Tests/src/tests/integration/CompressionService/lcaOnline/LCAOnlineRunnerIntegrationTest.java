@@ -13,13 +13,14 @@ import storage.cassandraClient.ISchemeInitializer;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
+
 import compressionservice.runner.IWorker;
-import compressionservice.runner.parameters.RunParams;
+import compressionservice.runner.parameters.IRunParamsFactory;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
-import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -28,6 +29,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
     private ISlpProductsRepository slpProductsRepository;
     private IStatisticsRepository statisticsRepository;
     private IWorker worker;
+    private IRunParamsFactory runParamsFactory;
 
     @Override
     public void setUp()
@@ -37,6 +39,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         
         statisticsRepository = container.get(IStatisticsRepository.class);
         slpProductsRepository = container.get(ISlpProductsRepository.class);
+        runParamsFactory = container.get(IRunParamsFactory.class);
         worker = container.get(IWorker.class);
     }
 
@@ -44,9 +47,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
     public void testSimpleDNASquared() {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
         
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileMetadata.getId(), AlgorithmType.lcaOnlineSlp));
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
@@ -60,9 +61,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
     {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository);
 
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileMetadata.getId(), AlgorithmType.lcaOnlineSlp));
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
@@ -76,9 +75,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
     {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository);
 
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lcaOnlineSlp);
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileMetadata.getId(), AlgorithmType.lcaOnlineSlp));
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);

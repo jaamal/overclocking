@@ -1,7 +1,6 @@
 package compressionservice.algorithms;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -15,13 +14,13 @@ import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.profile.IAnalysator;
-import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.StatisticKeys;
+import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
-import dataContracts.statistics.StatisticsObject;
+import dataContracts.statistics.StatisticKeys;
+import dataContracts.statistics.Statistics;
 
 public class LzInfAlgorithmRunner implements IAlgorithmRunner {
 
@@ -30,7 +29,6 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
     private final IResourceProvider resourceProvider;
     private final IFactorIteratorFactory factorIteratorFactory;
     private final IFactorsRepository factorsRepository;
-    private final IStatisticsObjectFactory statisticsObjectFactory;
     private final IAnalysator analysator;
     private String sourceId;
     private DataFactoryType dataFactoryType;
@@ -48,13 +46,12 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
         this.factorIteratorFactory = factorIteratorFactory;
         this.factorsRepository = factorsRepository;
         this.analysator = analysator;
-        this.statisticsObjectFactory = statisticsObjectFactory;
         this.sourceId = sourceId;
         this.dataFactoryType = dataFactoryType;
     }
 
     @Override
-    public StatisticsObject run(IRunParams runParams) {
+    public IStatistics run(String resultId) {
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             TimeCounter timeCounter = TimeCounter.start();
             ArrayList<FactorDef> factors = new ArrayList<>();
@@ -71,20 +68,19 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
             }
             timeCounter.finish();
 
-            HashMap<StatisticKeys, String> statistics = new HashMap<>();
-            statistics.put(StatisticKeys.SourceLength, String.valueOf(source.length()));
-            statistics.put(StatisticKeys.FactorizationLength, String.valueOf(factors.size()));
-            statistics.put(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
-            StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics);
+            IStatistics statistics = new Statistics();
+            statistics.putParam(StatisticKeys.SourceLength, String.valueOf(source.length()));
+            statistics.putParam(StatisticKeys.FactorizationLength, String.valueOf(factors.size()));
+            statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
+            statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
 
-            IArrayItemsWriter<FactorDef> writer = factorsRepository.getWriter(result.getId());
+            IArrayItemsWriter<FactorDef> writer = factorsRepository.getWriter(resultId);
             for (FactorDef factor : factors) {
                 writer.add(factor);
             }
             writer.done();
 
-            return result;
+            return statistics;
         }
     }
 }

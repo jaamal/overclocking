@@ -14,14 +14,14 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.slpProductsRepository.SlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
+
 import compressionservice.runner.IWorker;
-import compressionservice.runner.parameters.IRunParams;
-import compressionservice.runner.parameters.RunParams;
+import compressionservice.runner.parameters.IRunParamsFactory;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
-import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -29,6 +29,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
     private ISlpProductsRepository slpProductsRepository;
     private IStatisticsRepository statisticsRepository;
     private IWorker worker;
+    private IRunParamsFactory runParamsFactory;
 
     @Override
     public void setUp() {
@@ -37,25 +38,17 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
         worker = container.get(IWorker.class);
         slpProductsRepository = container.create(SlpProductsRepository.class);
         statisticsRepository = container.get(IStatisticsRepository.class);
+        runParamsFactory = container.get(IRunParamsFactory.class);
     }
 
     @Test
     public void testSimpleDNA() {
         FileMetadata simpleDnaFile = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(simpleDnaFile.getId(), AlgorithmType.lzInf));
         FileMetadata twoSectionsDnaFile = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
-
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(RunParamKeys.SourceId, simpleDnaFile.getId());
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(twoSectionsDnaFile.getId(), AlgorithmType.lzInf));
+        worker.process(UUID.randomUUID(), runParamsFactory.create(AlgorithmType.avlSlpConcurrent));
         
-        runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(RunParamKeys.SourceId, twoSectionsDnaFile.getId());
-        worker.process(UUID.randomUUID(), runParams);
-
-        BuildSLPs();
-
         StatisticsObject[] actuals = statisticsRepository.readAll(simpleDnaFile.getId());
         assertEquals(1, actuals.length);
         actuals = statisticsRepository.readAll(actuals[0].getId());
@@ -64,8 +57,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
         System.out.println(actuals[0].statistics.get(StatisticKeys.SlpCountRules));
         List<Product> slp = slpProductsRepository.readItems(actuals[0].getId());
         assertEquals(readFileText(simpleDnaFile), getText(slp));
-
-
+        
         actuals = statisticsRepository.readAll(twoSectionsDnaFile.getId());
         assertEquals(1, actuals.length);
         actuals = statisticsRepository.readAll(actuals[0].getId());
@@ -79,13 +71,8 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
     @Ignore
     public void testBig() {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AAOO.gz", ContentType.GZip, filesRepository);
-
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(RunParamKeys.SourceId, fileMetadata.getId());
-        worker.process(UUID.randomUUID(), runParams);
-
-        BuildSLPs();
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileMetadata.getId(), AlgorithmType.lzInf));
+        worker.process(UUID.randomUUID(), runParamsFactory.create(AlgorithmType.avlSlpConcurrent));
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
@@ -93,12 +80,6 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
         assertEquals(1, actuals.length);
         List<Product> slp = slpProductsRepository.readItems(actuals[0].getId());
         assertEquals(readFileText(fileMetadata), getText(slp));
-    }
-
-    private void BuildSLPs() {
-        IRunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.avlSlpConcurrent);
-        worker.process(UUID.randomUUID(), runParams);
     }
 
     private String getText(List<Product> products) {

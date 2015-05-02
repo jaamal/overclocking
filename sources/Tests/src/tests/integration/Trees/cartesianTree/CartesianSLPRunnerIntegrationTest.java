@@ -15,13 +15,14 @@ import storage.cassandraClient.ISchemeInitializer;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.AlgorithmRunnerTestBase;
+
 import compressionservice.runner.IWorker;
-import compressionservice.runner.parameters.RunParams;
+import compressionservice.runner.parameters.IRunParamsFactory;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
-import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -29,6 +30,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     private IStatisticsRepository statisticsRepository;
     private ISlpProductsRepository slpProductsRepository;
     private IWorker worker;
+    private IRunParamsFactory runParamsFactory;
 
     @Override
     public void setUp() {
@@ -38,6 +40,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         worker = container.get(IWorker.class);
         statisticsRepository = container.get(IStatisticsRepository.class);
         slpProductsRepository = container.get(ISlpProductsRepository.class);
+        runParamsFactory = container.get(IRunParamsFactory.class);
     }
 
     @Override
@@ -53,14 +56,9 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     @Ignore
     public void testBigDNA() {
         FileMetadata fileMetadata = FileHelpers.writeDnaToRepository("AATT.gz", ContentType.GZip, filesRepository);
-
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(RunParamKeys.SourceId, fileMetadata.getId());
-        worker.process(UUID.randomUUID(), runParams);
-
-        BuildSLPs();
-
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileMetadata.getId(), AlgorithmType.lzInf));
+        worker.process(UUID.randomUUID(), runParamsFactory.create( AlgorithmType.cartesianSlp));
+        
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
         actuals = statisticsRepository.readAll(actuals[0].getId());
@@ -72,20 +70,11 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
     @Test
     public void testSimpleDNA() {
         FileMetadata simpleDnaFile = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(simpleDnaFile.getId(), AlgorithmType.lzInf));
         FileMetadata twoSectionsDnaFile = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository);
-
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(RunParamKeys.SourceId, simpleDnaFile.getId());
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(twoSectionsDnaFile.getId(), AlgorithmType.lzInf));
+        worker.process(UUID.randomUUID(), runParamsFactory.create(AlgorithmType.cartesianSlp));
         
-        runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzInf);
-        runParams.put(RunParamKeys.SourceId, twoSectionsDnaFile.getId());
-        worker.process(UUID.randomUUID(), runParams);
-
-        BuildSLPs();
-
         StatisticsObject[] actuals = statisticsRepository.readAll(simpleDnaFile.getId());
         assertEquals(1, actuals.length);
         assertEquals("300", actuals[0].statistics.get(StatisticKeys.SourceLength));
@@ -101,12 +90,6 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         assertEquals(1, actuals.length);
         slp = slpProductsRepository.readItems(actuals[0].getId());
         assertEquals(readFileText(twoSectionsDnaFile), getText(slp));
-    }
-
-    private void BuildSLPs() {
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.cartesianSlp);
-        worker.process(UUID.randomUUID(), runParams);
     }
 
     private String getText(List<Product> products) {

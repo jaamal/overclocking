@@ -15,12 +15,13 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
+
 import compressionservice.runner.IWorker;
-import compressionservice.runner.parameters.RunParams;
+import compressionservice.runner.parameters.IRunParamsFactory;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -29,6 +30,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
     private IStatisticsRepository staisticsRepository;
     private IFactorsRepository factorsRepository;
     private IWorker worker;
+    private IRunParamsFactory runParamsFactory;
 
     @Override
     public void setUp()
@@ -39,6 +41,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         
         staisticsRepository = container.get(IStatisticsRepository.class);
         factorsRepository = container.get(IFactorsRepositoryFactory.class).getLZ77Repository();
+        runParamsFactory = container.get(IRunParamsFactory.class);
         worker = container.get(IWorker.class);
     }
     
@@ -54,9 +57,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
     public void testSimpleDNASquared() {
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository).getId();
         
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lz77);
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileId, AlgorithmType.lz77));
         
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
         assertEquals(1, actuals.length);
@@ -69,26 +70,20 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
     public void testSimpleDNA() {
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository).getId();
         
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lz77);
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileId, AlgorithmType.lz77));
 
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
         assertEquals(1, actuals.length);
         assertEquals("96", actuals[0].statistics.get(StatisticKeys.FactorizationLength));
         assertEquals("300", actuals[0].statistics.get(StatisticKeys.SourceLength));
         checkFactorization(actuals[0].getId(), "simpleDNA_clean.txt");
-        
-
     }
 
     @Test
     public void testGZippedFile() {
         String fileId = FileHelpers.writeDnaToRepository("AAES.gz", ContentType.GZip, filesRepository).getId();
 
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lz77);
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileId, AlgorithmType.lz77));
         
         StatisticsObject[] actuals = staisticsRepository.readAll(fileId);
         assertEquals(1, actuals.length);

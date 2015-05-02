@@ -6,14 +6,16 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 
 import storage.statistics.IStatisticsRepository;
+
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.IAlgorithmRunner;
 import compressionservice.algorithms.IAlgorithmRunnersFactory;
 import compressionservice.runner.parameters.IRunParams;
 import compressionservice.runner.state.ITaskOperationalLog;
-import dataContracts.statistics.RunParamKeys;
+
+import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
-import dataContracts.statistics.StatisticsObject;
+import dataContracts.statistics.RunParamKeys;
 
 public class Worker implements IWorker
 {
@@ -56,17 +58,17 @@ public class Worker implements IWorker
     private void processItem(UUID requestId, String sourceId, IRunParams runParams) {
         try {
             operationalLog.append(requestId, sourceId, "Start processing.");
-            if (statisticsRepository.exists(sourceId, statisticsObjectFactory.getStatisticsObjectId(runParams.toMap()))) {
+            String resultId = runParams.getHashId();
+            if (statisticsRepository.exists(sourceId, resultId)) {
                 operationalLog.append(requestId, sourceId, "Skip it since it has been already processed.");
                 return;
             }
 
-            runParams.put(RunParamKeys.SourceId, sourceId);
             IAlgorithmRunner algorithmRunner = algorithmRunnersFactory.create(runParams);
             TimeCounter timeCounter = TimeCounter.start();
-            StatisticsObject statisticsObject = algorithmRunner.run(runParams);
+            IStatistics statistics = algorithmRunner.run(resultId);
             Duration duration = timeCounter.finish();
-            statisticsRepository.write(sourceId, statisticsObject);
+            statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), statistics.toMap()));
             
             operationalLog.append(requestId, sourceId, String.format("End processing. Duration: %s.", duration));
         } catch (Exception e) {

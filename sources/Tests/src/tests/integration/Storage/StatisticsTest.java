@@ -16,9 +16,13 @@ import storage.KeySpaces;
 import storage.cassandraClient.ISchemeInitializer;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
-import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.StatisticKeys;
+
+import compressionservice.runner.parameters.IRunParams;
+import compressionservice.runner.parameters.IRunParamsFactory;
+
+import dataContracts.AlgorithmType;
 import dataContracts.statistics.IStatisticsObjectFactory;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
 public class StatisticsTest extends StorageTestBase {
@@ -27,6 +31,7 @@ public class StatisticsTest extends StorageTestBase {
     private ISchemeInitializer schemaInitializer;
     private IStatisticsRepository statisticsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
+    private IRunParamsFactory runParamsFactory;
 
     @Override
     public void setUp() {
@@ -35,7 +40,7 @@ public class StatisticsTest extends StorageTestBase {
         schemaInitializer = container.get(ISchemeInitializer.class);
         statisticsRepository = container.get(IStatisticsRepository.class);
         statisticsObjectFactory = container.get(IStatisticsObjectFactory.class);
-
+        runParamsFactory = container.get(IRunParamsFactory.class);
         schemaInitializer.setUpCluster();
     }
 
@@ -147,13 +152,11 @@ public class StatisticsTest extends StorageTestBase {
 
 
     private StatisticsObject genStatistic() {
-        Map<RunParamKeys, String> configuration = new HashMap<RunParamKeys, String>();
-        configuration.put(RunParamKeys.AlgorithmType, TestHelpers.genString(15));
-        configuration.put(RunParamKeys.DataFactoryType, TestHelpers.genString(16));
+        IRunParams runParams = runParamsFactory.create(TestHelpers.genString(15), AlgorithmType.lcaOnlineSlp);
         Map<StatisticKeys, String> statistics = new HashMap<StatisticKeys, String>();
         statistics.put(StatisticKeys.RunningTime, String.valueOf(TestHelpers.genInt()));
         statistics.put(StatisticKeys.SourceLength, String.valueOf(TestHelpers.genInt()));
-        return statisticsObjectFactory.create(configuration, statistics);
+        return statisticsObjectFactory.create(runParams.getHashId(), runParams.toMap(), statistics);
     }
 
 }

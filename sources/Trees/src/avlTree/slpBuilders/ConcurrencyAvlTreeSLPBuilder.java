@@ -50,13 +50,6 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
         this.slpByteSizeCounter = slpByteSizeCounter;
     }
 
-
-	@Override
-	public ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics)
-    {
-        return buildSlp(factors, statistics, new ConcurrentAvlBuilderStopwatches());
-    }
-
 	@Override
 	public ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches)
 	{

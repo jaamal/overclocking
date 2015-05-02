@@ -1,19 +1,30 @@
 package compressionservice.runner.parameters;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import serialization.ISerializer;
+import dataContracts.IIDFactory;
 import dataContracts.statistics.RunParamKeys;
 
 public class RunParams implements IRunParams {
 
+    private IIDFactory idFactory;
+    private ISerializer serializer;
     private Map<RunParamKeys, String> paramsMap;
 
-    public RunParams() {
-        this(new HashMap<RunParamKeys, String>());
+    public RunParams(IIDFactory idFactory, ISerializer serializer) {
+        this(idFactory, serializer, new HashMap<RunParamKeys, String>());
     }
 
-    public RunParams(Map<RunParamKeys, String> paramsMap) {
+    public RunParams(
+            IIDFactory idFactory, 
+            ISerializer serializer,
+            Map<RunParamKeys, String> paramsMap) {
+        this.idFactory = idFactory;
+        this.serializer = serializer;
         this.paramsMap = paramsMap;
     }
     
@@ -64,5 +75,38 @@ public class RunParams implements IRunParams {
     @Override
     public Map<RunParamKeys, String> toMap() {
         return paramsMap;
+    }
+
+    @Override
+    public String getHashId() {
+        return idFactory.getDeterministicID(getHash()).toString();
+    }
+    
+    private String getHash() {
+        KeyValuePair<RunParamKeys, String>[] array = new KeyValuePair[paramsMap.size()];
+        int index = 0;
+        for (Map.Entry<RunParamKeys, String> entry : paramsMap.entrySet()) {
+            array[index++] = new KeyValuePair<>(entry.getKey(), entry.getValue());
+        }
+        Arrays.sort(array, new Comparator<KeyValuePair<RunParamKeys, String>>()
+        {
+            @Override
+            public int compare(KeyValuePair<RunParamKeys, String> o1, KeyValuePair<RunParamKeys, String> o2) {
+                return o1.key.compareTo(o2.key);
+            }
+        });
+        return serializer.stringify(array);
+    }
+
+    private class KeyValuePair<TKey, TValue>
+    {
+        public final TKey key;
+        public final TValue value;
+
+        private KeyValuePair(TKey key, TValue value)
+        {
+            this.key = key;
+            this.value = value;
+        }
     }
 }

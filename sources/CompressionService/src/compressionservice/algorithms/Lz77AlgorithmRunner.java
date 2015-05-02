@@ -14,15 +14,13 @@ import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.profile.IAnalysator;
-import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.StatisticKeys;
-import dataContracts.statistics.Statistics;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
-import dataContracts.statistics.StatisticsObject;
+import dataContracts.statistics.StatisticKeys;
+import dataContracts.statistics.Statistics;
 
 public class Lz77AlgorithmRunner implements IAlgorithmRunner {
 
@@ -30,7 +28,6 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
 
     private final IFactorsRepository factorsRepotisory;
     private final IResourceProvider resourceProvider;
-    private final IStatisticsObjectFactory statisticsObjectFactory;
     private final IAnalysator analysator;
     private final IFactorIteratorFactory factorIteratorFactory;
 
@@ -55,11 +52,10 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
         this.windowSize = windowSize;
         this.factorsRepotisory = factorsRepository;
         this.analysator = analysator;
-        this.statisticsObjectFactory = statisticsObjectFactory;
     }
 
     @Override
-    public StatisticsObject run(IRunParams runParams) {
+    public IStatistics run(String resultId) {
         try (IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType)) {
             TimeCounter timeCounter = TimeCounter.start();
 
@@ -78,14 +74,12 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
             statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
             statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
 
-            StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics.toMap());
-
-            IArrayItemsWriter<FactorDef> writer = factorsRepotisory.getWriter(result.getId());
+            IArrayItemsWriter<FactorDef> writer = factorsRepotisory.getWriter(resultId);
             for (FactorDef factor : factors)
                 writer.add(factor);
             writer.done();
 
-            return result;
+            return statistics;
         }
     }
 }

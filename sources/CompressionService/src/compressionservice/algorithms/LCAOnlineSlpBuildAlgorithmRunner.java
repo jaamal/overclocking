@@ -1,7 +1,5 @@
 package compressionservice.algorithms;
 
-import java.util.HashMap;
-
 import org.apache.log4j.Logger;
 
 import storage.IArrayItemsWriter;
@@ -13,14 +11,14 @@ import avlTree.slpBuilders.ISLPBuilder;
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
-import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.DataFactoryType;
 import dataContracts.Product;
 import dataContracts.SLPStatistics;
-import dataContracts.statistics.StatisticKeys;
+import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
-import dataContracts.statistics.StatisticsObject;
+import dataContracts.statistics.StatisticKeys;
+import dataContracts.statistics.Statistics;
 
 public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
@@ -29,7 +27,6 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     private ILCAOnlineCompressor lcaOnlineCompressor;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
-    private IStatisticsObjectFactory statisticsObjectFactory;
     private final SlpByteSizeCounter slpByteSizeCounter;
     private String sourceId;
     private DataFactoryType dataFactoryType;
@@ -46,14 +43,13 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
         this.lcaOnlineCompressor = lcaOnlineCompressor;
         this.slpProductsRepository = slpProductsRepository;
         this.resourceProvider = resourceProvider;
-        this.statisticsObjectFactory = statisticsObjectFactory;
         this.slpByteSizeCounter = slpByteSizeCounter;
         this.sourceId = sourceId;
         this.dataFactoryType = dataFactoryType;
     }
 
     @Override
-    public StatisticsObject run(IRunParams runParams) {
+    public IStatistics run(String resultId) {
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             logger.info("Source file size is " + source.length());
             TimeCounter timeCounter = TimeCounter.start();
@@ -62,20 +58,19 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
             logger.info(String.format("Finish slpBuilding. Total time is about %d minutes", timeCounter.getMillis() / 60 / 1000));
             SLPStatistics slpStatistics = slp.getStatistics();
-            HashMap<StatisticKeys, String> statisitcs = new HashMap<>();
-            statisitcs.put(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            statisitcs.put(StatisticKeys.SlpWidth, String.valueOf(slpStatistics.length));
-            statisitcs.put(StatisticKeys.SlpCountRules, String.valueOf(slpStatistics.countRules));
-            statisitcs.put(StatisticKeys.SlpHeight, String.valueOf(slpStatistics.height));
-            statisitcs.put(StatisticKeys.SlpByteSize, String.valueOf(slpByteSizeCounter.getSlpByteSize(slp)));
-            StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statisitcs);
+            IStatistics statisitcs = new Statistics();
+            statisitcs.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
+            statisitcs.putParam(StatisticKeys.SlpWidth, String.valueOf(slpStatistics.length));
+            statisitcs.putParam(StatisticKeys.SlpCountRules, String.valueOf(slpStatistics.countRules));
+            statisitcs.putParam(StatisticKeys.SlpHeight, String.valueOf(slpStatistics.height));
+            statisitcs.putParam(StatisticKeys.SlpByteSize, String.valueOf(slpByteSizeCounter.getSlpByteSize(slp)));
 
-            IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(result.getId());
+            IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(resultId);
             Product[] products = slp.toNormalForm();
             writer.addAll(products);
             writer.done();
 
-            return result;
+            return statisitcs;
         }
     }
 }

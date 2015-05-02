@@ -1,10 +1,9 @@
 package tests.integration.CompressionService.lzw;
 
 import static junit.framework.Assert.assertEquals;
+import helpers.FileHelpers;
 
 import java.util.UUID;
-
-import helpers.FileHelpers;
 
 import org.junit.Test;
 
@@ -12,11 +11,12 @@ import storage.KeySpaces;
 import storage.cassandraClient.ISchemeInitializer;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
+
 import compressionservice.runner.IWorker;
-import compressionservice.runner.parameters.RunParams;
+import compressionservice.runner.parameters.IRunParamsFactory;
+
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
-import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -24,13 +24,14 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
 {
     private IStatisticsRepository statisticsRepository;
     private IWorker worker;
+    private IRunParamsFactory runParamsFactory;
 
     @Override
     public void setUp()
     {
         super.setUp();
         container.get(ISchemeInitializer.class).setUpCluster();
-        
+        runParamsFactory = container.get(IRunParamsFactory.class);
         worker = container.get(IWorker.class);
         statisticsRepository = container.get(IStatisticsRepository.class);
     }
@@ -47,9 +48,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
     public void testSimpleDNASquared() {
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA_twoSections.txt", ContentType.PlainText, filesRepository).getId();
         
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzw);
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileId, AlgorithmType.lzw));
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
@@ -61,9 +60,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
     public void testSimpleDNA() {
         String fileId = FileHelpers.writeDnaToRepository("simpleDNA.txt", ContentType.PlainText, filesRepository).getId();
         
-        RunParams runParams = new RunParams();
-        runParams.put(RunParamKeys.AlgorithmType, AlgorithmType.lzw);
-        worker.process(UUID.randomUUID(), runParams);
+        worker.process(UUID.randomUUID(), runParamsFactory.create(fileId, AlgorithmType.lzw));
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
