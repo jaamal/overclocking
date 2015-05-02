@@ -42,7 +42,7 @@ import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.files.FileType;
-import dataContracts.statistics.CompressionStatistics;
+import dataContracts.statistics.Statistics;
 
 public class BuildSLPFromFileTest extends IntegrationTestBase {
 
@@ -133,7 +133,7 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
             AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.sequential, AvlSplitPattern.fromMerged);
             SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
             AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
-            ISLPBuilder slp = builder.buildSlp(factorization.toArray(new FactorDef[0]), new CompressionStatistics());
+            ISLPBuilder slp = builder.buildSlp(factorization.toArray(new FactorDef[0]), new Statistics());
 
             Assert.assertEquals(text, slp.getProductString());
             return slp;

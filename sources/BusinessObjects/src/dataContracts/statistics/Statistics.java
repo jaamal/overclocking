@@ -3,36 +3,36 @@ package dataContracts.statistics;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CompressionStatistics implements ICompressionStatistics {
+public class Statistics implements IStatistics {
     @Override
-    public void putParam(CompressionStatisticKeys name, String value) {
+    public void putParam(StatisticKeys name, String value) {
         paramsMap.put(name, value);
     }
 
     @Override
-    public void putParam(CompressionStatisticKeys name, int value) {
+    public void putParam(StatisticKeys name, int value) {
         putParam(name, String.format("%d", value));
     }
 
     @Override
-    public void putParam(CompressionStatisticKeys name, long value) {
+    public void putParam(StatisticKeys name, long value) {
         putParam(name, String.format("%d", value));
     }
 
     @Override
-    public boolean contains(CompressionStatisticKeys name) {
+    public boolean contains(StatisticKeys name) {
         return paramsMap.containsKey(name);
     }
 
     @Override
-    public String getStrValue(CompressionStatisticKeys name) {
+    public String getStrValue(StatisticKeys name) {
         if (!paramsMap.containsKey(name))
             throw new RuntimeException(String.format("Parameter with name %s not found.", name));
         return paramsMap.get(name);
     }
 
     @Override
-    public int getIntValue(CompressionStatisticKeys name) {
+    public int getIntValue(StatisticKeys name) {
         String resultStr = getStrValue(name);
         try {
             return Integer.parseInt(resultStr);
@@ -43,7 +43,7 @@ public class CompressionStatistics implements ICompressionStatistics {
     }
 
     @Override
-    public long getLongValue(CompressionStatisticKeys name) {
+    public long getLongValue(StatisticKeys name) {
         String resultStr = getStrValue(name);
         try {
             return Long.parseLong(resultStr);
@@ -54,9 +54,9 @@ public class CompressionStatistics implements ICompressionStatistics {
     }
 
     @Override
-    public Map<CompressionStatisticKeys, String> toMap() {
+    public Map<StatisticKeys, String> toMap() {
         return paramsMap;
     }
 
-    private final HashMap<CompressionStatisticKeys, String> paramsMap = new HashMap<>();
+    private final HashMap<StatisticKeys, String> paramsMap = new HashMap<>();
 }

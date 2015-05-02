@@ -19,7 +19,7 @@ import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
@@ -71,11 +71,11 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
             }
             timeCounter.finish();
 
-            HashMap<CompressionStatisticKeys, String> statistics = new HashMap<>();
-            statistics.put(CompressionStatisticKeys.SourceLength, String.valueOf(source.length()));
-            statistics.put(CompressionStatisticKeys.FactorizationLength, String.valueOf(factors.size()));
-            statistics.put(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            statistics.put(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
+            HashMap<StatisticKeys, String> statistics = new HashMap<>();
+            statistics.put(StatisticKeys.SourceLength, String.valueOf(source.length()));
+            statistics.put(StatisticKeys.FactorizationLength, String.valueOf(factors.size()));
+            statistics.put(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
+            statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
             StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics);
 
             IArrayItemsWriter<FactorDef> writer = factorsRepository.getWriter(result.getId());

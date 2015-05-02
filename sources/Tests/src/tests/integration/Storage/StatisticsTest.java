@@ -17,7 +17,7 @@ import storage.cassandraClient.ISchemeInitializer;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
 import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
@@ -150,9 +150,9 @@ public class StatisticsTest extends StorageTestBase {
         Map<RunParamKeys, String> configuration = new HashMap<RunParamKeys, String>();
         configuration.put(RunParamKeys.AlgorithmType, TestHelpers.genString(15));
         configuration.put(RunParamKeys.DataFactoryType, TestHelpers.genString(16));
-        Map<CompressionStatisticKeys, String> statistics = new HashMap<CompressionStatisticKeys, String>();
-        statistics.put(CompressionStatisticKeys.RunningTime, String.valueOf(TestHelpers.genInt()));
-        statistics.put(CompressionStatisticKeys.SourceLength, String.valueOf(TestHelpers.genInt()));
+        Map<StatisticKeys, String> statistics = new HashMap<StatisticKeys, String>();
+        statistics.put(StatisticKeys.RunningTime, String.valueOf(TestHelpers.genInt()));
+        statistics.put(StatisticKeys.SourceLength, String.valueOf(TestHelpers.genInt()));
         return statisticsObjectFactory.create(configuration, statistics);
     }
 

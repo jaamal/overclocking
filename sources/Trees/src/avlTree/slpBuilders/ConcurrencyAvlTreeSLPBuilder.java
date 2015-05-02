@@ -22,8 +22,8 @@ import commons.utils.TimeCounter;
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
 import dataContracts.SLPStatistics;
-import dataContracts.statistics.CompressionStatisticKeys;
-import dataContracts.statistics.ICompressionStatistics;
+import dataContracts.statistics.StatisticKeys;
+import dataContracts.statistics.IStatistics;
 
 public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuilder {
 	private static final Logger log = LogManager.getLogger(AvlTreeSLPBuilder.class);
@@ -52,13 +52,13 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 
 
 	@Override
-	public ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics)
+	public ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics)
     {
         return buildSlp(factors, statistics, new ConcurrentAvlBuilderStopwatches());
     }
 
 	@Override
-	public ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches)
+	public ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches)
 	{
 	    LZFactorDef[] clonedFactorization = cloneFactorization(factors);
 	    
@@ -74,14 +74,14 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
         timeCounter.finish();
         resultTree.dispose();
 
-        statistics.putParam(CompressionStatisticKeys.FactorizationLength, factors.length);
-        statistics.putParam(CompressionStatisticKeys.RunningTime, timeCounter.getMillis());
+        statistics.putParam(StatisticKeys.FactorizationLength, factors.length);
+        statistics.putParam(StatisticKeys.RunningTime, timeCounter.getMillis());
 
         SLPStatistics slpStatistics = slp.getStatistics();
-        statistics.putParam(CompressionStatisticKeys.SourceLength, slpStatistics.length);
-        statistics.putParam(CompressionStatisticKeys.SlpHeight, slpStatistics.height);
-        statistics.putParam(CompressionStatisticKeys.SlpCountRules, slpStatistics.countRules);
-        statistics.putParam(CompressionStatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slp));
+        statistics.putParam(StatisticKeys.SourceLength, slpStatistics.length);
+        statistics.putParam(StatisticKeys.SlpHeight, slpStatistics.height);
+        statistics.putParam(StatisticKeys.SlpCountRules, slpStatistics.countRules);
+        statistics.putParam(StatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slp));
 
         return slp;
 	}
@@ -95,7 +95,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 	    return result;
 	}
 
-    private IAvlTree buildAvlTree(LZFactorDef[] factors, ICompressionStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches) {
+    private IAvlTree buildAvlTree(LZFactorDef[] factors, IStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches) {
         IRebalancingCounter rebalanceCounter = new ConcurrentRebalancingCounter();
         IAvlTreeArrayMergeCounter avlTreeArrayMergeCounter = new AvlTreeArrayMergeCounter();
 
@@ -113,8 +113,8 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
         IAvlTree resultTree = avlTreeSet.getSingleTree();
 
         avlTreeArrayMergeCounter.printStatistics();
-        statistics.putParam(CompressionStatisticKeys.RebalanceCount, rebalanceCounter.getCount());
-        statistics.putParam(CompressionStatisticKeys.CountOfLayers, layersNumber);
+        statistics.putParam(StatisticKeys.RebalanceCount, rebalanceCounter.getCount());
+        statistics.putParam(StatisticKeys.CountOfLayers, layersNumber);
         return resultTree;
     }
 

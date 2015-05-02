@@ -16,7 +16,7 @@ import avlTree.treeSets.IAvlTreeSetFactory;
 import dataContracts.AvlMergePattern;
 import dataContracts.DataFactoryType;
 import dataContracts.LZFactorDef;
-import dataContracts.statistics.CompressionStatistics;
+import dataContracts.statistics.Statistics;
 
 public class ConcurrencyAvlTreeSLPBuilderIntegrationTest extends IntegrationTestBase {
     @Test
@@ -31,7 +31,7 @@ public class ConcurrencyAvlTreeSLPBuilderIntegrationTest extends IntegrationTest
         ConcurrencyAvlTreeSLPBuilder builder = container.create(ConcurrencyAvlTreeSLPBuilder.class);
 
         ConcurrentAvlBuilderStopwatches stopwatches = new ConcurrentAvlBuilderStopwatches();
-        ISLPBuilder slpBuilder = builder.buildSlp(factors, new CompressionStatistics(), stopwatches);
+        ISLPBuilder slpBuilder = builder.buildSlp(factors, new Statistics(), stopwatches);
         stopwatches.printTimes();
 
         String actual = slpBuilder.getProductString();

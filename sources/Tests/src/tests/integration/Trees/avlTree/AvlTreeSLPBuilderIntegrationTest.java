@@ -20,7 +20,7 @@ import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.LZFactorDef;
-import dataContracts.statistics.CompressionStatistics;
+import dataContracts.statistics.Statistics;
 
 public class AvlTreeSLPBuilderIntegrationTest extends IntegrationTestBase {
 
@@ -32,7 +32,7 @@ public class AvlTreeSLPBuilderIntegrationTest extends IntegrationTestBase {
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.block, AvlSplitPattern.fromFirst);
         SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
         AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
-        String actuals = builder.buildSlp(factors, new CompressionStatistics()).getProductString();
+        String actuals = builder.buildSlp(factors, new Statistics()).getProductString();
         String expected = FactorizationScanrios.stringify(factors);
         Assert.assertEquals(expected, actuals);
     }

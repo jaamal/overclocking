@@ -29,7 +29,7 @@ import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.files.FileMetadata;
 import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
 public class ReadStatisticsFromProductionTest extends ProductionTestBase {
@@ -78,19 +78,19 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
                 String algorithmKey = getAlgorithmKey(obj.runningParameters);
                 System.out.println(String.format("fileId %s, algorithmKey '%s', statisticsId %s", fileId, algorithmKey, obj.getId()));
 
-                if (obj.statistics.containsKey(CompressionStatisticKeys.FactorizationByteSize)) {
+                if (obj.statistics.containsKey(StatisticKeys.FactorizationByteSize)) {
                     System.out.println("Skipped");
                     continue;
                 }
                 if (algorithmKey.equals(Algorithms.LZ77InMemory.key)) {
                     List<FactorDef> factors = lz77FactorsRepository.readItems(obj.getId());
                     long byteSize = analysator.countByteSize(factors);
-                    obj.statistics.put(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
+                    obj.statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
                     statisticsRepository.write(fileId, obj);
                 } else if (algorithmKey.equals(Algorithms.LZInfInMemory.key)) {
                     List<FactorDef> factors = factorsRepository.readItems(obj.getId());
                     long byteSize = analysator.countByteSize(factors);
-                    obj.statistics.put(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
+                    obj.statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
                     statisticsRepository.write(fileId, obj);
                 } else
                     System.out.println("Skipped");
@@ -483,14 +483,14 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
         private static class ConcurrentIterationCountExtractor extends ExtractorBase {
             @Override
             public double getY(StatisticsObject statisticsObject) {
-                return Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.CountOfLayers));
+                return Long.parseLong(statisticsObject.statistics.get(StatisticKeys.CountOfLayers));
             }
         }
 
         private static class SlpHeightExtractor extends ExtractorBase {
             @Override
             public double getY(StatisticsObject statisticsObject) {
-                return Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.SlpHeight));
+                return Long.parseLong(statisticsObject.statistics.get(StatisticKeys.SlpHeight));
             }
         }
 
@@ -498,10 +498,10 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
             @Override
             public double getY(StatisticsObject statisticsObject) {
                 long count;
-                if (statisticsObject.statistics.containsKey(CompressionStatisticKeys.SlpByteSize))
-                    count = Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.SlpByteSize));
-                else if (statisticsObject.statistics.containsKey(CompressionStatisticKeys.FactorizationByteSize))
-                    count = Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.FactorizationByteSize));
+                if (statisticsObject.statistics.containsKey(StatisticKeys.SlpByteSize))
+                    count = Long.parseLong(statisticsObject.statistics.get(StatisticKeys.SlpByteSize));
+                else if (statisticsObject.statistics.containsKey(StatisticKeys.FactorizationByteSize))
+                    count = Long.parseLong(statisticsObject.statistics.get(StatisticKeys.FactorizationByteSize));
                 else {
                     count = 0;
                     //throw new RuntimeException();
@@ -514,10 +514,10 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
             @Override
             public double getY(StatisticsObject statisticsObject) {
                 long count;
-                if (statisticsObject.statistics.containsKey(CompressionStatisticKeys.SlpCountRules))
-                    count = Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.SlpCountRules));
-                else if (statisticsObject.statistics.containsKey(CompressionStatisticKeys.FactorizationLength))
-                    count = Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.FactorizationLength));
+                if (statisticsObject.statistics.containsKey(StatisticKeys.SlpCountRules))
+                    count = Long.parseLong(statisticsObject.statistics.get(StatisticKeys.SlpCountRules));
+                else if (statisticsObject.statistics.containsKey(StatisticKeys.FactorizationLength))
+                    count = Long.parseLong(statisticsObject.statistics.get(StatisticKeys.FactorizationLength));
                 else
                     throw new RuntimeException();
                 return count / getX(statisticsObject);
@@ -527,23 +527,23 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
         private static class BuildSlpTimeExtractor extends ExtractorBase {
             @Override
             public double getY(StatisticsObject statisticsObject) {
-                return Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.RunningTime));
+                return Long.parseLong(statisticsObject.statistics.get(StatisticKeys.RunningTime));
             }
         }
 
         private static class BuildSlpAvlRotationsExtractor extends ExtractorBase {
             @Override
             public double getY(StatisticsObject statisticsObject) {
-                return Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.RebalanceCount));
+                return Long.parseLong(statisticsObject.statistics.get(StatisticKeys.RebalanceCount));
             }
         }
 
         private static abstract class ExtractorBase implements IFeatureExtractor {
             @Override
             public double getX(StatisticsObject statisticsObject) {
-                if (statisticsObject.statistics.containsKey(CompressionStatisticKeys.SourceLength))
-                    return Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.SourceLength));
-                return Long.parseLong(statisticsObject.statistics.get(CompressionStatisticKeys.SlpWidth));
+                if (statisticsObject.statistics.containsKey(StatisticKeys.SourceLength))
+                    return Long.parseLong(statisticsObject.statistics.get(StatisticKeys.SourceLength));
+                return Long.parseLong(statisticsObject.statistics.get(StatisticKeys.SlpWidth));
             }
 
             public abstract double getY(StatisticsObject statisticsObject);

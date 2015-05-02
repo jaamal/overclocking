@@ -22,7 +22,7 @@ import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionStatistics;
+import dataContracts.statistics.Statistics;
 
 public class AvlSlpBuildTest extends IntegrationTestBase {
 
@@ -33,7 +33,7 @@ public class AvlSlpBuildTest extends IntegrationTestBase {
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.block, AvlSplitPattern.fromFirst);
         SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
         AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
-        ISLPBuilder slp = builder.buildSlp(getFactorization("abacaba"), new CompressionStatistics());
+        ISLPBuilder slp = builder.buildSlp(getFactorization("abacaba"), new Statistics());
         System.out.println(slp.getStatistics().countRules);
     }
 

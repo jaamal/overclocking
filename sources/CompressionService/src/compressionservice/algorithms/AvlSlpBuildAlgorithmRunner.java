@@ -10,8 +10,8 @@ import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.FactorDef;
 import dataContracts.Product;
-import dataContracts.statistics.CompressionStatistics;
-import dataContracts.statistics.ICompressionStatistics;
+import dataContracts.statistics.Statistics;
+import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
@@ -41,7 +41,7 @@ public class AvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     @Override
     public StatisticsObject run(IRunParams runParams) {
         FactorDef[] factorization = resourceProvider.getFactorization(sourceId);
-        ICompressionStatistics statistics = new CompressionStatistics();
+        IStatistics statistics = new Statistics();
 
         ISLPBuilder slp = avlTreeSLPBuilder.buildSlp(factorization, statistics);
 

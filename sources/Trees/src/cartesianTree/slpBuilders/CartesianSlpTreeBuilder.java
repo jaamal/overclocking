@@ -13,8 +13,8 @@ import commons.utils.TimeCounter;
 
 import dataContracts.FactorDef;
 import dataContracts.SLPStatistics;
-import dataContracts.statistics.CompressionStatisticKeys;
-import dataContracts.statistics.ICompressionStatistics;
+import dataContracts.statistics.StatisticKeys;
+import dataContracts.statistics.IStatistics;
 
 public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     private static Logger logger = Logger.getLogger(CartesianSlpTreeBuilder.class);
@@ -32,21 +32,21 @@ public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     }
 
     @Override
-    public ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics) {
+    public ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics) {
         TimeCounter timeCounter = TimeCounter.start();
         ICartesianTree resultTree = buildCartesianTree(factors);
         ISLPBuilder slp = slpExtractor.getSLP(resultTree);
         timeCounter.finish();
         resultTree.dispose();
 
-        statistics.putParam(CompressionStatisticKeys.FactorizationLength, factors.length);
-        statistics.putParam(CompressionStatisticKeys.RunningTime, timeCounter.getMillis());
+        statistics.putParam(StatisticKeys.FactorizationLength, factors.length);
+        statistics.putParam(StatisticKeys.RunningTime, timeCounter.getMillis());
 
         SLPStatistics slpStatistics = slp.getStatistics();
-        statistics.putParam(CompressionStatisticKeys.SourceLength, slpStatistics.length);
-        statistics.putParam(CompressionStatisticKeys.SlpHeight, slpStatistics.height);
-        statistics.putParam(CompressionStatisticKeys.SlpCountRules, slpStatistics.countRules);
-        statistics.putParam(CompressionStatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slp));
+        statistics.putParam(StatisticKeys.SourceLength, slpStatistics.length);
+        statistics.putParam(StatisticKeys.SlpHeight, slpStatistics.height);
+        statistics.putParam(StatisticKeys.SlpCountRules, slpStatistics.countRules);
+        statistics.putParam(StatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slp));
 
         return slp;
     }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
 public class StatisticsConverter implements IStatisticsConverter {
@@ -12,7 +12,7 @@ public class StatisticsConverter implements IStatisticsConverter {
     List<StatisticsObject> stats = new ArrayList<StatisticsObject>();
     
     RunParamKeys[] runKeys = RunParamKeys.values();
-    CompressionStatisticKeys[] statsKeys = CompressionStatisticKeys.values();
+    StatisticKeys[] statsKeys = StatisticKeys.values();
     
     @Override
     public void append(StatisticsObject[] stats) {
@@ -29,7 +29,7 @@ public class StatisticsConverter implements IStatisticsConverter {
             builder.append(runKey);
             builder.append(";");
         }
-        for (CompressionStatisticKeys statKey : statsKeys) {
+        for (StatisticKeys statKey : statsKeys) {
             builder.append(statKey);
             builder.append(";");
         }
@@ -41,7 +41,7 @@ public class StatisticsConverter implements IStatisticsConverter {
                     builder.append(statisticsObject.runningParameters.get(runKey));
                 builder.append(";");
             }
-            for (CompressionStatisticKeys statKey : statsKeys) {
+            for (StatisticKeys statKey : statsKeys) {
                 if (statisticsObject.statistics.containsKey(statKey))
                     builder.append(statisticsObject.statistics.get(statKey));
                 builder.append(";");

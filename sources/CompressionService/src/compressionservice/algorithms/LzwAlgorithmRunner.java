@@ -10,7 +10,7 @@ import compressionservice.algorithms.lzw.ILZWFactorsAnalyzer;
 import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.DataFactoryType;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
@@ -45,10 +45,10 @@ public class LzwAlgorithmRunner implements IAlgorithmRunner {
             long lzwCodesCount = lzwFactorsAnalyzer.countLZWCodes(charArray);
             timeCounter.finish();
             
-            HashMap<CompressionStatisticKeys, String> statistics = new HashMap<>();
-            statistics.put(CompressionStatisticKeys.SourceLength, String.valueOf(charArray.length()));
-            statistics.put(CompressionStatisticKeys.FactorizationLength, String.valueOf(lzwCodesCount));
-            statistics.put(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
+            HashMap<StatisticKeys, String> statistics = new HashMap<>();
+            statistics.put(StatisticKeys.SourceLength, String.valueOf(charArray.length()));
+            statistics.put(StatisticKeys.FactorizationLength, String.valueOf(lzwCodesCount));
+            statistics.put(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
             StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics);
             
             return result;

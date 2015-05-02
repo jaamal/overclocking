@@ -20,7 +20,7 @@ import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
 import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
 public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
@@ -50,8 +50,8 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
-        assertEquals("600", actuals[0].statistics.get(CompressionStatisticKeys.SlpWidth));
-        assertEquals("176", actuals[0].statistics.get(CompressionStatisticKeys.SlpCountRules));
+        assertEquals("600", actuals[0].statistics.get(StatisticKeys.SlpWidth));
+        assertEquals("176", actuals[0].statistics.get(StatisticKeys.SlpCountRules));
         checkSLP(actuals[0].getId(), fileMetadata);
     }
     
@@ -66,8 +66,8 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
-        assertEquals("300", actuals[0].statistics.get(CompressionStatisticKeys.SlpWidth));
-        assertEquals("164", actuals[0].statistics.get(CompressionStatisticKeys.SlpCountRules));
+        assertEquals("300", actuals[0].statistics.get(StatisticKeys.SlpWidth));
+        assertEquals("164", actuals[0].statistics.get(StatisticKeys.SlpCountRules));
         checkSLP(actuals[0].getId(), fileMetadata);
     }
 
@@ -82,8 +82,8 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileMetadata.getId());
         assertEquals(1, actuals.length);
-        assertEquals("51359", actuals[0].statistics.get(CompressionStatisticKeys.SlpWidth));
-        assertEquals("12605", actuals[0].statistics.get(CompressionStatisticKeys.SlpCountRules));
+        assertEquals("51359", actuals[0].statistics.get(StatisticKeys.SlpWidth));
+        assertEquals("12605", actuals[0].statistics.get(StatisticKeys.SlpCountRules));
         checkSLP(actuals[0].getId(), fileMetadata);
     }
 

@@ -21,7 +21,7 @@ import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
 public class LzInfRunnerIntegrationDNATest extends StorageTestBase
@@ -61,8 +61,8 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
-        assertEquals("97", actuals[0].statistics.get(CompressionStatisticKeys.FactorizationLength));
-        assertEquals("600", actuals[0].statistics.get(CompressionStatisticKeys.SourceLength));
+        assertEquals("97", actuals[0].statistics.get(StatisticKeys.FactorizationLength));
+        assertEquals("600", actuals[0].statistics.get(StatisticKeys.SourceLength));
         checkFactorization(actuals[0].getId(), "simpleDNA_twoSections_clean.txt");
     }
     
@@ -77,8 +77,8 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
-        assertEquals("96", actuals[0].statistics.get(CompressionStatisticKeys.FactorizationLength));
-        assertEquals("300", actuals[0].statistics.get(CompressionStatisticKeys.SourceLength));
+        assertEquals("96", actuals[0].statistics.get(StatisticKeys.FactorizationLength));
+        assertEquals("300", actuals[0].statistics.get(StatisticKeys.SourceLength));
         checkFactorization(actuals[0].getId(), "simpleDNA_clean.txt");
     }
 
@@ -93,8 +93,8 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
-        assertEquals("7036", actuals[0].statistics.get(CompressionStatisticKeys.FactorizationLength));
-        assertEquals("51359", actuals[0].statistics.get(CompressionStatisticKeys.SourceLength));
+        assertEquals("7036", actuals[0].statistics.get(StatisticKeys.FactorizationLength));
+        assertEquals("51359", actuals[0].statistics.get(StatisticKeys.SourceLength));
     }
 
 

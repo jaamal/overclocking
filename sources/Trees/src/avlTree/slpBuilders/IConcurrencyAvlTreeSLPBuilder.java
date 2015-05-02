@@ -1,10 +1,10 @@
 package avlTree.slpBuilders;
 
 import dataContracts.FactorDef;
-import dataContracts.statistics.ICompressionStatistics;
+import dataContracts.statistics.IStatistics;
 
 public interface IConcurrencyAvlTreeSLPBuilder
 {
-    ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics);
-    ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches);
+    ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics);
+    ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches);
 }

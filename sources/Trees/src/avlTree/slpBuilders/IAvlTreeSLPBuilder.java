@@ -1,9 +1,9 @@
 package avlTree.slpBuilders;
 
 import dataContracts.FactorDef;
-import dataContracts.statistics.ICompressionStatistics;
+import dataContracts.statistics.IStatistics;
 
 public interface IAvlTreeSLPBuilder
 {
-    ISLPBuilder buildSlp(FactorDef[] factors, ICompressionStatistics statistics);
+    ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics);
 }

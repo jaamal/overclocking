@@ -18,7 +18,7 @@ import compressionservice.runner.parameters.IRunParams;
 import dataContracts.DataFactoryType;
 import dataContracts.Product;
 import dataContracts.SLPStatistics;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
@@ -62,12 +62,12 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
             logger.info(String.format("Finish slpBuilding. Total time is about %d minutes", timeCounter.getMillis() / 60 / 1000));
             SLPStatistics slpStatistics = slp.getStatistics();
-            HashMap<CompressionStatisticKeys, String> statisitcs = new HashMap<>();
-            statisitcs.put(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            statisitcs.put(CompressionStatisticKeys.SlpWidth, String.valueOf(slpStatistics.length));
-            statisitcs.put(CompressionStatisticKeys.SlpCountRules, String.valueOf(slpStatistics.countRules));
-            statisitcs.put(CompressionStatisticKeys.SlpHeight, String.valueOf(slpStatistics.height));
-            statisitcs.put(CompressionStatisticKeys.SlpByteSize, String.valueOf(slpByteSizeCounter.getSlpByteSize(slp)));
+            HashMap<StatisticKeys, String> statisitcs = new HashMap<>();
+            statisitcs.put(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
+            statisitcs.put(StatisticKeys.SlpWidth, String.valueOf(slpStatistics.length));
+            statisitcs.put(StatisticKeys.SlpCountRules, String.valueOf(slpStatistics.countRules));
+            statisitcs.put(StatisticKeys.SlpHeight, String.valueOf(slpStatistics.height));
+            statisitcs.put(StatisticKeys.SlpByteSize, String.valueOf(slpByteSizeCounter.getSlpByteSize(slp)));
             StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statisitcs);
 
             IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(result.getId());

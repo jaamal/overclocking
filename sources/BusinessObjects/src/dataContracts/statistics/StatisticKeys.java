@@ -1,6 +1,6 @@
 package dataContracts.statistics;
 
-public enum CompressionStatisticKeys
+public enum StatisticKeys
 {
     CountOfLayers,
     RebalanceCount,

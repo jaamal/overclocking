@@ -17,7 +17,7 @@ import compressionservice.runner.parameters.RunParams;
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
 import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
 public class LZWRunnerIntegrationTest extends StorageTestBase
@@ -53,8 +53,8 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
         
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
-        assertEquals("211", actuals[0].statistics.get(CompressionStatisticKeys.FactorizationLength));
-        assertEquals("600", actuals[0].statistics.get(CompressionStatisticKeys.SourceLength));
+        assertEquals("211", actuals[0].statistics.get(StatisticKeys.FactorizationLength));
+        assertEquals("600", actuals[0].statistics.get(StatisticKeys.SourceLength));
     }
     
     @Test
@@ -67,7 +67,7 @@ public class LZWRunnerIntegrationTest extends StorageTestBase
 
         StatisticsObject[] actuals = statisticsRepository.readAll(fileId);
         assertEquals(1,  actuals.length);
-        assertEquals("124", actuals[0].statistics.get(CompressionStatisticKeys.FactorizationLength));
-        assertEquals("300", actuals[0].statistics.get(CompressionStatisticKeys.SourceLength));
+        assertEquals("124", actuals[0].statistics.get(StatisticKeys.FactorizationLength));
+        assertEquals("300", actuals[0].statistics.get(StatisticKeys.SourceLength));
     }
 }

@@ -22,7 +22,7 @@ import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
 import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
 public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase {
@@ -60,8 +60,8 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
         assertEquals(1, actuals.length);
         actuals = statisticsRepository.readAll(actuals[0].getId());
         assertEquals(1, actuals.length);
-        assertEquals("168", actuals[0].statistics.get(CompressionStatisticKeys.SlpCountRules));
-        System.out.println(actuals[0].statistics.get(CompressionStatisticKeys.SlpCountRules));
+        assertEquals("168", actuals[0].statistics.get(StatisticKeys.SlpCountRules));
+        System.out.println(actuals[0].statistics.get(StatisticKeys.SlpCountRules));
         List<Product> slp = slpProductsRepository.readItems(actuals[0].getId());
         assertEquals(readFileText(simpleDnaFile), getText(slp));
 
@@ -70,7 +70,7 @@ public class AvlConcurrentRunnerIntegrationTest extends AlgorithmRunnerTestBase 
         assertEquals(1, actuals.length);
         actuals = statisticsRepository.readAll(actuals[0].getId());
         assertEquals(1, actuals.length);
-        assertEquals("184", actuals[0].statistics.get(CompressionStatisticKeys.SlpCountRules));
+        assertEquals("184", actuals[0].statistics.get(StatisticKeys.SlpCountRules));
         slp = slpProductsRepository.readItems(actuals[0].getId());
         assertEquals(readFileText(twoSectionsDnaFile), getText(slp));
     }

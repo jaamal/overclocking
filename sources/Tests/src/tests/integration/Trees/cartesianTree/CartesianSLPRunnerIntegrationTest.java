@@ -22,7 +22,7 @@ import dataContracts.ContentType;
 import dataContracts.Product;
 import dataContracts.files.FileMetadata;
 import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.CompressionStatisticKeys;
+import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
 public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
@@ -88,7 +88,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         StatisticsObject[] actuals = statisticsRepository.readAll(simpleDnaFile.getId());
         assertEquals(1, actuals.length);
-        assertEquals("300", actuals[0].statistics.get(CompressionStatisticKeys.SourceLength));
+        assertEquals("300", actuals[0].statistics.get(StatisticKeys.SourceLength));
         actuals = statisticsRepository.readAll(actuals[0].getId());
         assertEquals(1, actuals.length);
         List<Product> slp = slpProductsRepository.readItems(actuals[0].getId());
@@ -96,7 +96,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
 
         actuals = statisticsRepository.readAll(twoSectionsDnaFile.getId());
         assertEquals(1, actuals.length);
-        assertEquals("600", actuals[0].statistics.get(CompressionStatisticKeys.SourceLength));
+        assertEquals("600", actuals[0].statistics.get(StatisticKeys.SourceLength));
         actuals = statisticsRepository.readAll(actuals[0].getId());
         assertEquals(1, actuals.length);
         slp = slpProductsRepository.readItems(actuals[0].getId());

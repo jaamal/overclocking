@@ -17,7 +17,7 @@ import commons.settings.ISettings;
 
 import dataContracts.DataFactoryType;
 import dataContracts.LZFactorDef;
-import dataContracts.statistics.CompressionStatistics;
+import dataContracts.statistics.Statistics;
 
 public class CartesianSLPBuilderTests extends IntegrationTestBase {
 
@@ -27,7 +27,7 @@ public class CartesianSLPBuilderTests extends IntegrationTestBase {
         
         SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
         ICartesianSlpTreeBuilder slpTreeBuilder = new CartesianSlpTreeBuilder(new CartesianTreeManagerFactory(container.get(ISettings.class), DataFactoryType.memory), new SLPExtractor(), slpByteSizeCounter);
-        ISLPBuilder slp = slpTreeBuilder.buildSlp(factors, new CompressionStatistics());
+        ISLPBuilder slp = slpTreeBuilder.buildSlp(factors, new Statistics());
         String expected = FactorizationScanrios.stringify(factors);
         Assert.assertEquals(expected, slp.getProductString());
     }

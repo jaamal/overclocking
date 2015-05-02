@@ -22,7 +22,7 @@ public class StatisticsObjectFactory implements IStatisticsObjectFactory
         return idFactory.getDeterministicID(getKey(runningParameters)).toString();
     }
 
-    public StatisticsObject create(Map<RunParamKeys, String> runningParameters, Map<CompressionStatisticKeys, String> statistics) {
+    public StatisticsObject create(Map<RunParamKeys, String> runningParameters, Map<StatisticKeys, String> statistics) {
         StatisticsObject statisticsObject = new StatisticsObject(runningParameters, statistics);
         statisticsObject.setId(getStatisticsObjectId(runningParameters));
         return statisticsObject;

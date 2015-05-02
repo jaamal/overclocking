@@ -18,9 +18,9 @@ import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.CompressionStatisticKeys;
-import dataContracts.statistics.CompressionStatistics;
-import dataContracts.statistics.ICompressionStatistics;
+import dataContracts.statistics.StatisticKeys;
+import dataContracts.statistics.Statistics;
+import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticsObject;
 
@@ -72,11 +72,11 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
             }
             timeCounter.finish();
 
-            ICompressionStatistics statistics = new CompressionStatistics();
-            statistics.putParam(CompressionStatisticKeys.SourceLength, String.valueOf(charArray.length()));
-            statistics.putParam(CompressionStatisticKeys.FactorizationLength, String.valueOf(factors.size()));
-            statistics.putParam(CompressionStatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
-            statistics.putParam(CompressionStatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
+            IStatistics statistics = new Statistics();
+            statistics.putParam(StatisticKeys.SourceLength, String.valueOf(charArray.length()));
+            statistics.putParam(StatisticKeys.FactorizationLength, String.valueOf(factors.size()));
+            statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
+            statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
 
             StatisticsObject result = statisticsObjectFactory.create(runParams.toMap(), statistics.toMap());
 
