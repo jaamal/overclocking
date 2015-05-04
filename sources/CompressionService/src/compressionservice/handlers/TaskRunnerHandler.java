@@ -4,11 +4,8 @@ import httpservice.handlers.BaseHandler;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.Request;
 
 import compressionservice.handlers.binding.Binder;
 import compressionservice.runner.ITaskRunner;
@@ -27,16 +24,16 @@ public class TaskRunnerHandler extends BaseHandler {
     }
     
     @Override
-    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
         IRunParams runParams = paramsFactory.create(Binder.getAllParams(request));
         
         if (!taskRunner.isAvailable()) {
-            respondText(baseRequest, response, "Compression service is busy at now.");
+            respondText(response, "Compression service is busy at now.");
         }
         else {
             
             TaskStateModel result = taskRunner.run(runParams);
-            respondJson(baseRequest, response, result);
+            respondJson(response, result);
         }
     }
 

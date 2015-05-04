@@ -1,16 +1,15 @@
 package statisticsservice.handlers;
 
-import java.io.IOException;
+import httpservice.handlers.BaseHandler;
+import httpservice.handlers.HttpContentTypes;
 
-import javax.servlet.ServletException;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.server.Request;
-
 import statisticsservice.export.IStatsExporter;
-import httpservice.handlers.BaseHandler;
-import httpservice.handlers.HttpContentTypes;
 
 public class ExportHandler extends BaseHandler {
 
@@ -21,10 +20,13 @@ public class ExportHandler extends BaseHandler {
     }
     
     @Override
-    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String statsStr = statsExporter.exportAll();
-        response.getWriter().println(statsStr);
-        respondFile(baseRequest, response, HttpContentTypes.CSV, "result.csv");
+        respondFile(response, HttpContentTypes.CSV, statsStr.length(), "result.csv");
+        try (PrintWriter writer = response.getWriter()) {
+            writer.print(statsStr);
+            writer.flush();
+        }
     }
 
     @Override

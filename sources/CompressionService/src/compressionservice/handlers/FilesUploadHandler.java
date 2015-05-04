@@ -4,11 +4,8 @@ import httpservice.handlers.BaseHandler;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.Request;
 
 import commons.files.IFile;
 import commons.files.IFileManager;
@@ -31,13 +28,13 @@ public class FilesUploadHandler extends BaseHandler
     }
     
     @Override
-    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = request.getParameter("path");
         IFile file = fileManager.getFile(path);
         FileType fileType = Binder.getEnum(request, FileType.class, "fileType");
         ContentType contentType = Binder.getEnum(request, ContentType.class, "contentType");
         String fileId = fileUploader.upload(file, fileType, contentType);
-        respondText(baseRequest, response, String.format("File with id %s from %s of type %s with content type %s successfully exported.", 
+        respondText(response, String.format("File with id %s from %s of type %s with content type %s successfully exported.", 
                 fileId, path, fileType.name(), contentType.name()));
     }
 

@@ -21,4 +21,9 @@ public class RegexTest extends UnitTestBase
         Assert.assertFalse(p.matcher("random-49.gz").matches());
         Assert.assertFalse(p.matcher("aaaa.gz").matches());
     }
+    
+    @Test
+    public void test2() {
+        Assert.assertEquals("aaaa.txt", "aaaa.gz".replaceAll(".gz", ".txt"));
+    }
 }

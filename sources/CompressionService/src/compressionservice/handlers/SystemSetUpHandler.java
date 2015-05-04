@@ -4,11 +4,8 @@ import httpservice.handlers.BaseHandler;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.Request;
 
 import storage.cassandraClient.ISchemeInitializer;
 
@@ -21,9 +18,9 @@ public class SystemSetUpHandler extends BaseHandler
     }
     
     @Override
-    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
         schemeInitializer.setUpCluster();
-        respondText(baseRequest, response, "Cluster succefully initialized.");
+        respondText(response, "Cluster succefully initialized.");
     }
 
     @Override

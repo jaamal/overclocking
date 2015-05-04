@@ -5,11 +5,8 @@ import httpservice.handlers.BaseHandler;
 import java.io.IOException;
 import java.util.UUID;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.Request;
 
 import compressionservice.handlers.binding.Binder;
 import compressionservice.handlers.models.TaskStateExtendedModel;
@@ -37,16 +34,16 @@ public class TaskStateHandler extends BaseHandler {
     }
     
     @Override
-    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
         UUID requestId = Binder.getUUID(request, requestIdKey, defaultRequestId);
         if (requestId == defaultRequestId) {
             TaskStateModel[] taskStateModels = statesStorage.getAll();
-            respondJson(baseRequest, response, taskStateModels);
+            respondJson(response, taskStateModels);
         }
         else {
             TaskStateModel taskStateModel = statesStorage.getState(requestId);
             String opLog = taskOperationalLog.get(requestId);
-            respondJson(baseRequest, response, new TaskStateExtendedModel(taskStateModel, opLog));
+            respondJson(response, new TaskStateExtendedModel(taskStateModel, opLog));
         }
     }
 
