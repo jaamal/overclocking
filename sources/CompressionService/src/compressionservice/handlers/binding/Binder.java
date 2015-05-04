@@ -28,6 +28,13 @@ public class Binder {
         }
     }
     
+    public static int getInt(HttpServletRequest request, String key, int defaultValue) {
+        String str = request.getParameter(key);
+        return (str == null || str == "") 
+                ? defaultValue 
+                : Integer.parseInt(str);
+    }
+    
     public static Map<String, String> getAllParams(HttpServletRequest request) {
         HashMap<String, String> result = new HashMap<>();
         

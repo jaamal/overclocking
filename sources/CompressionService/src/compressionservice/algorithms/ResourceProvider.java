@@ -51,7 +51,7 @@ public class ResourceProvider implements IResourceProvider {
     @Override
     public IReadableCharArray getText(String sourceId, DataFactoryType dataFactoryType) {   
         logger.info(String.format("Start filtering of file %s...", sourceId));
-        FileMetadata fileMetadata = filesRepository.getMetadata(sourceId);
+        FileMetadata fileMetadata = filesRepository.getMeta(sourceId);
         try (InputStream stream = filesRepository.getFileStream(fileMetadata);
              Reader reader = new InputStreamReader(stream))
         {

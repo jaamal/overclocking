@@ -1,27 +1,33 @@
 package storage.filesRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.zip.GZIPInputStream;
+
+import storage.KeySpaces;
+import storage.cassandraClient.ColumnFamilies;
+import storage.cassandraClient.ICassandraConnectionFactory;
+import storage.cassandraClient.IEntityHandler;
+
+import com.google.common.base.Function;
+import com.netflix.astyanax.Keyspace;
 import com.netflix.astyanax.MutationBatch;
 import com.netflix.astyanax.connectionpool.OperationResult;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 import com.netflix.astyanax.model.Column;
 import com.netflix.astyanax.model.ColumnFamily;
 import com.netflix.astyanax.model.ColumnList;
+import com.netflix.astyanax.model.Row;
+import com.netflix.astyanax.recipes.reader.AllRowsReader;
 
 import dataContracts.ContentType;
 import dataContracts.files.FileBatch;
 import dataContracts.files.FileMetadata;
-import storage.KeySpaces;
-import storage.cassandraClient.ColumnFamilies;
-import storage.cassandraClient.ICassandraConnectionFactory;
-import storage.cassandraClient.IEntityHandler;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.zip.GZIPInputStream;
 
 public class CassandraFilesRepository implements IFilesRepository {
     private ICassandraConnectionFactory cassandraConnectionFactory;
@@ -38,8 +44,14 @@ public class CassandraFilesRepository implements IFilesRepository {
     }
 
     @Override
-    public FileMetadata getMetadata(String fileId) {
+    public FileMetadata getMeta(String fileId) {
         return entityHandler.read(KeySpaces.files, ColumnFamilies.FileMetas, FileMetadata.class, fileId);
+    }
+    
+    @Override
+    public FileMetadata[] getMeta(Collection<String> fileIds) {
+        return entityHandler.read(KeySpaces.files, ColumnFamilies.FileMetas, FileMetadata.class, fileIds)
+                            .toArray(new FileMetadata[0]);
     }
 
     @Override
@@ -47,15 +59,46 @@ public class CassandraFilesRepository implements IFilesRepository {
         return entityHandler.readAll(KeySpaces.files, ColumnFamilies.FileMetas, FileMetadata.class)
                 .toArray(new FileMetadata[0]);
     }
-
+    
     @Override
-    public String[] getAllIds() {
-        FileMetadata[] fileMetadatas = getAllFiles();
-        ArrayList<String> result = new ArrayList<String>();
-        for (FileMetadata meta : fileMetadatas) {
-            result.add(meta.getId());
+    public List<String> getFileIds() {
+        return getFileIds(0, Integer.MAX_VALUE);
+    }
+    
+    @Override
+    public List<String> getFileIds(int from, int count) {
+        try {
+            ArrayList<String> rowKeys = new ArrayList<String>();
+           
+            Keyspace filesKeyspace = cassandraConnectionFactory.getKeyspace(KeySpaces.files.toString());
+            Function<Row<String, String>, Boolean> rowIdFunc = new Function<Row<String, String>, Boolean>() {
+                @Override
+                public Boolean apply(Row<String, String> row) {
+                    rowKeys.add(row.getKey());
+                    return true;
+                }
+            };
+            
+            //TODO: handle false result
+            new AllRowsReader.Builder<String, String>(filesKeyspace, ColumnFamilies.FileMetas)
+                    .withColumnRange(null, null, false, 0)
+                    .withPartitioner(null)
+                    .forEachRow(rowIdFunc)
+                    .build()
+                    .call();
+            
+            if (from <= 0 && count == Integer.MAX_VALUE)
+                return rowKeys;
+            else{
+                int rowKeysSize = rowKeys.size();
+                return from + count > rowKeysSize 
+                        ? rowKeys.subList(from, rowKeysSize)
+                        : rowKeys.subList(from, from + count);
+            }
+                
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Fail to enumerate row keys"), e);
         }
-        return result.toArray(new String[0]);
     }
 
     @Override

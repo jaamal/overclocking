@@ -1,5 +1,7 @@
 package statisticsservice.export;
 
+import java.util.List;
+
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
@@ -27,7 +29,7 @@ public class StatsExporter implements IStatsExporter {
     @Override
     public String exportAll() {
         IStatisticsConverter statisticsConverter = statisticsConverterFactory.create();
-        String[] fileIds = filesRepository.getAllIds();
+        List<String> fileIds = filesRepository.getFileIds();
         for (String fileId : fileIds) {
             StatisticsObject[] stats = statisticsRepository.readAll(fileId);
             statisticsConverter.append(stats);

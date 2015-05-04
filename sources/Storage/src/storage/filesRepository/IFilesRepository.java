@@ -4,14 +4,20 @@ import dataContracts.files.FileBatch;
 import dataContracts.files.FileMetadata;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 public interface IFilesRepository
 {
     void saveMeta(FileMetadata fileMeta);
-    FileMetadata getMetadata(String fileId);
+    FileMetadata getMeta(String fileId);
+    FileMetadata[] getMeta(Collection<String> fileIds);
+    @Deprecated
     FileMetadata[] getAllFiles();
-    String[] getAllIds();
+    @Deprecated
+    List<String> getFileIds();
+    List<String> getFileIds(int from, int count);
     
     void saveBatch(FileBatch fileBatch);
     FileBatch getBatch(String fileId, int batchNumber);

@@ -55,7 +55,7 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
 
     @Test
     public void testDeleteObsoleteStatistics() {
-        String[] fileIds = fileRepository.getAllIds();
+        String[] fileIds = fileRepository.getFileIds().toArray(new String[0]);
         System.out.println(String.format("Total file count %d", fileIds.length));
         HashMap<String, StatisticsObject[]> statsBySourceId = statisticsRepository.readAll(fileIds);
         for (String factorizationId : factorsRepository.getDoneStatisticIds()) {
@@ -68,7 +68,7 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
 
     @Test
     public void testCalculateFactorizationByteSize() {
-        String[] fileIds = fileRepository.getAllIds();
+        String[] fileIds = fileRepository.getFileIds().toArray(new String[0]);;
         System.out.println(String.format("Total file count %d", fileIds.length));
         HashMap<String, StatisticsObject[]> statsBySourceId = statisticsRepository.readAll(fileIds);
         Analysator analysator = new Analysator();
@@ -102,7 +102,7 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
     @Test
     public void test() {
 
-        String[] fileIds = fileRepository.getAllIds();
+        String[] fileIds = fileRepository.getFileIds().toArray(new String[0]);;
         System.out.println(String.format("Total file count %d", fileIds.length));
         HashMap<String, StatisticsObject[]> statsBySourceId = statisticsRepository.readAll(fileIds);
         for (String factorizationId : factorsRepository.getDoneStatisticIds()) {
@@ -198,7 +198,7 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
     private HashMap<String, FileType> getFileTypes(String[] fileIds) {
         HashMap<String, FileType> fileTypeById = new HashMap<>();
         for (String fileId : fileIds) {
-            FileMetadata metadata = fileRepository.getMetadata(fileId);
+            FileMetadata metadata = fileRepository.getMeta(fileId);
             FileType fileType;
             if (metadata.getFileName().contains("DNA"))
                 fileType = FileType.Dna;

@@ -1,7 +1,5 @@
 package compressionservice.algorithms;
 
-import java.util.Arrays;
-
 import serialization.products.ProductsSerializer4;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
@@ -25,18 +23,20 @@ import avlTree.slpBuilders.ParallelExecutorFactory;
 import avlTree.treeSets.AvlTreeSetFactory;
 import cartesianTree.CartesianTreeManagerFactory;
 import cartesianTree.slpBuilders.CartesianSlpTreeBuilder;
+
 import commons.settings.ISettings;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
 import compressionservice.algorithms.lzw.ILZWFactorsAnalyzer;
 import compressionservice.profile.Analysator;
 import compressionservice.runner.parameters.IRunParams;
+
 import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
-import dataContracts.statistics.RunParamKeys;
 import dataContracts.statistics.IStatisticsObjectFactory;
+import dataContracts.statistics.RunParamKeys;
 
 public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
 
@@ -90,7 +90,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
             case lz77: 
             case lzInf:
             case lcaOnlineSlp: {
-                return Arrays.asList(filesRepository.getAllIds());
+                return filesRepository.getFileIds();
             }
             default:
                 throw new RuntimeException(String.format("Algorithm of type %s is not supported", algorithmType));

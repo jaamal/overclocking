@@ -1,5 +1,6 @@
 package storage.cassandraClient;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,6 +31,12 @@ public class EntityHandler implements IEntityHandler {
     public <T> T read(KeySpaces keyspace, ColumnFamily<String, String> columnFamily, Class<T> clazz, String id) {
         EntityManager<T, String> entityManager = getOrCreateManager(keyspace, columnFamily, clazz);
         return entityManager.get(id);
+    }
+    
+    @Override
+    public <T> List<T> read(KeySpaces keyspace, ColumnFamily<String, String> columnFamily, Class<T> clazz, Collection<String> ids) {
+        EntityManager<T, String> entityManager = getOrCreateManager(keyspace, columnFamily, clazz);
+        return entityManager.get(ids);
     }
     
     public <T> List<T> readAll(KeySpaces keyspace, ColumnFamily<String, String> columnFamily, Class<T> clazz) {

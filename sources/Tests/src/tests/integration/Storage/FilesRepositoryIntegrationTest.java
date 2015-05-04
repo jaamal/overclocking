@@ -87,4 +87,25 @@ public class FilesRepositoryIntegrationTest extends StorageTestBase
     public void putMetaData( ){
         cassandraFilesRepository.saveMeta(new FileMetadata("fileId1", "fileName1", 1024, FileType.Unspecified, ContentType.PlainText));
     }
+    
+    @Test
+    public void testFileIds() {
+        final FileMetadata fileMeta1 = new FileMetadata("fileId1", "fileName1", 1024, FileType.Unspecified, ContentType.PlainText);
+        final FileMetadata fileMeta2 = new FileMetadata("fileId2", "fileName2", 1024, FileType.Unspecified, ContentType.PlainText);
+        final FileMetadata fileMeta3 = new FileMetadata("fileId3", "fileName2", 1024, FileType.Unspecified, ContentType.PlainText);
+
+        cassandraFilesRepository.saveMeta(fileMeta1);
+        cassandraFilesRepository.saveMeta(fileMeta2);
+        cassandraFilesRepository.saveMeta(fileMeta3);
+        
+        String[] actuals = cassandraFilesRepository.getFileIds(0, 10).toArray(new String[0]);
+        Arrays.sort(actuals);
+        Assert.assertArrayEquals(new String[] {"fileId1", "fileId2", "fileId3"}, actuals);
+        
+        actuals = cassandraFilesRepository.getFileIds(0, 2).toArray(new String[0]);
+        Assert.assertEquals(2, actuals.length);
+        
+        actuals = cassandraFilesRepository.getFileIds(1, 3).toArray(new String[0]);
+        Assert.assertEquals(2, actuals.length);
+    }
 }
