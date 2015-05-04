@@ -4,5 +4,5 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 
 public interface IHandlersCollector {
 	ContextHandlerCollection collect();
-	BaseHandler[] collectBase();
+	BaseHandler[] collectHandlers();
 }

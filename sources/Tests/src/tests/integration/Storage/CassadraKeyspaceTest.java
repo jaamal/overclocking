@@ -83,7 +83,7 @@ public class CassadraKeyspaceTest extends StorageTestBase {
         FileMetadata actual = entityHandler.read(KeySpaces.files, ColumnFamilies.FileMetas, FileMetadata.class, meta.getId());
         
         Assert.assertEquals(meta.getId(), actual.getId());
-        Assert.assertEquals(meta.getFileName(), actual.getFileName());
+        Assert.assertEquals(meta.getName(), actual.getName());
     }
     
     @Test

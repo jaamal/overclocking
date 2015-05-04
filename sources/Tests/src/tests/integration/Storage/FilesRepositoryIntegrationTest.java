@@ -69,10 +69,9 @@ public class FilesRepositoryIntegrationTest extends StorageTestBase
         
         FileMetadata actual1 = cassandraFilesRepository.getMeta("fileId1");
         FileMetadata actual2 = cassandraFilesRepository.getMeta("fileId2");
-        Assert.assertEquals(fileMeta1.getId(), actual1.getId());
-        Assert.assertEquals(fileMeta2.getId(), actual2.getId());
+        Assert.assertEquals(fileMeta1, actual1);
+        Assert.assertEquals(fileMeta2, actual2);
     }
-
 
     @Test
     public void putMetaData( ){

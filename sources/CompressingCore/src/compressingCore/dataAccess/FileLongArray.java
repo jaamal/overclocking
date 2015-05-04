@@ -27,7 +27,7 @@ public class FileLongArray implements ILongArray
         catch (IOException e)
         {
             file.remove();
-            throw new RuntimeException("Error while work with file " + file.getFileName(), e);
+            throw new RuntimeException("Error while work with file " + file.getPath(), e);
         }
     }
 
@@ -51,7 +51,7 @@ public class FileLongArray implements ILongArray
             catch (IOException e)
             {
                 file.remove();
-                throw new RuntimeException("Error while work with file " + file.getFileName(), e);
+                throw new RuntimeException("Error while work with file " + file.getPath(), e);
             }
         }
     }

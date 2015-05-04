@@ -18,7 +18,7 @@ public class InfoHandler extends BaseHandler {
 	
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        BaseHandler[] handlers = handlersCollector.collectBase();
+        BaseHandler[] handlers = handlersCollector.collectHandlers();
         respondText(baseRequest, response, format(handlers));
 	}
 	

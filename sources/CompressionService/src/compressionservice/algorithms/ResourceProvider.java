@@ -55,7 +55,7 @@ public class ResourceProvider implements IResourceProvider {
         try (InputStream stream = filesRepository.getFileStream(fileMetadata);
              Reader reader = new InputStreamReader(stream))
         {
-            Path pathToFile = fileFilter.apply(fileMetadata.getFileType(), reader);
+            Path pathToFile = fileFilter.apply(fileMetadata.getType(), reader);
             IReadableCharArray result = dataFactory.readFile(dataFactoryType, pathToFile);
             logger.info(String.format("Filtration of file %s is finished. File name = %s", sourceId, pathToFile));
             return result;

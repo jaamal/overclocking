@@ -12,16 +12,14 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
+
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.algorithms.factorization.FactorIteratorFactory;
 import compressionservice.algorithms.factorization.IFactorIterator;
-import compressionservice.runner.parameters.IRunParams;
-import compressionservice.runner.parameters.RunParams;
-import dataContracts.AlgorithmType;
+
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
-import dataContracts.statistics.RunParamKeys;
 
 public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
 {

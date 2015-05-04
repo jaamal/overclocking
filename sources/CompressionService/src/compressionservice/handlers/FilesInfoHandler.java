@@ -1,6 +1,7 @@
 package compressionservice.handlers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import org.eclipse.jetty.server.Request;
 
 import storage.filesRepository.IFilesRepository;
 import compressionservice.handlers.binding.Binder;
+import compressionservice.handlers.models.FileModel;
 import dataContracts.files.FileMetadata;
 import httpservice.handlers.BaseHandler;
 
@@ -28,8 +30,12 @@ public class FilesInfoHandler extends BaseHandler {
         int count = Binder.getInt(request, "count", 10);
         
         List<String> fileIds = filesRepository.getFileIds(from, count);
-        FileMetadata[] metas = filesRepository.getMeta(fileIds);
-        respondJson(baseRequest, response, metas);
+        FileMetadata[] fileMetas = filesRepository.getMeta(fileIds);
+        List<FileModel> fileModels = new ArrayList<FileModel>();
+        for (FileMetadata fielMeta : fileMetas) {
+            fileModels.add(FileModel.create(fielMeta));
+        }
+        respondJson(baseRequest, response, fileModels);
     }
 
     @Override

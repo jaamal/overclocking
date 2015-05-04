@@ -55,12 +55,12 @@ public class FileMetadata
         this.id = id;
     }
     
-    public String getFileName() {
+    public String getName() {
         return fileName;
     }
     
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setName(String name) {
+        this.fileName = name;
     }
     
     public String getFileSizeStr() {
@@ -72,7 +72,7 @@ public class FileMetadata
         this.fileSize = Long.parseLong(fileSizeStr);
     }
     
-    public long getFileSize() {
+    public long getSize() {
         this.fileSize = Long.parseLong(this.fileSizeStr);
         return this.fileSize;
     }
@@ -86,7 +86,7 @@ public class FileMetadata
         this.fileType = FileType.valueOf(fileTypeStr);
     }
     
-    public FileType getFileType() {
+    public FileType getType() {
         this.fileType = FileType.valueOf(fileTypeStr);
         return this.fileType;
     }
@@ -103,5 +103,38 @@ public class FileMetadata
     public ContentType getContentType() {
         this.contentType = ContentType.valueOf(contentTypeStr);
         return this.contentType;
+    }
+    
+    @Override
+    public int hashCode() {
+        return 31 + ((id == null) ? 0 : id.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        FileMetadata other = (FileMetadata) obj;
+        if (getId() != other.getId())
+            return false;
+        if (getName() == null) {
+            if (other.getName() != null)
+                return false;
+        } else if (!getName().equals(other.getName()))
+            return false;
+        if (getSize() != other.getSize())
+            return false;
+        if (getType() != other.getType())
+            return false;
+        if (getId() == null) {
+            if (other.getId() != null)
+                return false;
+        } else if (!getId().equals(other.getId()))
+            return false;
+        return true;
     }
 }

@@ -200,16 +200,16 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
         for (String fileId : fileIds) {
             FileMetadata metadata = fileRepository.getMeta(fileId);
             FileType fileType;
-            if (metadata.getFileName().contains("DNA"))
+            if (metadata.getName().contains("DNA"))
                 fileType = FileType.Dna;
-            else if (metadata.getFileName().contains("Random"))
+            else if (metadata.getName().contains("Random"))
                 fileType = FileType.Random;
 //            else if (metadata.getFileName().contains("Bad_cut"))
 //                fileType = FileType.Bad;
-            else if (metadata.getFileName().contains("Bad"))
+            else if (metadata.getName().contains("Bad"))
                 fileType = FileType.Bad;
             else
-                throw new RuntimeException(String.format("Can not recognize fileType [id %s, name %s]", fileId, metadata.getFileName()));
+                throw new RuntimeException(String.format("Can not recognize fileType [id %s, name %s]", fileId, metadata.getName()));
             fileTypeById.put(fileId, fileType);
         }
         return fileTypeById;

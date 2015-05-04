@@ -11,3 +11,4 @@ cassandra.seeds = 127.0.0.1:9160
 cassandra.max_connection_per_host = 10
 
 memory_mapped_file.batch_size = 1000000
+

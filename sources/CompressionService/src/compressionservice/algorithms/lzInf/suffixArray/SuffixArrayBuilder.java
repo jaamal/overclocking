@@ -50,7 +50,7 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
             saveToFile(textFile, source);
             final long textSize = source.length();
             String processPath = settings.getPath(KnownKeys.ServerSuffixArrayBuilderPath).toString();
-            InputStream suffixArrayStream = externalProcessExecutor.execute(processPath, new String[] { textFile.getFileName(), String.valueOf(textSize) });
+            InputStream suffixArrayStream = externalProcessExecutor.execute(processPath, new String[] { textFile.getPath(), String.valueOf(textSize) });
             
             ILongArray suffixArray = dataFactory.createLongArray(dataFactoryType, textSize);
             long index = 0;

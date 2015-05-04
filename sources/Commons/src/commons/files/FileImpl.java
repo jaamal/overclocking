@@ -10,40 +10,50 @@ import java.io.RandomAccessFile;
 public class FileImpl implements IFile
 {
     private static Logger logger = Logger.getLogger(FileImpl.class);
-    private String fileName;
+    private String path;
+    private String name;
     private RandomAccessFile randomAccessFile;
 
-    public FileImpl(String fileName)
+    public FileImpl(String path)
     {
         try
         {
-            this.fileName = new File(fileName).getCanonicalPath();
+            File file = new File(path);
+            this.path = file.getCanonicalPath();
+            this.name = file.getName();
         }
         catch (IOException e)
         {
-            this.fileName = new File(fileName).getAbsolutePath();
+            File file = new File(path);
+            this.path = file.getAbsolutePath();
+            this.name = file.getName();
         }
         try
         {
-            randomAccessFile = new RandomAccessFile(this.fileName, "rw");
+            randomAccessFile = new RandomAccessFile(this.path, "rw");
         }
         catch (FileNotFoundException e)
         {
-            throw new RuntimeException("FileNotFound: " + this.fileName, e);
+            throw new RuntimeException("FileNotFound: " + this.path, e);
         }
     }
 
     @Override
-    public String getFileName()
+    public String getPath()
     {
-        return fileName;
+        return path;
+    }
+    
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Override
     public void remove()
     {
         close();
-        File file = new File(fileName);
+        File file = new File(path);
         if (file.exists() && file.isFile())
         {
             file.delete();
@@ -91,13 +101,13 @@ public class FileImpl implements IFile
         }
         catch (IOException e)
         {
-            logger.error("Error while closing file " + fileName, e);
+            logger.error("Error while closing file " + path, e);
         }
     }
 
     @Override
     public long size()
     {
-        return new File(fileName).length();
+        return new File(path).length();
     }
 }

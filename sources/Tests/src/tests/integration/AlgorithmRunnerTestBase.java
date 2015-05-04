@@ -39,7 +39,7 @@ public class AlgorithmRunnerTestBase extends StorageTestBase {
     protected String readFileText(FileMetadata fileMetadata) {
         try (InputStream stream = filesRepository.getFileStream(fileMetadata);
             Reader reader = new InputStreamReader(stream)) {
-            Path pathToFile = fileFilter.apply(fileMetadata.getFileType(), reader);
+            Path pathToFile = fileFilter.apply(fileMetadata.getType(), reader);
             try (BufferedReader localFileReader = Files.newBufferedReader(pathToFile, Charset.defaultCharset())) {
                 return IOUtils.toString(localFileReader);
             }
