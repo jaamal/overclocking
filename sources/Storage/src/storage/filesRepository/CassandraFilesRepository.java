@@ -141,6 +141,11 @@ public class CassandraFilesRepository implements IFilesRepository {
     public Iterator<FileBatch> getFile(String fileId) {
         return new FileBatchIterator(getColumnsIterator(fileId), fileId);
     }
+    
+    @Override
+    public Iterable<FileBatch> getFileIterator(String fileId) {
+        return new FileBatchIterable(fileId);
+    }
 
     @Override
     public InputStream getFileStream(FileMetadata fileMeta) {
@@ -187,12 +192,24 @@ public class CassandraFilesRepository implements IFilesRepository {
         }
     }
 
+    private class FileBatchIterable implements Iterable<FileBatch> {
+        private String fileId;
+
+        public FileBatchIterable(String fileId) {
+            this.fileId = fileId;
+        }
+        
+        @Override
+        public Iterator<FileBatch> iterator() {
+            return new FileBatchIterator(getColumnsIterator(fileId), fileId);
+        }
+    }
+    
     private class FileBatchIterator implements Iterator<FileBatch> {
         private String fileId;
         private Iterator<Column<Integer>> columns;
 
         public FileBatchIterator(Iterator<Column<Integer>> columns, String fileId) {
-
             this.columns = columns;
             this.fileId = fileId;
         }

@@ -20,6 +20,7 @@ public interface IFilesRepository
     void saveBatch(FileBatch fileBatch);
     FileBatch getBatch(String fileId, int batchNumber);
     Iterator<FileBatch> getFile(String fileId);
+    Iterable<FileBatch> getFileIterator(String fileId);
     InputStream getFileStream(FileMetadata fileMeta);
 
     void remove(String fileId);

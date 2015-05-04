@@ -40,18 +40,18 @@ public class FileUploader implements IFileUploader {
     
     @Override
     public String upload(IFile file, FileType fileType, ContentType contentType) {
-        uploadFileBatchs(file);
+        String fileId = idFactory.create().toString();
+        uploadFileBatchs(fileId, file);
         logger.info(String.format("File batches for file %s are loaded.", file.getPath()));
-        String fileId = uploadMetaData(file, fileType, contentType);
+        filesRepository.saveMeta(fileMetadataFactory.create(fileId, file.getName(), file.size(), fileType, contentType));
         logger.info(String.format("Metadata for file %s are loaded.", file.getPath()));
         return fileId;
     }
 
-    private void uploadFileBatchs(IFile file)
+    private void uploadFileBatchs(String fileId, IFile file)
     {
         int fileBatchSize = settings.getInt(KnownKeys.MemoryMappedFileBatchSize);
         byte[] fileBatchBuffer = new byte[fileBatchSize];
-        String fileId = file.getPath();
         
         long offset = 0;
         int batchNumber = 0;
@@ -69,12 +69,5 @@ public class FileUploader implements IFileUploader {
             offset += received;
             ++batchNumber;
         }
-    }
-
-    private String uploadMetaData(IFile file, FileType fileType, ContentType contentType)
-    {
-        String fileId = idFactory.create().toString();
-        filesRepository.saveMeta(fileMetadataFactory.create(fileId, file.getName(), file.size(), fileType, contentType));
-        return fileId;
     }
 }

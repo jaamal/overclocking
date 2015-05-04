@@ -56,7 +56,34 @@ public class FilesRepositoryIntegrationTest extends StorageTestBase
             actual[pos++] = (byte) b;
         Assert.assertArrayEquals(expected, actual);
     }
-
+    
+    @Test
+    public void testGetFileIterator() {
+        cassandraFilesRepository.saveBatch(new FileBatch("fileId", 1, new byte[]{1, 2}));
+        cassandraFilesRepository.saveBatch(new FileBatch("fileId", 2, new byte[]{3, 4}));
+        cassandraFilesRepository.saveBatch(new FileBatch("fileId", 3, new byte[]{5, 6}));
+        cassandraFilesRepository.saveBatch(new FileBatch("fileId", 4, new byte[]{7}));
+        
+        for (FileBatch fileBatch : cassandraFilesRepository.getFileIterator("fileId")) {
+            switch (fileBatch.batchNumber) {
+            case 1:
+                Assert.assertArrayEquals(new byte[] {1, 2}, fileBatch.batchData);
+                break;
+            case 2: 
+                Assert.assertArrayEquals(new byte[] {3, 4}, fileBatch.batchData);
+                break;
+            case 3: 
+                Assert.assertArrayEquals(new byte[] {5, 6}, fileBatch.batchData);
+                break;
+            case 4: 
+                Assert.assertArrayEquals(new byte[] {7}, fileBatch.batchData);
+                break;
+            default:
+                throw new RuntimeException(String.format("Unexpected batch with number %s.", fileBatch.batchNumber));
+            }
+        }
+    }
+    
     @Test
     public void testSaveAndGetMeta()
     {        
