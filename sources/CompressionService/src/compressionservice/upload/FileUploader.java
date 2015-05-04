@@ -33,11 +33,12 @@ public class FileUploader implements IFileUploader {
     }
     
     @Override
-    public void upload(IFile file, FileType fileType, ContentType contentType) {
+    public String upload(IFile file, FileType fileType, ContentType contentType) {
         uploadFileBatchs(file);
         logger.info(String.format("File batches for file %s are loaded.", file.getFileName()));
-        uploadMetaData(file, fileType, contentType);
+        String fileId = uploadMetaData(file, fileType, contentType);
         logger.info(String.format("Metadata for file %s are loaded.", file.getFileName()));
+        return fileId;
     }
 
     private void uploadFileBatchs(IFile file)
@@ -64,9 +65,10 @@ public class FileUploader implements IFileUploader {
         }
     }
 
-    private void uploadMetaData(IFile file, FileType fileType, ContentType contentType)
+    private String uploadMetaData(IFile file, FileType fileType, ContentType contentType)
     {
         final String fileName = file.getFileName();
         filesRepository.saveMeta(fileMetadataFactory.create(fileName, fileName, file.size(), fileType, contentType));
+        return fileName;
     }
 }

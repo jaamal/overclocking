@@ -3,7 +3,6 @@ package tests.integration.Storage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Comparator;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -67,19 +66,11 @@ public class FilesRepositoryIntegrationTest extends StorageTestBase
         cassandraFilesRepository.saveMeta(fileMeta1);
         cassandraFilesRepository.saveMeta(fileMeta2);
 
-        final FileMetadata[] allFiles = cassandraFilesRepository.getAllFiles();
-
-        Arrays.sort(allFiles, new Comparator<FileMetadata>()
-        {
-            @Override
-            public int compare(FileMetadata o1, FileMetadata o2)
-            {
-                return o1.getId().compareTo(o2.getId());
-            }
-        });
-        Assert.assertEquals(2, allFiles.length);
-        Assert.assertEquals(fileMeta1.getId(), allFiles[0].getId());
-        Assert.assertEquals(fileMeta2.getId(), allFiles[1].getId());
+        
+        FileMetadata actual1 = cassandraFilesRepository.getMeta("fileId1");
+        FileMetadata actual2 = cassandraFilesRepository.getMeta("fileId2");
+        Assert.assertEquals(fileMeta1.getId(), actual1.getId());
+        Assert.assertEquals(fileMeta2.getId(), actual2.getId());
     }
 
 

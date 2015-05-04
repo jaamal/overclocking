@@ -14,8 +14,6 @@ public interface IFilesRepository
     FileMetadata getMeta(String fileId);
     FileMetadata[] getMeta(Collection<String> fileIds);
     @Deprecated
-    FileMetadata[] getAllFiles();
-    @Deprecated
     List<String> getFileIds();
     List<String> getFileIds(int from, int count);
     

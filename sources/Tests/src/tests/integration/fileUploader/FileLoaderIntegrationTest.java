@@ -20,7 +20,7 @@ import dataContracts.files.FileType;
 
 public class FileLoaderIntegrationTest extends StorageTestBase
 {
-    private IFilesRepository cassandraFilesRepository;
+    private IFilesRepository filesRepository;
     private FileManager fileManager = new FileManager();
     private ISchemeInitializer schemeInitializer;
 
@@ -28,7 +28,7 @@ public class FileLoaderIntegrationTest extends StorageTestBase
     public void setUp()
     {
         super.setUp();
-        cassandraFilesRepository = container.get(IFilesRepository.class);
+        filesRepository = container.get(IFilesRepository.class);
         schemeInitializer = container.get(ISchemeInitializer.class);
         schemeInitializer.setUpCluster();
     }
@@ -47,16 +47,16 @@ public class FileLoaderIntegrationTest extends StorageTestBase
         final IFile file = fileManager.getFile(path);
         
         IFileUploader fileUploader = container.get(IFileUploader.class);
-        fileUploader.upload(file, FileType.Unspecified, ContentType.PlainText);
+        String fileId = fileUploader.upload(file, FileType.Unspecified, ContentType.PlainText);
 
-        FileMetadata fileMetadata = findMetadataByFileId(cassandraFilesRepository.getAllFiles(), file.getFileName());
+        FileMetadata fileMetadata = filesRepository.getMeta(fileId);
         Assert.assertNotNull(fileMetadata);
         Assert.assertEquals(fileMetadata.getId(), file.getFileName());
         Assert.assertEquals(fileMetadata.getFileName(), file.getFileName());
         Assert.assertEquals(fileMetadata.getFileSize(), file.size());
         Assert.assertEquals(fileMetadata.getFileType(), FileType.Unspecified);
 
-        final InputStream stream = cassandraFilesRepository.getFileStream(fileMetadata);
+        final InputStream stream = filesRepository.getFileStream(fileMetadata);
         final byte[] actual = new byte[expected.length];
         int cp;
         int pos = 0;
@@ -74,13 +74,4 @@ public class FileLoaderIntegrationTest extends StorageTestBase
         file.read(0, body);
         return body;
     }
-
-    private static FileMetadata findMetadataByFileId(FileMetadata[] fileMetadatas, String fileId)
-    {
-        for (FileMetadata fileMetadata : fileMetadatas)
-            if (fileMetadata.getId().equals(fileId))
-                return fileMetadata;
-        return null;
-    }
-
 }

@@ -53,12 +53,6 @@ public class CassandraFilesRepository implements IFilesRepository {
         return entityHandler.read(KeySpaces.files, ColumnFamilies.FileMetas, FileMetadata.class, fileIds)
                             .toArray(new FileMetadata[0]);
     }
-
-    @Override
-    public FileMetadata[] getAllFiles() {
-        return entityHandler.readAll(KeySpaces.files, ColumnFamilies.FileMetas, FileMetadata.class)
-                .toArray(new FileMetadata[0]);
-    }
     
     @Override
     public List<String> getFileIds() {
