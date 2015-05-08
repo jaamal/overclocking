@@ -12,20 +12,31 @@ public class ListNode
 		this.next = next;
 	}
 
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof ListNode) {
-			ListNode node = (ListNode) obj;
-			return key == node.key && prev == node.prev && next == node.next;
-		}
-		return false;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + key;
+        result = prime * result + next;
+        result = prime * result + prev;
+        return result;
+    }
 
-	@Override
-	public int hashCode()
-	{
-		Long[] fields = new Long[] { (long) key, (long) prev, (long) next };
-		return fields.hashCode();
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ListNode other = (ListNode) obj;
+        if (key != other.key)
+            return false;
+        if (next != other.next)
+            return false;
+        if (prev != other.prev)
+            return false;
+        return true;
+    }
 }

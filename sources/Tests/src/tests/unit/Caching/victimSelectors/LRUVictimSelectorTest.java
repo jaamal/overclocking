@@ -24,7 +24,7 @@ public class LRUVictimSelectorTest extends UnitTestBase
         int cacheSize = 10;
         expect(listFactory.create(cacheSize)).andReturn(list);
         for (int i = 0; i < cacheSize; ++i)
-            list.appendToBegin(i);
+            list.prepend(i);
         replayAll();
         selector = new LRUVictimSelector(listFactory, cacheSize);
         resetAll();

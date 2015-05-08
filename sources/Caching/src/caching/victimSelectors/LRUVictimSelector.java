@@ -11,7 +11,7 @@ public class LRUVictimSelector implements IVictimSelector
     {
         list = listFactory.create(cacheSize);
         for (int i = 0; i < cacheSize; ++i)
-            list.appendToBegin(i);
+            list.prepend(i);
     }
 
     @Override

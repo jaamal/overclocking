@@ -2,20 +2,7 @@ package caching.doubleLinkedList;
 
 public interface IList
 {
-	int size();
-
-	// TODO may be prepend
-	void appendToBegin(int key);
-
-	void moveToBegin(int key);
-
-	int getLastKey();
-
-	void delete(int key);
+    void prepend(int key);
+    void moveToBegin(int key);
+    int getLastKey();
 }
-
-// TODO
-// public interface IList {
-// void append(Object obj);
-// Iterator getIterator();
-// }

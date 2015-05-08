@@ -2,10 +2,9 @@ package caching.doubleLinkedList;
 
 public class InvalidKeyException extends RuntimeException
 {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public InvalidKeyException(int key) {
-		super("Invalid key " + key);
-	}
-
+    public InvalidKeyException(int key) {
+        super("Invalid key " + key);
+    }
 }
