@@ -5,20 +5,16 @@ import java.util.Random;
 public class TestHelpers {
     private static Random random = new Random(43);
     
-    public static String generateRandomString(Random rnd, int length, int charsCount) {
+    public static String genString(int length, int alphabiteSize) {
         StringBuffer result = new StringBuffer();
         for (int i = 0; i < length; i++) {
-            result.append((char) ('a' + rnd.nextInt(charsCount)));
+            result.append((char) ('a' + random.nextInt(alphabiteSize)));
         }
         return result.toString();
     }
     
     public static String genString(int length) {
-        StringBuffer result = new StringBuffer();
-        for (int i = 0; i < length; i++) {
-            result.append((char) ('a' + random.nextInt(26)));
-        }
-        return result.toString();
+        return genString(length, 26);
     }
     
     public static int genInt() {

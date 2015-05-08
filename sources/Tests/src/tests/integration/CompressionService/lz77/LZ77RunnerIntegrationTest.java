@@ -1,10 +1,10 @@
 package tests.integration.CompressionService.lz77;
 
 import static junit.framework.Assert.assertEquals;
+import helpers.FactorizationHelpers;
 import helpers.FileHelpers;
 
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -21,7 +21,6 @@ import compressionservice.runner.parameters.IRunParamsFactory;
 
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
-import dataContracts.FactorDef;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -91,26 +90,9 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         assertEquals("51359", actuals[0].statistics.get(StatisticKeys.SourceLength));
     }
 
-    private static String unpack(List<FactorDef> factors) {
-        StringBuffer result = new StringBuffer();
-        for (FactorDef factor : factors)
-        {
-            if (factor.isTerminal)
-            {
-                result.append((char)factor.symbol);
-            }
-            else
-            {
-                String subString = result.substring((int) factor.beginPosition, (int) (factor.beginPosition + factor.length));
-                result.append(subString);
-            }
-        }
-        return result.toString();
-    }
-
     private void checkFactorization(String statsId, String filePath) {
         String expected = FileHelpers.readTestFile(filePath, Charset.forName("cp1251"));
-        String actual = unpack(factorsRepository.readItems(statsId));
+        String actual = FactorizationHelpers.toString(factorsRepository.readItems(statsId));
         assertEquals(expected, actual);
     }
 }

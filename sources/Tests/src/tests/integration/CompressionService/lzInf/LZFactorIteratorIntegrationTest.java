@@ -1,23 +1,21 @@
 package tests.integration.CompressionService.lzInf;
 
+import helpers.FactorizationHelpers;
 import helpers.FileHelpers;
 import helpers.TestHelpers;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Random;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-
 import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.algorithms.factorization.FactorIteratorFactory;
 import compressionservice.algorithms.factorization.IFactorIterator;
-
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 
@@ -85,24 +83,23 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
     @Test
     public void testRandomSmallAlphabite()
     {
-        String randomString = TestHelpers.generateRandomString(new Random(), 1000, 2);
+        String randomString = TestHelpers.genString(1000, 2);
         doTest(randomString);
     }
 
     @Test
     public void testRandomBigAlphabite()
     {
-        String randomString = TestHelpers.generateRandomString(new Random(), 1000, 20);
+        String randomString = TestHelpers.genString(1000, 20);
         doTest(randomString);
     }
 
     @Test
     public void testRandomManyCases()
     {
-        Random rnd = new Random();
         for (int i = 0; i < 100; i++)
         {
-            String randomString = TestHelpers.generateRandomString(rnd, 100, 6);
+            String randomString = TestHelpers.genString(100, 6);
             doTest(randomString);
         }
     }
@@ -123,26 +120,7 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
     {
         IReadableCharArray charArray = new MemoryReadableCharArray(string);
         ArrayList<FactorDef> factors = getFactors(charArray);
-        System.out.println("Factors count = " + factors.size());
-        Assert.assertEquals(string, unpack(factors));
-    }
-
-    private static String unpack(ArrayList<FactorDef> factors)
-    {
-        StringBuffer result = new StringBuffer();
-        for (int index = 0; index < factors.size(); ++index)
-        {
-            FactorDef factor = factors.get(index);
-            if (factor.isTerminal)
-            {
-                result.append((char)factor.symbol);
-            }
-            else
-            {
-                String subString = result.substring((int) factor.beginPosition, (int) (factor.getEndPosition()));
-                result.append(subString);
-            }
-        }
-        return result.toString();
+        String actual = FactorizationHelpers.toString(factors);
+        Assert.assertEquals(string, actual);
     }
 }
