@@ -51,25 +51,21 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
     }
 
 	@Override
-	public SLPModel buildSlp(FactorDef[] factors, IStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches)
+	public SLPModel buildSlp(FactorDef[] factors, IStatistics statistics)
 	{
 	    LZFactorDef[] clonedFactorization = cloneFactorization(factors);
 	    
-        TimeCounter timeCounter = TimeCounter.start();
-
-        stopwatches.totalStopwatch.start();
-        IAvlTree resultTree = buildAvlTree(clonedFactorization, statistics, stopwatches);
-
-        stopwatches.minimizeTreeStopwatch.start();
+        TimeCounter algorithmsTimeCounter = TimeCounter.start();
+        IAvlTree resultTree = buildAvlTree(clonedFactorization, statistics);
+        TimeCounter minimizationTimeCounter = TimeCounter.start();
         ISLPBuilder slpBuilder = slpExtractor.getSLP(resultTree);
-        stopwatches.minimizeTreeStopwatch.stop();
-        stopwatches.totalStopwatch.stop();
-        timeCounter.finish();
+        log.info(String.format("Slp minimization finished during %d ms.", minimizationTimeCounter.finish().toMillis()));
+        log.info(String.format("Algorithm finished during %d ms.", algorithmsTimeCounter.finish().toMillis()));
         resultTree.dispose();
         
         SLPModel slpModel = slpBuilder.toSLPModel();
         statistics.putParam(StatisticKeys.FactorizationLength, factors.length);
-        statistics.putParam(StatisticKeys.RunningTime, timeCounter.getMillis());
+        statistics.putParam(StatisticKeys.RunningTime, algorithmsTimeCounter.getMillis());
 
         slpModel.appendStats(statistics, productsSerializer);
         return slpModel;
@@ -86,19 +82,19 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 	    return result;
 	}
 
-    private IAvlTree buildAvlTree(LZFactorDef[] factors, IStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches) {
+    private IAvlTree buildAvlTree(LZFactorDef[] factors, IStatistics statistics) {
         IRebalancingCounter rebalanceCounter = new ConcurrentRebalancingCounter();
         IAvlTreeArrayMergeCounter avlTreeArrayMergeCounter = new AvlTreeArrayMergeCounter();
 
         final IAvlTreeManager avlTreeManager = avlTreeManagerFactory.create();
         final IAvlTreeSet avlTreeSet = avlTreeSetFactory.create(parallelExecutorFactory, avlTreeManager, rebalanceCounter, avlTreeArrayMergeCounter);
-        stopwatches.findingLayersStopwatch.start();
+        TimeCounter timeCounter = TimeCounter.start();
         List<List<Integer>> layers = factorizationIndexer.index(factors);
-        stopwatches.findingLayersStopwatch.stop();
+        log.info(String.format("Layers indexed during %d ms.", timeCounter.finish().toMillis()));
 
         int layersNumber = layers.size();
         for (int level = 0; level < layersNumber; ++level) {
-        	buildTreeLevel(avlTreeSet, factors, layers.get(level), stopwatches);
+            buildTreeLevel(avlTreeSet, factors, layers.get(level));
             log.info(String.format("Processed %d from %d layers. There are %d factors on this layers.", level + 1, layersNumber, layers.get(level).size()));
         }
         IAvlTree resultTree = avlTreeSet.getSingleTree();
@@ -109,10 +105,9 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
         return resultTree;
     }
 
-    private void buildTreeLevel(final IAvlTreeSet avlTreeSet, LZFactorDef[] factors, List<Integer> levelIndexes, ConcurrentAvlBuilderStopwatches stopwatches) {
-		long starMs = System.currentTimeMillis();
+    private void buildTreeLevel(final IAvlTreeSet avlTreeSet, LZFactorDef[] factors, List<Integer> levelIndexes) {
+        TimeCounter timeCounter = TimeCounter.start();
 
-        stopwatches.processingLayersStopwatch.start();
         IParallelExecutor parallelExecutor = parallelExecutorFactory.create();
 		for (Integer levelIndex : levelIndexes) {
 			final LZFactorDef factor = factors[levelIndex];
@@ -126,14 +121,10 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 				}
 			});
 		}
-        stopwatches.waitProcessingLayersStopwatch.start();
         parallelExecutor.await();
-        stopwatches.waitProcessingLayersStopwatch.stop();
-        stopwatches.processingLayersStopwatch.stop();
+        log.info(String.format("Tree layer processed during %d ms.", timeCounter.getMillis()));
 
-        avlTreeSet.mergeNeighboringTree(stopwatches);
-
-        long endMs = System.currentTimeMillis();
-        log.info(String.format("buildTreeLevel %d ms.", endMs - starMs));
+        avlTreeSet.mergeNeighboringTree();
+        log.info(String.format("Level tree builded during %d ms.", timeCounter.finish().toMillis()));
 	}
 }

@@ -1,19 +1,25 @@
 package avlTree.treeSets;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import avlTree.IAvlTree;
 import avlTree.IAvlTreeManager;
 import avlTree.helpers.IAvlTreeArrayMergeCounter;
 import avlTree.helpers.IRebalancingCounter;
 import avlTree.mergers.IAvlTreeArrayMerger;
-import avlTree.slpBuilders.ConcurrentAvlBuilderStopwatches;
 import avlTree.slpBuilders.IParallelExecutor;
 import avlTree.slpBuilders.IParallelExecutorFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import commons.utils.TimeCounter;
 
 public class AvlTreeSet implements IAvlTreeSet {
+    private static final Logger log = LogManager.getLogger(AvlTreeSet.class);
+    
     private PositionedAvlTree[] trees;
     private final List<PositionedAvlTree> newTrees;
     private final IAvlTreeManager avlTreeManager;
@@ -65,8 +71,8 @@ public class AvlTreeSet implements IAvlTreeSet {
     }
 
     @Override
-    public void mergeNeighboringTree(ConcurrentAvlBuilderStopwatches stopwatches) {
-        stopwatches.mergeNeighbouringTreesStopwatch.start();
+    public void mergeNeighboringTree() {
+        TimeCounter timeCounter = TimeCounter.start();
         synchronized (newTrees) {
             PositionedAvlTree[] newTreesArray = newTrees.toArray(new PositionedAvlTree[0]);
             newTrees.clear();
@@ -106,9 +112,7 @@ public class AvlTreeSet implements IAvlTreeSet {
                 }
                 left = right;
             }
-            stopwatches.waitMergeNeighbouringTreesStopwatch.start();
             parallelExecutor.await();
-            stopwatches.waitMergeNeighbouringTreesStopwatch.stop();
             trees = mergedTrees.toArray(new PositionedAvlTree[mergedTrees.size()]);
 
             long[] numbers = new long[trees.length];
@@ -116,7 +120,7 @@ public class AvlTreeSet implements IAvlTreeSet {
                 numbers[index] = trees[index].tree.getRoot().number;
             avlTreeManager.disposeAllBut(numbers);
         }
-        stopwatches.mergeNeighbouringTreesStopwatch.stop();
+        log.info(String.format("Trees merged during %dms.", timeCounter.finish().toMillis()));
     }
 
     @Override

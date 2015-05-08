@@ -14,7 +14,6 @@ import avlTree.ConcurrentAvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.ConcurrencyAvlTreeSLPBuilder;
-import avlTree.slpBuilders.ConcurrentAvlBuilderStopwatches;
 import avlTree.slpBuilders.IParallelExecutorFactory;
 import avlTree.slpBuilders.ParallelExecutorFactory;
 import avlTree.treeSets.AvlTreeSetFactory;
@@ -39,10 +38,7 @@ public class ConcurrencyAvlTreeSLPBuilderIntegrationTest extends IntegrationTest
 
         System.out.println("Start to build avl tree.");
         ConcurrencyAvlTreeSLPBuilder builder = container.create(ConcurrencyAvlTreeSLPBuilder.class);
-
-        ConcurrentAvlBuilderStopwatches stopwatches = new ConcurrentAvlBuilderStopwatches();
-        SLPModel slpModel = builder.buildSlp(factors, new Statistics(), stopwatches);
-        stopwatches.printTimes();
+        SLPModel slpModel = builder.buildSlp(factors, new Statistics());
 
         String actual = slpModel.toString();
         String expected = FactorizationScenarios.stringify(factors);

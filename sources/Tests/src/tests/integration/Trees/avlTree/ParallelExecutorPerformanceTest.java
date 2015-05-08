@@ -12,10 +12,12 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
+import avlTree.slpBuilders.DelayParallelExecutor;
+import avlTree.slpBuilders.IParallelExecutor;
 import avlTree.slpBuilders.ParallelExecutor;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import commons.utils.TimeCounter;
 
 public class ParallelExecutorPerformanceTest extends IntegrationTestBase {
 
@@ -32,7 +34,7 @@ public class ParallelExecutorPerformanceTest extends IntegrationTestBase {
             @Override
             public Integer call() throws Exception {
                 System.out.println("Sleeping...");
-                Thread.sleep(100000);
+                Thread.sleep(10000);
                 return 42;
             }
         });
@@ -65,14 +67,14 @@ public class ParallelExecutorPerformanceTest extends IntegrationTestBase {
 
 
     @Test
-    public void Test() {
+    public void testParrallelExecutor() {
         final int ITER = 10;
         long totalElapsed = 0;
         for (int ii = 0; ii < ITER; ++ii) {
             final int threadsCount = 16;
             final int workerPerThread = 100;
             final int actionsCount = (int) 1e9;
-            ParallelExecutor parallelExecutor = new ParallelExecutor(threadsCount);
+            IParallelExecutor parallelExecutor = new ParallelExecutor(threadsCount);
             Worker[] workers = new Worker[threadsCount * workerPerThread];
             for (int i = 0; i < threadsCount; ++i) {
                 for (int j = 0; j < workerPerThread; ++j) {
@@ -82,12 +84,42 @@ public class ParallelExecutorPerformanceTest extends IntegrationTestBase {
                 }
             }
 
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.start();
+            TimeCounter timeCounter = TimeCounter.start();
             parallelExecutor.await();
-            stopwatch.stop();
-            System.out.println(stopwatch.elapsedMillis() / 1000.0);
-            totalElapsed += stopwatch.elapsedMillis();
+            timeCounter.finish();
+            totalElapsed += timeCounter.getMillis();
+
+            int totalCount = 0;
+            for (Worker worker : workers)
+                totalCount += worker.getValue();
+            Assert.assertEquals(actionsCount, totalCount);
+        }
+        System.out.println("Mean elapsed " + totalElapsed / 1000.0 / ITER);
+        System.gc();
+    }
+    
+    @Test
+    public void testDelayParrallelExecutor() {
+        final int ITER = 10;
+        long totalElapsed = 0;
+        for (int ii = 0; ii < ITER; ++ii) {
+            final int threadsCount = 16;
+            final int workerPerThread = 100;
+            final int actionsCount = (int) 1e9;
+            IParallelExecutor parallelExecutor = new DelayParallelExecutor(threadsCount);
+            Worker[] workers = new Worker[threadsCount * workerPerThread];
+            for (int i = 0; i < threadsCount; ++i) {
+                for (int j = 0; j < workerPerThread; ++j) {
+                    int num = i * workerPerThread + j;
+                    workers[num] = new Worker(actionsCount / threadsCount / workerPerThread, num);
+                    parallelExecutor.append(workers[num]);
+                }
+            }
+
+            TimeCounter timeCounter = TimeCounter.start();
+            parallelExecutor.await();
+            timeCounter.finish();
+            totalElapsed += timeCounter.getMillis();
 
             int totalCount = 0;
             for (Worker worker : workers)
@@ -101,11 +133,9 @@ public class ParallelExecutorPerformanceTest extends IntegrationTestBase {
     private class Worker implements Runnable {
         private final AtomicInteger counter = new AtomicInteger(0);
         private final int incrementsPerRun;
-        private final int number;
 
         private Worker(int incrementsPerRun, int number) {
             this.incrementsPerRun = incrementsPerRun;
-            this.number = number;
         }
 
         public int getValue() {
@@ -114,10 +144,8 @@ public class ParallelExecutorPerformanceTest extends IntegrationTestBase {
 
         @Override
         public void run() {
-//            System.out.println(String.format("Start working %d...", number));
             for (int i = 0; i < incrementsPerRun; ++i)
                 counter.incrementAndGet();
-//            System.out.println(String.format("End working %d!", number));
         }
     }
 }

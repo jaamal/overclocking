@@ -1,15 +1,16 @@
 package SLPs;
 
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
+import tree.ITree;
+import tree.ITreeNode;
 import avlTree.slpBuilders.ConcurrentSLPBuilder;
 import avlTree.slpBuilders.IParallelExecutor;
 import avlTree.slpBuilders.ISLPBuilder;
 import avlTree.slpBuilders.ParallelExecutor;
-import avlTree.slpBuilders.Stopwatch;
-import tree.ITree;
-import tree.ITreeNode;
 
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
+import commons.utils.TimeCounter;
 
 import dataContracts.Product;
 
@@ -27,26 +28,20 @@ public class ConcurrentSLPExtractor implements ISLPExtractor {
 
         ISLPBuilder slp = new ConcurrentSLPBuilder();
 
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.start();
+        TimeCounter dfsTimeCounter = TimeCounter.start();
         HashMap<Long, ITree<TNode>> forParallel = new HashMap<>();
         IParallelExecutor parallelDfs = new ParallelExecutor(threadCount);
         ConcurrentHashMap<Long, Long> oldNumberToNewNumber = new ConcurrentHashMap<>();
         dfs(tree, forParallel, 1, parallelDfs, slp, oldNumberToNewNumber);
-        stopwatch.stop();
-        System.out.println("dfs: " + stopwatch.getElapsedSeconds());
+        System.out.println(String.format("dfs: %dms", dfsTimeCounter.getMillis()));
 
-        stopwatch = new Stopwatch();
-        stopwatch.start();
+        dfsTimeCounter = TimeCounter.start();
         parallelDfs.await();
-        stopwatch.stop();
-        System.out.println("parallelDfs: " + stopwatch.getElapsedSeconds());
+        System.out.println(String.format("parallelDfs: %dms", dfsTimeCounter.getMillis()));
 
-        stopwatch = new Stopwatch();
-        stopwatch.start();
+        dfsTimeCounter = TimeCounter.start();
         dfs2(tree, oldNumberToNewNumber, slp);
-        stopwatch.stop();
-        System.out.println("dfs2: " + stopwatch.getElapsedSeconds());
+        System.out.println(String.format("dfs2: %dms", dfsTimeCounter.getMillis()));
 
         return slp;
     }

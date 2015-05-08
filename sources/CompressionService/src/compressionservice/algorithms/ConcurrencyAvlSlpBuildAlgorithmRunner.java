@@ -3,7 +3,6 @@ package compressionservice.algorithms;
 import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.slpProductsRepository.ISlpProductsRepository;
-import avlTree.slpBuilders.ConcurrentAvlBuilderStopwatches;
 import avlTree.slpBuilders.IConcurrencyAvlTreeSLPBuilder;
 import dataContracts.FactorDef;
 import dataContracts.Product;
@@ -37,9 +36,7 @@ public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
         FactorDef[] factorization = resourceProvider.getFactorization(sourceId);
         IStatistics statistics = new Statistics();
 
-        ConcurrentAvlBuilderStopwatches stopwatches = new ConcurrentAvlBuilderStopwatches();
-        SLPModel slpModel = avlTreeSLPBuilder.buildSlp(factorization, statistics, stopwatches);
-        stopwatches.printTimes();
+        SLPModel slpModel = avlTreeSLPBuilder.buildSlp(factorization, statistics);
 
         IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(resultId);
         Product[] products = slpModel.toNormalForm();

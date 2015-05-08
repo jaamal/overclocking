@@ -6,5 +6,5 @@ import dataContracts.statistics.IStatistics;
 
 public interface IConcurrencyAvlTreeSLPBuilder
 {
-    SLPModel buildSlp(FactorDef[] factors, IStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches);
+    SLPModel buildSlp(FactorDef[] factors, IStatistics statistics);
 }

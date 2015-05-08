@@ -6,42 +6,35 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 
 public class ParallelExecutor implements IParallelExecutor {
 
     private final ArrayList<Future<?>> futures = new ArrayList<>();
-    private final ExecutorService localExecutor;
+    private final ThreadFactory threadFactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat("ParallelExecutor-%d").build();
+    private final ExecutorService executor;
 
     public ParallelExecutor(int threadCount) {
-        localExecutor = Executors
-                .newFixedThreadPool(threadCount,
-                        new ThreadFactoryBuilder().setDaemon(true)
-                                .setNameFormat("ParallelExecutor-%d")
-                                .build());
+        executor = Executors.newFixedThreadPool(threadCount, threadFactory);
     }
 
     @Override
     public void append(Runnable task) {
-        futures.add(localExecutor.submit(task));
+        futures.add(executor.submit(task));
     }
 
     @Override
     public void await() {
         try {
             System.out.println("Tasks count " + futures.size());
-            waitForTasksToFinish();
-        } finally {
-            localExecutor.shutdownNow();
-        }
-    }
-
-    private void waitForTasksToFinish() {
-        for (Future<?> future : futures) {
-            try {
+            for (Future<?> future : futures) {
                 future.get();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            executor.shutdownNow();
         }
     }
 }
