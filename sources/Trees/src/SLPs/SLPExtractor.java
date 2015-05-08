@@ -3,14 +3,18 @@ package SLPs;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import commons.utils.TimeCounter;
 import avlTree.slpBuilders.SLPBuilder;
 import dataContracts.Product;
 import tree.ITree;
 import tree.ITreeNode;
 
+import java.time.Duration;
 import java.util.HashMap;
 
 public class SLPExtractor implements ISLPExtractor {
+    private Logger log = LogManager.getLogger(SLPExtractor.class);
+    
     @Override
     public <TNode extends ITreeNode> SLPBuilder getSLP(ITree<TNode> tree) {
         SLPBuilder slp = new SLPBuilder();
@@ -18,10 +22,10 @@ public class SLPExtractor implements ISLPExtractor {
             return slp;
         HashMap<Long, Long> used = new HashMap<Long, Long>();
         log.info(String.format("Count of nodes approximate %d", tree.getRoot().getNumber()));
-        long start = System.currentTimeMillis();
+        TimeCounter timeCounter = TimeCounter.start();
         dfs(tree, used, slp);
-        long end = System.currentTimeMillis();
-        log.info(String.format("Total time of SLP extracting is %dms", end - start));
+        Duration duration = timeCounter.finish();
+        log.info(String.format("Total time of SLP extracting is %dms", duration.toMillis()));
         return slp;
     }
 
@@ -42,6 +46,4 @@ public class SLPExtractor implements ISLPExtractor {
         used.put(rootNumber, fromNumber);
         return fromNumber;
     }
-
-    private Logger log = LogManager.getLogger(SLPExtractor.class);
 }

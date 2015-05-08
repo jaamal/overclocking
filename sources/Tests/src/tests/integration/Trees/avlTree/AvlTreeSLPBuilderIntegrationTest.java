@@ -3,9 +3,9 @@ package tests.integration.Trees.avlTree;
 import org.junit.Assert;
 import org.junit.Test;
 
-import serialization.products.ProductsSerializer4;
 import tests.integration.IntegrationTestBase;
 import tests.scenarios.FactorizationScanrios;
+import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import SLPs.SlpByteSizeCounter;
 import avlTree.AvlTreeManagerFactory;

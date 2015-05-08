@@ -1,17 +1,21 @@
-package serialization.products;
+package SLPs;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 import serialization.primitives.BooleanArraySerializer;
 import serialization.primitives.IBooleanArraySerializer;
 import serialization.primitives.IIntArraySerializer;
 import serialization.primitives.IntArraySerializer;
+import serialization.products.IProductsSerializer;
+import avlTree.slpBuilders.SLPBuilder;
 import dataContracts.Product;
 
+//TODO: it is very strange that serialization depends on SLPBuilder.
 public class ProductsSerializer4 implements IProductsSerializer {
     private final IBooleanArraySerializer booleanArraySerializer;
     private final IIntArraySerializer intArraySerializer;
@@ -28,6 +32,9 @@ public class ProductsSerializer4 implements IProductsSerializer {
 
     @Override
     public void serialize(OutputStream stream, Product[] products) throws IOException {
+        if (products.length == 0)
+            throw new RuntimeException("Fail to serialize empty array of products.");
+        
         PartialTreeRepresentation representation = toPartialTreeRepresentation(products);
         booleanArraySerializer.serialize(stream, representation.isLeaf);
         intArraySerializer.serialize(stream, representation.values);
@@ -41,10 +48,8 @@ public class ProductsSerializer4 implements IProductsSerializer {
         return fromPartialTreeRepresentation(representation);
     }
 
-    //TODO: it is very strange that serialization depends on SLPBuilder.
     private static Product[] fromPartialTreeRepresentation(PartialTreeRepresentation representation) {
-        return new Product[0];
-    	/*ArrayList<Integer> number = new ArrayList<>();
+        ArrayList<Integer> number = new ArrayList<>();
         Stack<Integer> stack = new Stack<>();
         SLPBuilder slpBuilder = new SLPBuilder();
         for (int i = 0, currentValue = 0; i < representation.isLeaf.length; ++i) {
@@ -53,20 +58,20 @@ public class ProductsSerializer4 implements IProductsSerializer {
             else {
                 int second = stack.pop();
                 int first = stack.pop();
-                ProductionRule rule = slpBuilder.addRule(new Product(first, second));
-                number.add((int) rule.fromNumber);
-                stack.push((int) rule.fromNumber);
+                int fromNumber = (int) slpBuilder.addRule(new Product(first, second));
+                number.add(fromNumber);
+                stack.push(fromNumber);
             }
         }
-        return slpBuilder.toNormalForm();*/
+        return slpBuilder.toNormalForm();
     }
 
-    /*private static int findNonTerminalNumber(int encodedNumber, ArrayList<Integer> number, SLPBuilder slpBuilder) {
+    private static int findNonTerminalNumber(int encodedNumber, ArrayList<Integer> number, SLPBuilder slpBuilder) {
         if (encodedNumber < MAX_SYMBOL) {
-            return (int) slpBuilder.addRule(new Product((char) encodedNumber)).fromNumber;
+            return (int) slpBuilder.addRule(new Product((char) encodedNumber));
         }
         return number.get(encodedNumber - MAX_SYMBOL);
-    }*/
+    }
 
     private static PartialTreeRepresentation toPartialTreeRepresentation(Product[] products) {
         HashMap<Integer, Integer> number = new HashMap<>();

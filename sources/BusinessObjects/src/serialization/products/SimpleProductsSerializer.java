@@ -6,9 +6,9 @@ import java.io.OutputStream;
 
 import dataContracts.Product;
 
-public class SimpleProductsSerializer extends IndependentProductsSerializer {
+public class SimpleProductsSerializer extends AbstractProductsSerializer {
     @Override
-    public void serializeOneProduct(OutputStream stream, int index, Product product) throws IOException {
+    public void serializeProduct(OutputStream stream, int index, Product product) throws IOException {
         if (product.isTerminal) {
             stream.write(0);
             writeChar(stream, product.symbol);
@@ -20,7 +20,7 @@ public class SimpleProductsSerializer extends IndependentProductsSerializer {
     }
 
     @Override
-    public Product deserializeOneProduct(InputStream stream, int index) throws IOException {
+    public Product deserializeProduct(InputStream stream, int index) throws IOException {
 
         int b = readByte(stream);
         if (b == 0) {

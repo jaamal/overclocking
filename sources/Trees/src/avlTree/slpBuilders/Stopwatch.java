@@ -1,5 +1,6 @@
 package avlTree.slpBuilders;
 
+//TODO: merge with TimeConter class
 public class Stopwatch {
     private long elapsedNanoseconds = 0;
     private long startNanoseconds;

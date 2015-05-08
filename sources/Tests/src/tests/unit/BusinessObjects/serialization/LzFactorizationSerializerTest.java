@@ -2,7 +2,6 @@ package tests.unit.BusinessObjects.serialization;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import junit.framework.Assert;
 
@@ -11,33 +10,28 @@ import org.junit.Test;
 import serialization.lzFactorizations.ILzFactorizationSerializer;
 import serialization.lzFactorizations.LzFactorizationSerializer;
 import serialization.primitives.IntArraySerializer;
-import tests.TestBase;
+import tests.unit.UnitTestBase;
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
 
-public class LzFactorizationSerializerTest extends TestBase {
+public class LzFactorizationSerializerTest extends UnitTestBase {
     @Test
-    public void Test() throws IOException {
-        doTest(abrakadabra, new LzFactorizationSerializer(new IntArraySerializer()));
+    public void Test() {
+        checkSerializer(new LzFactorizationSerializer(new IntArraySerializer()), abrakadabra);
     }
 
-    private void doTest(LZFactorDef[] factors, ILzFactorizationSerializer serializer) throws IOException {
-        checkSerializer(serializer, factors);
-    }
-
-    private int checkSerializer(ILzFactorizationSerializer lzFactorizationSerializer, LZFactorDef[] factors) throws IOException {
-        int bytesCount;
+    private void checkSerializer(ILzFactorizationSerializer lzFactorizationSerializer, LZFactorDef[] factors) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             lzFactorizationSerializer.serialize(outputStream, factors);
-            byte[] bytes = outputStream.toByteArray();
-            bytesCount = bytes.length;
-            printInfo(bytes);
-            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
+            printInfo(outputStream.toByteArray());
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray())) {
                 FactorDef[] actualFactors = lzFactorizationSerializer.deserialize(inputStream);
                 checkEqualsProducts(factors, actualFactors);
             }
         }
-        return bytesCount;
+        catch (Exception e) {
+            throw new RuntimeException("Fail to check serializer.", e);
+        }
     }
 
     private void printInfo(byte[] bytes) {
@@ -60,21 +54,13 @@ public class LzFactorizationSerializerTest extends TestBase {
     }
 
     public final static LZFactorDef[] abrakadabra = new LZFactorDef[]{
-        createTerminal('a'),
-        createTerminal('b'),
-        createTerminal('r'),
-        createNonTerminal(0, 1),
-        createTerminal('k'),
-        createNonTerminal(0, 1),
-        createTerminal('d'),
-        createNonTerminal(0, 4)
+        new LZFactorDef(true, -1, -1, 'a'),
+        new LZFactorDef(true, -1, -1, 'b'),
+        new LZFactorDef(true, -1, -1, 'r'),
+        new LZFactorDef(false, 0L, 1L, (char) 0),
+        new LZFactorDef(true, -1, -1, 'k'),
+        new LZFactorDef(false, 0L, 1L, (char) 0),
+        new LZFactorDef(true, -1, -1, 'd'),
+        new LZFactorDef(false, 0L, 4L, (char) 0)
     };
-
-    private static LZFactorDef createTerminal(char ch) {
-        return new LZFactorDef(true, -1, -1, ch);
-    }
-
-    private static LZFactorDef createNonTerminal(long beginPosition, long length) {
-        return new LZFactorDef(false, beginPosition, length, ' ');
-    }
 }

@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 
-import tests.TestBase;
+import tests.unit.UnitTestBase;
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
 
-public class FactorsConvertationTests extends TestBase
+public class FactorsConvertationTests extends UnitTestBase
 {
     @Test
     public void testConvertArrayListToArray() {

@@ -6,12 +6,16 @@ import java.io.OutputStream;
 
 import dataContracts.Product;
 
-public abstract class IndependentProductsSerializer implements IProductsSerializer {
+public abstract class AbstractProductsSerializer implements IProductsSerializer {
+    
+    protected abstract void serializeProduct(OutputStream stream, int index, Product product) throws IOException;
+    protected abstract Product deserializeProduct(InputStream stream, int index) throws IOException;
+    
     @Override
     public void serialize(OutputStream stream, Product[] products) throws IOException {
         writeInt32(stream, products.length);
         for (int i = 0; i < products.length; i++)
-            serializeOneProduct(stream, i, products[i]);
+            serializeProduct(stream, i, products[i]);
     }
 
     @Override
@@ -19,14 +23,9 @@ public abstract class IndependentProductsSerializer implements IProductsSerializ
         int productsCount = readInt32(stream);
         Product[] products = new Product[productsCount];
         for (int i = 0; i < productsCount; ++i)
-            products[i] = deserializeOneProduct(stream, i);
+            products[i] = deserializeProduct(stream, i);
         return products;
     }
-
-    protected abstract void serializeOneProduct(OutputStream stream, int index, Product product) throws IOException;
-
-    protected abstract Product deserializeOneProduct(InputStream stream, int index) throws IOException;
-
 
     private static void writeInt32(OutputStream stream, int integer) throws IOException {
         for (int i = 0; i < 4; ++i) {

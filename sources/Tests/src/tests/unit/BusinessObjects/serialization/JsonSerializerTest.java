@@ -8,10 +8,9 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
-import dataContracts.BusinessObject;
 import serialization.ISerializer;
 import serialization.Serializer;
-import tests.TestBase;
+import tests.unit.UnitTestBase;
 import tests.unit.BusinessObjects.serialization.dataContracts.ComplexDataContract;
 import tests.unit.BusinessObjects.serialization.dataContracts.DataContractWithArrays;
 import tests.unit.BusinessObjects.serialization.dataContracts.DataContractWithFinalField;
@@ -21,8 +20,9 @@ import tests.unit.BusinessObjects.serialization.dataContracts.SimpleDataContract
 import tests.unit.BusinessObjects.serialization.dataContracts.SomeInterfaceImplementation;
 import tests.unit.BusinessObjects.serialization.dataContracts.SubDataContract;
 import tests.unit.BusinessObjects.serialization.dataContracts.SubSubDataContract;
+import dataContracts.BusinessObject;
 
-public class JsonSerializerTest extends TestBase {
+public class JsonSerializerTest extends UnitTestBase {
     
     private ISerializer serializer = new Serializer();
 

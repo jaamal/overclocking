@@ -18,11 +18,6 @@ public class TaskRunnerStateFactory implements ITaskRunnerStateFactory {
     }
 
     @Override
-    public TaskStateModel failed(String message) {
-        return failed(idFactory.getEmpty(), message);
-    }
-
-    @Override
     public TaskStateModel failed(UUID requestId, String message) {
         return new TaskStateModel(requestId, TaskState.Failed, message);
     }

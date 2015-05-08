@@ -18,8 +18,8 @@ import serialization.products.IProductsSerializer;
 import serialization.products.ProductsSerializer;
 import serialization.products.ProductsSerializer2;
 import serialization.products.ProductsSerializer3;
-import serialization.products.ProductsSerializer4;
 import tests.integration.IntegrationTestBase;
+import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import SLPs.SlpByteSizeCounter;
 import avlTree.AvlTreeManagerFactory;
@@ -29,6 +29,7 @@ import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
 import avlTree.slpBuilders.SLPBuilder;
+
 import commons.settings.ISettings;
 import compressingCore.dataAccess.IDataFactory;
 import compressingCore.dataAccess.IReadableCharArray;
@@ -36,6 +37,7 @@ import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressingCore.dataFiltering.FileFilter;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
+
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;

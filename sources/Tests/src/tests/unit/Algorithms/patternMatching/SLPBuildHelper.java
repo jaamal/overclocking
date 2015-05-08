@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import patternMatching.fcpm.preprocessing.Product;
 import patternMatching.fcpm.preprocessing.ProductFactory;
 import patternMatching.fcpm.preprocessing.ProductsPreprocessor;
-import serialization.products.ProductsSerializer4;
+import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import SLPs.SlpByteSizeCounter;
 import avlTree.AvlTreeManagerFactory;
@@ -18,6 +18,7 @@ import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 import avlTree.slpBuilders.ISLPBuilder;
+
 import commons.files.FileManager;
 import commons.files.IFileManager;
 import commons.settings.ISettings;
@@ -33,6 +34,7 @@ import compressionservice.algorithms.lzInf.suffixArray.ISuffixArrayBuilder;
 import compressionservice.algorithms.lzInf.suffixArray.SuffixArrayBuilder;
 import compressionservice.algorithms.lzInf.suffixTreeImitation.IOnlineSuffixTreeFactory;
 import compressionservice.algorithms.lzInf.suffixTreeImitation.OnLineSuffixTreeFactory;
+
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;

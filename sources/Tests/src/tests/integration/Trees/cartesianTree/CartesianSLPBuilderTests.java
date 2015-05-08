@@ -3,9 +3,9 @@ package tests.integration.Trees.cartesianTree;
 import org.junit.Assert;
 import org.junit.Test;
 
-import serialization.products.ProductsSerializer4;
 import tests.integration.IntegrationTestBase;
 import tests.scenarios.FactorizationScanrios;
+import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import SLPs.SlpByteSizeCounter;
 import avlTree.slpBuilders.ISLPBuilder;
