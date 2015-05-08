@@ -20,7 +20,6 @@ import serialization.products.ProductsSerializer3;
 import tests.integration.IntegrationTestBase;
 import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
-import SLPs.SlpByteSizeCounter;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
 import avlTree.buffers.AvlTreeBufferFactory;
@@ -123,8 +122,7 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
 
             IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);
             AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.sequential, AvlSplitPattern.fromMerged);
-            SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
-            AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
+            AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new ProductsSerializer4());
             return builder.buildSlp(factorization.toArray(new FactorDef[0]), new Statistics());
         }
     }

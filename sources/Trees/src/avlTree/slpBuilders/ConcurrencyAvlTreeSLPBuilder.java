@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import serialization.products.IProductsSerializer;
 import SLPs.ISLPExtractor;
-import SLPs.SlpByteSizeCounter;
 import avlTree.IAvlTree;
 import avlTree.IAvlTreeManager;
 import avlTree.IAvlTreeManagerFactory;
@@ -16,13 +16,14 @@ import avlTree.helpers.IAvlTreeArrayMergeCounter;
 import avlTree.helpers.IRebalancingCounter;
 import avlTree.treeSets.IAvlTreeSet;
 import avlTree.treeSets.IAvlTreeSetFactory;
+
 import commons.utils.TimeCounter;
+
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
 import dataContracts.SLPModel;
-import dataContracts.SLPStatistics;
-import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.IStatistics;
+import dataContracts.statistics.StatisticKeys;
 
 public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuilder {
 	private static final Logger log = LogManager.getLogger(AvlTreeSLPBuilder.class);
@@ -32,7 +33,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 	private final IParallelExecutorFactory parallelExecutorFactory;
 	private final IFactorizationIndexer factorizationIndexer;
     private final ISLPExtractor slpExtractor;
-    private final SlpByteSizeCounter slpByteSizeCounter;
+    private IProductsSerializer productsSerializer;
 
     public ConcurrencyAvlTreeSLPBuilder(
             IAvlTreeManagerFactory avlTreeManagerFactory,
@@ -40,13 +41,13 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
     		IParallelExecutorFactory parallelExecutorFactory,
             IFactorizationIndexer factorizationIndexer,
             ISLPExtractor slpExtractor,
-            SlpByteSizeCounter slpByteSizeCounter) {
+            IProductsSerializer productsSerializer) {
         this.avlTreeManagerFactory = avlTreeManagerFactory;
         this.avlTreeSetFactory = avlTreeSetFactory;
 		this.parallelExecutorFactory = parallelExecutorFactory;
 		this.factorizationIndexer = factorizationIndexer;
         this.slpExtractor = slpExtractor;
-        this.slpByteSizeCounter = slpByteSizeCounter;
+        this.productsSerializer = productsSerializer;
     }
 
 	@Override
@@ -70,12 +71,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
         statistics.putParam(StatisticKeys.FactorizationLength, factors.length);
         statistics.putParam(StatisticKeys.RunningTime, timeCounter.getMillis());
 
-        SLPStatistics slpStatistics = slpModel.calcStats();
-        statistics.putParam(StatisticKeys.SourceLength, slpStatistics.length);
-        statistics.putParam(StatisticKeys.SlpHeight, slpStatistics.height);
-        statistics.putParam(StatisticKeys.SlpCountRules, slpStatistics.countRules);
-        statistics.putParam(StatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slpModel));
-
+        slpModel.appendStats(statistics, productsSerializer);
         return slpModel;
 	}
 	

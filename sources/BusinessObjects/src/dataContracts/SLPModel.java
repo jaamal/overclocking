@@ -1,9 +1,15 @@
 package dataContracts;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+
+import serialization.products.IProductsSerializer;
+import dataContracts.statistics.IStatistics;
+import dataContracts.statistics.StatisticKeys;
 
 //TODO: test this class
 public class SLPModel
@@ -44,6 +50,21 @@ public class SLPModel
             sortedProducts[i] = oldProduct.isTerminal ? oldProduct : new Product(reverseIndexes[(int) oldProduct.first], reverseIndexes[(int) oldProduct.second]);
         }
         return sortedProducts;
+    }
+    
+    public void appendStats(IStatistics to, IProductsSerializer productsSerializer) {
+        SLPStatistics stats = calcStats();
+        to.putParam(StatisticKeys.SlpWidth, stats.length);
+        to.putParam(StatisticKeys.SlpHeight, stats.height);
+        to.putParam(StatisticKeys.SlpCountRules, stats.countRules);
+        
+        Product[] products = toNormalForm();
+        try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            productsSerializer.serialize(stream, products);
+            to.putParam(StatisticKeys.SlpByteSize, stream.size());
+        } catch (IOException e) {
+            throw new RuntimeException("Fail to serialize products.", e);
+        }
     }
     
     public SLPStatistics calcStats() {

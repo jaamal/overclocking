@@ -3,8 +3,8 @@ package avlTree.slpBuilders;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import serialization.products.IProductsSerializer;
 import SLPs.ISLPExtractor;
-import SLPs.SlpByteSizeCounter;
 import avlTree.IAvlTree;
 import avlTree.IAvlTreeManager;
 import avlTree.IAvlTreeManagerFactory;
@@ -15,12 +15,13 @@ import avlTree.helpers.IAvlTreeArrayMergeCounter;
 import avlTree.helpers.IRebalancingCounter;
 import avlTree.helpers.NodesCacheStatisticsCounter;
 import avlTree.helpers.RebalancingCounter;
+
 import commons.utils.TimeCounter;
+
 import dataContracts.FactorDef;
 import dataContracts.SLPModel;
-import dataContracts.SLPStatistics;
-import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.IStatistics;
+import dataContracts.statistics.StatisticKeys;
 
 public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     private static final Logger log = LogManager.getLogger(AvlTreeSLPBuilder.class);
@@ -28,17 +29,17 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     private IAvlTreeManagerFactory avlTreeManagerFactory;
     private IAvlTreeBufferFactory avlTreeBufferFactory;
     private final ISLPExtractor slpExtractor;
-    private final SlpByteSizeCounter slpByteSizeCounter;
+    private IProductsSerializer productsSerializer;
 
     public AvlTreeSLPBuilder(
             IAvlTreeManagerFactory avlTreeManagerFactory,
             IAvlTreeBufferFactory avlTreeBufferFactory,
             ISLPExtractor slpExtractor,
-            SlpByteSizeCounter slpByteSizeCounter) {
+            IProductsSerializer productsSerializer) {
         this.avlTreeManagerFactory = avlTreeManagerFactory;
         this.avlTreeBufferFactory = avlTreeBufferFactory;
         this.slpExtractor = slpExtractor;
-        this.slpByteSizeCounter = slpByteSizeCounter;
+        this.productsSerializer = productsSerializer;
     }
 
     @Override
@@ -52,12 +53,7 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
         SLPModel slpModel = slpBuilder.toSLPModel();
         statistics.putParam(StatisticKeys.FactorizationLength, factors.length);
         statistics.putParam(StatisticKeys.RunningTime, timeCounter.getMillis());
-
-        SLPStatistics slpStatistics = slpModel.calcStats();
-        statistics.putParam(StatisticKeys.SourceLength, slpStatistics.length);
-        statistics.putParam(StatisticKeys.SlpHeight, slpStatistics.height);
-        statistics.putParam(StatisticKeys.SlpCountRules, slpStatistics.countRules);
-        statistics.putParam(StatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slpModel));
+        slpModel.appendStats(statistics, productsSerializer);
         return slpModel;
     }
     

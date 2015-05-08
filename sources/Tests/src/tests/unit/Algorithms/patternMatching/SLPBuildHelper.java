@@ -11,7 +11,6 @@ import patternMatching.fcpm.preprocessing.ProductFactory;
 import patternMatching.fcpm.preprocessing.ProductsPreprocessor;
 import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
-import SLPs.SlpByteSizeCounter;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
 import avlTree.buffers.AvlTreeBufferFactory;
@@ -55,8 +54,7 @@ public class SLPBuildHelper {
     public Product[] buildSlp(ISettings settings, String text) {
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(settings, DataFactoryType.memory);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.recursiveBlock, AvlSplitPattern.fromFirst);
-        SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
-        AvlTreeSLPBuilder avlSlpTreeBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
+        AvlTreeSLPBuilder avlSlpTreeBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new ProductsSerializer4());
         SLPModel slpModel = avlSlpTreeBuilder.buildSlp(getFactorization(settings, text), new Statistics());
         ProductsPreprocessor builder = new ProductsPreprocessor(new ProductFactory());
         return builder.execute(slpModel.toNormalForm());

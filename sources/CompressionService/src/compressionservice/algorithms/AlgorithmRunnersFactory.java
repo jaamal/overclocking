@@ -6,7 +6,6 @@ import storage.slpProductsRepository.ISlpProductsRepository;
 import SLPs.ConcurrentSLPExtractor;
 import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
-import SLPs.SlpByteSizeCounter;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.ConcurrentAvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
@@ -140,9 +139,8 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         IAvlTreeArrayMerger avlTreeArrayMerger = avlTreeArrayMergerFactory.create(avlMergePattern);
         IAvlTreeManagerFactory avlTreeManagerFactory = new ConcurrentAvlTreeManagerFactory(dataFactoryType);
         IParallelExecutorFactory parallelExecutorFactory = new ParallelExecutorFactory(threadCount);
-        SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
         ConcurrentSLPExtractor slpExtractor = new ConcurrentSLPExtractor(threadCount);
-        IConcurrencyAvlTreeSLPBuilder concurrencyAvlTreeSLPBuilder = new ConcurrencyAvlTreeSLPBuilder(avlTreeManagerFactory, new AvlTreeSetFactory(avlTreeArrayMerger), parallelExecutorFactory, factorizationIndexer, slpExtractor, slpByteSizeCounter);
+        IConcurrencyAvlTreeSLPBuilder concurrencyAvlTreeSLPBuilder = new ConcurrencyAvlTreeSLPBuilder(avlTreeManagerFactory, new AvlTreeSetFactory(avlTreeArrayMerger), parallelExecutorFactory, factorizationIndexer, slpExtractor, new ProductsSerializer4());
         return new ConcurrencyAvlSlpBuildAlgorithmRunner(concurrencyAvlTreeSLPBuilder, slpProductsRepository, resourceProvider, 
                 factorsRepositoryFactory, statisticsObjectFactory, sourceId);
     }
@@ -159,8 +157,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(settings, dataFactoryType);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(avlTreeArrayMergerFactory, avlMergePattern, avlSplitPattern);
-        SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
-        IAvlTreeSLPBuilder avlTreeSLPBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
+        IAvlTreeSLPBuilder avlTreeSLPBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new ProductsSerializer4());
         return new AvlSlpBuildAlgorithmRunner(avlTreeSLPBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory, sourceId);
     }
 
@@ -171,8 +168,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
         
         CartesianTreeManagerFactory cartesianTreeManagerFactory = new CartesianTreeManagerFactory(settings, dataFactoryType);
-        SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
-        CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), slpByteSizeCounter);
+        CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), new ProductsSerializer4());
         return new CartesianSlpBuildAlgorithmRunner(cartesianSLPTreeBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, 
                 statisticsObjectFactory, sourceId);
     }
@@ -214,8 +210,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         String sourceId = runParams.get(RunParamKeys.SourceId);
         DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
         
-        SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
         return new LCAOnlineSlpBuildAlgorithmRunner(lcaOnlineCompressor, slpProductsRepository, resourceProvider, filesRepository, 
-                statisticsObjectFactory, slpByteSizeCounter, sourceId, dataFactoryType);
+                statisticsObjectFactory, new ProductsSerializer4(), sourceId, dataFactoryType);
     }
 }

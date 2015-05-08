@@ -2,18 +2,19 @@ package compressionservice.algorithms;
 
 import org.apache.log4j.Logger;
 
+import serialization.products.IProductsSerializer;
 import storage.IArrayItemsWriter;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
-import SLPs.SlpByteSizeCounter;
 import avlTree.slpBuilders.ISLPBuilder;
+
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
+
 import dataContracts.DataFactoryType;
 import dataContracts.Product;
 import dataContracts.SLPModel;
-import dataContracts.SLPStatistics;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticKeys;
@@ -26,9 +27,9 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     private ILCAOnlineCompressor lcaOnlineCompressor;
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
-    private final SlpByteSizeCounter slpByteSizeCounter;
     private String sourceId;
     private DataFactoryType dataFactoryType;
+    private final IProductsSerializer productsSerializer;
 
     public LCAOnlineSlpBuildAlgorithmRunner(
             ILCAOnlineCompressor lcaOnlineCompressor,
@@ -36,13 +37,13 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
             IResourceProvider resourceProvider,
             IFilesRepository filesRepository,
             IStatisticsObjectFactory statisticsObjectFactory,
-            SlpByteSizeCounter slpByteSizeCounter,
+            IProductsSerializer productsSerializer,
             String sourceId,
             DataFactoryType dataFactoryType) {
         this.lcaOnlineCompressor = lcaOnlineCompressor;
         this.slpProductsRepository = slpProductsRepository;
         this.resourceProvider = resourceProvider;
-        this.slpByteSizeCounter = slpByteSizeCounter;
+        this.productsSerializer = productsSerializer;
         this.sourceId = sourceId;
         this.dataFactoryType = dataFactoryType;
     }
@@ -57,13 +58,9 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
             logger.info(String.format("Finish slpBuilding. Total time is about %d minutes", timeCounter.getMillis() / 60 / 1000));
             
             SLPModel slpModel = slpBuilder.toSLPModel();
-            SLPStatistics slpStatistics = slpModel.calcStats();
             IStatistics statisitcs = new Statistics();
             statisitcs.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            statisitcs.putParam(StatisticKeys.SlpWidth, String.valueOf(slpStatistics.length));
-            statisitcs.putParam(StatisticKeys.SlpCountRules, String.valueOf(slpStatistics.countRules));
-            statisitcs.putParam(StatisticKeys.SlpHeight, String.valueOf(slpStatistics.height));
-            statisitcs.putParam(StatisticKeys.SlpByteSize, String.valueOf(slpByteSizeCounter.getSlpByteSize(slpModel)));
+            slpModel.appendStats(statisitcs, productsSerializer);
 
             IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(resultId);
             Product[] products = slpModel.toNormalForm();

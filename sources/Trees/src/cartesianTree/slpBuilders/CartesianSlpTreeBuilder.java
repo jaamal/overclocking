@@ -2,32 +2,34 @@ package cartesianTree.slpBuilders;
 
 import org.apache.log4j.Logger;
 
+import serialization.products.IProductsSerializer;
 import SLPs.ISLPExtractor;
-import SLPs.SlpByteSizeCounter;
 import avlTree.slpBuilders.ISLPBuilder;
 import cartesianTree.ICartesianTree;
 import cartesianTree.ICartesianTreeManager;
 import cartesianTree.ICartesianTreeManagerFactory;
+
 import commons.utils.TimeCounter;
+
 import dataContracts.FactorDef;
 import dataContracts.SLPModel;
 import dataContracts.SLPStatistics;
-import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.IStatistics;
+import dataContracts.statistics.StatisticKeys;
 
 public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     private static Logger logger = Logger.getLogger(CartesianSlpTreeBuilder.class);
     private ICartesianTreeManagerFactory treeManagerFactory;
     private final ISLPExtractor slpExtractor;
-    private final SlpByteSizeCounter slpByteSizeCounter;
+    private final IProductsSerializer productsSerializer;
 
     public CartesianSlpTreeBuilder(
             ICartesianTreeManagerFactory treeManagerFactory,
             ISLPExtractor slpExtractor,
-            SlpByteSizeCounter slpByteSizeCounter) {
+            IProductsSerializer productsSerializer) {
         this.treeManagerFactory = treeManagerFactory;
         this.slpExtractor = slpExtractor;
-        this.slpByteSizeCounter = slpByteSizeCounter;
+        this.productsSerializer = productsSerializer;
     }
 
     @Override
@@ -44,10 +46,7 @@ public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
 
         SLPStatistics slpStatistics = slpModel.calcStats();
         statistics.putParam(StatisticKeys.SourceLength, slpStatistics.length);
-        statistics.putParam(StatisticKeys.SlpHeight, slpStatistics.height);
-        statistics.putParam(StatisticKeys.SlpCountRules, slpStatistics.countRules);
-        statistics.putParam(StatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slpModel));
-
+        slpModel.appendStats(statistics, productsSerializer);
         return slpModel;
     }
 

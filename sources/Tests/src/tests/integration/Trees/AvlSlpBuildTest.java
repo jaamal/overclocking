@@ -7,7 +7,6 @@ import org.junit.Test;
 import tests.integration.IntegrationTestBase;
 import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
-import SLPs.SlpByteSizeCounter;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
 import avlTree.buffers.AvlTreeBufferFactory;
@@ -33,8 +32,7 @@ public class AvlSlpBuildTest extends IntegrationTestBase {
     {
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.block, AvlSplitPattern.fromFirst);
-        SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
-        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
+        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new ProductsSerializer4());
         SLPModel slpModel = builder.buildSlp(getFactorization("abacaba"), new Statistics());
         System.out.println(slpModel.calcStats().countRules);
     }
