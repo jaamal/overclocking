@@ -14,9 +14,9 @@ public class FactorsConvertationTests extends UnitTestBase
     @Test
     public void testConvertArrayListToArray() {
         ArrayList<LZFactorDef> factorsList = new ArrayList<LZFactorDef>();
-        factorsList.add(new LZFactorDef(true, 0, 1, 'a'));
-        factorsList.add(new LZFactorDef(true, 0, 1, 'b'));
-        factorsList.add(new LZFactorDef(false, 0, 2, ' '));
+        factorsList.add(new LZFactorDef('a'));
+        factorsList.add(new LZFactorDef('b'));
+        factorsList.add(new LZFactorDef(0, 2));
         
         FactorDef[] actuals = factorsList.toArray(new FactorDef[0]);
         Assert.assertEquals(3, actuals.length);

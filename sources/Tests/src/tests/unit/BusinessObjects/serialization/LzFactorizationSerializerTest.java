@@ -54,13 +54,13 @@ public class LzFactorizationSerializerTest extends UnitTestBase {
     }
 
     public final static LZFactorDef[] abrakadabra = new LZFactorDef[]{
-        new LZFactorDef(true, -1, -1, 'a'),
-        new LZFactorDef(true, -1, -1, 'b'),
-        new LZFactorDef(true, -1, -1, 'r'),
-        new LZFactorDef(false, 0L, 1L, (char) 0),
-        new LZFactorDef(true, -1, -1, 'k'),
-        new LZFactorDef(false, 0L, 1L, (char) 0),
-        new LZFactorDef(true, -1, -1, 'd'),
-        new LZFactorDef(false, 0L, 4L, (char) 0)
+        new LZFactorDef('a'),
+        new LZFactorDef('b'),
+        new LZFactorDef('r'),
+        new LZFactorDef(0L, 1L),
+        new LZFactorDef('k'),
+        new LZFactorDef(0L, 1L),
+        new LZFactorDef('d'),
+        new LZFactorDef(0L, 4L)
     };
 }

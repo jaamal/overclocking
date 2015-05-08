@@ -1,6 +1,6 @@
 package tests.integration.CompressionService.lzInf;
 
-import helpers.FactorizationHelpers;
+import helpers.FactorizationScenarios;
 import helpers.FileHelpers;
 import helpers.TestHelpers;
 
@@ -104,23 +104,23 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
         }
     }
 
-    private ArrayList<FactorDef> getFactors(IReadableCharArray charArray)
+    private FactorDef[] getFactors(IReadableCharArray charArray)
     {
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
-        try(IFactorIterator lzFactorizator = factorIteratorFactory.createInfiniteIterator(charArray, DataFactoryType.memory);)  {
+        try(IFactorIterator lzFactorizator = factorIteratorFactory.createInfiniteIterator(charArray, DataFactoryType.memory);) {
             while (lzFactorizator.any())
                 factors.add(lzFactorizator.next());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return factors;
+        return factors.toArray(new FactorDef[0]);
     }
 
     private void doTest(String string)
     {
         IReadableCharArray charArray = new MemoryReadableCharArray(string);
-        ArrayList<FactorDef> factors = getFactors(charArray);
-        String actual = FactorizationHelpers.toString(factors);
+        FactorDef[] factors = getFactors(charArray);
+        String actual = FactorizationScenarios.stringify(factors);
         Assert.assertEquals(string, actual);
     }
 }

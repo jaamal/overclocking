@@ -1,8 +1,13 @@
 package services.blobs;
 
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
+
 import play.Logger;
 import storage.filesRepository.IFilesRepository;
 import dataContracts.files.FileBatch;
+import dataContracts.files.FileMetadata;
 import dataContracts.files.IFileBatchFactory;
 
 public class BlobService implements IBlobService
@@ -19,10 +24,9 @@ public class BlobService implements IBlobService
 	public byte[] drain(String id)
 	{
 		try {
-		    //TODO: invalid usage of files repository
-			//InputStream stream = filesRepository.getFileStream(id);
-			//return IOUtils.toByteArray(stream);
-		    return null;
+		    FileMetadata meta = filesRepository.getMeta(id);
+			InputStream stream = filesRepository.getFileStream(meta);
+			return IOUtils.toByteArray(stream);
 		}
 		catch(Exception e){
 			String message = "Fail to read blob with id " + id;

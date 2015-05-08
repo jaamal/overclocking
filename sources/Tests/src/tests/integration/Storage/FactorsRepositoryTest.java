@@ -1,7 +1,10 @@
 package tests.integration.Storage;
 
+import helpers.FactorizationScenarios;
+
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +58,7 @@ public class FactorsRepositoryTest extends StorageTestBase {
 	
 	@Test
     public void TestWriteSLP() {
-        String slpId = "jkhjkh";
+        String slpId = UUID.randomUUID().toString();
         Product[] products = genSLP(random);
         final ISlpProductsRepository slpProductsRepository = container.create(SlpProductsRepository.class);
         writeItems(slpProductsRepository, slpId, products);
@@ -75,8 +78,8 @@ public class FactorsRepositoryTest extends StorageTestBase {
 	
 	@Test
     public void TestWriteLZFactorization() {
-        String factorizationId = "fhfhf";
-        LZFactorDef[] factorization = genLZFactorization(random);
+        String factorizationId = UUID.randomUUID().toString();
+        LZFactorDef[] factorization = FactorizationScenarios.generate(2000);
         final IFactorsRepository lzFactorsRepository = container.create(LZFactorsRepository.class);
         writeItems(lzFactorsRepository, factorizationId, factorization);
 
@@ -95,8 +98,8 @@ public class FactorsRepositoryTest extends StorageTestBase {
 	
 	@Test
 	public void TestWriteLZ77Factorization() {
-        String factorizationId = "zzzz";
-        FactorDef[] factorization = genLZ77Factorization(random);
+	    String factorizationId = UUID.randomUUID().toString();
+        FactorDef[] factorization = FactorizationScenarios.generate2(2000);
         final IFactorsRepository lz77FactorsRepository = container.create(LZ77FactorsRepository.class);
         writeItems(lz77FactorsRepository, factorizationId, factorization);
 
@@ -118,7 +121,7 @@ public class FactorsRepositoryTest extends StorageTestBase {
 		final String[] ids = new String[]{"id1", "id2", "id3"};
 		final FactorDef[][] testFactorizations = new FactorDef[ids.length][];
 		for (int i = 0; i < ids.length; ++i) {
-		    testFactorizations[i] = genLZ77Factorization(random);
+		    testFactorizations[i] = FactorizationScenarios.generate2(2000);
 		}
 		
 		final IFactorsRepository lz77FactorsRepository = container.create(LZ77FactorsRepository.class);
@@ -170,29 +173,6 @@ public class FactorsRepositoryTest extends StorageTestBase {
         Product[] result = new Product[length];
         for (int j = 0; j < length; ++j)
             result[j] = new Product((char)(random.nextInt(26) + 'a'));
-        return result;
-    }
-    
-    private static LZFactorDef[] genLZFactorization(Random random) {
-        int length = random.nextInt(2000) + 1;
-        LZFactorDef[] result = new LZFactorDef[length];
-        for (int j = 0; j < length; ++j)
-            result[j] = new LZFactorDef(random.nextBoolean(), random.nextLong(), random.nextLong(), (char)(random.nextInt(26) + 'a'));
-        return result;
-    }
-    
-    private static FactorDef[] genLZ77Factorization(Random random) {
-        int length = random.nextInt(2000) + 1;
-        FactorDef[] result = new FactorDef[length];
-        result[0] = new FactorDef((char)(random.nextInt(26) + 'a'));
-        for (int j = 1; j < length; ++j){
-            if (random.nextBoolean()) {
-                result[j] = new FactorDef((char)(random.nextInt(26) + 'a'));
-            }
-            else {
-                result[j] = new FactorDef(random.nextLong(), random.nextLong());
-            }
-        }
         return result;
     }
 }

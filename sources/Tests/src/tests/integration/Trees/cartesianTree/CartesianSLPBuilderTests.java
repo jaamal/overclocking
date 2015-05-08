@@ -1,18 +1,17 @@
 package tests.integration.Trees.cartesianTree;
 
+import helpers.FactorizationScenarios;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import tests.scenarios.FactorizationScenarios;
 import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import cartesianTree.CartesianTreeManagerFactory;
 import cartesianTree.slpBuilders.CartesianSlpTreeBuilder;
 import cartesianTree.slpBuilders.ICartesianSlpTreeBuilder;
-
 import commons.settings.ISettings;
-
 import dataContracts.DataFactoryType;
 import dataContracts.LZFactorDef;
 import dataContracts.SLPModel;

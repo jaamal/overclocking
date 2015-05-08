@@ -79,7 +79,9 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 	private LZFactorDef[] cloneFactorization(FactorDef[] factors) {
 	    LZFactorDef[] result = new LZFactorDef[factors.length];
 	    for (int i = 0; i < factors.length; i++) {
-	        result[i] = new LZFactorDef(factors[i].isTerminal, factors[i].beginPosition, factors[i].length, (char)factors[i].symbol);
+	        result[i] = factors[i].isTerminal 
+	                ? new LZFactorDef((char)factors[i].symbol)
+	                : new LZFactorDef(factors[i].beginPosition, factors[i].length);
 	    }
 	    return result;
 	}

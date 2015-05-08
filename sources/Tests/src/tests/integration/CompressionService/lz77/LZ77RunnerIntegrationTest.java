@@ -1,7 +1,7 @@
 package tests.integration.CompressionService.lz77;
 
 import static junit.framework.Assert.assertEquals;
-import helpers.FactorizationHelpers;
+import helpers.FactorizationScenarios;
 import helpers.FileHelpers;
 
 import java.nio.charset.Charset;
@@ -15,12 +15,11 @@ import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.statistics.IStatisticsRepository;
 import tests.integration.StorageTestBase;
-
 import compressionservice.runner.IWorker;
 import compressionservice.runner.parameters.IRunParamsFactory;
-
 import dataContracts.AlgorithmType;
 import dataContracts.ContentType;
+import dataContracts.FactorDef;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
 
@@ -92,7 +91,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
 
     private void checkFactorization(String statsId, String filePath) {
         String expected = FileHelpers.readTestFile(filePath, Charset.forName("cp1251"));
-        String actual = FactorizationHelpers.toString(factorsRepository.readItems(statsId));
+        String actual = FactorizationScenarios.stringify(factorsRepository.readItems(statsId).toArray(new FactorDef[0]));
         assertEquals(expected, actual);
     }
 }

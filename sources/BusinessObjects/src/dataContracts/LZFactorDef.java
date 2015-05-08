@@ -3,13 +3,14 @@ package dataContracts;
 public class LZFactorDef extends FactorDef
 {
     public Long offset = null;
-
-    public LZFactorDef(
-            boolean isTerminal,
-            long beginPosition,
-            long length,
-            char symbol)
+    
+    public LZFactorDef(long beginPosition, long length)
     {
-        super(isTerminal, beginPosition, length, (int) symbol);
+        super(beginPosition, length);
+    }
+
+    public LZFactorDef(char symbol)
+    {
+        super(symbol);
     }
 }
