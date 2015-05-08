@@ -17,7 +17,6 @@ import avlTree.IAvlTreeManagerFactory;
 import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
-import avlTree.slpBuilders.ISLPBuilder;
 
 import commons.files.FileManager;
 import commons.files.IFileManager;
@@ -40,6 +39,7 @@ import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
+import dataContracts.SLPModel;
 import dataContracts.statistics.Statistics;
 
 public class SLPBuildHelper {
@@ -57,9 +57,9 @@ public class SLPBuildHelper {
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.recursiveBlock, AvlSplitPattern.fromFirst);
         SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
         AvlTreeSLPBuilder avlSlpTreeBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
-        ISLPBuilder slpBuilder = avlSlpTreeBuilder.buildSlp(getFactorization(settings, text), new Statistics());
+        SLPModel slpModel = avlSlpTreeBuilder.buildSlp(getFactorization(settings, text), new Statistics());
         ProductsPreprocessor builder = new ProductsPreprocessor(new ProductFactory());
-        return builder.execute(slpBuilder.toNormalForm());
+        return builder.execute(slpModel.toNormalForm());
     }
 
     private LZFactorDef[] getFactorization(ISettings settings, String text) {

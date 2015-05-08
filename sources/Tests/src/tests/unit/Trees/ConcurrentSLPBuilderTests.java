@@ -8,22 +8,23 @@ import tests.unit.UnitTestBase;
 import avlTree.slpBuilders.ConcurrentSLPBuilder;
 import avlTree.slpBuilders.InvalidProductionRuleException;
 import dataContracts.Product;
+import dataContracts.SLPModel;
 import dataContracts.SLPStatistics;
 
 public class ConcurrentSLPBuilderTests extends UnitTestBase {
 
-    private ConcurrentSLPBuilder slp;
+    private ConcurrentSLPBuilder slpBuilder;
 
     @Override
     public void setUp() {
         super.setUp();
-        slp = new ConcurrentSLPBuilder();
+        slpBuilder = new ConcurrentSLPBuilder();
     }
 
     @Test(expected = InvalidProductionRuleException.class)
     public void testInvalidProductionRule() {
-        slp.addRule(new Product('a'));
-        slp.addRule(new Product(0, 1));
+        slpBuilder.append(new Product('a'));
+        slpBuilder.append(new Product(0, 1));
     }
 
     @Test
@@ -32,17 +33,17 @@ public class ConcurrentSLPBuilderTests extends UnitTestBase {
         Product product2 = new Product('b');
         Product product3 = new Product(0, 1);
         Product product4 = new Product(2, 2);
-        Assert.assertEquals(0, slp.addRule(product1));
-        Assert.assertEquals(1, slp.addRule(product2));
-        Assert.assertEquals(2, slp.addRule(product3));
-        Assert.assertEquals(0, slp.addRule(product1));
-        Assert.assertEquals(1, slp.addRule(product2));
-        Assert.assertEquals(2, slp.addRule(product3));
-        Assert.assertEquals(3, slp.addRule(product4));
+        Assert.assertEquals(0, slpBuilder.append(product1));
+        Assert.assertEquals(1, slpBuilder.append(product2));
+        Assert.assertEquals(2, slpBuilder.append(product3));
+        Assert.assertEquals(0, slpBuilder.append(product1));
+        Assert.assertEquals(1, slpBuilder.append(product2));
+        Assert.assertEquals(2, slpBuilder.append(product3));
+        Assert.assertEquals(3, slpBuilder.append(product4));
 
-        Assert.assertEquals("abab", slp.getProductString());
-
-        SLPStatistics statistics = slp.getStatistics();
+        SLPModel slpModel = slpBuilder.toSLPModel();
+        Assert.assertEquals("abab", slpModel.toString());
+        SLPStatistics statistics = slpModel.calcStats();
         Assert.assertEquals(4, statistics.length);
         Assert.assertEquals(4, statistics.countRules);
         Assert.assertEquals(3, statistics.height);

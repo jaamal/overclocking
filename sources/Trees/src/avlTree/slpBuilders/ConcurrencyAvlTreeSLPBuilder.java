@@ -16,11 +16,10 @@ import avlTree.helpers.IAvlTreeArrayMergeCounter;
 import avlTree.helpers.IRebalancingCounter;
 import avlTree.treeSets.IAvlTreeSet;
 import avlTree.treeSets.IAvlTreeSetFactory;
-
 import commons.utils.TimeCounter;
-
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
+import dataContracts.SLPModel;
 import dataContracts.SLPStatistics;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.IStatistics;
@@ -51,7 +50,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
     }
 
 	@Override
-	public ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches)
+	public SLPModel buildSlp(FactorDef[] factors, IStatistics statistics, ConcurrentAvlBuilderStopwatches stopwatches)
 	{
 	    LZFactorDef[] clonedFactorization = cloneFactorization(factors);
 	    
@@ -61,22 +60,23 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
         IAvlTree resultTree = buildAvlTree(clonedFactorization, statistics, stopwatches);
 
         stopwatches.minimizeTreeStopwatch.start();
-        ISLPBuilder slp = slpExtractor.getSLP(resultTree);
+        ISLPBuilder slpBuilder = slpExtractor.getSLP(resultTree);
         stopwatches.minimizeTreeStopwatch.stop();
         stopwatches.totalStopwatch.stop();
         timeCounter.finish();
         resultTree.dispose();
-
+        
+        SLPModel slpModel = slpBuilder.toSLPModel();
         statistics.putParam(StatisticKeys.FactorizationLength, factors.length);
         statistics.putParam(StatisticKeys.RunningTime, timeCounter.getMillis());
 
-        SLPStatistics slpStatistics = slp.getStatistics();
+        SLPStatistics slpStatistics = slpModel.calcStats();
         statistics.putParam(StatisticKeys.SourceLength, slpStatistics.length);
         statistics.putParam(StatisticKeys.SlpHeight, slpStatistics.height);
         statistics.putParam(StatisticKeys.SlpCountRules, slpStatistics.countRules);
-        statistics.putParam(StatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slp));
+        statistics.putParam(StatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slpModel));
 
-        return slp;
+        return slpModel;
 	}
 	
 	//TODO: cheat, we should found the way to store factors and its offest's separately.

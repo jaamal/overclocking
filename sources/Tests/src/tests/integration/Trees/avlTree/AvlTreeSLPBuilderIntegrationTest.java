@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import tests.scenarios.FactorizationScanrios;
+import tests.scenarios.FactorizationScenarios;
 import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import SLPs.SlpByteSizeCounter;
@@ -26,14 +26,14 @@ public class AvlTreeSLPBuilderIntegrationTest extends IntegrationTestBase {
 
     @Test
     public void testFileModern() {
-        LZFactorDef[] factors = FactorizationScanrios.generate(200000);
+        LZFactorDef[] factors = FactorizationScenarios.generate(200000);
         
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.block, AvlSplitPattern.fromFirst);
         SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
         AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
-        String actuals = builder.buildSlp(factors, new Statistics()).getProductString();
-        String expected = FactorizationScanrios.stringify(factors);
+        String actuals = builder.buildSlp(factors, new Statistics()).toString();
+        String expected = FactorizationScenarios.stringify(factors);
         Assert.assertEquals(expected, actuals);
     }
 }

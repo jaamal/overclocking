@@ -42,7 +42,7 @@ public class SLPExtractor implements ISLPExtractor {
             product = new Product((char) tree.getRoot().getValue());
         else
             product = new Product(dfs(leftSubTree, used, slp), dfs(rightSubTree, used, slp));
-        long fromNumber = slp.addRule(product);
+        long fromNumber = slp.append(product);
         used.put(rootNumber, fromNumber);
         return fromNumber;
     }

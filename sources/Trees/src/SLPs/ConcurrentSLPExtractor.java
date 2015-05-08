@@ -95,7 +95,7 @@ public class ConcurrentSLPExtractor implements ISLPExtractor {
             Long rightNewNumber = dfs2(rightSubTree, oldNumberToNewNumber, slpBuilder);
             product = new Product(leftNewNumber, rightNewNumber);
         }
-        newNumber = slpBuilder.addRule(product);
+        newNumber = slpBuilder.append(product);
         oldNumberToNewNumber.put(rootNumber, newNumber);
         return newNumber;
     }
@@ -134,7 +134,7 @@ public class ConcurrentSLPExtractor implements ISLPExtractor {
                 Long rightNewNumber = dfs(rightSubTree);
                 product = new Product(leftNewNumber, rightNewNumber);
             }
-            newNumber = slpBuilder.addRule(product);
+            newNumber = slpBuilder.append(product);
             oldNumberToNewNumber.put(number, newNumber);
             return newNumber;
         }

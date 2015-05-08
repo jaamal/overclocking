@@ -58,17 +58,17 @@ public class ProductsSerializer4 implements IProductsSerializer {
             else {
                 int second = stack.pop();
                 int first = stack.pop();
-                int fromNumber = (int) slpBuilder.addRule(new Product(first, second));
+                int fromNumber = (int) slpBuilder.append(new Product(first, second));
                 number.add(fromNumber);
                 stack.push(fromNumber);
             }
         }
-        return slpBuilder.toNormalForm();
+        return slpBuilder.toSLPModel().toNormalForm();
     }
 
     private static int findNonTerminalNumber(int encodedNumber, ArrayList<Integer> number, SLPBuilder slpBuilder) {
         if (encodedNumber < MAX_SYMBOL) {
-            return (int) slpBuilder.addRule(new Product((char) encodedNumber));
+            return (int) slpBuilder.append(new Product((char) encodedNumber));
         }
         return number.get(encodedNumber - MAX_SYMBOL);
     }

@@ -8,10 +8,9 @@ import avlTree.slpBuilders.ISLPBuilder;
 import cartesianTree.ICartesianTree;
 import cartesianTree.ICartesianTreeManager;
 import cartesianTree.ICartesianTreeManagerFactory;
-
 import commons.utils.TimeCounter;
-
 import dataContracts.FactorDef;
+import dataContracts.SLPModel;
 import dataContracts.SLPStatistics;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.IStatistics;
@@ -32,23 +31,24 @@ public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     }
 
     @Override
-    public ISLPBuilder buildSlp(FactorDef[] factors, IStatistics statistics) {
+    public SLPModel buildSlp(FactorDef[] factors, IStatistics statistics) {
         TimeCounter timeCounter = TimeCounter.start();
         ICartesianTree resultTree = buildCartesianTree(factors);
-        ISLPBuilder slp = slpExtractor.getSLP(resultTree);
+        ISLPBuilder slpBuilder = slpExtractor.getSLP(resultTree);
         timeCounter.finish();
         resultTree.dispose();
 
+        SLPModel slpModel = slpBuilder.toSLPModel();
         statistics.putParam(StatisticKeys.FactorizationLength, factors.length);
         statistics.putParam(StatisticKeys.RunningTime, timeCounter.getMillis());
 
-        SLPStatistics slpStatistics = slp.getStatistics();
+        SLPStatistics slpStatistics = slpModel.calcStats();
         statistics.putParam(StatisticKeys.SourceLength, slpStatistics.length);
         statistics.putParam(StatisticKeys.SlpHeight, slpStatistics.height);
         statistics.putParam(StatisticKeys.SlpCountRules, slpStatistics.countRules);
-        statistics.putParam(StatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slp));
+        statistics.putParam(StatisticKeys.SlpByteSize, slpByteSizeCounter.getSlpByteSize(slpModel));
 
-        return slp;
+        return slpModel;
     }
 
     private ICartesianTree buildCartesianTree(FactorDef[] factors) {

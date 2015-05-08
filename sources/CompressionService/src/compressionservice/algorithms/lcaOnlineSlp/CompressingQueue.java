@@ -22,7 +22,7 @@ public class CompressingQueue implements ICompressingQueue {
                 queue.pop();
                 long y1 = queue.pop();
                 long y2 = queue.peek();
-                long fromNumber = slp.addRule(new Product(y1, y2));
+                long fromNumber = slp.append(new Product(y1, y2));
                 nextQueue.insertSymbol(fromNumber);
             } else {
                 queue.pop();
@@ -30,7 +30,7 @@ public class CompressingQueue implements ICompressingQueue {
                 nextQueue.insertSymbol(y1);
                 long y2 = queue.pop();
                 long y3 = queue.peek();
-                long fromNumber = slp.addRule(new Product(y2, y3));
+                long fromNumber = slp.append(new Product(y2, y3));
                 nextQueue.insertSymbol(fromNumber);
             }
         }
@@ -47,7 +47,7 @@ public class CompressingQueue implements ICompressingQueue {
             queue.pop();
             long y1 = queue.pop();
             long y2 = queue.peek();
-            long fromNumber = slp.addRule(new Product(y1, y2));
+            long fromNumber = slp.append(new Product(y1, y2));
             nextQueue.insertSymbol(fromNumber);
         }
         if (queue.size() == 2) {

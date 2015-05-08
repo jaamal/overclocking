@@ -3,9 +3,9 @@ package SLPs;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import avlTree.slpBuilders.ISLPBuilder;
 import serialization.products.IProductsSerializer;
 import dataContracts.Product;
+import dataContracts.SLPModel;
 
 public class SlpByteSizeCounter {
     private final IProductsSerializer slpSerializer;
@@ -14,8 +14,8 @@ public class SlpByteSizeCounter {
         this.slpSerializer = slpSerializer;
     }
 
-    public long getSlpByteSize(ISLPBuilder slpBuilder) {
-        Product[] products = slpBuilder.toNormalForm();
+    public long getSlpByteSize(SLPModel slpModel) {
+        Product[] products = slpModel.toNormalForm();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             slpSerializer.serialize(stream, products);
             return stream.size();

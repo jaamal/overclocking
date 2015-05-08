@@ -13,7 +13,6 @@ import avlTree.IAvlTreeManagerFactory;
 import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
-import avlTree.slpBuilders.ISLPBuilder;
 
 import commons.settings.ISettings;
 import compressingCore.dataAccess.MemoryReadableCharArray;
@@ -24,6 +23,7 @@ import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
+import dataContracts.SLPModel;
 import dataContracts.statistics.Statistics;
 
 public class AvlSlpBuildTest extends IntegrationTestBase {
@@ -35,8 +35,8 @@ public class AvlSlpBuildTest extends IntegrationTestBase {
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.block, AvlSplitPattern.fromFirst);
         SlpByteSizeCounter slpByteSizeCounter = new SlpByteSizeCounter(new ProductsSerializer4());
         AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), slpByteSizeCounter);
-        ISLPBuilder slp = builder.buildSlp(getFactorization("abacaba"), new Statistics());
-        System.out.println(slp.getStatistics().countRules);
+        SLPModel slpModel = builder.buildSlp(getFactorization("abacaba"), new Statistics());
+        System.out.println(slpModel.calcStats().countRules);
     }
 
     private FactorDef[] getFactorization(String text) {

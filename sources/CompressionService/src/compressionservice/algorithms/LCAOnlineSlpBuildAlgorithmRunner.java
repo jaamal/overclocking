@@ -7,13 +7,12 @@ import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import SLPs.SlpByteSizeCounter;
 import avlTree.slpBuilders.ISLPBuilder;
-
 import commons.utils.TimeCounter;
 import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
-
 import dataContracts.DataFactoryType;
 import dataContracts.Product;
+import dataContracts.SLPModel;
 import dataContracts.SLPStatistics;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
@@ -53,20 +52,21 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             logger.info("Source file size is " + source.length());
             TimeCounter timeCounter = TimeCounter.start();
-            ISLPBuilder slp = lcaOnlineCompressor.buildSLP(source);
+            ISLPBuilder slpBuilder = lcaOnlineCompressor.buildSLP(source);
             timeCounter.finish();
-
             logger.info(String.format("Finish slpBuilding. Total time is about %d minutes", timeCounter.getMillis() / 60 / 1000));
-            SLPStatistics slpStatistics = slp.getStatistics();
+            
+            SLPModel slpModel = slpBuilder.toSLPModel();
+            SLPStatistics slpStatistics = slpModel.calcStats();
             IStatistics statisitcs = new Statistics();
             statisitcs.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
             statisitcs.putParam(StatisticKeys.SlpWidth, String.valueOf(slpStatistics.length));
             statisitcs.putParam(StatisticKeys.SlpCountRules, String.valueOf(slpStatistics.countRules));
             statisitcs.putParam(StatisticKeys.SlpHeight, String.valueOf(slpStatistics.height));
-            statisitcs.putParam(StatisticKeys.SlpByteSize, String.valueOf(slpByteSizeCounter.getSlpByteSize(slp)));
+            statisitcs.putParam(StatisticKeys.SlpByteSize, String.valueOf(slpByteSizeCounter.getSlpByteSize(slpModel)));
 
             IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(resultId);
-            Product[] products = slp.toNormalForm();
+            Product[] products = slpModel.toNormalForm();
             writer.addAll(products);
             writer.done();
 

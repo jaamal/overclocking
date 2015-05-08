@@ -12,7 +12,7 @@ public class LCAOnlineCompressor implements ILCAOnlineCompressor {
             IReadableCharArray batch = text.subArray(i, Math.min(text.length(), i + batchSize));
             for (int j = 0; j < batch.length(); ++j) {
                 char symbol = batch.get(j);
-                long fromNumber = slp.addRule(new Product(symbol));
+                long fromNumber = slp.append(new Product(symbol));
                 queue.insertSymbol(fromNumber);
             }
         }

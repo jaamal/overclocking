@@ -5,9 +5,9 @@ import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.ConcurrentAvlBuilderStopwatches;
 import avlTree.slpBuilders.IConcurrencyAvlTreeSLPBuilder;
-import avlTree.slpBuilders.ISLPBuilder;
 import dataContracts.FactorDef;
 import dataContracts.Product;
+import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.Statistics;
@@ -38,11 +38,11 @@ public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
         IStatistics statistics = new Statistics();
 
         ConcurrentAvlBuilderStopwatches stopwatches = new ConcurrentAvlBuilderStopwatches();
-        ISLPBuilder slp = avlTreeSLPBuilder.buildSlp(factorization, statistics, stopwatches);
+        SLPModel slpModel = avlTreeSLPBuilder.buildSlp(factorization, statistics, stopwatches);
         stopwatches.printTimes();
 
         IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(resultId);
-        Product[] products = slp.toNormalForm();
+        Product[] products = slpModel.toNormalForm();
         writer.addAll(products);
         writer.done();
 

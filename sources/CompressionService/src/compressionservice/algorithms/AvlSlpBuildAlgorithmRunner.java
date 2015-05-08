@@ -4,9 +4,9 @@ import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.IAvlTreeSLPBuilder;
-import avlTree.slpBuilders.ISLPBuilder;
 import dataContracts.FactorDef;
 import dataContracts.Product;
+import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.Statistics;
@@ -37,10 +37,10 @@ public class AvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
         FactorDef[] factorization = resourceProvider.getFactorization(sourceId);
         IStatistics statistics = new Statistics();
 
-        ISLPBuilder slp = avlTreeSLPBuilder.buildSlp(factorization, statistics);
+        SLPModel slpModel = avlTreeSLPBuilder.buildSlp(factorization, statistics);
 
         IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(resultId);
-        Product[] products = slp.toNormalForm();
+        Product[] products = slpModel.toNormalForm();
         writer.addAll(products);
         writer.done();
 

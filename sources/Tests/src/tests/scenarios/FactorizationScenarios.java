@@ -5,7 +5,7 @@ import java.util.Random;
 
 import dataContracts.LZFactorDef;
 
-public class FactorizationScanrios
+public class FactorizationScenarios
 {
     private static Random random = new Random(42);
     
