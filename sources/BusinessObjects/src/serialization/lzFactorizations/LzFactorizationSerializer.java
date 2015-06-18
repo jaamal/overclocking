@@ -24,6 +24,7 @@ public class LzFactorizationSerializer implements ILzFactorizationSerializer {
         return fromIntArray(intArraySerializer.deserialize(stream));
     }
     
+    //TODO: this way of serialization doesn't supports big factorizations
     private static <T extends FactorDef> int[] toIntArray(FactorDef[] factors) {
         int[] array = new int[factors.length * 2];
         for (int index = 0; index < factors.length; ++index) {
