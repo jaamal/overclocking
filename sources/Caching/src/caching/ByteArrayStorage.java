@@ -16,13 +16,13 @@ public class ByteArrayStorage<T> implements IStorage<T>
     @Override
     public T load(long number)
     {
-        return serializer.deserialize(data, (int)(serializer.size() * number));
+        return serializer.deserialize(data, (int)(serializer.sizeInBytes() * number));
     }
 
     @Override
     public void save(long number, T obj)
     {
-        serializer.serialize(obj, data, (int)(serializer.size() * number));
+        serializer.serialize(obj, data, (int)(serializer.sizeInBytes() * number));
     }
 
     @Override

@@ -5,7 +5,7 @@ import caching.serializers.ISerializer;
 public class CharSerializer implements ISerializer<Character>
 {
     @Override
-    public int size()
+    public int sizeInBytes()
     {
         return 1;
     }

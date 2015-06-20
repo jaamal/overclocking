@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 public class IntegerSerializer implements ISerializer<Integer>
     {
         @Override
-        public int size()
+        public int sizeInBytes()
         {
             return 4;
         }
@@ -29,14 +29,14 @@ public class IntegerSerializer implements ISerializer<Integer>
         @Override
         public void serialize(Integer obj, byte[] array, int offset)
         {
-            ByteBuffer buffer = ByteBuffer.wrap(array, offset, size());
+            ByteBuffer buffer = ByteBuffer.wrap(array, offset, sizeInBytes());
             buffer.putInt(obj);
         }
 
         @Override
         public Integer deserialize(byte[] array, int offset)
         {
-            ByteBuffer buffer = ByteBuffer.wrap(array, offset, size());
+            ByteBuffer buffer = ByteBuffer.wrap(array, offset, sizeInBytes());
             return buffer.getInt();
         }
     }

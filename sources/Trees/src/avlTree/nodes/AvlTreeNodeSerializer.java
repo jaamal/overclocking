@@ -27,7 +27,7 @@ public class AvlTreeNodeSerializer implements ISerializer<AvlTreeNode>
     }
 
     @Override
-    public int size()
+    public int sizeInBytes()
     {
         return size;
     }

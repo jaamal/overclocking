@@ -6,7 +6,7 @@ import commons.utils.NumericUtils;
 public class LongSerializer implements ISerializer<Long>
 {
     @Override
-    public int size()
+    public int sizeInBytes()
     {
         return 8;
     }

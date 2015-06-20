@@ -27,7 +27,7 @@ public class MemoryMappedFileStorage<T> implements IStorage<T>
 			ISettings settings)
 	{
 		this.serializer = serializer;
-		this.connection = new MemoryMappedFileConnection(temporaryFileFactory.getTemporaryFile(), settings, serializer.size(), true);
+		this.connection = new MemoryMappedFileConnection(temporaryFileFactory.getTemporaryFile(), settings, serializer.sizeInBytes(), true);
 		connection.open();
 	}
 
@@ -37,7 +37,7 @@ public class MemoryMappedFileStorage<T> implements IStorage<T>
 			ISettings settings)
 	{
 		this.serializer = serializer;
-		this.connection = new MemoryMappedFileConnection(file, settings, serializer.size(), false);
+		this.connection = new MemoryMappedFileConnection(file, settings, serializer.sizeInBytes(), false);
 		connection.open();
 	}
 

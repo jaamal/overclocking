@@ -32,7 +32,7 @@ public class CachedConnectionStorage<T> implements IStorage<T>
         this.byteArrayStorageFactory = byteArrayStorageFactory;
         victimSelector = victimSelectorFactory.create(cacheConfiguration.getCacheLineCount());
         objectInCacheLine = cacheConfiguration.getCacheLineLength();
-        objectLength = serializer.size();
+        objectLength = serializer.sizeInBytes();
         cacheLineInBytes = objectInCacheLine * objectLength;
         lineNumberMapper = lineNumberMapperFactory.create();
         cacheLines = new ByteArrayStorage[cacheConfiguration.getCacheLineCount()];

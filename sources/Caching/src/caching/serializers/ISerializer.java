@@ -2,7 +2,7 @@ package caching.serializers;
 
 public interface ISerializer<T>
 {
-    int size();
+    int sizeInBytes();
     
     byte[] serialize(T obj);
     void serialize(T obj, byte[] array, int offset);

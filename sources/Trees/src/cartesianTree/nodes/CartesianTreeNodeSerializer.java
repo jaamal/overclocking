@@ -27,7 +27,7 @@ public class CartesianTreeNodeSerializer implements ISerializer<CartesianTreeNod
     }
 
     @Override
-    public int size()
+    public int sizeInBytes()
     {
         return size;
     }
