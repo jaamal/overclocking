@@ -6,9 +6,12 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import compressingCore.dataAccess.MemoryLongArray;
+import caching.MemoryStorage;
+
+import compressingCore.dataAccess.LongArray;
 import compressionservice.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
 import compressionservice.algorithms.lzInf.arrayMinSearching.IArrayMinSearcher;
+
 import dataContracts.DataFactoryType;
 
 public class ArrayMinSearcherIntegrationTest extends IntegrationTestBase
@@ -35,17 +38,20 @@ public class ArrayMinSearcherIntegrationTest extends IntegrationTestBase
 
     private void doTest(long[] array)
     {
-        IArrayMinSearcher minSearcher = arrayMinSearcherFactory.createSearcher(DataFactoryType.memory, new MemoryLongArray(array));
-        for (int startIndex = 0; startIndex < array.length; startIndex++)
-        {
-            long currentMin = Long.MAX_VALUE;
-            for (int endIndex = startIndex + 1; endIndex <= array.length; endIndex++)
+        try (LongArray longArray = new LongArray(new MemoryStorage<Long>(), array.length)){
+            longArray.set(0, array);
+            IArrayMinSearcher minSearcher = arrayMinSearcherFactory.createSearcher(DataFactoryType.memory, longArray);
+            for (int startIndex = 0; startIndex < array.length; startIndex++)
             {
-                currentMin = Math.min(currentMin, array[endIndex - 1]);
-                Assert.assertEquals(currentMin, minSearcher.getMin(startIndex, endIndex));
+                long currentMin = Long.MAX_VALUE;
+                for (int endIndex = startIndex + 1; endIndex <= array.length; endIndex++)
+                {
+                    currentMin = Math.min(currentMin, array[endIndex - 1]);
+                    Assert.assertEquals(currentMin, minSearcher.getMin(startIndex, endIndex));
+                }
             }
+            minSearcher.dispose();
         }
-        minSearcher.dispose();
     }
 
     private static long[] generateRandomArray(int size, long seed)

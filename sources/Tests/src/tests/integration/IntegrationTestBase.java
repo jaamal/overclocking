@@ -2,6 +2,7 @@ package tests.integration;
 
 import java.nio.file.Paths;
 
+import org.junit.After;
 import org.junit.Before;
 
 import commons.settings.ISettings;
@@ -20,6 +21,12 @@ public class IntegrationTestBase extends TestBase {
 
         container = new Container(new TestsClassPathLoaderConfiguration());
         container.bindInstance(ISettings.class, Settings.Load(Paths.get("conf", "application.settings").toAbsolutePath().toString()));
+    }
+    
+    @Override
+    @After
+    public void tearDown() {
+        super.tearDown();
     }
 
     private class TestsClassPathLoaderConfiguration implements IClassPathScannerConfiguration {
