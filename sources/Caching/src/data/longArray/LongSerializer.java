@@ -1,4 +1,4 @@
-package compressingCore.dataAccess;
+package data.longArray;
 
 import commons.utils.NumericUtils;
 import data.enumerableData.IItemSerializer;

@@ -7,6 +7,9 @@ import caching.connections.ITemporaryFileFactory;
 import commons.settings.ISettings;
 import data.enumerableData.IItemSerializer;
 import data.enumerableData.MemoryMappedFileEnumerableData;
+import data.longArray.ILongArray;
+import data.longArray.LongArray;
+import data.longArray.LongSerializer;
 import dataContracts.DataFactoryType;
 
 public class FileDataFactory implements ITypedDataFactory

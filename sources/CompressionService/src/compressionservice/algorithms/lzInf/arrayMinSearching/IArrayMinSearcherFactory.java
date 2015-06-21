@@ -1,6 +1,6 @@
 package compressionservice.algorithms.lzInf.arrayMinSearching;
 
-import compressingCore.dataAccess.ILongArray;
+import data.longArray.ILongArray;
 import dataContracts.DataFactoryType;
 
 public interface IArrayMinSearcherFactory

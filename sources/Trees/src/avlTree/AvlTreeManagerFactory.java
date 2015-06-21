@@ -1,6 +1,5 @@
 package avlTree;
 
-import compressingCore.dataAccess.LongSerializer;
 import tree.nodeProviders.*;
 import tree.nodeProviders.indexSets.FreeNodesSet;
 import avlTree.nodes.AvlTreeNode;
@@ -12,6 +11,7 @@ import data.enumerableData.IEnumerableData;
 import data.enumerableData.IItemSerializer;
 import data.enumerableData.InMemoryEnumerableData;
 import data.enumerableData.MemoryMappedFileEnumerableData;
+import data.longArray.LongSerializer;
 import dataContracts.DataFactoryType;
 
 public class AvlTreeManagerFactory implements IAvlTreeManagerFactory {

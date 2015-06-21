@@ -11,8 +11,8 @@ import commons.files.IFileManager;
 import commons.settings.ISettings;
 import commons.settings.KnownKeys;
 import compressingCore.dataAccess.IDataFactory;
-import compressingCore.dataAccess.ILongArray;
 import compressingCore.dataAccess.IReadableCharArray;
+import data.longArray.ILongArray;
 import dataContracts.DataFactoryType;
 
 public class SuffixArrayBuilder implements ISuffixArrayBuilder

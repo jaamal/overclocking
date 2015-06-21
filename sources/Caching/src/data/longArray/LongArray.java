@@ -1,28 +1,28 @@
-package compressingCore.dataAccess;
+package data.longArray;
 
 import data.enumerableData.IEnumerableData;
 
 public class LongArray implements ILongArray
 {
-    private IEnumerableData<Long> storage;
+    private IEnumerableData<Long> data;
     private long length;
 
-    public LongArray(IEnumerableData<Long> storage, long length)
+    public LongArray(IEnumerableData<Long> data, long length)
     {
-        this.storage = storage;
+        this.data = data;
         this.length = length;
     }
 
     @Override
     public long get(long index)
     {
-        return storage.load(index);
+        return data.load(index);
     }
 
     @Override
     public void set(long index, long value)
     {
-        storage.save(index, value);
+        data.save(index, value);
     }
 
     @Override
@@ -34,6 +34,6 @@ public class LongArray implements ILongArray
     @Override
     public void close()
     {
-        storage.close();
+        data.close();
     }
 }

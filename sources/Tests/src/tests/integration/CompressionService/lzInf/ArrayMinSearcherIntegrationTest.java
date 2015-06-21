@@ -6,10 +6,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import compressingCore.dataAccess.LongArray;
 import compressionservice.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
 import compressionservice.algorithms.lzInf.arrayMinSearching.IArrayMinSearcher;
 import data.enumerableData.InMemoryEnumerableData;
+import data.longArray.LongArray;
 import dataContracts.DataFactoryType;
 
 public class ArrayMinSearcherIntegrationTest extends IntegrationTestBase

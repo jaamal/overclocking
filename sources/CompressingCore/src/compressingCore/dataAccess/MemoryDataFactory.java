@@ -3,6 +3,8 @@ package compressingCore.dataAccess;
 import org.apache.commons.io.IOUtils;
 
 import data.enumerableData.InMemoryEnumerableData;
+import data.longArray.ILongArray;
+import data.longArray.LongArray;
 import dataContracts.DataFactoryType;
 
 import java.io.BufferedReader;

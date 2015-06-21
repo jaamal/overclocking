@@ -1,4 +1,4 @@
-package compressingCore.dataAccess;
+package data.longArray;
 
 public interface ILongArray extends AutoCloseable
 {

@@ -2,7 +2,7 @@ package compressionservice.algorithms.lzInf.arrayMinSearching;
 
 import commons.utils.MathHelpers;
 import compressingCore.dataAccess.IDataFactory;
-import compressingCore.dataAccess.ILongArray;
+import data.longArray.ILongArray;
 import dataContracts.DataFactoryType;
 
 /**
