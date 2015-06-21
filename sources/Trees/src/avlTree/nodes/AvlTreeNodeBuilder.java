@@ -1,7 +1,7 @@
 package avlTree.nodes;
 
 import tree.nodeProviders.ITreeNodeBuilder;
-import caching.IEnumerableData;
+import data.enumerableData.IEnumerableData;
 
 public class AvlTreeNodeBuilder implements ITreeNodeBuilder<AvlTreeNode> {
     private IEnumerableData<AvlTreeNode> storage;

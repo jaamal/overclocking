@@ -3,16 +3,16 @@ package compressingCore.dataAccess;
 import java.io.File;
 import java.nio.file.Path;
 
-import caching.MemoryMappedFileEnumerableData;
 import caching.connections.ITemporaryFileFactory;
-import caching.serializers.ISerializer;
 import commons.settings.ISettings;
+import data.enumerableData.IItemSerializer;
+import data.enumerableData.MemoryMappedFileEnumerableData;
 import dataContracts.DataFactoryType;
 
 public class FileDataFactory implements ITypedDataFactory
 {
-    private static ISerializer<Long> longSerializer = new LongSerializer();
-    private static ISerializer<Character> charSerializer = new CharSerializer();
+    private static IItemSerializer<Long> longSerializer = new LongSerializer();
+    private static IItemSerializer<Character> charSerializer = new CharSerializer();
     private ITemporaryFileFactory temporaryFileFactory;
     private ISettings settings;
 

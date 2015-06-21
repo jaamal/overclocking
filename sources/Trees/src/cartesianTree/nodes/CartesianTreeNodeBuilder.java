@@ -1,7 +1,7 @@
 package cartesianTree.nodes;
 
 import tree.nodeProviders.ITreeNodeBuilder;
-import caching.IEnumerableData;
+import data.enumerableData.IEnumerableData;
 
 public class CartesianTreeNodeBuilder implements ITreeNodeBuilder<CartesianTreeNode>
 {

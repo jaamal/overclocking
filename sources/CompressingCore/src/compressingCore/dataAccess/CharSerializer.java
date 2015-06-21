@@ -1,11 +1,11 @@
 package compressingCore.dataAccess;
 
-import caching.serializers.ISerializer;
+import data.enumerableData.IItemSerializer;
 
-public class CharSerializer implements ISerializer<Character>
+public class CharSerializer implements IItemSerializer<Character>
 {
     @Override
-    public int sizeInBytes()
+    public int itemSizeInBytes()
     {
         return 1;
     }

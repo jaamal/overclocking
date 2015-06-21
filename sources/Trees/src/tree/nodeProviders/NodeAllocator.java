@@ -1,10 +1,11 @@
 package tree.nodeProviders;
 
-import caching.IEnumerableData;
 import tree.ITreeNode;
 import tree.nodeProviders.indexSets.IFreeNodesSet;
 
 import java.util.HashSet;
+
+import data.enumerableData.IEnumerableData;
 
 public class NodeAllocator<TNode extends ITreeNode> implements INodeAllocator<TNode> {
     private final IEnumerableData<TNode> nodeStorage;

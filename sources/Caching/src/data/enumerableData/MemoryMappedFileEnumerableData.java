@@ -1,19 +1,17 @@
-package caching;
+package data.enumerableData;
 
 import java.io.File;
 
 import caching.connections.ITemporaryFileFactory;
-import caching.serializers.ISerializer;
-
 import commons.settings.ISettings;
 
 public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
 {
 	private MemoryMappedFileConnection connection;
-	private ISerializer<T> serializer;
+	private IItemSerializer<T> serializer;
 
 	public MemoryMappedFileEnumerableData(
-            ISerializer<T> serializer,
+            IItemSerializer<T> serializer,
             ITemporaryFileFactory temporaryFileFactory,
             ISettings settings)
     {
@@ -21,7 +19,7 @@ public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
     }
 
     public MemoryMappedFileEnumerableData(
-            ISerializer<T> serializer,
+            IItemSerializer<T> serializer,
             File file,
             ISettings settings)
     {
@@ -29,13 +27,13 @@ public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
     }
     
     public MemoryMappedFileEnumerableData(
-            ISerializer<T> serializer,
+            IItemSerializer<T> serializer,
             File file,
             ISettings settings,
             boolean deleteOnClose)
     {
         this.serializer = serializer;
-        this.connection = new MemoryMappedFileConnection(file, settings, serializer.sizeInBytes(), deleteOnClose);
+        this.connection = new MemoryMappedFileConnection(file, settings, serializer.itemSizeInBytes(), deleteOnClose);
         connection.open();
     }
 

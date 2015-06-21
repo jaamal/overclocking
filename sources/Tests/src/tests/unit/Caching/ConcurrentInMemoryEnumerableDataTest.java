@@ -1,11 +1,11 @@
 package tests.unit.Caching;
 
-import caching.ConcurrentInMemoryEnumerableData;
-import caching.IEnumerableData;
 import junit.framework.Assert;
 
 import org.junit.Test;
 
+import data.enumerableData.ConcurrentInMemoryEnumerableData;
+import data.enumerableData.IEnumerableData;
 import tests.unit.UnitTestBase;
 
 import java.util.ArrayList;

@@ -7,10 +7,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import tests.stress.StressTestBase;
-import caching.IEnumerableData;
-import caching.MemoryMappedFileEnumerableData;
 import caching.connections.ITemporaryFileFactory;
 import commons.settings.ISettings;
+import data.enumerableData.IEnumerableData;
+import data.enumerableData.MemoryMappedFileEnumerableData;
 
 public class MemoryMappedFileStorageTest extends StressTestBase
 {

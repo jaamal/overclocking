@@ -2,8 +2,8 @@ package avlTree;
 
 import avlTree.nodes.AvlTreeNode;
 import avlTree.nodes.AvlTreeNodeBuilder;
-import caching.ConcurrentInMemoryEnumerableData;
-import caching.IEnumerableData;
+import data.enumerableData.ConcurrentInMemoryEnumerableData;
+import data.enumerableData.IEnumerableData;
 import dataContracts.DataFactoryType;
 import tree.nodeProviders.ConcurrentNodeAllocator;
 import tree.nodeProviders.INodeAllocator;

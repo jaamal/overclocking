@@ -1,12 +1,12 @@
 package compressingCore.dataAccess;
 
-import caching.serializers.ISerializer;
 import commons.utils.NumericUtils;
+import data.enumerableData.IItemSerializer;
 
-public class LongSerializer implements ISerializer<Long>
+public class LongSerializer implements IItemSerializer<Long>
 {
     @Override
-    public int sizeInBytes()
+    public int itemSizeInBytes()
     {
         return 8;
     }

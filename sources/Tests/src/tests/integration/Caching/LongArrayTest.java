@@ -3,8 +3,8 @@ package tests.integration.Caching;
 import org.junit.Assert;
 import org.junit.Test;
 
-import caching.InMemoryEnumerableData;
 import compressingCore.dataAccess.LongArray;
+import data.enumerableData.InMemoryEnumerableData;
 import tests.integration.IntegrationTestBase;
 
 public class LongArrayTest extends IntegrationTestBase

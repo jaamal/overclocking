@@ -1,6 +1,6 @@
 package compressingCore.dataAccess;
 
-import caching.IEnumerableData;
+import data.enumerableData.IEnumerableData;
 
 public class CharArray implements IReadableCharArray
 {

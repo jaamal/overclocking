@@ -1,8 +1,5 @@
 package cartesianTree;
 
-import caching.IEnumerableData;
-import caching.MemoryMappedFileEnumerableData;
-import caching.InMemoryEnumerableData;
 import caching.connections.TemporaryFileFactory;
 import cartesianTree.heapKeyResolvers.IHeapKeyResolver;
 import cartesianTree.heapKeyResolvers.RandomGeneratorFactory;
@@ -12,6 +9,9 @@ import cartesianTree.nodes.CartesianTreeNodeBuilder;
 import cartesianTree.nodes.CartesianTreeNodeSerializer;
 import commons.settings.ISettings;
 import compressingCore.dataAccess.LongSerializer;
+import data.enumerableData.IEnumerableData;
+import data.enumerableData.InMemoryEnumerableData;
+import data.enumerableData.MemoryMappedFileEnumerableData;
 import dataContracts.DataFactoryType;
 import tree.nodeProviders.*;
 import tree.nodeProviders.indexSets.FreeNodesSet;

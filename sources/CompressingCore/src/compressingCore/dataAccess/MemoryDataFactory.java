@@ -1,9 +1,8 @@
 package compressingCore.dataAccess;
 
-import caching.InMemoryEnumerableData;
-
 import org.apache.commons.io.IOUtils;
 
+import data.enumerableData.InMemoryEnumerableData;
 import dataContracts.DataFactoryType;
 
 import java.io.BufferedReader;

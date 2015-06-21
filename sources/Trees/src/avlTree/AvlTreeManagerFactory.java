@@ -6,14 +6,12 @@ import tree.nodeProviders.indexSets.FreeNodesSet;
 import avlTree.nodes.AvlTreeNode;
 import avlTree.nodes.AvlTreeNodeBuilder;
 import avlTree.nodes.AvlTreeNodeSerializer;
-import caching.IEnumerableData;
-import caching.MemoryMappedFileEnumerableData;
-import caching.InMemoryEnumerableData;
 import caching.connections.TemporaryFileFactory;
-import caching.serializers.ISerializer;
-
 import commons.settings.ISettings;
-
+import data.enumerableData.IEnumerableData;
+import data.enumerableData.IItemSerializer;
+import data.enumerableData.InMemoryEnumerableData;
+import data.enumerableData.MemoryMappedFileEnumerableData;
 import dataContracts.DataFactoryType;
 
 public class AvlTreeManagerFactory implements IAvlTreeManagerFactory {
@@ -34,7 +32,7 @@ public class AvlTreeManagerFactory implements IAvlTreeManagerFactory {
                 innerReferencesStorage = new InMemoryEnumerableData<>(Long.class);
                 break;
             case file:
-                ISerializer<AvlTreeNode> nodeSerializer = new AvlTreeNodeSerializer();
+                IItemSerializer<AvlTreeNode> nodeSerializer = new AvlTreeNodeSerializer();
                 TemporaryFileFactory temporaryFileFactory = new TemporaryFileFactory(settings);
                 nodeStorage = new MemoryMappedFileEnumerableData<>(nodeSerializer, temporaryFileFactory, settings);
                 innerReferencesStorage = new MemoryMappedFileEnumerableData<>(new LongSerializer(), temporaryFileFactory, settings);

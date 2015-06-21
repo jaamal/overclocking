@@ -1,4 +1,4 @@
-package caching;
+package data.enumerableData;
 
 public interface IEnumerableData<T>
 {

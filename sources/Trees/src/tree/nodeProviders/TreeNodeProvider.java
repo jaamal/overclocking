@@ -1,6 +1,6 @@
 package tree.nodeProviders;
 
-import caching.IEnumerableData;
+import data.enumerableData.IEnumerableData;
 import tree.ITreeNode;
 
 public class TreeNodeProvider<TNode extends ITreeNode> implements ITreeNodeProvider<TNode> {

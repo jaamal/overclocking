@@ -1,8 +1,8 @@
-package caching.serializers;
+package data.enumerableData;
 
-public interface ISerializer<T>
+public interface IItemSerializer<T>
 {
-    int sizeInBytes();
+    int itemSizeInBytes();
     
     byte[] serialize(T obj);
     void serialize(T obj, byte[] array, int offset);

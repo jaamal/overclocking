@@ -2,9 +2,9 @@ package avlTree.nodes;
 
 import java.nio.ByteBuffer;
 
-import caching.serializers.ISerializer;
+import data.enumerableData.IItemSerializer;
 
-public class AvlTreeNodeSerializer implements ISerializer<AvlTreeNode>
+public class AvlTreeNodeSerializer implements IItemSerializer<AvlTreeNode>
 {
     private final static int size = 57;
 
@@ -27,7 +27,7 @@ public class AvlTreeNodeSerializer implements ISerializer<AvlTreeNode>
     }
 
     @Override
-    public int sizeInBytes()
+    public int itemSizeInBytes()
     {
         return size;
     }

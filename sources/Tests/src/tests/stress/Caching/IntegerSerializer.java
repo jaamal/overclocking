@@ -1,13 +1,13 @@
 package tests.stress.Caching;
 
-import caching.serializers.ISerializer;
-
 import java.nio.ByteBuffer;
 
-public class IntegerSerializer implements ISerializer<Integer>
+import data.enumerableData.IItemSerializer;
+
+public class IntegerSerializer implements IItemSerializer<Integer>
     {
         @Override
-        public int sizeInBytes()
+        public int itemSizeInBytes()
         {
             return 4;
         }
@@ -29,14 +29,14 @@ public class IntegerSerializer implements ISerializer<Integer>
         @Override
         public void serialize(Integer obj, byte[] array, int offset)
         {
-            ByteBuffer buffer = ByteBuffer.wrap(array, offset, sizeInBytes());
+            ByteBuffer buffer = ByteBuffer.wrap(array, offset, itemSizeInBytes());
             buffer.putInt(obj);
         }
 
         @Override
         public Integer deserialize(byte[] array, int offset)
         {
-            ByteBuffer buffer = ByteBuffer.wrap(array, offset, sizeInBytes());
+            ByteBuffer buffer = ByteBuffer.wrap(array, offset, itemSizeInBytes());
             return buffer.getInt();
         }
     }

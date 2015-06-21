@@ -2,9 +2,9 @@ package cartesianTree.nodes;
 
 import java.nio.ByteBuffer;
 
-import caching.serializers.ISerializer;
+import data.enumerableData.IItemSerializer;
 
-public class CartesianTreeNodeSerializer implements ISerializer<CartesianTreeNode>
+public class CartesianTreeNodeSerializer implements IItemSerializer<CartesianTreeNode>
 {
     private final static int size = 40;
 
@@ -27,7 +27,7 @@ public class CartesianTreeNodeSerializer implements ISerializer<CartesianTreeNod
     }
 
     @Override
-    public int sizeInBytes()
+    public int itemSizeInBytes()
     {
         return size;
     }
