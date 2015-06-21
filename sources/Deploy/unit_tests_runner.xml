@@ -23,7 +23,6 @@
                 <pathelement path="${ov.root.dir}/BusinessObjects/bin" />
                 <pathelement path="${ov.root.dir}/Caching/bin" />
                 <pathelement path="${ov.root.dir}/Commons/bin" />
-                <pathelement path="${ov.root.dir}/CompressingCore/bin" />
                 <pathelement path="${ov.root.dir}/CompressionService/bin" />
                 <pathelement path="${ov.root.dir}/Front/eclipse/classes" />
                 <pathelement path="${ov.root.dir}/SLP/bin" />

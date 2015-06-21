@@ -12,7 +12,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BusinessObjects"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Storage"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/CompressingCore"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Caching"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Trees"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-cassandra-1.56.44.jar"/>
