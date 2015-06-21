@@ -6,9 +6,9 @@ import tree.nodeProviders.indexSets.FreeNodesSet;
 import avlTree.nodes.AvlTreeNode;
 import avlTree.nodes.AvlTreeNodeBuilder;
 import avlTree.nodes.AvlTreeNodeSerializer;
-import caching.IStorage;
-import caching.MemoryMappedFileStorage;
-import caching.MemoryStorage;
+import caching.IEnumerableData;
+import caching.MemoryMappedFileEnumerableData;
+import caching.InMemoryEnumerableData;
 import caching.connections.TemporaryFileFactory;
 import caching.serializers.ISerializer;
 
@@ -26,18 +26,18 @@ public class AvlTreeManagerFactory implements IAvlTreeManagerFactory {
     }
 
     public IAvlTreeManager create() {
-        IStorage<AvlTreeNode> nodeStorage;
-        IStorage<Long> innerReferencesStorage;
+        IEnumerableData<AvlTreeNode> nodeStorage;
+        IEnumerableData<Long> innerReferencesStorage;
         switch (dataFactoryType) {
             case memory:
-                nodeStorage = new MemoryStorage<>();
-                innerReferencesStorage = new MemoryStorage<>();
+                nodeStorage = new InMemoryEnumerableData<>(AvlTreeNode.class);
+                innerReferencesStorage = new InMemoryEnumerableData<>(Long.class);
                 break;
             case file:
                 ISerializer<AvlTreeNode> nodeSerializer = new AvlTreeNodeSerializer();
                 TemporaryFileFactory temporaryFileFactory = new TemporaryFileFactory(settings);
-                nodeStorage = new MemoryMappedFileStorage<>(nodeSerializer, temporaryFileFactory, settings);
-                innerReferencesStorage = new MemoryMappedFileStorage<>(new LongSerializer(), temporaryFileFactory, settings);
+                nodeStorage = new MemoryMappedFileEnumerableData<>(nodeSerializer, temporaryFileFactory, settings);
+                innerReferencesStorage = new MemoryMappedFileEnumerableData<>(new LongSerializer(), temporaryFileFactory, settings);
                 break;
             default:
                 throw new RuntimeException(String.format("Unsupported DataFactoryType '%s'", dataFactoryType));

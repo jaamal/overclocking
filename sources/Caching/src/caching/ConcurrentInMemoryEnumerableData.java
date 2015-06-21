@@ -2,21 +2,24 @@ package caching;
 
 import org.apache.log4j.Logger;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class ConcurrentMemoryStorage<T> implements IStorage<T> {
-    private static Logger logger = Logger.getLogger(ConcurrentMemoryStorage.class);
+public class ConcurrentInMemoryEnumerableData<T> implements IEnumerableData<T> {
+    private static Logger logger = Logger.getLogger(ConcurrentInMemoryEnumerableData.class);
 
+    private final ArrayList<T[]> batches;
     private final int batchSize;
-    private final ArrayList<Object[]> batches;
+    private final Class<T> itemClass;
     private volatile long size;
     private final Object lockObject = new Object();
 
-    public ConcurrentMemoryStorage() {
-        this(100000);
+    public ConcurrentInMemoryEnumerableData(Class<T> itemClass) {
+        this(itemClass, 100000);
     }
 
-    public ConcurrentMemoryStorage(int batchSize) {
+    public ConcurrentInMemoryEnumerableData(Class<T> itemClass, int batchSize) {
+        this.itemClass = itemClass;
         this.batchSize = batchSize;
         batches = new ArrayList<>();
         size = 0;
@@ -30,10 +33,11 @@ public class ConcurrentMemoryStorage<T> implements IStorage<T> {
             throw new IndexOutOfBoundsException();
         if (index >= size)
             throw new IndexOutOfBoundsException();
-        return (T) threadSafeGetBatch((int) (index / batchSize))[(int) (index % batchSize)];
+        return safeGetBatch((int) (index / batchSize))[(int) (index % batchSize)];
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void save(long index, T object) {
         if (index < 0)
@@ -41,20 +45,19 @@ public class ConcurrentMemoryStorage<T> implements IStorage<T> {
         if (index >= size) {
             synchronized (lockObject) {
                 while (index >= size) {
-                    batches.add(new Object[batchSize]);
+                    batches.add((T[])Array.newInstance(itemClass, batchSize));
                     size += batchSize;
                 }
             }
         }
-
-        threadSafeGetBatch((int) (index / batchSize))[(int) (index % batchSize)] = object;
+        safeGetBatch((int) (index / batchSize))[(int) (index % batchSize)] = object;
     }
 
     @Override
     public void close() {
     }
 
-    private Object[] threadSafeGetBatch(int batchNumber) {
+    private T[] safeGetBatch(int batchNumber) {
         for (int i = 0; i < 10; ++i) {
             try {
                 return batches.get(batchNumber);

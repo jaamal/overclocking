@@ -2,8 +2,8 @@ package avlTree;
 
 import avlTree.nodes.AvlTreeNode;
 import avlTree.nodes.AvlTreeNodeBuilder;
-import caching.ConcurrentMemoryStorage;
-import caching.IStorage;
+import caching.ConcurrentInMemoryEnumerableData;
+import caching.IEnumerableData;
 import dataContracts.DataFactoryType;
 import tree.nodeProviders.ConcurrentNodeAllocator;
 import tree.nodeProviders.INodeAllocator;
@@ -19,10 +19,10 @@ public class ConcurrentAvlTreeManagerFactory implements IAvlTreeManagerFactory {
     }
 
     public IAvlTreeManager create() {
-        IStorage<AvlTreeNode> nodeStorage;
+        IEnumerableData<AvlTreeNode> nodeStorage;
         switch (dataFactoryType) {
             case memory:
-                nodeStorage = new ConcurrentMemoryStorage<>();
+                nodeStorage = new ConcurrentInMemoryEnumerableData<>(AvlTreeNode.class);
                 break;
             default:
                 throw new RuntimeException(String.format("Unsupported DataFactoryType '%s'", dataFactoryType));

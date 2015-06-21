@@ -7,8 +7,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import tests.stress.StressTestBase;
-import caching.IStorage;
-import caching.MemoryMappedFileStorage;
+import caching.IEnumerableData;
+import caching.MemoryMappedFileEnumerableData;
 import caching.connections.ITemporaryFileFactory;
 import commons.settings.ISettings;
 
@@ -23,10 +23,10 @@ public class MemoryMappedFileStorageTest extends StressTestBase
     @Test
     public void testTempFile()
     {
-        MemoryMappedFileStorage<Integer> storage;
+        MemoryMappedFileEnumerableData<Integer> storage;
         IntegerSerializer serializer = new IntegerSerializer();
         ITemporaryFileFactory temporaryFileFactory = container.get(ITemporaryFileFactory.class);
-        storage = new MemoryMappedFileStorage<Integer>(serializer, temporaryFileFactory, container.get(ISettings.class));
+        storage = new MemoryMappedFileEnumerableData<Integer>(serializer, temporaryFileFactory, container.get(ISettings.class));
 
         final int count = 1056;
         for (int i = 0; i < count; ++i)
@@ -62,7 +62,7 @@ public class MemoryMappedFileStorageTest extends StressTestBase
 
             for (int attempt = 0; attempt < 2; attempt++)
             {
-                IStorage<Integer> storage = new MemoryMappedFileStorage<Integer>(serializer, rawFile, container.get(ISettings.class));
+                IEnumerableData<Integer> storage = new MemoryMappedFileEnumerableData<Integer>(serializer, rawFile, container.get(ISettings.class));
 
                 final int count = 1056;
                 for (int i = 0; i < count; ++i)

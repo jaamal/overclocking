@@ -1,7 +1,7 @@
 package tests.unit.Caching;
 
-import caching.ConcurrentMemoryStorage;
-import caching.IStorage;
+import caching.ConcurrentInMemoryEnumerableData;
+import caching.IEnumerableData;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-public class ConcurrentMemoryStorageTest extends UnitTestBase {
+public class ConcurrentInMemoryEnumerableDataTest extends UnitTestBase {
+    private IEnumerableData<Long> storage;
+    
     @Override
     public void setUp() {
         super.setUp();
-        storage = new ConcurrentMemoryStorage<>(100);
+        storage = new ConcurrentInMemoryEnumerableData<Long>(Long.class, 100);
     }
 
     @Test
@@ -42,13 +44,13 @@ public class ConcurrentMemoryStorageTest extends UnitTestBase {
     }
 
     private static class ThreadWriterRunner implements Runnable {
-        private IStorage<Long> storage;
+        private IEnumerableData<Long> storage;
         private int number;
         private int threadsCount;
         private int totalCount;
         private Random random;
 
-        private ThreadWriterRunner(IStorage<Long> storage, int number, int threadsCount, int totalCount) {
+        private ThreadWriterRunner(IEnumerableData<Long> storage, int number, int threadsCount, int totalCount) {
             this.storage = storage;
             this.number = number;
             this.threadsCount = threadsCount;
@@ -75,6 +77,4 @@ public class ConcurrentMemoryStorageTest extends UnitTestBase {
             System.out.println(String.format("Thread %d ended", number));
         }
     }
-
-    private IStorage<Long> storage;
 }

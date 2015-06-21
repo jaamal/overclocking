@@ -3,7 +3,7 @@ package tests.integration.Caching;
 import org.junit.Assert;
 import org.junit.Test;
 
-import caching.MemoryStorage;
+import caching.InMemoryEnumerableData;
 import compressingCore.dataAccess.LongArray;
 import tests.integration.IntegrationTestBase;
 
@@ -11,14 +11,14 @@ public class LongArrayTest extends IntegrationTestBase
 {
     @Test(expected=IndexOutOfBoundsException.class)
     public void testDefaults() {
-        try (LongArray longArray = new LongArray(new MemoryStorage<Long>(), 3)){
+        try (LongArray longArray = new LongArray(new InMemoryEnumerableData<Long>(Long.class), 3)){
             longArray.get(0);
         }
     }
     
     @Test
     public void testGetAndSet() {
-        try (LongArray longArray = new LongArray(new MemoryStorage<Long>(), 3)){
+        try (LongArray longArray = new LongArray(new InMemoryEnumerableData<Long>(Long.class), 3)){
             longArray.set(0, 16);
             Assert.assertEquals(16L, longArray.get(0));
             longArray.set(1, Integer.MAX_VALUE);
@@ -30,7 +30,7 @@ public class LongArrayTest extends IntegrationTestBase
     
     @Test
     public void testMultiSet() {
-        try (LongArray longArray = new LongArray(new MemoryStorage<Long>(), 3)){
+        try (LongArray longArray = new LongArray(new InMemoryEnumerableData<Long>(Long.class), 3)){
             long[] array = new long[] {16L, Integer.MAX_VALUE, (long) Integer.MAX_VALUE + 100 };
             longArray.set(0, array);
             Assert.assertEquals(16L, longArray.get(0));

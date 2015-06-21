@@ -1,13 +1,13 @@
 package cartesianTree.nodes;
 
 import tree.nodeProviders.ITreeNodeBuilder;
-import caching.IStorage;
+import caching.IEnumerableData;
 
 public class CartesianTreeNodeBuilder implements ITreeNodeBuilder<CartesianTreeNode>
 {
-    private IStorage<CartesianTreeNode> storage;
+    private IEnumerableData<CartesianTreeNode> storage;
 
-    public CartesianTreeNodeBuilder(IStorage<CartesianTreeNode> storage)
+    public CartesianTreeNodeBuilder(IEnumerableData<CartesianTreeNode> storage)
     {
         this.storage = storage;
     }

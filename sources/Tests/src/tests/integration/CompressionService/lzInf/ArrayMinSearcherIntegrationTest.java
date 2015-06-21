@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import caching.MemoryStorage;
+import caching.InMemoryEnumerableData;
 
 import compressingCore.dataAccess.LongArray;
 import compressionservice.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
@@ -38,7 +38,7 @@ public class ArrayMinSearcherIntegrationTest extends IntegrationTestBase
 
     private void doTest(long[] array)
     {
-        try (LongArray longArray = new LongArray(new MemoryStorage<Long>(), array.length)){
+        try (LongArray longArray = new LongArray(new InMemoryEnumerableData<Long>(Long.class), array.length)){
             longArray.set(0, array);
             IArrayMinSearcher minSearcher = arrayMinSearcherFactory.createSearcher(DataFactoryType.memory, longArray);
             for (int startIndex = 0; startIndex < array.length; startIndex++)

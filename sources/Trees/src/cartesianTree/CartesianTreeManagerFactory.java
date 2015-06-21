@@ -1,8 +1,8 @@
 package cartesianTree;
 
-import caching.IStorage;
-import caching.MemoryMappedFileStorage;
-import caching.MemoryStorage;
+import caching.IEnumerableData;
+import caching.MemoryMappedFileEnumerableData;
+import caching.InMemoryEnumerableData;
 import caching.connections.TemporaryFileFactory;
 import cartesianTree.heapKeyResolvers.IHeapKeyResolver;
 import cartesianTree.heapKeyResolvers.RandomGeneratorFactory;
@@ -27,16 +27,16 @@ public class CartesianTreeManagerFactory implements ICartesianTreeManagerFactory
 
     @Override
     public ICartesianTreeManager create() {
-        IStorage<CartesianTreeNode> nodeIStorage;
-        IStorage<Long> innerReferencesStorage;
+        IEnumerableData<CartesianTreeNode> nodeIStorage;
+        IEnumerableData<Long> innerReferencesStorage;
         if (dataFactoryType == DataFactoryType.memory) {
-            nodeIStorage = new MemoryStorage<>();
-            innerReferencesStorage = new MemoryStorage<>();
+            nodeIStorage = new InMemoryEnumerableData<>(CartesianTreeNode.class);
+            innerReferencesStorage = new InMemoryEnumerableData<>(Long.class);
         } else if (dataFactoryType == DataFactoryType.file) {
             CartesianTreeNodeSerializer serializer = new CartesianTreeNodeSerializer();
             TemporaryFileFactory temporaryFileFactory = new TemporaryFileFactory(settings);
-            nodeIStorage = new MemoryMappedFileStorage<>(serializer, temporaryFileFactory, settings);
-            innerReferencesStorage = new MemoryMappedFileStorage<>(new LongSerializer(), temporaryFileFactory, settings);
+            nodeIStorage = new MemoryMappedFileEnumerableData<>(serializer, temporaryFileFactory, settings);
+            innerReferencesStorage = new MemoryMappedFileEnumerableData<>(new LongSerializer(), temporaryFileFactory, settings);
         } else {
             throw new RuntimeException(String.format("Unknown DataFactoryType '%s'", dataFactoryType));
         }

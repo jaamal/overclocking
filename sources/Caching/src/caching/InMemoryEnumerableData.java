@@ -1,19 +1,21 @@
 package caching;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class MemoryStorage<T> implements IStorage<T> {
+public class InMemoryEnumerableData<T> implements IEnumerableData<T> {
+    private final ArrayList<T[]> batches;
+    private final Class<T> itemClass;
     private final int batchSize;
-    private final ArrayList<Object[]> batches;
     private long size;
 
-    public MemoryStorage()
-    {
-      this(100000);
+    public InMemoryEnumerableData(Class<T> itemClass) {
+      this(itemClass, 100000);
     }
 
-    public MemoryStorage(int batchSize) {
+    public InMemoryEnumerableData(Class<T> itemClass, int batchSize) {
         this.batchSize = batchSize;
+        this.itemClass = itemClass;
         batches = new ArrayList<>();
         size = 0;
     }
@@ -26,15 +28,16 @@ public class MemoryStorage<T> implements IStorage<T> {
             throw new IndexOutOfBoundsException();
         if (index >= size)
             throw new IndexOutOfBoundsException();
-        return (T) batches.get((int) (index / batchSize))[(int) (index % batchSize)];
+        return batches.get((int) (index / batchSize))[(int) (index % batchSize)];
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void save(long index, T object) {
         if (index < 0)
             throw new IndexOutOfBoundsException();
         while (index >= size) {
-            batches.add(new Object[batchSize]);
+            batches.add((T[])Array.newInstance(itemClass, batchSize));
             size += batchSize;
         }
         batches.get((int) (index / batchSize))[(int) (index % batchSize)] = object;

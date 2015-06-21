@@ -1,20 +1,20 @@
 package tree.nodeProviders;
 
-import caching.IStorage;
+import caching.IEnumerableData;
 import tree.ITreeNode;
 import tree.nodeProviders.indexSets.IFreeNodesSet;
 
 import java.util.HashSet;
 
 public class NodeAllocator<TNode extends ITreeNode> implements INodeAllocator<TNode> {
-    private final IStorage<TNode> nodeStorage;
-    private final IStorage<Long> innerReferenceStorage;
+    private final IEnumerableData<TNode> nodeStorage;
+    private final IEnumerableData<Long> innerReferenceStorage;
     private final IFreeNodesSet freeNodesSet;
     private final HashSet<Long> withoutInner;
 
     public NodeAllocator(
-            IStorage<TNode> nodeStorage,
-            IStorage<Long> innerReferenceStorage,
+            IEnumerableData<TNode> nodeStorage,
+            IEnumerableData<Long> innerReferenceStorage,
             IFreeNodesSet freeNodesSet) {
         this.nodeStorage = nodeStorage;
         this.innerReferenceStorage = innerReferenceStorage;

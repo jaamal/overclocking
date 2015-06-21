@@ -1,6 +1,6 @@
 package compressingCore.dataAccess;
 
-import caching.MemoryStorage;
+import caching.InMemoryEnumerableData;
 
 import org.apache.commons.io.IOUtils;
 
@@ -32,7 +32,7 @@ public class MemoryDataFactory implements ITypedDataFactory
     @Override
     public ILongArray createLongArray(long size)
     {
-        return new LongArray(new MemoryStorage<Long>(), size);
+        return new LongArray(new InMemoryEnumerableData<Long>(Long.class), size);
     }
 
     @Override

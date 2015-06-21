@@ -1,13 +1,13 @@
 package compressingCore.dataAccess;
 
-import caching.IStorage;
+import caching.IEnumerableData;
 
 public class LongArray implements ILongArray
 {
-    private IStorage<Long> storage;
+    private IEnumerableData<Long> storage;
     private long length;
 
-    public LongArray(IStorage<Long> storage, long length)
+    public LongArray(IEnumerableData<Long> storage, long length)
     {
         this.storage = storage;
         this.length = length;

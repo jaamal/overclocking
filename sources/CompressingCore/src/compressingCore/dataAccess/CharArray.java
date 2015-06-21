@@ -1,19 +1,19 @@
 package compressingCore.dataAccess;
 
-import caching.IStorage;
+import caching.IEnumerableData;
 
 public class CharArray implements IReadableCharArray
 {
-    private final IStorage<Character> storage;
+    private final IEnumerableData<Character> storage;
     private final long length;
     private final long start;
 
-    public CharArray(IStorage<Character> storage, long length)
+    public CharArray(IEnumerableData<Character> storage, long length)
     {
         this(storage, length, 0);
     }
 
-    private CharArray(IStorage<Character> storage, long length, long start)
+    private CharArray(IEnumerableData<Character> storage, long length, long start)
     {
         this.storage = storage;
         this.length = length;

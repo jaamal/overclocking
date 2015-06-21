@@ -1,15 +1,15 @@
 package tree.nodeProviders;
 
-import caching.IStorage;
+import caching.IEnumerableData;
 import tree.ITreeNode;
 
 public class TreeNodeProvider<TNode extends ITreeNode> implements ITreeNodeProvider<TNode> {
-    private final IStorage<TNode> nodeStorage;
+    private final IEnumerableData<TNode> nodeStorage;
     private ITreeNodeBuilder<TNode> treeNodeBuilder;
     private INodeAllocator<TNode> nodeAllocator;
 
     public TreeNodeProvider(
-            IStorage<TNode> nodeStorage,
+            IEnumerableData<TNode> nodeStorage,
             ITreeNodeBuilder<TNode> treeNodeBuilder,
             INodeAllocator<TNode> nodeAllocator) {
         this.nodeStorage = nodeStorage;

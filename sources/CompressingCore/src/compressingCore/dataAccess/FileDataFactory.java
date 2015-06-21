@@ -3,7 +3,7 @@ package compressingCore.dataAccess;
 import java.io.File;
 import java.nio.file.Path;
 
-import caching.MemoryMappedFileStorage;
+import caching.MemoryMappedFileEnumerableData;
 import caching.connections.ITemporaryFileFactory;
 import caching.serializers.ISerializer;
 import commons.settings.ISettings;
@@ -28,14 +28,14 @@ public class FileDataFactory implements ITypedDataFactory
     public IReadableCharArray readFile(Path filePath)
     {
         File file = filePath.toFile();
-        MemoryMappedFileStorage<Character> memoryMappedFileStorage = new MemoryMappedFileStorage<>(charSerializer, file, settings);
+        MemoryMappedFileEnumerableData<Character> memoryMappedFileStorage = new MemoryMappedFileEnumerableData<>(charSerializer, file, settings);
         return new CharArray(memoryMappedFileStorage, file.length());
     }
 
     @Override
     public ILongArray createLongArray(long size)
     {
-        MemoryMappedFileStorage<Long> memoryMappedFileStorage = new MemoryMappedFileStorage<>(longSerializer, temporaryFileFactory, settings);
+        MemoryMappedFileEnumerableData<Long> memoryMappedFileStorage = new MemoryMappedFileEnumerableData<>(longSerializer, temporaryFileFactory, settings);
         return new LongArray(memoryMappedFileStorage, size);
     }
 
