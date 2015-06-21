@@ -6,12 +6,12 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-import compressingCore.dataAccess.MemoryDataFactory;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.Finder;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.IFindingSearcher;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
+import data.MemoryDataFactory;
 import data.charArray.IReadableCharArray;
 
 public class FinderTest extends UnitTestBase

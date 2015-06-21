@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-
-import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.lzw.LZWFactorIterator;
+import data.IDataFactory;
 
 public class LZWFactorIteratorIntegrationTest extends IntegrationTestBase
 {

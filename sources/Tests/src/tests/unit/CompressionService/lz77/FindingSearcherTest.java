@@ -9,11 +9,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-
-import compressingCore.dataAccess.MemoryDataFactory;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.FindingSearcher;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
+import data.MemoryDataFactory;
 
 public class FindingSearcherTest extends UnitTestBase
 {

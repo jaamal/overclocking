@@ -12,10 +12,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.LZ77FactorIterator;
 import compressionservice.algorithms.lz77.TextWindow;
+import data.IDataFactory;
 import data.charArray.IReadableCharArray;
 import dataContracts.FactorDef;
 

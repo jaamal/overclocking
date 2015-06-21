@@ -6,8 +6,8 @@ import java.util.Random;
 import org.junit.Test;
 
 import tests.stress.StressTestBase;
-import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.lzw.LZWFactorIterator;
+import data.IDataFactory;
 import data.charArray.IReadableCharArray;
 
 public class LZWFactorIteratorStressTest extends StressTestBase

@@ -6,10 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-
-import compressingCore.dataAccess.MemoryDataFactory;
 import compressionservice.algorithms.lcaOnlineSlp.LCAOnlineCompressor;
-
+import data.MemoryDataFactory;
 import dataContracts.SLPModel;
 import dataContracts.SLPStatistics;
 

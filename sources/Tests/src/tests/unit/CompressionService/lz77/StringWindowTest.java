@@ -5,11 +5,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-
-import compressingCore.dataAccess.MemoryDataFactory;
 import compressionservice.algorithms.lz77.ITextWindow;
 import compressionservice.algorithms.lz77.TextWindow;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
+import data.MemoryDataFactory;
 
 public class StringWindowTest extends UnitTestBase
 {

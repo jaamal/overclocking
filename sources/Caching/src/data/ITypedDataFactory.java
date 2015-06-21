@@ -1,4 +1,4 @@
-package compressingCore.dataAccess;
+package data;
 
 import java.nio.file.Path;
 

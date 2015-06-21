@@ -10,7 +10,7 @@ import commons.files.IFile;
 import commons.files.IFileManager;
 import commons.settings.ISettings;
 import commons.settings.KnownKeys;
-import compressingCore.dataAccess.IDataFactory;
+import data.IDataFactory;
 import data.charArray.IReadableCharArray;
 import data.longArray.ILongArray;
 import dataContracts.DataFactoryType;

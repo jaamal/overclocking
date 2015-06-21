@@ -16,11 +16,9 @@ import avlTree.IAvlTreeManagerFactory;
 import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
-
 import commons.files.FileManager;
 import commons.files.IFileManager;
 import commons.settings.ISettings;
-import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.factorization.FactorIteratorFactory;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
@@ -31,7 +29,7 @@ import compressionservice.algorithms.lzInf.suffixArray.ISuffixArrayBuilder;
 import compressionservice.algorithms.lzInf.suffixArray.SuffixArrayBuilder;
 import compressionservice.algorithms.lzInf.suffixTreeImitation.IOnlineSuffixTreeFactory;
 import compressionservice.algorithms.lzInf.suffixTreeImitation.OnLineSuffixTreeFactory;
-
+import data.IDataFactory;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;

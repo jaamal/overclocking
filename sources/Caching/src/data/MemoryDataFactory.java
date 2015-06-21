@@ -1,4 +1,4 @@
-package compressingCore.dataAccess;
+package data;
 
 import org.apache.commons.io.IOUtils;
 

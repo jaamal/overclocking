@@ -1,4 +1,4 @@
-package compressingCore.dataAccess;
+package data;
 
 import java.nio.file.Path;
 
@@ -30,7 +30,7 @@ public class DataFactory implements IDataFactory {
                 continue;
             return typedDataFactory;
         }
-        throw new UnknownDataFactoryTypeException(dataType);
+        throw new RuntimeException(String.format("Fail to find data factory of type %s.", dataType));
     }
 
     @Override
