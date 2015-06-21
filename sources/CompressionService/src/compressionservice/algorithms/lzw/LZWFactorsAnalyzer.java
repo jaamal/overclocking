@@ -1,6 +1,6 @@
 package compressionservice.algorithms.lzw;
 
-import compressingCore.dataAccess.IReadableCharArray;
+import data.charArray.IReadableCharArray;
 
 public class LZWFactorsAnalyzer implements ILZWFactorsAnalyzer
 {

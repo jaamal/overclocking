@@ -5,9 +5,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import compressingCore.dataAccess.MemoryReadableCharArray;
+
+import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.lzInf.suffixArray.ISuffixArray;
 import compressionservice.algorithms.lzInf.suffixArray.SuffixArrayBuilder;
+
 import dataContracts.DataFactoryType;
 
 public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
@@ -25,7 +27,7 @@ public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
     @Test
     public void testOneSymbol()
     {
-        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, new MemoryReadableCharArray("a"));
+        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray("a".toCharArray()));
         doAssert(new long[]{0}, suffixArray);
         suffixArray.dispose();
     }
@@ -33,7 +35,7 @@ public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
     @Test
     public void testAaaaa()
     {
-        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, new MemoryReadableCharArray("aaaaa"));
+        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray("aaaaa".toCharArray()));
         doAssert(new long[]{4, 3, 2, 1, 0}, suffixArray);
         suffixArray.dispose();
     }
@@ -41,7 +43,7 @@ public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
     @Test
     public void testMissisipi()
     {
-        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, new MemoryReadableCharArray("missisipi"));
+        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray("missisipi".toCharArray()));
         doAssert(new long[]{8, 6, 4, 1, 0, 7, 5, 3, 2}, suffixArray);
         suffixArray.dispose();
     }

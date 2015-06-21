@@ -1,7 +1,6 @@
 package compressionservice.algorithms.factorization;
 
-import compressingCore.dataAccess.IReadableCharArray;
-
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 
 public interface IFactorIteratorFactory

@@ -5,6 +5,9 @@ import java.nio.file.Path;
 
 import caching.connections.ITemporaryFileFactory;
 import commons.settings.ISettings;
+import data.charArray.CharArray;
+import data.charArray.CharSerializer;
+import data.charArray.IReadableCharArray;
 import data.enumerableData.IItemSerializer;
 import data.enumerableData.MemoryMappedFileEnumerableData;
 import data.longArray.ILongArray;
@@ -28,7 +31,7 @@ public class FileDataFactory implements ITypedDataFactory
     }
 
     @Override
-    public IReadableCharArray readFile(Path filePath)
+    public IReadableCharArray getCharArray(Path filePath)
     {
         File file = filePath.toFile();
         MemoryMappedFileEnumerableData<Character> memoryMappedFileStorage = new MemoryMappedFileEnumerableData<>(charSerializer, file, settings);
@@ -45,5 +48,10 @@ public class FileDataFactory implements ITypedDataFactory
     @Override
     public DataFactoryType getDataType() {
         return DataFactoryType.file;
+    }
+
+    @Override
+    public IReadableCharArray createCharArray(char[] chars) {
+        throw new RuntimeException("Unable to create char array implicitly at file data factory.");
     }
 }

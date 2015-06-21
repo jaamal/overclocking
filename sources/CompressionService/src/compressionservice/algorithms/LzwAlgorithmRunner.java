@@ -1,11 +1,9 @@
 package compressionservice.algorithms;
 
 import storage.filesRepository.IFilesRepository;
-
 import commons.utils.TimeCounter;
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lzw.ILZWFactorsAnalyzer;
-
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;

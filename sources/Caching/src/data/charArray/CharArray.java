@@ -1,4 +1,4 @@
-package compressingCore.dataAccess;
+package data.charArray;
 
 import data.enumerableData.IEnumerableData;
 

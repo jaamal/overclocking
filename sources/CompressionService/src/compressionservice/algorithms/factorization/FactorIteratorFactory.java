@@ -1,8 +1,8 @@
 package compressionservice.algorithms.factorization;
 
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lz77.TextWindow;
 import compressionservice.algorithms.lzInf.suffixTreeImitation.IOnlineSuffixTreeFactory;
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 
 public class FactorIteratorFactory implements IFactorIteratorFactory

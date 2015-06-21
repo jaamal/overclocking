@@ -1,11 +1,11 @@
 package compressionservice.algorithms.lz77;
 
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lz77.suffixTree.ITree;
 import compressionservice.algorithms.lz77.suffixTree.Tree;
 import compressionservice.algorithms.lz77.suffixTree.structures.FactoriesImpl;
 import compressionservice.algorithms.lz77.suffixTree.structures.IFactories;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
+import data.charArray.IReadableCharArray;
 
 public class TextWindow implements ITextWindow
 {

@@ -8,10 +8,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.factorization.LZ77FactorIterator;
 import compressionservice.algorithms.lz77.ITextWindow;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
+import data.charArray.IReadableCharArray;
 import dataContracts.FactorDef;
 
 public class LZ77FactorIteratorTest extends UnitTestBase

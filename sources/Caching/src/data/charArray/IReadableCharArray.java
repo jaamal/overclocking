@@ -1,4 +1,4 @@
-package compressingCore.dataAccess;
+package data.charArray;
 
 public interface IReadableCharArray extends AutoCloseable
 {

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import tests.unit.UnitTestBase;
 
-import compressingCore.dataAccess.MemoryReadableCharArray;
+import compressingCore.dataAccess.MemoryDataFactory;
 import compressionservice.algorithms.lcaOnlineSlp.LCAOnlineCompressor;
 
 import dataContracts.SLPModel;
@@ -54,7 +54,7 @@ public class LCAOnlineCompressorTest extends UnitTestBase{
     }
 
     private void doTest(String text) {
-        SLPModel slpModel = compressor.buildSLP(new MemoryReadableCharArray(text)).toSLPModel();
+        SLPModel slpModel = compressor.buildSLP(new MemoryDataFactory().createCharArray(text.toCharArray())).toSLPModel();
         SLPStatistics statistics = slpModel.calcStats();
         System.out.println(String.format("Length = %d, count of rules = %d, height = %d", text.length(), statistics.countRules, statistics.height));
         Assert.assertEquals(text, slpModel.toString());

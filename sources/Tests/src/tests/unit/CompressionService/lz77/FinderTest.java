@@ -6,13 +6,13 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-import compressingCore.dataAccess.IReadableCharArray;
-import compressingCore.dataAccess.MemoryReadableCharArray;
+import compressingCore.dataAccess.MemoryDataFactory;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.Finder;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.IFindingSearcher;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
+import data.charArray.IReadableCharArray;
 
 public class FinderTest extends UnitTestBase
 {
@@ -32,7 +32,7 @@ public class FinderTest extends UnitTestBase
     public void testEmptySubstring()
     {
         this.text = "text";
-        this.string = new MemoryReadableCharArray("");
+        this.string = new MemoryDataFactory().createCharArray("".toCharArray());
         this.finder = new Finder(this.text, this.string, this.mockFindingSearcher);
         INode mockNode = newMock(INode.class);
 
@@ -46,7 +46,7 @@ public class FinderTest extends UnitTestBase
     public void testNullEdge()
     {
         this.text = "text";
-        this.string = new MemoryReadableCharArray("aaa");
+        this.string = new MemoryDataFactory().createCharArray("aaa".toCharArray());
         this.finder = new Finder(this.text, this.string, mockFindingSearcher);
         INode mockNode = newMock(INode.class);
 
@@ -61,7 +61,7 @@ public class FinderTest extends UnitTestBase
     public void testSubstringFound()
     {
         this.text = "text";
-        this.string = new MemoryReadableCharArray("tex");
+        this.string = new MemoryDataFactory().createCharArray("tex".toCharArray());
         this.finder = new Finder(this.text, this.string, this.mockFindingSearcher);
         INode mockNode = newMock(INode.class);
         IEdge mockEdge = newMock(IEdge.class);
@@ -81,7 +81,7 @@ public class FinderTest extends UnitTestBase
     public void testDifficultPathSubstringFound1()
     {
         this.text = "abcdefabcuvw";
-        this.string = new MemoryReadableCharArray("bcdef");
+        this.string = new MemoryDataFactory().createCharArray("bcdef".toCharArray());
         finder = new Finder(this.text, this.string, this.mockFindingSearcher);
         INode[] mockNodes = new INode[]{newMock(INode.class), newMock(INode.class)};
         IEdge[] mockEdges = new IEdge[]{newMock(IEdge.class), newMock(IEdge.class)};
@@ -106,7 +106,7 @@ public class FinderTest extends UnitTestBase
     public void testDifficultPathSubstringFound2()
     {
         this.text = "abcdefabcuvw";
-        this.string = new MemoryReadableCharArray("bcdqf");
+        this.string = new MemoryDataFactory().createCharArray("bcdqf".toCharArray());
         this.finder = new Finder(this.text, this.string, this.mockFindingSearcher);
         INode[] mockNodes = new INode[]{newMock(INode.class), newMock(INode.class), newMock(INode.class)};
         IEdge[] mockEdges = new IEdge[]{newMock(IEdge.class), newMock(IEdge.class)};

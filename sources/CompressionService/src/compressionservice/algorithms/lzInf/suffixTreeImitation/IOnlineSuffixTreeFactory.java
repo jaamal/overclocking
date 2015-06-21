@@ -1,6 +1,6 @@
 package compressionservice.algorithms.lzInf.suffixTreeImitation;
 
-import compressingCore.dataAccess.IReadableCharArray;
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 
 public interface IOnlineSuffixTreeFactory

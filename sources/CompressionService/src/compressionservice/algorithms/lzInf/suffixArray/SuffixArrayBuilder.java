@@ -11,7 +11,7 @@ import commons.files.IFileManager;
 import commons.settings.ISettings;
 import commons.settings.KnownKeys;
 import compressingCore.dataAccess.IDataFactory;
-import compressingCore.dataAccess.IReadableCharArray;
+import data.charArray.IReadableCharArray;
 import data.longArray.ILongArray;
 import dataContracts.DataFactoryType;
 
@@ -37,7 +37,7 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
     @Override
     public ISuffixArray build(DataFactoryType dataFactoryType, String pathToFile) {
         try (IFile textFile = fileManager.getFile(pathToFile); ) {
-            IReadableCharArray source = dataFactory.readFile(dataFactoryType, new File(pathToFile).toPath());
+            IReadableCharArray source = dataFactory.getCharArray(dataFactoryType, new File(pathToFile).toPath());
             return build(dataFactoryType, source);
         }
     }

@@ -1,6 +1,5 @@
 package compressionservice.algorithms.lz77.suffixTree;
 
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.IAppender;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.IBeginPlace;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.IInsertPlace;
@@ -25,6 +24,7 @@ import compressionservice.algorithms.lz77.suffixTree.structures.Leaf;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.INodeFactory;
+import data.charArray.IReadableCharArray;
 
 public class Tree implements ITree
 {

@@ -12,11 +12,9 @@ import org.apache.log4j.Logger;
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
-
 import compressingCore.dataAccess.IDataFactory;
-import compressingCore.dataAccess.IReadableCharArray;
 import compressingCore.dataFiltering.IFileFilter;
-
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.files.FileMetadata;
@@ -56,7 +54,7 @@ public class ResourceProvider implements IResourceProvider {
              Reader reader = new InputStreamReader(stream))
         {
             Path pathToFile = fileFilter.apply(fileMetadata.getType(), reader);
-            IReadableCharArray result = dataFactory.readFile(dataFactoryType, pathToFile);
+            IReadableCharArray result = dataFactory.getCharArray(dataFactoryType, pathToFile);
             logger.info(String.format("Filtration of file %s is finished. File name = %s", sourceId, pathToFile));
             return result;
         } catch (IOException e) {

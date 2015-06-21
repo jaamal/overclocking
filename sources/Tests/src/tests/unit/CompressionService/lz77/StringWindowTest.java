@@ -5,7 +5,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-import compressingCore.dataAccess.MemoryReadableCharArray;
+
+import compressingCore.dataAccess.MemoryDataFactory;
 import compressionservice.algorithms.lz77.ITextWindow;
 import compressionservice.algorithms.lz77.TextWindow;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
@@ -19,7 +20,7 @@ public class StringWindowTest extends UnitTestBase
     {
         this.stringWindow = TextWindow.create(5);
         this.stringWindow.append("bbb");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("aaa"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("aaa".toCharArray()));
         Assert.assertEquals(Location.create(0, 0), actual);
     }
 
@@ -28,7 +29,7 @@ public class StringWindowTest extends UnitTestBase
     {
         this.stringWindow = TextWindow.create(5);
         this.stringWindow.append("aaa");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("aaaa"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("aaaa".toCharArray()));
         Assert.assertEquals(Location.create(0, 3), actual);
     }
 
@@ -39,7 +40,7 @@ public class StringWindowTest extends UnitTestBase
         this.stringWindow.append("aaa");
         this.stringWindow.append("bbb");
         this.stringWindow.append("aaa");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("aaa"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("aaa".toCharArray()));
         Assert.assertEquals(Location.create(6, 3), actual);
     }
 
@@ -51,7 +52,7 @@ public class StringWindowTest extends UnitTestBase
         this.stringWindow.append("bbb");
         this.stringWindow.append("aaa");
         this.stringWindow.append("ccc");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("aaa"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("aaa".toCharArray()));
         Assert.assertEquals(Location.create(7, 2), actual);
     }
 
@@ -63,7 +64,7 @@ public class StringWindowTest extends UnitTestBase
         this.stringWindow.append("bbb");
         this.stringWindow.append("aaa");
         this.stringWindow.append("ccc");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("aacceee"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("aacceee".toCharArray()));
         Assert.assertEquals(Location.create(7, 4), actual);
     }
 
@@ -71,7 +72,7 @@ public class StringWindowTest extends UnitTestBase
     public void textNullText()
     {
         this.stringWindow = TextWindow.create(5);
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("aaa"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("aaa".toCharArray()));
         Assert.assertEquals(Location.create(0, 0), actual);
     }
 
@@ -83,7 +84,7 @@ public class StringWindowTest extends UnitTestBase
         this.stringWindow.append("bbb");
         this.stringWindow.append("aaa");
         this.stringWindow.append("ccc");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("cacceee"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("cacceee".toCharArray()));
         Assert.assertEquals(Location.create(9, 1), actual);
     }
 
@@ -95,7 +96,7 @@ public class StringWindowTest extends UnitTestBase
         this.stringWindow.append("bbb");
         this.stringWindow.append("aaa");
         this.stringWindow.append("ccc");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("cacceee"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("cacceee".toCharArray()));
         Assert.assertEquals(Location.create(9, 1), actual);
     }
 
@@ -107,7 +108,7 @@ public class StringWindowTest extends UnitTestBase
         this.stringWindow.append("bbbzzz");
         this.stringWindow.append("aaaaaa");
         this.stringWindow.append("cccasdjk");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("cacceee"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("cacceee".toCharArray()));
         Assert.assertEquals(Location.create(20, 2), actual);
     }
 
@@ -119,7 +120,7 @@ public class StringWindowTest extends UnitTestBase
         this.stringWindow.append("");
         this.stringWindow.append("cccasdjk");
         this.stringWindow.append("");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("cacceee"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("cacceee".toCharArray()));
         Assert.assertEquals(Location.create(2, 2), actual);
     }
 
@@ -130,7 +131,7 @@ public class StringWindowTest extends UnitTestBase
         this.stringWindow.append("aaa");
         this.stringWindow.append("aaa");
         this.stringWindow.append("cccasdjkaa");
-        Location actual = this.stringWindow.search(new MemoryReadableCharArray("cccasdjkaaa"));
+        Location actual = this.stringWindow.search(new MemoryDataFactory().createCharArray("cccasdjkaaa".toCharArray()));
         Assert.assertEquals(Location.create(6, 10), actual);
     }
 }

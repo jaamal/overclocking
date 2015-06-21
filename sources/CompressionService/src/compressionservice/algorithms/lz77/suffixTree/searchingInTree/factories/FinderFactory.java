@@ -1,9 +1,9 @@
 package compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories;
 
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.Finder;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.IFinder;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.IFindingSearcher;
+import data.charArray.IReadableCharArray;
 
 public class FinderFactory implements IFinderFactory
 {

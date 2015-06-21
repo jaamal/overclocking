@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import compressingCore.dataAccess.MemoryReadableCharArray;
+
+import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.lzw.LZWFactorIterator;
 
 public class LZWFactorIteratorIntegrationTest extends IntegrationTestBase
@@ -17,7 +18,7 @@ public class LZWFactorIteratorIntegrationTest extends IntegrationTestBase
     public void testIntegration()
     {
         char[] charArray = {'a', 'b', 'a', 'a', 'b', 'a', 'b', 'a', 'a', 'b', 'a', 'a', 'b'};
-        LZWFactorIterator lzwFactorIterator = new LZWFactorIterator(new MemoryReadableCharArray(charArray, 0, charArray.length));
+        LZWFactorIterator lzwFactorIterator = new LZWFactorIterator(container.get(IDataFactory.class).createCharArray(charArray));
         long[] expected = new long[]{
                 97, 98, 97, Character.MAX_CODE_POINT + 1,
                 Character.MAX_CODE_POINT + 1, Character.MAX_CODE_POINT + 3,
@@ -33,7 +34,7 @@ public class LZWFactorIteratorIntegrationTest extends IntegrationTestBase
         char[] charArray = new char[fileContent.length];
         for (int i = 0; i < fileContent.length; i++)
             charArray[i] = (char) fileContent[i];
-        LZWFactorIterator lzwFactorIterator = new LZWFactorIterator(new MemoryReadableCharArray(charArray, 0, charArray.length));
+        LZWFactorIterator lzwFactorIterator = new LZWFactorIterator(container.get(IDataFactory.class).createCharArray(charArray));
         long[] actual = extractAllFactorCodes(lzwFactorIterator);
         System.out.println(actual.length);
     }
@@ -45,7 +46,7 @@ public class LZWFactorIteratorIntegrationTest extends IntegrationTestBase
         char[] charArray = new char[fileContent.length];
         for (int i = 0; i < fileContent.length; i++)
             charArray[i] = (char) fileContent[i];
-        LZWFactorIterator lzwFactorIterator = new LZWFactorIterator(new MemoryReadableCharArray(charArray, 0, charArray.length));
+        LZWFactorIterator lzwFactorIterator = new LZWFactorIterator(container.get(IDataFactory.class).createCharArray(charArray));
         long[] actual = extractAllFactorCodes(lzwFactorIterator);
         System.out.println(actual.length);
     }

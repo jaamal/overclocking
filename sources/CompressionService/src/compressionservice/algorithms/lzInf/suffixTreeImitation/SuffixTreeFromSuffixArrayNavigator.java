@@ -1,8 +1,8 @@
 package compressionservice.algorithms.lzInf.suffixTreeImitation;
 
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lzInf.arrayMinSearching.IArrayMinSearcher;
 import compressionservice.algorithms.lzInf.suffixArray.ISuffixArray;
+import data.charArray.IReadableCharArray;
 
 /**
  *The class is simulates navigator on suffix array.

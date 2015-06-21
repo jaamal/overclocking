@@ -2,6 +2,8 @@ package compressingCore.dataAccess;
 
 import org.apache.commons.io.IOUtils;
 
+import data.charArray.CharArray;
+import data.charArray.IReadableCharArray;
 import data.enumerableData.InMemoryEnumerableData;
 import data.longArray.ILongArray;
 import data.longArray.LongArray;
@@ -16,13 +18,13 @@ import java.nio.file.Path;
 public class MemoryDataFactory implements ITypedDataFactory
 {
     @Override
-    public IReadableCharArray readFile(Path filePath)
+    public IReadableCharArray getCharArray(Path filePath)
     {
         try
         {
             try(BufferedReader reader = Files.newBufferedReader(filePath, Charset.defaultCharset())) {
                 char[] chars = IOUtils.toCharArray(reader);
-                return new MemoryReadableCharArray(chars, 0, chars.length);
+                return createCharArray(chars);
             }
         } catch (IOException e)
         {
@@ -30,6 +32,15 @@ public class MemoryDataFactory implements ITypedDataFactory
         }
     }
 
+    @Override
+    public IReadableCharArray createCharArray(char[] chars) {
+        InMemoryEnumerableData<Character> charsData = new InMemoryEnumerableData<Character>(Character.class, chars.length);
+        for (int i = 0; i < chars.length; i++) {
+            charsData.save(i, chars[i]);
+        }
+        return new CharArray(charsData, chars.length);
+    }
+    
     @Override
     public ILongArray createLongArray(long size)
     {

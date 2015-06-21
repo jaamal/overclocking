@@ -1,9 +1,9 @@
 package compressionservice.algorithms.lzInf.suffixTreeImitation;
 
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lzInf.arrayMinSearching.IArrayMinSearcherFactory;
 import compressionservice.algorithms.lzInf.suffixArray.ISuffixArray;
 import compressionservice.algorithms.lzInf.suffixArray.ISuffixArrayBuilder;
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 
 public class OnLineSuffixTreeFactory implements IOnlineSuffixTreeFactory

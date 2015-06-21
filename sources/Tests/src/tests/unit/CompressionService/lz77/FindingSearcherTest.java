@@ -9,7 +9,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-import compressingCore.dataAccess.MemoryReadableCharArray;
+
+import compressingCore.dataAccess.MemoryDataFactory;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.FindingSearcher;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
@@ -34,7 +35,7 @@ public class FindingSearcherTest extends UnitTestBase
 
         replayAll();
 
-        Assert.assertNull(null, this.findingSearcher.search("text", new MemoryReadableCharArray("text"), mockNode, 2));
+        Assert.assertNull(null, this.findingSearcher.search("text", new MemoryDataFactory().createCharArray("text".toCharArray()), mockNode, 2));
     }
 
     @Test
@@ -48,7 +49,7 @@ public class FindingSearcherTest extends UnitTestBase
 
         replayAll();
 
-        Assert.assertEquals(null, this.findingSearcher.search("text", new MemoryReadableCharArray("text"), this.mockNode, 1));
+        Assert.assertEquals(null, this.findingSearcher.search("text", new MemoryDataFactory().createCharArray("text".toCharArray()), this.mockNode, 1));
     }
 
     @Test
@@ -66,6 +67,6 @@ public class FindingSearcherTest extends UnitTestBase
 
         replayAll();
 
-        Assert.assertEquals(mockEdges[1], this.findingSearcher.search("text", new MemoryReadableCharArray("e"), this.mockNode, 0));
+        Assert.assertEquals(mockEdges[1], this.findingSearcher.search("text", new MemoryDataFactory().createCharArray("e".toCharArray()), this.mockNode, 0));
     }
 }

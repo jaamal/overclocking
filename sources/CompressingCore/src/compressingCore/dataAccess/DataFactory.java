@@ -2,6 +2,7 @@ package compressingCore.dataAccess;
 
 import java.nio.file.Path;
 
+import data.charArray.IReadableCharArray;
 import data.longArray.ILongArray;
 import dataContracts.DataFactoryType;
 
@@ -14,8 +15,8 @@ public class DataFactory implements IDataFactory {
     }
     
     @Override
-    public IReadableCharArray readFile(DataFactoryType dataType, Path filePath) {
-        return chooseDataFactoryOrDie(dataType).readFile(filePath);
+    public IReadableCharArray getCharArray(DataFactoryType dataType, Path filePath) {
+        return chooseDataFactoryOrDie(dataType).getCharArray(filePath);
     }
 
     @Override
@@ -30,6 +31,11 @@ public class DataFactory implements IDataFactory {
             return typedDataFactory;
         }
         throw new UnknownDataFactoryTypeException(dataType);
+    }
+
+    @Override
+    public IReadableCharArray createCharArray(char[] chars) {
+        return chooseDataFactoryOrDie(DataFactoryType.memory).createCharArray(chars);
     }
 
 }

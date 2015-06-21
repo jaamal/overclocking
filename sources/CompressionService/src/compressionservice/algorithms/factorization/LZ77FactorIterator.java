@@ -1,8 +1,8 @@
 package compressionservice.algorithms.factorization;
 
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lz77.ITextWindow;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
+import data.charArray.IReadableCharArray;
 import dataContracts.FactorDef;
 
 public class LZ77FactorIterator implements IFactorIterator

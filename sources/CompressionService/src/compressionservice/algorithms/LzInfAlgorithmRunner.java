@@ -8,13 +8,11 @@ import org.apache.log4j.Logger;
 import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
 import storage.filesRepository.IFilesRepository;
-
 import commons.utils.TimeCounter;
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.profile.IAnalysator;
-
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.IStatistics;

@@ -7,11 +7,9 @@ import storage.IArrayItemsWriter;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.ISLPBuilder;
-
 import commons.utils.TimeCounter;
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
-
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 import dataContracts.Product;
 import dataContracts.SLPModel;

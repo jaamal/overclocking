@@ -26,14 +26,11 @@ import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 import avlTree.slpBuilders.SLPBuilder;
-
 import commons.settings.ISettings;
 import compressingCore.dataAccess.IDataFactory;
-import compressingCore.dataAccess.IReadableCharArray;
-import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
-
+import data.charArray.IReadableCharArray;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
@@ -100,13 +97,13 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
     private String readText(Path path) {
         IDataFactory dataFactory = container.get(IDataFactory.class);
         //Note! The algorithm that find lz-factorization works incorrect if input text contains spaces or special symbols.
-        try (IReadableCharArray source = dataFactory.readFile(DataFactoryType.memory, path)) {
+        try (IReadableCharArray source = dataFactory.getCharArray(DataFactoryType.memory, path)) {
             return source.toString(0, source.length());
         }
     }
 
     private SLPModel buildSLP(String text) {
-        try (IReadableCharArray source = new MemoryReadableCharArray(text)) {
+        try (IReadableCharArray source = container.get(IDataFactory.class).createCharArray(text.toCharArray())) {
             IFactorIteratorFactory factorIteratorFactory = container.get(IFactorIteratorFactory.class);
 
             ArrayList<FactorDef> factorization;

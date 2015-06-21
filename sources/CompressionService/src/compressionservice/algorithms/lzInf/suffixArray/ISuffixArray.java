@@ -1,6 +1,6 @@
 package compressionservice.algorithms.lzInf.suffixArray;
 
-import compressingCore.dataAccess.IReadableCharArray;
+import data.charArray.IReadableCharArray;
 import data.longArray.ILongArray;
 
 public interface ISuffixArray

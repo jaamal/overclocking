@@ -1,7 +1,6 @@
 package compressionservice.algorithms;
 
-import compressingCore.dataAccess.IReadableCharArray;
-
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 

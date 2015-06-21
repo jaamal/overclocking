@@ -1,8 +1,8 @@
 package compressionservice.algorithms.lzw;
 
-import compressingCore.dataAccess.IReadableCharArray;
-
 import java.util.HashMap;
+
+import data.charArray.IReadableCharArray;
 
 public class LZWFactorIterator
 {

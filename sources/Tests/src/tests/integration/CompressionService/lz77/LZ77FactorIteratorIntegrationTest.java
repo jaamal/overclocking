@@ -12,11 +12,11 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import compressingCore.dataAccess.IReadableCharArray;
-import compressingCore.dataAccess.MemoryReadableCharArray;
+import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.LZ77FactorIterator;
 import compressionservice.algorithms.lz77.TextWindow;
+import data.charArray.IReadableCharArray;
 import dataContracts.FactorDef;
 
 public class LZ77FactorIteratorIntegrationTest extends IntegrationTestBase
@@ -121,9 +121,9 @@ public class LZ77FactorIteratorIntegrationTest extends IntegrationTestBase
         }
     }
 
-    private static void doTest(String string, int windowSize)
+    private void doTest(String string, int windowSize)
     {
-        IReadableCharArray charArray = new MemoryReadableCharArray(string);
+        IReadableCharArray charArray = container.get(IDataFactory.class).createCharArray(string.toCharArray());
         FactorDef[] factors = getFactors(charArray, windowSize);
         String actual = FactorizationScenarios.stringify(factors);
         Assert.assertEquals(string, actual);

@@ -6,9 +6,9 @@ import java.util.Random;
 import org.junit.Test;
 
 import tests.stress.StressTestBase;
-import compressingCore.dataAccess.IReadableCharArray;
-import compressingCore.dataAccess.MemoryReadableCharArray;
+import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.lzw.LZWFactorIterator;
+import data.charArray.IReadableCharArray;
 
 public class LZWFactorIteratorStressTest extends StressTestBase
 {
@@ -31,7 +31,7 @@ public class LZWFactorIteratorStressTest extends StressTestBase
         return result;
     }
 
-    private static IReadableCharArray createHugeRandomCharArray()
+    private IReadableCharArray createHugeRandomCharArray()
     {
         Random random = new Random();
         ArrayList<Character> arrayList = new ArrayList<Character>();
@@ -41,6 +41,6 @@ public class LZWFactorIteratorStressTest extends StressTestBase
         char[] result = new char[arrayList.size()];
         for (int i = 0; i < result.length; i++)
             result[i] = arrayList.get(i);
-        return new MemoryReadableCharArray(result, 0, arrayList.size());
+        return container.get(IDataFactory.class).createCharArray(result);
     }
 }

@@ -21,7 +21,6 @@ import commons.files.FileManager;
 import commons.files.IFileManager;
 import commons.settings.ISettings;
 import compressingCore.dataAccess.IDataFactory;
-import compressingCore.dataAccess.MemoryReadableCharArray;
 import compressionservice.algorithms.factorization.FactorIteratorFactory;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.lzInf.arrayMinSearching.ArrayMinSearcherFactory;
@@ -66,7 +65,7 @@ public class SLPBuildHelper {
         ISuffixArrayBuilder suffixArrayFactory = new SuffixArrayBuilder(dataFactory, fileManager, externalProcessExecutor, settings);
         IArrayMinSearcherFactory arrayMinSearcherFactory = new ArrayMinSearcherFactory(dataFactory);
         IOnlineSuffixTreeFactory onlineSuffixTreeFactory = new OnLineSuffixTreeFactory(suffixArrayFactory, arrayMinSearcherFactory);
-        IFactorIterator iterator = new FactorIteratorFactory(onlineSuffixTreeFactory).createInfiniteIterator(new MemoryReadableCharArray(text), DataFactoryType.memory);
+        IFactorIterator iterator = new FactorIteratorFactory(onlineSuffixTreeFactory).createInfiniteIterator(dataFactory.createCharArray(text.toCharArray()), DataFactoryType.memory);
         
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
         while (iterator.any()) {

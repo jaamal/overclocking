@@ -14,7 +14,7 @@ import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
 
 import commons.settings.ISettings;
-import compressingCore.dataAccess.MemoryReadableCharArray;
+import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 
@@ -38,7 +38,8 @@ public class AvlSlpBuildTest extends IntegrationTestBase {
     }
 
     private FactorDef[] getFactorization(String text) {
-        IFactorIterator iterator = container.get(IFactorIteratorFactory.class).createInfiniteIterator(new MemoryReadableCharArray(text), DataFactoryType.memory);
+        IFactorIterator iterator = container.get(IFactorIteratorFactory.class).createInfiniteIterator(
+                container.get(IDataFactory.class).createCharArray(text.toCharArray()), DataFactoryType.memory);
         ArrayList<FactorDef> factors = new ArrayList<FactorDef>();
         while(iterator.any())
         {

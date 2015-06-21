@@ -1,7 +1,7 @@
 package compressionservice.algorithms.lcaOnlineSlp;
 
 import avlTree.slpBuilders.SLPBuilder;
-import compressingCore.dataAccess.IReadableCharArray;
+import data.charArray.IReadableCharArray;
 import dataContracts.Product;
 
 public class LCAOnlineCompressor implements ILCAOnlineCompressor {

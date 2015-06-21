@@ -12,10 +12,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import compressingCore.dataAccess.IReadableCharArray;
-import compressingCore.dataAccess.MemoryReadableCharArray;
+import compressingCore.dataAccess.IDataFactory;
 import compressionservice.algorithms.factorization.FactorIteratorFactory;
 import compressionservice.algorithms.factorization.IFactorIterator;
+import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 
@@ -118,7 +118,7 @@ public class LZFactorIteratorIntegrationTest extends IntegrationTestBase
 
     private void doTest(String string)
     {
-        IReadableCharArray charArray = new MemoryReadableCharArray(string);
+        IReadableCharArray charArray = container.get(IDataFactory.class).createCharArray(string.toCharArray());
         FactorDef[] factors = getFactors(charArray);
         String actual = FactorizationScenarios.stringify(factors);
         Assert.assertEquals(string, actual);

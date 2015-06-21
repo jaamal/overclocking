@@ -1,9 +1,9 @@
 package compressionservice.algorithms.lz77.suffixTree.searchingInTree;
 
-import compressingCore.dataAccess.IReadableCharArray;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
+import data.charArray.IReadableCharArray;
 
 public class Finder implements IFinder
 {
