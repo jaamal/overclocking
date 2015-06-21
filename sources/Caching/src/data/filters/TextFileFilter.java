@@ -1,4 +1,4 @@
-package compressingCore.dataFiltering;
+package data.filters;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

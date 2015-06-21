@@ -19,7 +19,7 @@ import storage.filesRepository.IFilesRepository;
 import commons.files.FileManager;
 import commons.files.IFile;
 import commons.files.IFileManager;
-import compressingCore.dataFiltering.IFileFilter;
+import data.filters.IFileFilter;
 import dataContracts.ContentType;
 import dataContracts.files.FileBatch;
 import dataContracts.files.FileMetadata;

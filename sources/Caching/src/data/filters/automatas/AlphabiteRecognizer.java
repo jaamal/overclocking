@@ -1,4 +1,4 @@
-package compressingCore.dataFiltering.automatas;
+package data.filters.automatas;
 
 public class AlphabiteRecognizer implements IAutomata
 {

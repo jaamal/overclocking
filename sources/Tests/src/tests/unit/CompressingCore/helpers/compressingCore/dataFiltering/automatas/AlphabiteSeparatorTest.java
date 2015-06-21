@@ -1,10 +1,9 @@
 package tests.unit.CompressingCore.helpers.compressingCore.dataFiltering.automatas;
 
-import compressingCore.dataFiltering.automatas.AlphabiteSeparator;
-import compressingCore.dataFiltering.automatas.IAlphabite;
-
 import org.junit.Test;
 
+import data.filters.automatas.AlphabiteSeparator;
+import data.filters.automatas.IAlphabite;
 import tests.unit.UnitTestBase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;

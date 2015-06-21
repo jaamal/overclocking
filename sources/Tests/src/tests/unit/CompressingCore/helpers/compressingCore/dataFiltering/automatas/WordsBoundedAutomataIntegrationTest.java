@@ -6,11 +6,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import tests.unit.UnitTestBase;
-import compressingCore.dataFiltering.automatas.AlphabetFactory;
-import compressingCore.dataFiltering.automatas.AutomataFactory;
-import compressingCore.dataFiltering.automatas.AutomataType;
-import compressingCore.dataFiltering.automatas.IAutomata;
-import compressingCore.dataFiltering.automatas.IAutomataFactory;
+import data.filters.automatas.AlphabetFactory;
+import data.filters.automatas.AutomataFactory;
+import data.filters.automatas.AutomataType;
+import data.filters.automatas.IAutomata;
+import data.filters.automatas.IAutomataFactory;
 
 public class WordsBoundedAutomataIntegrationTest extends UnitTestBase
 {

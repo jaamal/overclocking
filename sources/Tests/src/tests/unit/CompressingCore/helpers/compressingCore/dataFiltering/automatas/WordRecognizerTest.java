@@ -1,9 +1,8 @@
 package tests.unit.CompressingCore.helpers.compressingCore.dataFiltering.automatas;
 
-import compressingCore.dataFiltering.automatas.WordRecognizer;
-
 import org.junit.Test;
 
+import data.filters.automatas.WordRecognizer;
 import tests.unit.UnitTestBase;
 import static org.junit.Assert.*;
 

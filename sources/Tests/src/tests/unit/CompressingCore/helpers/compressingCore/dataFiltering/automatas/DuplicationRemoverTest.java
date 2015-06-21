@@ -1,11 +1,10 @@
 package tests.unit.CompressingCore.helpers.compressingCore.dataFiltering.automatas;
 
 
-import compressingCore.dataFiltering.automatas.DuplicationRemover;
-import compressingCore.dataFiltering.automatas.IAlphabite;
-
 import org.junit.Test;
 
+import data.filters.automatas.DuplicationRemover;
+import data.filters.automatas.IAlphabite;
 import tests.unit.UnitTestBase;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertFalse;

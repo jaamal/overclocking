@@ -1,4 +1,4 @@
-package compressingCore.dataFiltering;
+package data.filters;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -8,10 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import compressingCore.dataFiltering.automatas.AutomataType;
-import compressingCore.dataFiltering.automatas.IAutomata;
-import compressingCore.dataFiltering.automatas.IAutomataFactory;
 import caching.connections.ITemporaryFileFactory;
+import data.filters.automatas.AutomataType;
+import data.filters.automatas.IAutomata;
+import data.filters.automatas.IAutomataFactory;
 import dataContracts.files.FileType;
 
 public class DnaFileFilter implements ITypedFileFilter {

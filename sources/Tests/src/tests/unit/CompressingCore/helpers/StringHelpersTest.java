@@ -1,9 +1,8 @@
 package tests.unit.CompressingCore.helpers;
 
-import compressingCore.dataFiltering.automatas.StringHelpers;
-
 import org.junit.Test;
 
+import data.filters.automatas.StringHelpers;
 import tests.unit.UnitTestBase;
 import static org.junit.Assert.assertArrayEquals;
 

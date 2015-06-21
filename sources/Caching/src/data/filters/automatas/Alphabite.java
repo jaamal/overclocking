@@ -1,4 +1,4 @@
-package compressingCore.dataFiltering.automatas;
+package data.filters.automatas;
 
 
 import java.util.HashSet;

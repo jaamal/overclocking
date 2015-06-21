@@ -13,9 +13,7 @@ import org.apache.commons.io.IOUtils;
 
 import storage.KeySpaces;
 import storage.cassandraClient.ISchemeInitializer;
-
-import compressingCore.dataFiltering.IFileFilter;
-
+import data.filters.IFileFilter;
 import dataContracts.files.FileMetadata;
 
 public class AlgorithmRunnerTestBase extends StorageTestBase {
