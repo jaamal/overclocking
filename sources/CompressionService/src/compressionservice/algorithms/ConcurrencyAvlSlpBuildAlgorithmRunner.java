@@ -1,6 +1,5 @@
 package compressionservice.algorithms;
 
-import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.IConcurrencyAvlTreeSLPBuilder;
@@ -38,11 +37,8 @@ public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
         SLPModel slpModel = avlTreeSLPBuilder.buildSlp(factorization, statistics);
 
-        IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(resultId);
         Product[] products = slpModel.toNormalForm();
-        writer.addAll(products);
-        writer.done();
-
+        slpProductsRepository.writeAll(resultId, products);
         return statistics;
     }
 }

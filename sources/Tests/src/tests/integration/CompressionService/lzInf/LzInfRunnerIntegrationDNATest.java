@@ -91,7 +91,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
     private void checkFactorization(String factorizationId, String filePath)
     {
         String expected = FileHelpers.readTestFile(filePath, Charset.forName("cp1251"));
-        String actual = FactorizationScenarios.stringify(factorsRepository.readItems(factorizationId).toArray(new FactorDef[0]));
+        String actual = FactorizationScenarios.stringify(factorsRepository.readAll(factorizationId).toArray(new FactorDef[0]));
         assertEquals(expected, actual);
     }
 }

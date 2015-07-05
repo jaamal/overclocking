@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepository;
 import storage.filesRepository.IFilesRepository;
+
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.profile.IAnalysator;
+
 import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
@@ -72,12 +73,7 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
             statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
             statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
 
-            IArrayItemsWriter<FactorDef> writer = factorsRepository.getWriter(resultId);
-            for (FactorDef factor : factors) {
-                writer.add(factor);
-            }
-            writer.done();
-
+            factorsRepository.writeAll(resultId, factors.toArray(new FactorDef[0]));
             return statistics;
         }
     }

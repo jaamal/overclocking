@@ -54,7 +54,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         assertEquals(1, actuals.length);
         assertEquals("171", actuals[0].statistics.get(StatisticKeys.SlpCountRules));
         assertEquals("300", actuals[0].statistics.get(StatisticKeys.SourceLength));
-        List<Product> slp = slpProductsRepository.readItems(actuals[0].getId());
+        List<Product> slp = slpProductsRepository.readAll(actuals[0].getId());
         assertEquals(readFileText(simpleDnaFile), getText(slp));
         
         actuals = statisticsRepository.readAll(twoSectionsDnaFile.getId());
@@ -64,7 +64,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         assertEquals(1, actuals.length);
         assertEquals("185", actuals[0].statistics.get(StatisticKeys.SlpCountRules));
         assertEquals("600", actuals[0].statistics.get(StatisticKeys.SourceLength));
-        slp = slpProductsRepository.readItems(actuals[0].getId());
+        slp = slpProductsRepository.readAll(actuals[0].getId());
         assertEquals(readFileText(twoSectionsDnaFile), getText(slp));
     }
 
@@ -78,7 +78,7 @@ public class AvlSlpRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         assertEquals(1, actuals.length);
         actuals = statisticsRepository.readAll(actuals[0].getId());
         assertEquals(1, actuals.length);
-        List<Product> slp = slpProductsRepository.readItems(actuals[0].getId());
+        List<Product> slp = slpProductsRepository.readAll(actuals[0].getId());
         assertEquals("51359", actuals[0].statistics.get(StatisticKeys.SourceLength));
         assertEquals("15036", actuals[0].statistics.get(StatisticKeys.SlpCountRules));
         assertEquals(readFileText(fileMetadata), getText(slp));

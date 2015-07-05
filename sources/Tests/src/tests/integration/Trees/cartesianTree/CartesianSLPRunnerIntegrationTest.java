@@ -63,7 +63,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         assertEquals(1, actuals.length);
         actuals = statisticsRepository.readAll(actuals[0].getId());
         assertEquals(1, actuals.length);
-        List<Product> slp = slpProductsRepository.readItems(actuals[0].getId());
+        List<Product> slp = slpProductsRepository.readAll(actuals[0].getId());
         assertEquals(readFileText(fileMetadata), getText(slp));
     }
 
@@ -80,7 +80,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         assertEquals("300", actuals[0].statistics.get(StatisticKeys.SourceLength));
         actuals = statisticsRepository.readAll(actuals[0].getId());
         assertEquals(1, actuals.length);
-        List<Product> slp = slpProductsRepository.readItems(actuals[0].getId());
+        List<Product> slp = slpProductsRepository.readAll(actuals[0].getId());
         assertEquals(readFileText(simpleDnaFile), getText(slp));
 
         actuals = statisticsRepository.readAll(twoSectionsDnaFile.getId());
@@ -88,7 +88,7 @@ public class CartesianSLPRunnerIntegrationTest extends AlgorithmRunnerTestBase {
         assertEquals("600", actuals[0].statistics.get(StatisticKeys.SourceLength));
         actuals = statisticsRepository.readAll(actuals[0].getId());
         assertEquals(1, actuals.length);
-        slp = slpProductsRepository.readItems(actuals[0].getId());
+        slp = slpProductsRepository.readAll(actuals[0].getId());
         assertEquals(readFileText(twoSectionsDnaFile), getText(slp));
     }
 

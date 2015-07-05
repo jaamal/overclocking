@@ -83,12 +83,12 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
                     continue;
                 }
                 if (algorithmKey.equals(Algorithms.LZ77InMemory.key)) {
-                    List<FactorDef> factors = lz77FactorsRepository.readItems(obj.getId());
+                    List<FactorDef> factors = lz77FactorsRepository.readAll(obj.getId());
                     long byteSize = analysator.countByteSize(factors);
                     obj.statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
                     statisticsRepository.write(fileId, obj);
                 } else if (algorithmKey.equals(Algorithms.LZInfInMemory.key)) {
-                    List<FactorDef> factors = factorsRepository.readItems(obj.getId());
+                    List<FactorDef> factors = factorsRepository.readAll(obj.getId());
                     long byteSize = analysator.countByteSize(factors);
                     obj.statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
                     statisticsRepository.write(fileId, obj);

@@ -41,7 +41,7 @@ public class ResourceProvider implements IResourceProvider {
     @Override
     public FactorDef[] getFactorization(String sourceId) {
         logger.info("Start read factors from factorization with id = " + sourceId);
-        List<FactorDef> lzFactors = factorsRepository.readItems(sourceId);
+        List<FactorDef> lzFactors = factorsRepository.readAll(sourceId);
         logger.info("End read factors. Factors count = " + lzFactors.size());
         return lzFactors.toArray(new FactorDef[0]);
     }

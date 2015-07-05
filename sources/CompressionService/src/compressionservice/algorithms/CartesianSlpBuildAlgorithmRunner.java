@@ -1,6 +1,5 @@
 package compressionservice.algorithms;
 
-import storage.IArrayItemsWriter;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import cartesianTree.slpBuilders.ICartesianSlpTreeBuilder;
@@ -39,11 +38,8 @@ public class CartesianSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
         SLPModel slpModel = cartesianSLPTreeBuilder.buildSlp(factorization, statistics);
 
-        IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(resultId);
         Product[] products = slpModel.toNormalForm();
-        writer.addAll(products);
-        writer.done();
-
+        slpProductsRepository.writeAll(resultId, products);
         return statistics;
     }
 }

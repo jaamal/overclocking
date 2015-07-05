@@ -91,7 +91,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
 
     private void checkFactorization(String statsId, String filePath) {
         String expected = FileHelpers.readTestFile(filePath, Charset.forName("cp1251"));
-        String actual = FactorizationScenarios.stringify(factorsRepository.readItems(statsId).toArray(new FactorDef[0]));
+        String actual = FactorizationScenarios.stringify(factorsRepository.readAll(statsId).toArray(new FactorDef[0]));
         assertEquals(expected, actual);
     }
 }

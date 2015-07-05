@@ -3,12 +3,13 @@ package compressionservice.algorithms;
 import org.apache.log4j.Logger;
 
 import serialization.products.IProductsSerializer;
-import storage.IArrayItemsWriter;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.ISLPBuilder;
+
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
+
 import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
 import dataContracts.Product;
@@ -60,11 +61,8 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
             statisitcs.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
             slpModel.appendStats(statisitcs, productsSerializer);
 
-            IArrayItemsWriter<Product> writer = slpProductsRepository.getWriter(resultId);
             Product[] products = slpModel.toNormalForm();
-            writer.addAll(products);
-            writer.done();
-
+            slpProductsRepository.writeAll(resultId, products);
             return statisitcs;
         }
     }

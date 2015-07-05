@@ -87,7 +87,7 @@ public class LCAOnlineRunnerIntegrationTest extends AlgorithmRunnerTestBase
     private void checkSLP(String slpId, FileMetadata fileMetadata)
     {
         String expected = readFileText(fileMetadata);
-        String actual = unpack(slpProductsRepository.readItems(slpId));
+        String actual = unpack(slpProductsRepository.readAll(slpId));
         assertEquals(expected, actual);
     }
 

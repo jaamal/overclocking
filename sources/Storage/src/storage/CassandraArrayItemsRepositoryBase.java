@@ -37,7 +37,7 @@ public abstract class CassandraArrayItemsRepositoryBase<T> implements IArrayItem
     }
 
     @Override
-    public List<T> readItems(String statisticId) {
+    public List<T> readAll(String statisticId) {
         try {
             ArrayList<T> result = new ArrayList<>();
             Iterator<Column<String>> columns = keyspace.prepareQuery(columnFamily).getRow(statisticId).execute().getResult().iterator();
@@ -60,12 +60,15 @@ public abstract class CassandraArrayItemsRepositoryBase<T> implements IArrayItem
             throw new RuntimeException(String.format("Fail to query done statistics of type %s ", storageItemClass.getSimpleName()), e);
         }
     }
-
+    
     @Override
-    public IArrayItemsWriter<T> getWriter(String statisticId) {
-        return new CassandraArrayItemsWriter<T>(serializer, keyspace, columnFamily, statisticId, rowListDone);
+    public void writeAll(String statisticId, T[] items){
+        CassandraArrayItemsWriter<T> writer = new CassandraArrayItemsWriter<T>(serializer, keyspace, columnFamily, statisticId, rowListDone);
+        writer.addAll(items);
+        writer.done();
     }
 
+    @Override
     public void remove(String statisticId) {
         try {
             ArrayList<ColumnFamily<String, String>> columnFamilies = new ArrayList<>();
