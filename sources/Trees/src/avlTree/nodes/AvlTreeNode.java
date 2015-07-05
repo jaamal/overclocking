@@ -81,5 +81,48 @@ public class AvlTreeNode implements ITreeNode
     {
         return isBalanced;
     }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (cutPosition ^ (cutPosition >>> 32));
+        result = prime * result + (int) (height ^ (height >>> 32));
+        result = prime * result + (isBalanced ? 1231 : 1237);
+        result = prime * result + (int) (leftSonNumber ^ (leftSonNumber >>> 32));
+        result = prime * result + (int) (number ^ (number >>> 32));
+        result = prime * result + (int) (rightSonNumber ^ (rightSonNumber >>> 32));
+        result = prime * result + (int) (value ^ (value >>> 32));
+        result = prime * result + (int) (width ^ (width >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        AvlTreeNode other = (AvlTreeNode) obj;
+        if (cutPosition != other.cutPosition)
+            return false;
+        if (height != other.height)
+            return false;
+        if (isBalanced != other.isBalanced)
+            return false;
+        if (leftSonNumber != other.leftSonNumber)
+            return false;
+        if (number != other.number)
+            return false;
+        if (rightSonNumber != other.rightSonNumber)
+            return false;
+        if (value != other.value)
+            return false;
+        if (width != other.width)
+            return false;
+        return true;
+    }
 }
 

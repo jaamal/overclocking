@@ -27,26 +27,26 @@ public class CartesianTreeManagerFactory implements ICartesianTreeManagerFactory
 
     @Override
     public ICartesianTreeManager create() {
-        IEnumerableData<CartesianTreeNode> nodeIStorage;
+        IEnumerableData<CartesianTreeNode> nodeStorage;
         IEnumerableData<Long> innerReferencesStorage;
         if (dataFactoryType == DataFactoryType.memory) {
-            nodeIStorage = new InMemoryEnumerableData<>(CartesianTreeNode.class);
+            nodeStorage = new InMemoryEnumerableData<>(CartesianTreeNode.class);
             innerReferencesStorage = new InMemoryEnumerableData<>(Long.class);
         } else if (dataFactoryType == DataFactoryType.file) {
             CartesianTreeNodeSerializer serializer = new CartesianTreeNodeSerializer();
             TemporaryFileFactory temporaryFileFactory = new TemporaryFileFactory(settings);
-            nodeIStorage = new MemoryMappedFileEnumerableData<>(serializer, temporaryFileFactory, settings);
+            nodeStorage = new MemoryMappedFileEnumerableData<>(serializer, temporaryFileFactory, settings);
             innerReferencesStorage = new MemoryMappedFileEnumerableData<>(new LongSerializer(), temporaryFileFactory, settings);
         } else {
             throw new RuntimeException(String.format("Unknown DataFactoryType '%s'", dataFactoryType));
         }
 
-        ITreeNodeBuilder<CartesianTreeNode> cartesianTreeNodeBuilder = new CartesianTreeNodeBuilder(nodeIStorage);
+        ITreeNodeBuilder<CartesianTreeNode> cartesianTreeNodeBuilder = new CartesianTreeNodeBuilder(nodeStorage);
         IHeapKeyResolver heapKeyResolver = new RandomHeapKeyResolver(new RandomGeneratorFactory());
 
-        INodeAllocator<CartesianTreeNode> nodeAllocator = new NodeAllocator<>(nodeIStorage, innerReferencesStorage, new FreeNodesSet());
+        INodeAllocator<CartesianTreeNode> nodeAllocator = new NodeAllocator<>(nodeStorage, innerReferencesStorage, new FreeNodesSet());
 
-        ITreeNodeProvider<CartesianTreeNode> nodeProvider = new TreeNodeProvider<>(nodeIStorage, cartesianTreeNodeBuilder, nodeAllocator);
+        ITreeNodeProvider<CartesianTreeNode> nodeProvider = new TreeNodeProvider<>(nodeStorage, cartesianTreeNodeBuilder, nodeAllocator);
         return new CartesianTreeManager(nodeProvider, heapKeyResolver);
     }
 }

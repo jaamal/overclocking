@@ -1,12 +1,10 @@
 package data.enumerableData;
 
+import java.nio.ByteBuffer;
+
 public interface IItemSerializer<T>
 {
     int itemSizeInBytes();
-    
-    byte[] serialize(T obj);
-    void serialize(T obj, byte[] array, int offset);
-
-    T deserialize(byte[] array);
-    T deserialize(byte[] array, int offset);
+    void serialize(T obj, ByteBuffer buffer);
+    T deserialize(ByteBuffer buffer);
 }

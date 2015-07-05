@@ -1,6 +1,7 @@
 package data.longArray;
 
-import commons.utils.NumericUtils;
+import java.nio.ByteBuffer;
+
 import data.enumerableData.IItemSerializer;
 
 public class LongSerializer implements IItemSerializer<Long>
@@ -12,28 +13,12 @@ public class LongSerializer implements IItemSerializer<Long>
     }
 
     @Override
-    public byte[] serialize(Long obj)
-    {
-        byte[] result = new byte[8];
-        serialize(obj, result, 0);
-        return result;
+    public Long deserialize(ByteBuffer buffer) {
+        return buffer.getLong();
     }
 
     @Override
-    public Long deserialize(byte[] array)
-    {
-        return deserialize(array, 0);
-    }
-
-    @Override
-    public void serialize(Long obj, byte[] array, int offset)
-    {
-        NumericUtils.longToBytes(obj, array, 0);
-    }
-
-    @Override
-    public Long deserialize(byte[] array, int offset)
-    {
-        return NumericUtils.bytesToLong(array, offset);
+    public void serialize(Long obj, ByteBuffer buffer) {
+        buffer.putLong(obj);
     }
 }

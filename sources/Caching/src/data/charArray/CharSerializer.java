@@ -1,5 +1,7 @@
 package data.charArray;
 
+import java.nio.ByteBuffer;
+
 import data.enumerableData.IItemSerializer;
 
 public class CharSerializer implements IItemSerializer<Character>
@@ -11,28 +13,12 @@ public class CharSerializer implements IItemSerializer<Character>
     }
 
     @Override
-    public byte[] serialize(Character obj)
-    {
-        byte[] result = new byte[1];
-        serialize(obj, result, 0);
-        return result;
+    public Character deserialize(ByteBuffer buffer) {
+        return (char) buffer.get();
     }
 
     @Override
-    public Character deserialize(byte[] array)
-    {
-        return deserialize(array, 0);
-    }
-
-    @Override
-    public void serialize(Character obj, byte[] array, int offset)
-    {
-        array[offset] = (byte) obj.charValue();
-    }
-
-    @Override
-    public Character deserialize(byte[] array, int offset)
-    {
-        return (char) array[offset];
+    public void serialize(Character obj, ByteBuffer buffer) {
+        buffer.put((byte)obj.charValue());
     }
 }

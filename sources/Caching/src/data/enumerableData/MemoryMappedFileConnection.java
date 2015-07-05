@@ -15,24 +15,27 @@ import commons.settings.ISettings;
 import commons.settings.KnownKeys;
 
 //TODO: this class should be at connections
-public class MemoryMappedFileConnection
+public class MemoryMappedFileConnection<T>
 {
     private final File file;
     private FileLock fileLock;
     private ArrayList<MappedByteBuffer> mappedByteBuffers;
     private FileChannel channel;
     private int batchSize;
-    private int objectLength;
     private boolean deleteOnClose;
     private RandomAccessFile randomAccessFile;
+    
+    private int objectLength;
+    private IItemSerializer<T> serializer;
 
     public MemoryMappedFileConnection(
             File file,
             ISettings settings,
-            int objectLength,
+            IItemSerializer<T> serializer,
             boolean deleteOnClose)
     {
-        this.objectLength = objectLength;
+        this.serializer = serializer;
+        objectLength = serializer.itemSizeInBytes();
         this.deleteOnClose = deleteOnClose;
         this.batchSize = settings.getInt(KnownKeys.MemoryMappedFileBatchSize);
         this.file = file;
@@ -84,24 +87,20 @@ public class MemoryMappedFileConnection
         }
     }
 
-    public void write(long number, byte[] array)
+    public void write(long number, T obj)
     {
-        if (array.length != objectLength)
-            throw new RuntimeException(String.format("Invalid length of array %d. It must be equals %d", array.length, objectLength));
         checkOpened();
-        MappedByteBuffer mappedByteBuffer = getMappedByteBuffer(number / batchSize);
-        mappedByteBuffer.position((int) (number % batchSize) * objectLength);
-        mappedByteBuffer.put(array);
+        MappedByteBuffer byteBuffer = getMappedByteBuffer(number / batchSize);
+        byteBuffer.position((int) (number % batchSize) * objectLength);
+        serializer.serialize(obj, byteBuffer);
     }
 
-    public byte[] read(long number)
+    public T read(long number)
     {
         checkOpened();
-        MappedByteBuffer mappedByteBuffer = getMappedByteBuffer(number / batchSize);
-        mappedByteBuffer.position((int) (number % batchSize) * objectLength);
-        byte[] array = new byte[objectLength];
-        mappedByteBuffer.get(array);
-        return array;
+        MappedByteBuffer byteBuffer = getMappedByteBuffer(number / batchSize);
+        byteBuffer.position((int) (number % batchSize) * objectLength);
+        return serializer.deserialize(byteBuffer);
     }
 
     protected void finalize() throws Throwable

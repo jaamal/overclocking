@@ -1,84 +1,94 @@
 package tests.stress.Caching;
 
-import java.io.File;
-import java.io.RandomAccessFile;
+import helpers.TestHelpers;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import avlTree.nodes.AvlTreeNode;
+import avlTree.nodes.AvlTreeNodeSerializer;
 import tests.stress.StressTestBase;
 import caching.connections.ITemporaryFileFactory;
 import commons.settings.ISettings;
-import data.enumerableData.IEnumerableData;
+import data.charArray.CharSerializer;
+import data.enumerableData.IItemSerializer;
 import data.enumerableData.MemoryMappedFileEnumerableData;
+import data.longArray.LongSerializer;
 
 public class MemoryMappedFileStorageTest extends StressTestBase
 {
+    private ITemporaryFileFactory temporaryFileFactory;
+
     @Override
-    public void setUp()
-    {
+    public void setUp() {
         super.setUp();
+        
+        temporaryFileFactory = container.get(ITemporaryFileFactory.class);
     }
 
     @Test
-    public void testTempFile()
+    public void testWithIntArray()
     {
-        MemoryMappedFileEnumerableData<Integer> storage;
-        IntegerSerializer serializer = new IntegerSerializer();
-        ITemporaryFileFactory temporaryFileFactory = container.get(ITemporaryFileFactory.class);
-        storage = new MemoryMappedFileEnumerableData<Integer>(serializer, temporaryFileFactory, container.get(ISettings.class));
+        IItemSerializer<Integer> serializer = new IntegerSerializer();
+        MemoryMappedFileEnumerableData<Integer> storage = new MemoryMappedFileEnumerableData<Integer>(serializer, temporaryFileFactory, container.get(ISettings.class));
 
         final int count = 1056;
+        int[] array = TestHelpers.genIntArray(count);
         for (int i = 0; i < count; ++i)
-            storage.save(i, i);
+            storage.save(i, array[i]);
         for (int i = 0; i < count; ++i)
-            Assert.assertEquals(i, (int) storage.load(i));
+            Assert.assertEquals(array[i], (int) storage.load(i));
+
+        storage.close();
+    }
+    
+    @Test
+    public void testWithLongArray()
+    {
+        IItemSerializer<Long> serializer = new LongSerializer();
+        MemoryMappedFileEnumerableData<Long> storage = new MemoryMappedFileEnumerableData<Long>(serializer, temporaryFileFactory, container.get(ISettings.class));
+
+        final int count = 1056;
+        long[] array = TestHelpers.genLongArray(count);
         for (int i = 0; i < count; ++i)
-            storage.save(i, i * i);
-        for (int i = 0; i < count; i += 3)
-            Assert.assertEquals(i * i, (int) storage.load(i));
+            storage.save(i, array[i]);
+        for (int i = 0; i < count; ++i)
+            Assert.assertEquals(array[i], (long) storage.load(i));
+
+        storage.close();
+    }
+    
+    @Test
+    public void testWithCharArray()
+    {
+        IItemSerializer<Character> serializer = new CharSerializer();
+        MemoryMappedFileEnumerableData<Character> storage = new MemoryMappedFileEnumerableData<Character>(serializer, temporaryFileFactory, container.get(ISettings.class));
+
+        final int count = 100000;
+        char[] array = TestHelpers.genCharArray(count);
+        for (int i = 0; i < count; ++i)
+            storage.save(i, array[i]);
+        for (int i = 0; i < count; ++i)
+            Assert.assertEquals(array[i], (char) storage.load(i));
+
+        storage.close();
+    }
+    
+    @Test
+    public void testWithAvlNodeArray()
+    {
+        IItemSerializer<AvlTreeNode> serializer = new AvlTreeNodeSerializer();
+        MemoryMappedFileEnumerableData<AvlTreeNode> storage = new MemoryMappedFileEnumerableData<AvlTreeNode>(serializer, temporaryFileFactory, container.get(ISettings.class));
+
+        final int count = 10000;
+        AvlTreeNode[] array = TestHelpers.genAvlTreeNodeArray(count);
+        for (int i = 0; i < count; ++i)
+            storage.save(i, array[i]);
+        for (int i = 0; i < count; ++i)
+            Assert.assertEquals(array[i], storage.load(i));
 
         storage.close();
     }
 
-    @Test
-    public void TestExistsFile() throws Exception
-    {
-        IntegerSerializer serializer = new IntegerSerializer();
-        String fileName = "WorkingDirectory\\testExistsFile.testEmptySLP";
-        File rawFile = new File(fileName);
-        rawFile.getParentFile().mkdirs();
-
-        try (RandomAccessFile file = new RandomAccessFile(rawFile, "rw"))
-        {
-            byte[] bytes = new byte[4 * 1056];
-            for (int i = 0; i < bytes.length / 4; i++)
-            {
-                serializer.serialize(i * i, bytes, i * 4);
-            }
-
-            file.write(bytes);
-            file.close();
-
-            for (int attempt = 0; attempt < 2; attempt++)
-            {
-                IEnumerableData<Integer> storage = new MemoryMappedFileEnumerableData<Integer>(serializer, rawFile, container.get(ISettings.class));
-
-                final int count = 1056;
-                for (int i = 0; i < count; ++i)
-                {
-                    int actual = storage.load(i);
-                    Assert.assertEquals(i * i, actual);
-                }
-
-                storage.close();
-                Assert.assertTrue(rawFile.exists());
-            }
-        }
-        finally
-        {
-            rawFile.deleteOnExit();
-        }
-    }
 }
 
