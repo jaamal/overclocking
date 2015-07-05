@@ -27,7 +27,6 @@ import commons.settings.ISettings;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
 import compressionservice.algorithms.lzw.ILZWFactorsAnalyzer;
-import compressionservice.profile.Analysator;
 import compressionservice.runner.parameters.IRunParams;
 
 import dataContracts.AlgorithmType;
@@ -182,7 +181,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         int windowSize = runParams.getOrDefaultInt(RunParamKeys.WindowSize, defaultWindowSize);
         
         return new Lz77AlgorithmRunner(resourceProvider, filesRepository, factorsRepositoryFactory.getLZ77Repository(), factorIteratorFactory, 
-                new Analysator(), statisticsObjectFactory, sourceId, dataFactoryType, windowSize);
+                statisticsObjectFactory, sourceId, dataFactoryType, windowSize);
     }
     
     private IAlgorithmRunner createLZInfRunner(IRunParams runParams) {
@@ -192,7 +191,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
         
         return new LzInfAlgorithmRunner(resourceProvider, filesRepository, factorIteratorFactory, factorsRepositoryFactory.getLZRepository(), 
-                new Analysator(), statisticsObjectFactory, sourceId, dataFactoryType);
+                 statisticsObjectFactory, sourceId, dataFactoryType);
     }
     
     private IAlgorithmRunner createLZWRunner(IRunParams runParams) {

@@ -21,7 +21,6 @@ import storage.factorsRepository.LZFactorsRepository;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.SlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
-import compressionservice.profile.Analysator;
 import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
@@ -71,7 +70,6 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
         String[] fileIds = fileRepository.getFileIds().toArray(new String[0]);;
         System.out.println(String.format("Total file count %d", fileIds.length));
         HashMap<String, StatisticsObject[]> statsBySourceId = statisticsRepository.readAll(fileIds);
-        Analysator analysator = new Analysator();
         for (Map.Entry<String, StatisticsObject[]> entry : statsBySourceId.entrySet()) {
             String fileId = entry.getKey();
             for (StatisticsObject obj : entry.getValue()) {
@@ -84,12 +82,12 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
                 }
                 if (algorithmKey.equals(Algorithms.LZ77InMemory.key)) {
                     List<FactorDef> factors = lz77FactorsRepository.readAll(obj.getId());
-                    long byteSize = analysator.countByteSize(factors);
+                    long byteSize = FactorDef.SIZE_IN_BYTES * factors.size();
                     obj.statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
                     statisticsRepository.write(fileId, obj);
                 } else if (algorithmKey.equals(Algorithms.LZInfInMemory.key)) {
                     List<FactorDef> factors = factorsRepository.readAll(obj.getId());
-                    long byteSize = analysator.countByteSize(factors);
+                    long byteSize = FactorDef.SIZE_IN_BYTES * factors.size();
                     obj.statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
                     statisticsRepository.write(fileId, obj);
                 } else

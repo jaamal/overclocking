@@ -11,7 +11,6 @@ import storage.filesRepository.IFilesRepository;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
-import compressionservice.profile.IAnalysator;
 
 import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
@@ -27,7 +26,6 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
 
     private final IFactorsRepository factorsRepotisory;
     private final IResourceProvider resourceProvider;
-    private final IAnalysator analysator;
     private final IFactorIteratorFactory factorIteratorFactory;
 
     private String sourceId;
@@ -39,7 +37,6 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
             IFilesRepository filesRepository,
             IFactorsRepository factorsRepository,
             IFactorIteratorFactory factorIteratorFactory,
-            IAnalysator analysator,
             IStatisticsObjectFactory statisticsObjectFactory,
             String sourceId, 
             DataFactoryType dataFactoryType,
@@ -50,7 +47,6 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
         this.dataFactoryType = dataFactoryType;
         this.windowSize = windowSize;
         this.factorsRepotisory = factorsRepository;
-        this.analysator = analysator;
     }
 
     @Override
@@ -70,7 +66,7 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
             IStatistics statistics = new Statistics();
             statistics.putParam(StatisticKeys.SourceLength, String.valueOf(charArray.length()));
             statistics.putParam(StatisticKeys.FactorizationLength, String.valueOf(factors.size()));
-            statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
+            statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(FactorDef.SIZE_IN_BYTES * factors.size()));
             statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
 
             factorsRepotisory.writeAll(resultId, factors.toArray(new FactorDef[0]));

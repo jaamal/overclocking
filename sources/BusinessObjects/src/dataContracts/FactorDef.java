@@ -2,6 +2,9 @@ package dataContracts;
 
 public class FactorDef
 {
+    //NOTE: we can serialize begin + length or symbol in two integers with restrictions on positions
+    public final static int SIZE_IN_BYTES = 2 * 8;
+    
     public final long beginPosition;
     public final long length;
     public final int symbol;

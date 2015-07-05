@@ -11,7 +11,6 @@ import storage.filesRepository.IFilesRepository;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
-import compressionservice.profile.IAnalysator;
 
 import data.charArray.IReadableCharArray;
 import dataContracts.DataFactoryType;
@@ -28,7 +27,6 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
     private final IResourceProvider resourceProvider;
     private final IFactorIteratorFactory factorIteratorFactory;
     private final IFactorsRepository factorsRepository;
-    private final IAnalysator analysator;
     private String sourceId;
     private DataFactoryType dataFactoryType;
 
@@ -37,14 +35,12 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
             IFilesRepository filesRepository,
             IFactorIteratorFactory factorIteratorFactory,
             IFactorsRepository factorsRepository,
-            IAnalysator analysator,
             IStatisticsObjectFactory statisticsObjectFactory,
             String sourceId,
             DataFactoryType dataFactoryType) {
         this.resourceProvider = resourceProvider;
         this.factorIteratorFactory = factorIteratorFactory;
         this.factorsRepository = factorsRepository;
-        this.analysator = analysator;
         this.sourceId = sourceId;
         this.dataFactoryType = dataFactoryType;
     }
@@ -71,7 +67,7 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
             statistics.putParam(StatisticKeys.SourceLength, String.valueOf(source.length()));
             statistics.putParam(StatisticKeys.FactorizationLength, String.valueOf(factors.size()));
             statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(analysator.countByteSize(factors)));
+            statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(FactorDef.SIZE_IN_BYTES * factors.size()));
 
             factorsRepository.writeAll(resultId, factors.toArray(new FactorDef[0]));
             return statistics;
