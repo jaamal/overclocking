@@ -8,9 +8,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
 
-import caching.connections.ConnectionNotOpenedYetException;
-import caching.connections.FileConnectionIOException;
-
 import commons.settings.ISettings;
 import commons.settings.KnownKeys;
 
@@ -56,7 +53,7 @@ public class MemoryMappedFileConnection<T>
         }
         catch (IOException e)
         {
-            throw new FileConnectionIOException(file, e);
+            throw new RuntimeException(String.format("Fail to finish file %s processing.", file.getAbsolutePath()), e);
         }
         finally
         {
@@ -78,7 +75,7 @@ public class MemoryMappedFileConnection<T>
         }
         catch (IOException e)
         {
-            throw new FileConnectionIOException(file, e);
+            throw new RuntimeException(String.format("Fail to start file %s processing.", file.getAbsolutePath()), e);
         }
         finally
         {
@@ -112,7 +109,7 @@ public class MemoryMappedFileConnection<T>
     private void checkOpened()
     {
         if (channel == null)
-            throw new ConnectionNotOpenedYetException();
+            throw new RuntimeException(String.format("File %s is not opened.", file.getAbsolutePath()));
     }
 
     private MappedByteBuffer getMappedByteBuffer(long number)
@@ -130,7 +127,7 @@ public class MemoryMappedFileConnection<T>
         }
         catch (IOException e)
         {
-            throw new FileConnectionIOException(file, e);
+            throw new RuntimeException(String.format("Fail to create map for file %s.", file.getAbsolutePath()), e);
         }
     }
 }
