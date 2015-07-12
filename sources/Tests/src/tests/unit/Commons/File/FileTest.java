@@ -29,7 +29,7 @@ public class FileTest extends UnitTestBase
         checkRead(temporaryFile, 1, 9, new byte[]{2, 3, 4, 5, 6, 7, 8, 9}, 8);
         checkRead(temporaryFile, 5, 2, new byte[]{6, 7}, 2);
         checkRead(temporaryFile, 9, 10, new byte[0], -1);
-        temporaryFile.remove();
+        temporaryFile.delete();
         assertFalse(new File(fileName).exists());
     }
 
@@ -49,7 +49,7 @@ public class FileTest extends UnitTestBase
         }
         check(fileName, hugeArray);
         checkRead(temporaryFile, 0, hugeArray.length + 39120891, hugeArray, hugeArray.length);
-        temporaryFile.remove();
+        temporaryFile.delete();
         assertFalse(new File(fileName).exists());
     }
 

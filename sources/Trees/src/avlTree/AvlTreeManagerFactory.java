@@ -1,12 +1,18 @@
 package avlTree;
 
-import tree.nodeProviders.*;
+import tree.nodeProviders.INodeAllocator;
+import tree.nodeProviders.ITreeNodeProvider;
+import tree.nodeProviders.NodeAllocator;
+import tree.nodeProviders.TreeNodeProvider;
 import tree.nodeProviders.indexSets.FreeNodesSet;
 import avlTree.nodes.AvlTreeNode;
 import avlTree.nodes.AvlTreeNodeBuilder;
 import avlTree.nodes.AvlTreeNodeSerializer;
-import caching.connections.TemporaryFileFactory;
+
+import commons.files.FileManager;
+import commons.files.IFileManager;
 import commons.settings.ISettings;
+
 import data.enumerableData.IEnumerableData;
 import data.enumerableData.IItemSerializer;
 import data.enumerableData.InMemoryEnumerableData;
@@ -33,9 +39,9 @@ public class AvlTreeManagerFactory implements IAvlTreeManagerFactory {
                 break;
             case file:
                 IItemSerializer<AvlTreeNode> nodeSerializer = new AvlTreeNodeSerializer();
-                TemporaryFileFactory temporaryFileFactory = new TemporaryFileFactory(settings);
-                nodeStorage = new MemoryMappedFileEnumerableData<>(nodeSerializer, temporaryFileFactory, settings);
-                innerReferencesStorage = new MemoryMappedFileEnumerableData<>(new LongSerializer(), temporaryFileFactory, settings);
+                IFileManager fileManager = new FileManager(settings);
+                nodeStorage = new MemoryMappedFileEnumerableData<>(nodeSerializer, fileManager, settings);
+                innerReferencesStorage = new MemoryMappedFileEnumerableData<>(new LongSerializer(), fileManager, settings);
                 break;
             default:
                 throw new RuntimeException(String.format("Unsupported DataFactoryType '%s'", dataFactoryType));

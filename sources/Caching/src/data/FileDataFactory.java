@@ -3,8 +3,9 @@ package data;
 import java.io.File;
 import java.nio.file.Path;
 
-import caching.connections.ITemporaryFileFactory;
+import commons.files.IFileManager;
 import commons.settings.ISettings;
+
 import data.charArray.CharArray;
 import data.charArray.CharSerializer;
 import data.charArray.IReadableCharArray;
@@ -19,14 +20,14 @@ public class FileDataFactory implements ITypedDataFactory
 {
     private static IItemSerializer<Long> longSerializer = new LongSerializer();
     private static IItemSerializer<Character> charSerializer = new CharSerializer();
-    private ITemporaryFileFactory temporaryFileFactory;
     private ISettings settings;
+    private IFileManager fileManager;
 
     public FileDataFactory(
-            ITemporaryFileFactory temporaryFileFactory,
+            IFileManager fileManager,
             ISettings settings)
     {
-        this.temporaryFileFactory = temporaryFileFactory;
+        this.fileManager = fileManager;
         this.settings = settings;
     }
 
@@ -41,7 +42,7 @@ public class FileDataFactory implements ITypedDataFactory
     @Override
     public ILongArray createLongArray(long size)
     {
-        MemoryMappedFileEnumerableData<Long> memoryMappedFileStorage = new MemoryMappedFileEnumerableData<>(longSerializer, temporaryFileFactory, settings);
+        MemoryMappedFileEnumerableData<Long> memoryMappedFileStorage = new MemoryMappedFileEnumerableData<>(longSerializer, fileManager, settings);
         return new LongArray(memoryMappedFileStorage, size);
     }
 

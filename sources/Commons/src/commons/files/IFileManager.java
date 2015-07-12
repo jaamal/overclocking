@@ -1,8 +1,11 @@
 package commons.files;
 
+import java.io.File;
+
 public interface IFileManager
 {
-    IFile createTempFile(String directory);
-    IFile getFile(String fileName);
-    
+    IFile createTempFile2();
+    File createTempFile();
+    void deleteTempFiles();
+    IFile getFile(String path);
 }

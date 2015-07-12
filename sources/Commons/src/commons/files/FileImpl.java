@@ -50,7 +50,7 @@ public class FileImpl implements IFile
     }
 
     @Override
-    public void remove()
+    public void delete()
     {
         close();
         File file = new File(path);

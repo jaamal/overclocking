@@ -2,40 +2,73 @@ package commons.files;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+
+import commons.settings.ISettings;
+import commons.settings.KnownKeys;
 
 public class FileManager implements IFileManager
 {
-    @Override
-    public IFile createTempFile(String workFolder)
-    {
-        String filePath = workFolder + File.separator + UUID.randomUUID().toString();
-        tryCreateFile(new File(filePath));
-        return new FileImpl(filePath);
-    }
+    private Path workDirPath;
 
-    @Override
-    public IFile getFile(String fileName)
+    public FileManager(ISettings settings)
     {
-        return new FileImpl(fileName);
+        if (settings != null)
+            workDirPath = settings.getPath(KnownKeys.ServerWorkingDir);
+        else {
+            workDirPath = Paths.get(System.getProperty("user.dir"), "tmp");
+        }
     }
     
-    private static void tryCreateFile(File file)
+    @Override
+    public IFile createTempFile2()
     {
-        File parent = file.getParentFile();
-        if (parent != null)
-            parent.mkdirs();
-        
-        if (file.exists())
-            return;
+        File tempFile = createTempFile();
+        return new FileImpl(tempFile.getPath());
+    }
+    
+    @Override
+    public File createTempFile() {
         try
         {
-            if (!file.createNewFile())
-                throw new RuntimeException(String.format("Fail to create new file %s, since createNewFile returns false", file.getPath()));
+            Files.createDirectories(workDirPath);
+            return Files.createTempFile(workDirPath, "ov", ".tmp").toFile();
         }
         catch (IOException e)
         {
-            throw new RuntimeException(String.format("Fail to create new file %s.", file.getPath()), e);
+            throw new RuntimeException(String.format("Fail to create temporary file at dir %s.", workDirPath), e);
         }
+    }
+    
+    @Override
+    public void deleteTempFiles() {
+        try {
+            Files.walkFileTree(workDirPath, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Fail to delete all temp files by path %s.", workDirPath), e);
+        }
+    }
+
+    @Override
+    public IFile getFile(String path)
+    {
+        return new FileImpl(path);
     }
 }

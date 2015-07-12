@@ -10,15 +10,16 @@ import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.IOUtils;
 
-import caching.connections.ITemporaryFileFactory;
+import commons.files.IFileManager;
+
 import dataContracts.files.FileType;
 
 public class TextFileFilter implements ITypedFileFilter {
 
-    private ITemporaryFileFactory temporaryFileFactory;
+    private IFileManager fileManager;
 
-    public TextFileFilter(ITemporaryFileFactory temporaryFileFactory) {
-        this.temporaryFileFactory = temporaryFileFactory;
+    public TextFileFilter(IFileManager fileManager) {
+        this.fileManager = fileManager;
     }
     
     @Override
@@ -28,7 +29,7 @@ public class TextFileFilter implements ITypedFileFilter {
 
     @Override
     public Path apply(Reader reader) {
-        Path result = temporaryFileFactory.getTemporaryFile().toPath();
+        Path result = fileManager.createTempFile().toPath();
         try (BufferedWriter writer = Files.newBufferedWriter(result, Charset.defaultCharset(), StandardOpenOption.WRITE))
         {
             String str = IOUtils.toString(reader);

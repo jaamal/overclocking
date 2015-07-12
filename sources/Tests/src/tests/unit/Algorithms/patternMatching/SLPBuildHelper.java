@@ -58,7 +58,7 @@ public class SLPBuildHelper {
     }
 
     private LZFactorDef[] getFactorization(ISettings settings, String text) {
-        IFileManager fileManager = new FileManager();
+        IFileManager fileManager = new FileManager(settings);
         IExternalProcessExecutor externalProcessExecutor = new ExternalProcessExecutor();
         ISuffixArrayBuilder suffixArrayFactory = new SuffixArrayBuilder(dataFactory, fileManager, externalProcessExecutor, settings);
         IArrayMinSearcherFactory arrayMinSearcherFactory = new ArrayMinSearcherFactory(dataFactory);

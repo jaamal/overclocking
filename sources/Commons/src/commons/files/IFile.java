@@ -14,6 +14,6 @@ public interface IFile extends AutoCloseable
     void appendBatch(byte[] batch, int offset, int length) throws IOException;
     void appendBatch(char[] batch, int offset, int length) throws IOException;
     
-    void remove();
+    void delete();
     void close();
 }

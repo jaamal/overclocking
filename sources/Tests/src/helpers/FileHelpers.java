@@ -28,6 +28,7 @@ import dataContracts.files.FileType;
 public class FileHelpers
 {
     private static String testFilesDir = null;
+    private static IFileManager fileManager = new FileManager(null);
 
     public static String getAbsolutePathToTestFile(String localPath) {
         if (testFilesDir == null) {
@@ -55,7 +56,6 @@ public class FileHelpers
     }
 
     public static byte[] readTestFile(String localPath) {
-        IFileManager fileManager = new FileManager();
         IFile file = fileManager.getFile(getAbsolutePathToTestFile(localPath));
         int size = (int) file.size();
         byte[] result = new byte[size];
@@ -72,8 +72,6 @@ public class FileHelpers
         byte[] fileContent = readTestFile(localPath);
         return new String(fileContent, charset);
     }
-    
-    private static IFileManager fileManager = new FileManager();
     
     public static FileMetadata writeDnaToRepository(String fileName, ContentType contentType, IFilesRepository repo) {
         return writeFileToRepository(fileName, FileType.Dna, contentType, repo);

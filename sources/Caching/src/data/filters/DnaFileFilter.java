@@ -8,7 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import caching.connections.ITemporaryFileFactory;
+import commons.files.IFileManager;
+
 import data.filters.automatas.AutomataType;
 import data.filters.automatas.IAutomata;
 import data.filters.automatas.IAutomataFactory;
@@ -17,11 +18,11 @@ import dataContracts.files.FileType;
 public class DnaFileFilter implements ITypedFileFilter {
 
     private IAutomataFactory automataFactory;
-    private ITemporaryFileFactory temporaryFileFactory;
+    private IFileManager fileManager;
 
-    public DnaFileFilter(IAutomataFactory automataFactory, ITemporaryFileFactory temporaryFileFactory) {
+    public DnaFileFilter(IAutomataFactory automataFactory, IFileManager fileManager) {
         this.automataFactory = automataFactory;
-        this.temporaryFileFactory = temporaryFileFactory;
+        this.fileManager = fileManager;
     }
     
     @Override
@@ -32,7 +33,7 @@ public class DnaFileFilter implements ITypedFileFilter {
     @Override
     public Path apply(Reader reader) {
         IAutomata automata = automataFactory.createAutomata(AutomataType.DNA);
-        Path result = temporaryFileFactory.getTemporaryFile().toPath();
+        Path result = fileManager.createTempFile().toPath();
         try (BufferedWriter writer = Files.newBufferedWriter(result, Charset.defaultCharset(), StandardOpenOption.WRITE))
         {
             int cp;

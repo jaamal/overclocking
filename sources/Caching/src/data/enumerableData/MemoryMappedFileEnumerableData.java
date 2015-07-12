@@ -2,7 +2,7 @@ package data.enumerableData;
 
 import java.io.File;
 
-import caching.connections.ITemporaryFileFactory;
+import commons.files.IFileManager;
 import commons.settings.ISettings;
 
 public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
@@ -11,10 +11,10 @@ public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
 
     public MemoryMappedFileEnumerableData(
             IItemSerializer<T> serializer,
-            ITemporaryFileFactory temporaryFileFactory,
+            IFileManager fileManager,
             ISettings settings)
     {
-        this(serializer, temporaryFileFactory.getTemporaryFile(), settings, true);
+        this(serializer, fileManager.createTempFile(), settings, true);
     }
 
     public MemoryMappedFileEnumerableData(

@@ -11,9 +11,11 @@ import storage.KeySpaces;
 import storage.cassandraClient.ISchemeInitializer;
 import storage.filesRepository.IFilesRepository;
 import tests.integration.StorageTestBase;
-import commons.files.FileManager;
+
 import commons.files.IFile;
+import commons.files.IFileManager;
 import compressionservice.upload.IFileUploader;
+
 import dataContracts.ContentType;
 import dataContracts.files.FileMetadata;
 import dataContracts.files.FileType;
@@ -21,7 +23,7 @@ import dataContracts.files.FileType;
 public class FileLoaderIntegrationTest extends StorageTestBase
 {
     private IFilesRepository filesRepository;
-    private FileManager fileManager = new FileManager();
+    private IFileManager fileManager;
     private ISchemeInitializer schemeInitializer;
 
     @Override
@@ -29,6 +31,7 @@ public class FileLoaderIntegrationTest extends StorageTestBase
     {
         super.setUp();
         filesRepository = container.get(IFilesRepository.class);
+        fileManager = container.get(IFileManager.class);
         schemeInitializer = container.get(ISchemeInitializer.class);
         schemeInitializer.setUpCluster();
     }

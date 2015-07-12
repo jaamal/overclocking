@@ -5,11 +5,13 @@ import helpers.TestHelpers;
 import org.junit.Assert;
 import org.junit.Test;
 
+import tests.stress.StressTestBase;
 import avlTree.nodes.AvlTreeNode;
 import avlTree.nodes.AvlTreeNodeSerializer;
-import tests.stress.StressTestBase;
-import caching.connections.ITemporaryFileFactory;
+
+import commons.files.IFileManager;
 import commons.settings.ISettings;
+
 import data.charArray.CharSerializer;
 import data.enumerableData.IItemSerializer;
 import data.enumerableData.MemoryMappedFileEnumerableData;
@@ -17,20 +19,20 @@ import data.longArray.LongSerializer;
 
 public class MemoryMappedFileStorageTest extends StressTestBase
 {
-    private ITemporaryFileFactory temporaryFileFactory;
+    private IFileManager fileManager;
 
     @Override
     public void setUp() {
         super.setUp();
         
-        temporaryFileFactory = container.get(ITemporaryFileFactory.class);
+        fileManager = container.get(IFileManager.class);
     }
 
     @Test
     public void testWithIntArray()
     {
         IItemSerializer<Integer> serializer = new IntegerSerializer();
-        MemoryMappedFileEnumerableData<Integer> storage = new MemoryMappedFileEnumerableData<Integer>(serializer, temporaryFileFactory, container.get(ISettings.class));
+        MemoryMappedFileEnumerableData<Integer> storage = new MemoryMappedFileEnumerableData<Integer>(serializer, fileManager, container.get(ISettings.class));
 
         final int count = 1056;
         int[] array = TestHelpers.genIntArray(count);
@@ -46,7 +48,7 @@ public class MemoryMappedFileStorageTest extends StressTestBase
     public void testWithLongArray()
     {
         IItemSerializer<Long> serializer = new LongSerializer();
-        MemoryMappedFileEnumerableData<Long> storage = new MemoryMappedFileEnumerableData<Long>(serializer, temporaryFileFactory, container.get(ISettings.class));
+        MemoryMappedFileEnumerableData<Long> storage = new MemoryMappedFileEnumerableData<Long>(serializer, fileManager, container.get(ISettings.class));
 
         final int count = 1056;
         long[] array = TestHelpers.genLongArray(count);
@@ -62,7 +64,7 @@ public class MemoryMappedFileStorageTest extends StressTestBase
     public void testWithCharArray()
     {
         IItemSerializer<Character> serializer = new CharSerializer();
-        MemoryMappedFileEnumerableData<Character> storage = new MemoryMappedFileEnumerableData<Character>(serializer, temporaryFileFactory, container.get(ISettings.class));
+        MemoryMappedFileEnumerableData<Character> storage = new MemoryMappedFileEnumerableData<Character>(serializer, fileManager, container.get(ISettings.class));
 
         final int count = 100000;
         char[] array = TestHelpers.genCharArray(count);
@@ -78,7 +80,7 @@ public class MemoryMappedFileStorageTest extends StressTestBase
     public void testWithAvlNodeArray()
     {
         IItemSerializer<AvlTreeNode> serializer = new AvlTreeNodeSerializer();
-        MemoryMappedFileEnumerableData<AvlTreeNode> storage = new MemoryMappedFileEnumerableData<AvlTreeNode>(serializer, temporaryFileFactory, container.get(ISettings.class));
+        MemoryMappedFileEnumerableData<AvlTreeNode> storage = new MemoryMappedFileEnumerableData<AvlTreeNode>(serializer, fileManager, container.get(ISettings.class));
 
         final int count = 10000;
         AvlTreeNode[] array = TestHelpers.genAvlTreeNodeArray(count);

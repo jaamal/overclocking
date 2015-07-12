@@ -45,7 +45,7 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
     @Override
     public ISuffixArray build(DataFactoryType dataFactoryType, IReadableCharArray source) {
       //TODO cheat, fix it
-        try (IFile textFile = fileManager.createTempFile(settings.getPath(KnownKeys.ServerWorkingDir).toString());)
+        try (IFile textFile = fileManager.createTempFile2())
         {
             saveToFile(textFile, source);
             final long textSize = source.length();
