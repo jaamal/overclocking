@@ -1,15 +1,13 @@
 package compressionservice.algorithms.lzInf.suffixArray;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import commons.files.IFile;
 import commons.files.IFileManager;
 import commons.settings.ISettings;
 import commons.settings.KnownKeys;
+import commons.utils.NumericUtils;
+
 import data.IDataFactory;
 import data.charArray.IReadableCharArray;
 import data.longArray.ILongArray;
@@ -35,43 +33,32 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
     }
     
     @Override
-    public ISuffixArray build(DataFactoryType dataFactoryType, String pathToFile) {
-        try (IFile textFile = fileManager.getFile(pathToFile); ) {
-            IReadableCharArray source = dataFactory.getCharArray(dataFactoryType, new File(pathToFile).toPath());
-            return build(dataFactoryType, source);
-        }
-    }
-    
-    @Override
     public ISuffixArray build(DataFactoryType dataFactoryType, IReadableCharArray source) {
       //TODO cheat, fix it
-        try (IFile textFile = fileManager.createTempFile2())
+        try (IFile textFile = fileManager.createTempFile2();
+             IFile suffixArrayFile = fileManager.createTempFile2())
         {
             saveToFile(textFile, source);
             final long textSize = source.length();
             String processPath = settings.getPath(KnownKeys.ServerSuffixArrayBuilderPath).toString();
-            InputStream suffixArrayStream = externalProcessExecutor.execute(processPath, new String[] { textFile.getPath(), String.valueOf(textSize) });
+            externalProcessExecutor.execute(processPath, new String[] { textFile.getPath(), String.valueOf(textSize), suffixArrayFile.getPath() });
             
-            ILongArray suffixArray = dataFactory.createLongArray(dataFactoryType, textSize);
+            ILongArray longArray = dataFactory.createLongArray(dataFactoryType, textSize);
+            byte[] buffer = new byte[128 * 1024];
+            long position = 0;
             long index = 0;
-            if (suffixArrayStream.available() > 0){
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(suffixArrayStream));) {
-                    String line;
-                    do {
-                        line = reader.readLine();
-                        if (line != null) {
-                            String[] splits = line.split(",");
-                            for (int i = 0; i < splits.length; i++) {
-                                suffixArray.set(index, Long.parseLong(splits[i]));
-                                index++;
-                            }
-                        }
-                    }
-                    while (line != null);
-                }
+            while (position < 4 * textSize)
+            {
+                int actual = suffixArrayFile.read(position, buffer);
+                final int right = actual / 4;
+                for (int i = 0; i < right; i++)
+                    longArray.set(index++, NumericUtils.bytesToInt(buffer, i * 4));
+                position += actual;
             }
-            suffixArrayStream.close();
-            return new SuffixArray(suffixArray, source);
+
+            SuffixArray result = new SuffixArray(longArray, source);
+            textFile.delete();
+            return result;
         }
         catch (IOException e)
         {
@@ -81,21 +68,21 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
     
     private static void saveToFile(IFile file, IReadableCharArray readableCharArray) throws IOException
     {
-        char[] buffer = new char[16 * 1024];
-        int currentBufferSize = 0;
-        long charArraySize = readableCharArray.length();
-        for (long i = 0; i < charArraySize; i++)
+        final int bufferSize = 16 * 1024;
+        final long charArrayLength = readableCharArray.length();
+        String bufferStr = "";
+        for (long i = 0; i < charArrayLength; i++)
         {
-            if (currentBufferSize == buffer.length)
+            if (bufferStr.length() == bufferSize)
             {
-                file.appendBatch(buffer, 0, currentBufferSize);
-                currentBufferSize = 0;
+                file.append(bufferStr.getBytes());
+                bufferStr = "";
             }
-            buffer[currentBufferSize++] = readableCharArray.get(i);
+            bufferStr += readableCharArray.get(i);
         }
-        if (currentBufferSize > 0)
+        if (bufferStr.length() > 0)
         {
-            file.appendBatch(buffer, 0, currentBufferSize);
+            file.append(bufferStr.getBytes());
         }
     }
 }

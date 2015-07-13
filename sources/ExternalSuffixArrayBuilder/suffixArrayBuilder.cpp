@@ -142,7 +142,7 @@ int main(int argc, char * argv[]){
 	int n = std::stoi(argv[2]);	
 	char * arr = new char[n];
 	for (int i = 0; i < n; i++)
-		scanf("%c",&arr[i]);	
+		scanf("%c",&arr[i]);
 	int * T = new int[n+3];
 	memset(T,0,(n+3)*4);
 	for (int i = 0; i < n; i++){
@@ -155,8 +155,13 @@ int main(int argc, char * argv[]){
 	if (n >= 2)
 		suffixArray(T,SA,n,1024);
 
-    for (int i = 0; i < n; i++)
-        cout << to_string(SA[i]) << ",";
+    //for (int i = 0; i < n; i++)
+    //    cout << to_string(SA[i]) << ",";
+	ofstream result;
+	result.open(argv[3],ios::out | ios::binary);
+	result.write((char*)SA,n * 4);
+	result.flush();
+	result.close();
 
 	delete [] T;
 	delete [] SA;

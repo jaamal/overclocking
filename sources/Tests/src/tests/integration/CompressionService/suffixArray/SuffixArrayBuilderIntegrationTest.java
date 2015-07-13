@@ -1,6 +1,7 @@
 package tests.integration.CompressionService.suffixArray;
 
 import static org.junit.Assert.assertEquals;
+import helpers.TestHelpers;
 
 import org.junit.Test;
 
@@ -10,22 +11,22 @@ import compressionservice.algorithms.lzInf.suffixArray.SuffixArrayBuilder;
 import data.IDataFactory;
 import dataContracts.DataFactoryType;
 
-public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
+public class SuffixArrayBuilderIntegrationTest extends IntegrationTestBase
 {
-    private SuffixArrayBuilder suffixArrayFactory;
+    private SuffixArrayBuilder suffixArrayBuilder;
 
     @Override
     public void setUp()
     {
         super.setUp();
         
-        suffixArrayFactory = container.get(SuffixArrayBuilder.class);
+        suffixArrayBuilder = container.get(SuffixArrayBuilder.class);
     }
 
     @Test
     public void testOneSymbol()
     {
-        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray("a".toCharArray()));
+        ISuffixArray suffixArray = suffixArrayBuilder.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray("a".toCharArray()));
         doAssert(new long[]{0}, suffixArray);
         suffixArray.dispose();
     }
@@ -33,7 +34,7 @@ public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
     @Test
     public void testAaaaa()
     {
-        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray("aaaaa".toCharArray()));
+        ISuffixArray suffixArray = suffixArrayBuilder.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray("aaaaa".toCharArray()));
         doAssert(new long[]{4, 3, 2, 1, 0}, suffixArray);
         suffixArray.dispose();
     }
@@ -41,8 +42,17 @@ public class ExternalSuffixArrayIntegrationTest extends IntegrationTestBase
     @Test
     public void testMissisipi()
     {
-        ISuffixArray suffixArray = suffixArrayFactory.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray("missisipi".toCharArray()));
+        ISuffixArray suffixArray = suffixArrayBuilder.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray("missisipi".toCharArray()));
         doAssert(new long[]{8, 6, 4, 1, 0, 7, 5, 3, 2}, suffixArray);
+        suffixArray.dispose();
+    }
+    
+    @Test
+    public void testHugeString()
+    {
+        String hugeStr = TestHelpers.genString(32 * 1024, 4);
+        ISuffixArray suffixArray = suffixArrayBuilder.build(DataFactoryType.memory, container.get(IDataFactory.class).createCharArray(hugeStr.toCharArray()));
+        assertEquals(hugeStr.length(), suffixArray.length());
         suffixArray.dispose();
     }
 

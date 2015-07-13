@@ -1,11 +1,11 @@
 package commons.files;
 
-import org.apache.log4j.Logger;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+
+import org.apache.log4j.Logger;
 
 public class FileImpl implements IFile
 {
@@ -61,21 +61,10 @@ public class FileImpl implements IFile
     }
 
     @Override
-    public void appendBatch(byte[] batch, int offset, int length) throws IOException
+    public void append(byte[] buffer) throws IOException
     {
-        long fileLength = randomAccessFile.length();
-        randomAccessFile.seek(fileLength);
-        randomAccessFile.write(batch, offset, length);
-    }
-
-    @Override
-    public void appendBatch(char[] batch, int offset, int length) throws IOException
-    {
-        //TODO encoding
-        byte[] byteBatch = new byte[batch.length];
-        for (int i = 0; i < batch.length; i++)
-            byteBatch[i] = (byte) batch[i];
-        appendBatch(byteBatch, offset, length);
+        randomAccessFile.seek(randomAccessFile.length());
+        randomAccessFile.write(buffer, 0, buffer.length);
     }
 
     @Override
@@ -83,13 +72,6 @@ public class FileImpl implements IFile
     {
         randomAccessFile.seek(offset);
         return randomAccessFile.read(dst);
-    }
-
-    @Override
-    public void write(long fileOffset, byte[] batch, int offset, int length) throws IOException
-    {
-        randomAccessFile.seek(fileOffset);
-        randomAccessFile.write(batch, offset, length);
     }
 
     @Override

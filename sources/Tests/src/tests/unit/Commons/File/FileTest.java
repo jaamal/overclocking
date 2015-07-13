@@ -20,17 +20,20 @@ public class FileTest extends UnitTestBase
     public void testTemporaryFile() throws IOException
     {
         String fileName = "zzz.qxx";
-        FileImpl temporaryFile = new FileImpl(fileName);
-        temporaryFile.appendBatch(new byte[]{1, 2, 3}, 0, 3);
-        temporaryFile.appendBatch(new byte[]{1, 4, 5, 6}, 1, 3);
-        temporaryFile.appendBatch(new byte[]{7, 8, 9}, 0, 3);
-        check(fileName, new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
-        checkRead(temporaryFile, 0, 9, new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, 9);
-        checkRead(temporaryFile, 1, 9, new byte[]{2, 3, 4, 5, 6, 7, 8, 9}, 8);
-        checkRead(temporaryFile, 5, 2, new byte[]{6, 7}, 2);
-        checkRead(temporaryFile, 9, 10, new byte[0], -1);
-        temporaryFile.delete();
-        assertFalse(new File(fileName).exists());
+        try (FileImpl temporaryFile = new FileImpl(fileName)){
+            temporaryFile.append(new byte[]{1, 2, 3});
+            temporaryFile.append(new byte[]{4, 5, 6});
+            temporaryFile.append(new byte[]{7, 8, 9});
+            check(fileName, new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
+            checkRead(temporaryFile, 0, 9, new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, 9);
+            checkRead(temporaryFile, 1, 9, new byte[]{2, 3, 4, 5, 6, 7, 8, 9}, 8);
+            checkRead(temporaryFile, 5, 2, new byte[]{6, 7}, 2);
+            checkRead(temporaryFile, 9, 10, new byte[0], -1);
+        }
+        finally {
+            new FileImpl(fileName).delete();
+            assertFalse(new File(fileName).exists());
+        }
     }
 
     @Test
@@ -45,7 +48,7 @@ public class FileTest extends UnitTestBase
             byte[] small = new byte[1024];
             random.nextBytes(small);
             System.arraycopy(small, 0, hugeArray, i * 1024, small.length);
-            temporaryFile.appendBatch(small, 0, 1024);
+            temporaryFile.append(small);
         }
         check(fileName, hugeArray);
         checkRead(temporaryFile, 0, hugeArray.length + 39120891, hugeArray, hugeArray.length);
