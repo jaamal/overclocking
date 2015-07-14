@@ -40,7 +40,7 @@ public interface IReadableCharArray extends AutoCloseable
             }
         }
         catch (IOException e) {
-            throw new RuntimeException(String.format("Fail to save char array to file %s.", file.getPath()), e);
+            throw new RuntimeException(String.format("Fail to save char array to file %s.", file.getPathStr()), e);
         }
     }
 }

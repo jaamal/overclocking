@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.log4j.Logger;
 
@@ -34,30 +36,31 @@ public class FileImpl implements IFile
         }
         catch (FileNotFoundException e)
         {
-            throw new RuntimeException("FileNotFound: " + this.path, e);
+            throw new RuntimeException(String.format("File %s not found.", this.path), e);
         }
     }
 
     @Override
-    public String getPath()
+    public String getPathStr()
     {
         return path;
+    }
+    
+    @Override
+    public Path getPath()
+    {
+        return Paths.get(path);
     }
     
     @Override
     public String getName() {
         return this.name;
     }
-
+    
     @Override
-    public void delete()
+    public long size()
     {
-        close();
-        File file = new File(path);
-        if (file.exists() && file.isFile())
-        {
-            file.delete();
-        }
+        return new File(path).length();
     }
 
     @Override
@@ -86,10 +89,15 @@ public class FileImpl implements IFile
             logger.error("Error while closing file " + path, e);
         }
     }
-
+    
     @Override
-    public long size()
+    public void delete()
     {
-        return new File(path).length();
+        close();
+        File file = new File(path);
+        if (file.exists() && file.isFile())
+        {
+            file.delete();
+        }
     }
 }

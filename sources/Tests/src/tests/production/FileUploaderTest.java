@@ -21,7 +21,7 @@ public class FileUploaderTest extends ProductionTestBase {
         IFile file = fileManager.getFile(filePath);
         FileType fileType = FileType.Dna;
         ContentType contentType = ContentType.GZip;
-        System.out.printf("Loading %s %s %s", file.getPath(), fileType, contentType);
+        System.out.printf("Loading %s %s %s", file.getPathStr(), fileType, contentType);
         fileUploader.upload(file, fileType, contentType);
         System.out.println("Done");
     }
@@ -36,7 +36,7 @@ public class FileUploaderTest extends ProductionTestBase {
             IFile file = fileManager.getFile(windowsFile.getAbsolutePath());
             FileType fileType = FileType.Text;
             ContentType contentType = ContentType.PlainText;
-            System.out.printf("Loading %s %s %s", file.getPath(), fileType, contentType);
+            System.out.printf("Loading %s %s %s", file.getPathStr(), fileType, contentType);
             fileUploader.upload(file, fileType, contentType);
             System.out.println("Done");
         }
@@ -52,7 +52,7 @@ public class FileUploaderTest extends ProductionTestBase {
             IFile file = fileManager.getFile(windowsFile.getAbsolutePath());
             FileType fileType = FileType.Text;
             ContentType contentType = ContentType.PlainText;
-            System.out.printf("Loading %s %s %s", file.getPath(), fileType, contentType);
+            System.out.printf("Loading %s %s %s", file.getPathStr(), fileType, contentType);
             fileUploader.upload(file, fileType, contentType);
             System.out.println("Done");
         }

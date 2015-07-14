@@ -25,7 +25,7 @@ public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
         this(serializer, file, settings, false);
     }
 
-    public MemoryMappedFileEnumerableData(
+    private MemoryMappedFileEnumerableData(
             IItemSerializer<T> serializer,
             File file,
             ISettings settings,

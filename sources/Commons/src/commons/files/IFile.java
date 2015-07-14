@@ -1,10 +1,12 @@
 package commons.files;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 public interface IFile extends AutoCloseable
 {
-    String getPath();
+    String getPathStr();
+    Path getPath();
     String getName();
     long size();
 

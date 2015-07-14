@@ -29,7 +29,7 @@ public class TextFileFilter implements ITypedFileFilter {
 
     @Override
     public Path apply(Reader reader) {
-        Path result = fileManager.createTempFile().toPath();
+        Path result = fileManager.createTempFile2().getPath();
         try (BufferedWriter writer = Files.newBufferedWriter(result, Charset.defaultCharset(), StandardOpenOption.WRITE))
         {
             String str = IOUtils.toString(reader);

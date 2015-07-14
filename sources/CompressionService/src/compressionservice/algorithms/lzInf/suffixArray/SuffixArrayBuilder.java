@@ -40,7 +40,7 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
             final long textSize = source.length();
             source.saveToFile(textFile);
             String processPath = settings.getPath(KnownKeys.ServerSuffixArrayBuilderPath).toString();
-            externalProcessExecutor.execute(processPath, new String[] { textFile.getPath(), String.valueOf(textSize), suffixArrayFile.getPath() });
+            externalProcessExecutor.execute(processPath, new String[] { textFile.getPathStr(), String.valueOf(textSize), suffixArrayFile.getPathStr() });
             
             ILongArray longArray = dataFactory.createLongArray(dataFactoryType, textSize);
             byte[] buffer = new byte[128 * 1024];

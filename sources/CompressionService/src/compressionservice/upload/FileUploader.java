@@ -42,9 +42,9 @@ public class FileUploader implements IFileUploader {
     public String upload(IFile file, FileType fileType, ContentType contentType) {
         String fileId = idFactory.create().toString();
         uploadFileBatchs(fileId, file);
-        logger.info(String.format("File batches for file %s are loaded.", file.getPath()));
+        logger.info(String.format("File batches for file %s are loaded.", file.getPathStr()));
         filesRepository.saveMeta(fileMetadataFactory.create(fileId, file.getName(), file.size(), fileType, contentType));
-        logger.info(String.format("Metadata for file %s are loaded.", file.getPath()));
+        logger.info(String.format("Metadata for file %s are loaded.", file.getPathStr()));
         return fileId;
     }
 
@@ -63,7 +63,7 @@ public class FileUploader implements IFileUploader {
                 received = file.read(offset, fileBatchBuffer);
             } 
             catch (IOException e) {
-                throw new UploadException(String.format("Fail to upload file %s.", file.getPath()), e);
+                throw new UploadException(String.format("Fail to upload file %s.", file.getPathStr()), e);
             }
             filesRepository.saveBatch(fileBatchFactory.create(fileId, batchNumber, Arrays.copyOfRange(fileBatchBuffer, 0, received)));
             offset += received;

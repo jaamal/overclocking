@@ -1,14 +1,15 @@
 package tests.integration.Commons.files;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import commons.files.FileManager;
-import commons.files.IFileManager;
 import tests.integration.IntegrationTestBase;
+
+import commons.files.FileManager;
+import commons.files.IFile;
+import commons.files.IFileManager;
 
 public class FileManagerTest extends IntegrationTestBase
 {
@@ -24,14 +25,18 @@ public class FileManagerTest extends IntegrationTestBase
     @Test
     public void testCreateTempFileWithNoSettings() throws IOException {
         fileManager = new FileManager(null);
-        File file = fileManager.createTempFile();
-        Assert.assertEquals("tmp", file.getParentFile().getName());
+        try (IFile file = fileManager.createTempFile2()) {
+            String pathStr = file.getPathStr();
+            Assert.assertTrue(pathStr.contains("/tmp/"));
+        }
     }
     
     @Test
     public void testCreateTempFileWithSettings() throws IOException {
         fileManager = container.get(IFileManager.class);
-        File file = fileManager.createTempFile();
-        Assert.assertEquals("WorkingDirectory", file.getParentFile().getName());
+        try (IFile file = fileManager.createTempFile2()) {
+            String pathStr = file.getPathStr();
+            Assert.assertTrue(pathStr.contains("/WorkingDirectory/"));
+        }
     }
 }

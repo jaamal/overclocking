@@ -33,7 +33,7 @@ public class DnaFileFilter implements ITypedFileFilter {
     @Override
     public Path apply(Reader reader) {
         IAutomata automata = automataFactory.createAutomata(AutomataType.DNA);
-        Path result = fileManager.createTempFile().toPath();
+        Path result = fileManager.createTempFile2().getPath();
         try (BufferedWriter writer = Files.newBufferedWriter(result, Charset.defaultCharset(), StandardOpenOption.WRITE))
         {
             int cp;

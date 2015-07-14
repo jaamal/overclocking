@@ -54,8 +54,8 @@ public class FileLoaderIntegrationTest extends StorageTestBase
 
         FileMetadata fileMetadata = filesRepository.getMeta(fileId);
         Assert.assertNotNull(fileMetadata);
-        Assert.assertEquals(fileMetadata.getId(), file.getPath());
-        Assert.assertEquals(fileMetadata.getName(), file.getPath());
+        Assert.assertEquals(fileMetadata.getId(), file.getPathStr());
+        Assert.assertEquals(fileMetadata.getName(), file.getPathStr());
         Assert.assertEquals(fileMetadata.getSize(), file.size());
         Assert.assertEquals(fileMetadata.getType(), FileType.Unspecified);
 

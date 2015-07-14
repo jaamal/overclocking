@@ -86,7 +86,6 @@ public class MemoryMappedFileConnection<T>
 
     public void write(long number, T obj)
     {
-        checkOpened();
         MappedByteBuffer byteBuffer = getMappedByteBuffer(number / batchSize);
         byteBuffer.position((int) (number % batchSize) * objectLength);
         serializer.serialize(obj, byteBuffer);
@@ -94,7 +93,6 @@ public class MemoryMappedFileConnection<T>
 
     public T read(long number)
     {
-        checkOpened();
         MappedByteBuffer byteBuffer = getMappedByteBuffer(number / batchSize);
         byteBuffer.position((int) (number % batchSize) * objectLength);
         return serializer.deserialize(byteBuffer);
@@ -106,12 +104,6 @@ public class MemoryMappedFileConnection<T>
         super.finalize();
     }
 
-    private void checkOpened()
-    {
-        if (channel == null)
-            throw new RuntimeException(String.format("File %s is not opened.", file.getAbsolutePath()));
-    }
-
     private MappedByteBuffer getMappedByteBuffer(long number)
     {
         while (mappedByteBuffers.size() <= number)
@@ -121,6 +113,9 @@ public class MemoryMappedFileConnection<T>
 
     private MappedByteBuffer createMappedBuffer(long number)
     {
+        if (channel == null)
+            throw new RuntimeException(String.format("File %s is not opened.", file.getAbsolutePath()));
+        
         try
         {
             return channel.map(FileChannel.MapMode.READ_WRITE, number * batchSize * objectLength, batchSize * objectLength);
