@@ -34,12 +34,11 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
     
     @Override
     public ISuffixArray build(DataFactoryType dataFactoryType, IReadableCharArray source) {
-      //TODO cheat, fix it
         try (IFile textFile = fileManager.createTempFile2();
              IFile suffixArrayFile = fileManager.createTempFile2())
         {
-            saveToFile(textFile, source);
             final long textSize = source.length();
+            source.saveToFile(textFile);
             String processPath = settings.getPath(KnownKeys.ServerSuffixArrayBuilderPath).toString();
             externalProcessExecutor.execute(processPath, new String[] { textFile.getPath(), String.valueOf(textSize), suffixArrayFile.getPath() });
             
@@ -57,32 +56,13 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
             }
 
             SuffixArray result = new SuffixArray(longArray, source);
+            suffixArrayFile.delete();
             textFile.delete();
             return result;
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
-        }
-    }
-    
-    private static void saveToFile(IFile file, IReadableCharArray readableCharArray) throws IOException
-    {
-        final int bufferSize = 16 * 1024;
-        final long charArrayLength = readableCharArray.length();
-        String bufferStr = "";
-        for (long i = 0; i < charArrayLength; i++)
-        {
-            if (bufferStr.length() == bufferSize)
-            {
-                file.append(bufferStr.getBytes());
-                bufferStr = "";
-            }
-            bufferStr += readableCharArray.get(i);
-        }
-        if (bufferStr.length() > 0)
-        {
-            file.append(bufferStr.getBytes());
         }
     }
 }
