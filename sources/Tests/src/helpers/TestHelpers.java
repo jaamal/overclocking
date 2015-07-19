@@ -19,6 +19,12 @@ public class TestHelpers {
         return genString(length, 26);
     }
     
+    public static byte[] genBytes(int length) {
+        byte[] result = new byte[length];
+        random.nextBytes(result);
+        return result;
+    }
+    
     public static int[] genIntArray(int length) {
         int[] result = new int[length];
         for (int i = 0; i < length; ++i) {

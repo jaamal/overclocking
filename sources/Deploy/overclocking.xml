@@ -5,7 +5,7 @@
   <import file="deploy.xml"/>
   <include file="unit_tests_runner.xml" as="testrunner"/>
 
-  <property name="proj.list" value="BusinessObjects,Algorithms,Commons,Caching,Storage,Trees,HttpService"/>
+  <property name="proj.list" value="Commons,BusinessObjects,Algorithms,Storage,Trees,HttpService"/>
   
   <target name="run">
     <echo message="Deploying project from ${ov.root.dir}."/>

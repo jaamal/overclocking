@@ -14,7 +14,6 @@
 	<classpathentry kind="lib" path="/Deploy/assemblies/test/objenesis-1.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Algorithms"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BusinessObjects"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Caching"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Commons"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CompressionService"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Front"/>
