@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -15,6 +18,8 @@ public class FileImpl implements IFile
     private String path;
     private String name;
     private RandomAccessFile randomAccessFile;
+    private FileLock fileLock;
+    private FileChannel channel;
 
     public FileImpl(String path)
     {
@@ -76,6 +81,20 @@ public class FileImpl implements IFile
         randomAccessFile.seek(offset);
         return randomAccessFile.read(dst);
     }
+    
+    @Override
+    public MappedByteBuffer mapBuffer(long position, long size) throws IOException {
+        
+        if (channel == null) {
+            channel = randomAccessFile.getChannel();
+            fileLock = channel.tryLock();
+            if (fileLock == null)
+                throw new RuntimeException(String.format("Fail to take lock the file %s.", path));
+            
+        }
+        
+        return channel.map(FileChannel.MapMode.READ_WRITE, position, size);
+    }
 
     @Override
     public void close()
@@ -83,6 +102,12 @@ public class FileImpl implements IFile
         try
         {
             randomAccessFile.close();
+            if (fileLock.isValid()) {
+                fileLock.release();
+                channel.close();
+                fileLock = null;
+                channel = null;
+            }
         }
         catch (IOException e)
         {
