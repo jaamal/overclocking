@@ -8,5 +8,8 @@
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/xpp3-1.1.3_8.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/gson-2.2.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/persistence-api-1.0.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Commons"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="/Deploy/assemblies/ext/log4j-1.2.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

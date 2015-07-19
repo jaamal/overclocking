@@ -1,4 +1,4 @@
-package tests.unit.Caching;
+package tests.unit.BusinessObjects.data;
 
 import junit.framework.Assert;
 

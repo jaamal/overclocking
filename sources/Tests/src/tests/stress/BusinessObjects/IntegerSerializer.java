@@ -1,4 +1,4 @@
-package tests.stress.Caching;
+package tests.stress.BusinessObjects;
 
 import java.nio.ByteBuffer;
 

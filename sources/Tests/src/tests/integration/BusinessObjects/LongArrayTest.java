@@ -1,4 +1,4 @@
-package tests.integration.Caching;
+package tests.integration.BusinessObjects;
 
 import org.junit.Assert;
 import org.junit.Test;

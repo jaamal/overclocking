@@ -1,4 +1,4 @@
-package tests.integration.Caching;
+package tests.integration.BusinessObjects;
 
 import java.io.IOException;
 
