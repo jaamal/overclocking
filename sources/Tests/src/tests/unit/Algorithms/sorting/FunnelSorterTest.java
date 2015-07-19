@@ -1,4 +1,4 @@
-package tests.unit.Caching.sorting;
+package tests.unit.Algorithms.sorting;
 
 import org.junit.Assert;
 import org.junit.Ignore;
