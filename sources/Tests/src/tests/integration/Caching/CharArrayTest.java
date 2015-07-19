@@ -19,7 +19,7 @@ public class CharArrayTest extends IntegrationTestBase
     public void testSaveToFileHugeString() throws IOException {
         String mbText = TestHelpers.genString(1024 * 1024);
         try (IReadableCharArray readableCharArray = container.get(IDataFactory.class).createCharArray(mbText.toCharArray());
-             IFile textFile = container.get(IFileManager.class).createTempFile2())
+             IFile textFile = container.get(IFileManager.class).createTempFile())
         {
             readableCharArray.saveToFile(textFile);
             

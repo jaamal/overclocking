@@ -25,7 +25,7 @@ public class FileManagerTest extends IntegrationTestBase
     @Test
     public void testCreateTempFileWithNoSettings() throws IOException {
         fileManager = new FileManager(null);
-        try (IFile file = fileManager.createTempFile2()) {
+        try (IFile file = fileManager.createTempFile()) {
             String pathStr = file.getPathStr();
             Assert.assertTrue(pathStr.contains("/tmp/"));
         }
@@ -34,7 +34,7 @@ public class FileManagerTest extends IntegrationTestBase
     @Test
     public void testCreateTempFileWithSettings() throws IOException {
         fileManager = container.get(IFileManager.class);
-        try (IFile file = fileManager.createTempFile2()) {
+        try (IFile file = fileManager.createTempFile()) {
             String pathStr = file.getPathStr();
             Assert.assertTrue(pathStr.contains("/WorkingDirectory/"));
         }

@@ -34,8 +34,8 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
     
     @Override
     public ISuffixArray build(DataFactoryType dataFactoryType, IReadableCharArray source) {
-        try (IFile textFile = fileManager.createTempFile2();
-             IFile suffixArrayFile = fileManager.createTempFile2())
+        try (IFile textFile = fileManager.createTempFile();
+             IFile suffixArrayFile = fileManager.createTempFile())
         {
             final long textSize = source.length();
             source.saveToFile(textFile);

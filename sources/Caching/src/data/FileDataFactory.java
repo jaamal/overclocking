@@ -1,8 +1,8 @@
 package data;
 
-import java.io.File;
 import java.nio.file.Path;
 
+import commons.files.IFile;
 import commons.files.IFileManager;
 import commons.settings.ISettings;
 
@@ -34,9 +34,9 @@ public class FileDataFactory implements ITypedDataFactory
     @Override
     public IReadableCharArray getCharArray(Path filePath)
     {
-        File file = filePath.toFile();
+        IFile file = fileManager.getFile(filePath.toString());
         MemoryMappedFileEnumerableData<Character> memoryMappedFileStorage = new MemoryMappedFileEnumerableData<>(charSerializer, file, settings);
-        return new CharArray(memoryMappedFileStorage, file.length());
+        return new CharArray(memoryMappedFileStorage, file.size());
     }
 
     @Override

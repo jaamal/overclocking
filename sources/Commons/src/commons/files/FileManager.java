@@ -1,6 +1,5 @@
 package commons.files;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -26,18 +25,12 @@ public class FileManager implements IFileManager
     }
     
     @Override
-    public IFile createTempFile2()
+    public IFile createTempFile()
     {
-        File tempFile = createTempFile();
-        return new FileImpl(tempFile.getPath());
-    }
-    
-    @Override
-    public File createTempFile() {
         try
         {
             Files.createDirectories(workDirPath);
-            return Files.createTempFile(workDirPath, "ov", ".tmp").toFile();
+            return new FileImpl(Files.createTempFile(workDirPath, "ov", ".tmp").toString());
         }
         catch (IOException e)
         {

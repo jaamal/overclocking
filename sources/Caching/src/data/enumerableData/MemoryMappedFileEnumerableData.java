@@ -1,21 +1,22 @@
 package data.enumerableData;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 
-import commons.files.FileImpl;
+import commons.files.IFile;
 import commons.files.IFileManager;
 import commons.settings.ISettings;
 import commons.settings.KnownKeys;
 
 public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
 {
-    private final int objectLength;
     private final boolean deleteOnClose;
     private final int batchSize;
-    private FileImpl _file;
+    private final int objectLength;
+    private final int bufferLength;
+    
+    private IFile file;
     private ArrayList<MappedByteBuffer> buffersCache;
     private IItemSerializer<T> serializer;
 
@@ -29,7 +30,7 @@ public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
 
     public MemoryMappedFileEnumerableData(
             IItemSerializer<T> serializer,
-            File file,
+            IFile file,
             ISettings settings)
     {
         this(serializer, file, settings, false);
@@ -37,17 +38,19 @@ public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
 
     private MemoryMappedFileEnumerableData(
             IItemSerializer<T> serializer,
-            File file,
+            IFile file,
             ISettings settings,
             boolean deleteOnClose)
     {
-        _file = new FileImpl(file.getPath());
-
-        this.serializer = serializer;
-        objectLength = serializer.itemSizeInBytes();
-        this.deleteOnClose = deleteOnClose;
         this.batchSize = settings.getInt(KnownKeys.MemoryMappedFileBatchSize);
+        
+        this.file = file;
+        this.serializer = serializer;
+        this.deleteOnClose = deleteOnClose;
         this.buffersCache = new ArrayList<MappedByteBuffer>();
+        
+        objectLength = serializer.itemSizeInBytes();
+        bufferLength = objectLength * batchSize;
     }
 
     @Override
@@ -78,9 +81,9 @@ public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
         for (MappedByteBuffer buffer : buffersCache)
             buffer.force();
         if (deleteOnClose)
-            _file.delete();
+            file.delete();
         else
-            _file.close();
+            file.close();
     }
 
     @Override
@@ -94,10 +97,10 @@ public class MemoryMappedFileEnumerableData<T> implements IEnumerableData<T>
     {
         while (buffersCache.size() <= index) {
             try {
-                buffersCache.add(_file.mapBuffer(index * batchSize * objectLength, batchSize * objectLength));
+                buffersCache.add(file.mapBuffer(index * batchSize * objectLength, bufferLength));
             }
             catch (IOException e) {
-                throw new RuntimeException(String.format("Fail to create map for file %s.", _file.getPath()), e);
+                throw new RuntimeException(String.format("Fail to create map for file %s.", file.getPath()), e);
             }
         }
         return buffersCache.get((int) index);
