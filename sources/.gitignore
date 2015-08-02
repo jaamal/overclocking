@@ -1,5 +1,6 @@
 # ignore eclipse metadata folder 
 /.metadata
+/.recommenders
 
 # ignore all binaries and logs
 **/bin
