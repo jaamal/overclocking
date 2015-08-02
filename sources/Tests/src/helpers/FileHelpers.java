@@ -65,7 +65,6 @@ public class FileHelpers
             throw new RuntimeException(e);
         }
         return result;
-
     }
 
     public static String readTestFile(String localPath, Charset charset) {

@@ -3,21 +3,11 @@ package tests.integration.Trees.avlTree;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
-
-import junit.framework.Assert;
 
 import org.junit.Test;
 
-import serialization.primitives.DifferenceHeuristicIntArraySerializer;
-import serialization.primitives.IntArraySerializer;
-import serialization.products.IProductsSerializer;
-import serialization.products.ProductsSerializer;
-import serialization.products.ProductsSerializer2;
-import serialization.products.ProductsSerializer3;
-import tests.integration.IntegrationTestBase;
 import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
@@ -25,7 +15,6 @@ import avlTree.IAvlTreeManagerFactory;
 import avlTree.buffers.AvlTreeBufferFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;
 import avlTree.slpBuilders.AvlTreeSLPBuilder;
-import avlTree.slpBuilders.SLPBuilder;
 import commons.settings.ISettings;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
@@ -38,19 +27,29 @@ import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.SLPModel;
 import dataContracts.statistics.Statistics;
+import helpers.FactorizationScenarios;
+import helpers.FileHelpers;
+import junit.framework.Assert;
+import serialization.primitives.DifferenceHeuristicIntArraySerializer;
+import serialization.primitives.IntArraySerializer;
+import serialization.products.IProductsSerializer;
+import serialization.products.ProductsSerializer;
+import serialization.products.ProductsSerializer2;
+import serialization.products.ProductsSerializer3;
+import tests.integration.IntegrationTestBase;
 
 public class BuildSLPFromFileTest extends IntegrationTestBase {
 
     @Test
     public void testBuildSLPFromFile() {
-        String text = readText(Paths.get("testFiles", "simpleDNA_clean.txt"));
+        String text = FileHelpers.readTestFile("simpleDNA_clean.txt", Charset.forName("Cp1251"));
         SLPModel slpModel = buildSLP(text);
         Assert.assertEquals(text, slpModel.toString());
     }
 
     @Test
     public void testBuildSerializedSlpFromFile() throws IOException {
-        String text = readText(Paths.get("testFiles", "simpleDNA_clean.txt"));
+        String text = FileHelpers.readTestFile("simpleDNA_clean.txt", Charset.forName("Cp1251"));
         System.out.println(String.format("Text length is %d", text.length()));
         SLPModel slpModel = buildSLP(text);
         Assert.assertEquals(text, slpModel.toString());
@@ -79,27 +78,9 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
         System.out.println(String.format("Serialized into %d bytes. Compression ratio %f", bytes.length, bytes.length / (text.length() * 1.0)));
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
             Product[] actualProducts = slpSerializer.deserialize(inputStream);
-            Assert.assertEquals(getString(products), getString(actualProducts));
+            Assert.assertEquals(FactorizationScenarios.stringify(products), FactorizationScenarios.stringify(actualProducts));
         }
         return bytes;
-    }
-
-    private String getString(Product[] products) {
-        SLPBuilder builder = new SLPBuilder();
-        for (int i = 0; i < products.length; i++) {
-            Product product = products[i];
-            long fromNumber = builder.append(product);
-            Assert.assertEquals(i, fromNumber);
-        }
-        return builder.toSLPModel().toString();
-    }
-
-    private String readText(Path path) {
-        IDataFactory dataFactory = container.get(IDataFactory.class);
-        //Note! The algorithm that find lz-factorization works incorrect if input text contains spaces or special symbols.
-        try (IReadableCharArray source = dataFactory.getCharArray(DataFactoryType.memory, path)) {
-            return source.toString(0, source.length());
-        }
     }
 
     private SLPModel buildSLP(String text) {

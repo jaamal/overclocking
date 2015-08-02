@@ -1,14 +1,15 @@
 package tests.unit.Commons;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
-import tests.unit.UnitTestBase;
 import commons.utils.NumericUtils;
+import junit.framework.Assert;
+import tests.unit.UnitTestBase;
 
 public class NumericUtilsTest extends UnitTestBase
 {
+    private static int[] testIntArray = new int[] { Integer.MAX_VALUE, Integer.MIN_VALUE, 782378, -2782738, 1, -1, 0, 429834929, -429834929 };
+    
     @Test
     public void testConvertingLong()
     {
@@ -26,24 +27,34 @@ public class NumericUtilsTest extends UnitTestBase
     @Test
     public void testConvertingInt()
     {
-        doTestInt(Integer.MAX_VALUE);
-        doTestInt(Integer.MIN_VALUE);
-        doTestInt(782378);
-        doTestInt(-2782738);
-        doTestInt(1);
-        doTestInt(-1);
-        doTestInt(0);
-        doTestInt(429834929);
-        doTestInt(-429834929);
+        for (int i = 0; i < testIntArray.length; i++) {
+            doTestInt(testIntArray[i]);
+        }
     }
-
+    
+    @Test
+    public void testConvertingIntWithShift()
+    {
+        for (int i = 0; i < testIntArray.length; i++) {
+            doTestIntWithShift(testIntArray[i]);
+        }
+    }
+    
     private static void doTestInt(int value)
     {
-        byte[] bytes = new byte[6];
-        NumericUtils.intToBytes(value, bytes, 2);
-        Assert.assertEquals(value, NumericUtils.bytesToInt(bytes, 2));
+        byte[] bytes = NumericUtils.toBytes(value);
+        Assert.assertEquals(value, NumericUtils.fromBytes(bytes));
     }
 
+    private static void doTestIntWithShift(int value) {
+        byte[] bytes = NumericUtils.toBytes(value);
+        byte[] shiftedBytes = new byte[bytes.length + 10];
+        for (int i = 0; i < bytes.length; i++) 
+            shiftedBytes[i + 10] = bytes[i];
+        
+        Assert.assertEquals(value, NumericUtils.fromBytes(shiftedBytes, 10));
+    }
+    
     private static void doTestLong(long value)
     {
         byte[] bytes = new byte[9];

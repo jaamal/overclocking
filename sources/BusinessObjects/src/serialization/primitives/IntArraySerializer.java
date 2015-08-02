@@ -4,77 +4,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import commons.utils.NumericUtils;
+/*
+ * This class serializes array of integers in the following format:
+ *   1. length of array
+ *   Each 4 integers joined into single block
+ *   2.  for each block 
+ *   2.1 mask of lengths for each integer in the block
+ *   2.2 4 integers
+ */
 public class IntArraySerializer implements IIntArraySerializer {
 
     public void serialize(OutputStream stream, int[] array) throws IOException {
-        writeInt32(stream, array.length);
+        stream.write(array.length);
         for (int i = 0; i < array.length; i += 4) {
-            int b = 0;
+            byte[] lenghtsMask = new byte[4];
+            byte[][] blockBytes = new byte[4][];
             for (int j = 0; j < 4 && i + j < array.length; ++j) {
-                int length = getLength(array[i + j]);
-                b |= (length - 1) << (j * 2);
+                byte[] buffer = NumericUtils.toBytes(array[i + j]);
+                lenghtsMask[j] = (byte) buffer.length;
+                blockBytes[j] = buffer;
             }
-            stream.write(b);
+
+            stream.write(lenghtsMask);
             for (int j = 0; j < 4 && i + j < array.length; ++j)
-                writeInt(stream, array[i + j]);
-        }
-    }
-
-    private static void writeInt(OutputStream stream, int number) throws IOException {
-        do {
-            stream.write((byte) (number & 255));
-            number >>= 8;
-        } while (number != 0);
-    }
-
-    private static int getLength(long number) {
-        int length = 0;
-        do {
-            ++length;
-            number >>= 8;
-        } while (number != 0);
-        return length;
-    }
-
-    private static void writeInt32(OutputStream stream, int integer) throws IOException {
-        for (int i = 0; i < 4; ++i) {
-            stream.write(integer & 255);
-            integer >>= 8;
+                stream.write(blockBytes[j]);
         }
     }
 
     public int[] deserialize(InputStream stream) throws IOException {
-        int count = readInt32(stream);
+        int count = stream.read();
         int[] array = new int[count];
         for (int i = 0; i < count; i += 4) {
-            int b = readByte(stream);
+            byte[] lengthsMask = new byte[4];
+            stream.read(lengthsMask);
             for (int j = 0; j < 4 && i + j < count; ++j) {
-                int length = ((b >> (2 * j)) & 3) + 1;
-                array[i + j] = readInt(stream, length);
+                byte[] bytes = new byte[lengthsMask[j]];
+                stream.read(bytes);
+                array[i + j] = NumericUtils.fromBytes(bytes);
             }
         }
         return array;
-    }
-
-    private static int readInt(InputStream stream, int length) throws IOException {
-        int result = 0;
-        for (int i = 0; length > 0; i += 8, --length)
-            result |= readByte(stream) << i;
-        return result;
-    }
-
-    private static int readInt32(InputStream stream) throws IOException {
-        int result = 0;
-        for (int i = 0; i < 32; i += 8)
-            result |= readByte(stream) << i;
-        return result;
-    }
-
-    private static int readByte(InputStream stream) throws IOException {
-        int result = stream.read();
-        if (result == -1)
-            throw new IOException("Try to read from empty stream!");
-        return result;
     }
 }
 

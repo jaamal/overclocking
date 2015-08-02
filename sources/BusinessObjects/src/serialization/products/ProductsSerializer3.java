@@ -17,7 +17,6 @@ public class ProductsSerializer3 implements IProductsSerializer {
     }
 
     public ProductsSerializer3(IIntArraySerializer intArraySerializer){
-
         this.intArraySerializer = intArraySerializer;
     }
 

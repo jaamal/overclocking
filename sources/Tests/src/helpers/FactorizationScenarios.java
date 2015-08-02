@@ -3,8 +3,11 @@ package helpers;
 import java.util.ArrayList;
 import java.util.Random;
 
+import avlTree.slpBuilders.SLPBuilder;
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
+import dataContracts.Product;
+import junit.framework.Assert;
 
 public class FactorizationScenarios
 {
@@ -56,5 +59,15 @@ public class FactorizationScenarios
                 buffer.append(buffer.substring((int) factor.beginPosition, (int) (factor.beginPosition + factor.length)));
         }
         return buffer.toString();
+    }
+    
+    public static String stringify(Product[] products) {
+        SLPBuilder builder = new SLPBuilder();
+        for (int i = 0; i < products.length; i++) {
+            Product product = products[i];
+            long fromNumber = builder.append(product);
+            Assert.assertEquals(i, fromNumber);
+        }
+        return builder.toSLPModel().toString();
     }
 }

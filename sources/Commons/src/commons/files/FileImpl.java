@@ -101,13 +101,13 @@ public class FileImpl implements IFile
     {
         try
         {
-            randomAccessFile.close();
             if (fileLock != null && fileLock.isValid()) {
                 fileLock.release();
                 channel.close();
                 fileLock = null;
                 channel = null;
             }
+            randomAccessFile.close();
         }
         catch (IOException e)
         {

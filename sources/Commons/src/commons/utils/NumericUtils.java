@@ -23,7 +23,12 @@ public class NumericUtils
         }
     }
 
-    public static int bytesToInt(byte[] buffer, int startPosition)
+    public static int fromBytes(byte[] buffer)
+    {
+        return fromBytes(buffer, 0);
+    }
+    
+    public static int fromBytes(byte[] buffer, int startPosition)
     {
         int result = 0;
         for (int idx = startPosition + 3; idx >= startPosition; idx--)
@@ -31,14 +36,14 @@ public class NumericUtils
         return result;
     }
 
-
-    public static void intToBytes(int value, byte[] buffer, int startPorition)
+    public static byte[] toBytes(int value)
     {
-        final int endPos = startPorition + 4;
-        for (int idx = startPorition; idx < endPos; idx++)
+        byte[] result = new byte[4];
+        for (int idx = 0; idx < 4; idx++)
         {
-            buffer[idx] = (byte) (value & 0xFF);
+            result[idx] = (byte) (value & 0xFF);
             value = value >> 8;
         }
+        return result;
     }
 }
