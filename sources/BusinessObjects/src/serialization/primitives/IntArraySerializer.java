@@ -16,7 +16,7 @@ import commons.utils.NumericUtils;
 public class IntArraySerializer implements IIntArraySerializer {
 
     public void serialize(OutputStream stream, int[] array) throws IOException {
-        stream.write(array.length);
+        stream.write(NumericUtils.toBytes(array.length));
         for (int i = 0; i < array.length; i += 4) {
             byte[] lenghtsMask = new byte[4];
             byte[][] blockBytes = new byte[4][];
@@ -30,10 +30,14 @@ public class IntArraySerializer implements IIntArraySerializer {
             for (int j = 0; j < 4 && i + j < array.length; ++j)
                 stream.write(blockBytes[j]);
         }
+        stream.flush();
     }
 
     public int[] deserialize(InputStream stream) throws IOException {
-        int count = stream.read();
+        byte[] intBuffer = new byte[4];
+        stream.read(intBuffer);
+        int count = NumericUtils.fromBytes(intBuffer);
+        
         int[] array = new int[count];
         for (int i = 0; i < count; i += 4) {
             byte[] lengthsMask = new byte[4];
