@@ -1,9 +1,9 @@
-package avlTree.slpBuilders;
+package productEnumerator;
 
 import dataContracts.Product;
 import dataContracts.SLPModel;
 
-public interface ISLPBuilder {
+public interface IProductEnumerator {
     long append(Product product);
     SLPModel toSLPModel();
 }

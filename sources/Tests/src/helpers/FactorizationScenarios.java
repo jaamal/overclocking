@@ -2,12 +2,11 @@ package helpers;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import avlTree.slpBuilders.SLPBuilder;
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
 import dataContracts.Product;
 import junit.framework.Assert;
+import productEnumerator.ProductEnumerator;
 
 public class FactorizationScenarios
 {
@@ -62,7 +61,7 @@ public class FactorizationScenarios
     }
     
     public static String stringify(Product[] products) {
-        SLPBuilder builder = new SLPBuilder();
+        ProductEnumerator builder = new ProductEnumerator();
         for (int i = 0; i < products.length; i++) {
             Product product = products[i];
             long fromNumber = builder.append(product);

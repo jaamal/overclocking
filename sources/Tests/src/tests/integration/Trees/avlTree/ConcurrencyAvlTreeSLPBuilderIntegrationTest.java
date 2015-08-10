@@ -6,10 +6,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import serialization.products.IProductsSerializer;
+import serialization.products.ProductsSerializer4;
 import tests.integration.IntegrationTestBase;
 import SLPs.ConcurrentSLPExtractor;
 import SLPs.ISLPExtractor;
-import SLPs.ProductsSerializer4;
 import avlTree.ConcurrentAvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
 import avlTree.mergers.AvlTreeArrayMergerFactory;

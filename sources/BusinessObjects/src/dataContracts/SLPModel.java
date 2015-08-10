@@ -12,6 +12,7 @@ import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
 
 //TODO: test this class
+//TODO: verify name of class
 public class SLPModel
 {
     private final AbstractMap<Long, Product> numbersIndex;

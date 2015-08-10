@@ -5,8 +5,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import dataContracts.Product;
 import dataContracts.SLPModel;
+import productEnumerator.IProductEnumerator;
 
-public class ConcurrentSLPBuilder implements ISLPBuilder {
+public class ConcurrentSLPBuilder implements IProductEnumerator {
     private AtomicLong count = new AtomicLong(0);
     private ConcurrentHashMap<Long, Product> rulesIndex;
     private ConcurrentHashMap<Product, Long> productsIndex;
@@ -30,7 +31,8 @@ public class ConcurrentSLPBuilder implements ISLPBuilder {
             } else {
                 fromNumber = count.getAndIncrement();
                 if (!product.isTerminal && (product.first >= fromNumber || product.second >= fromNumber))
-                    throw new InvalidProductionRuleException(fromNumber, product);
+                    throw new RuntimeException(String.format("Product with number %s links on products with greater numbers: %s, %s", 
+                            fromNumber, product.first, product.second));
 
                 rulesIndex.put(fromNumber, product);
                 productsIndex.put(product, fromNumber);

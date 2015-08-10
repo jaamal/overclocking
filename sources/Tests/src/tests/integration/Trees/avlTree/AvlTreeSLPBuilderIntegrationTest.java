@@ -1,12 +1,11 @@
 package tests.integration.Trees.avlTree;
 
 import helpers.FactorizationScenarios;
-
+import serialization.products.ProductsSerializer4;
 import org.junit.Assert;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;

@@ -1,4 +1,4 @@
-package SLPs;
+package serialization.products;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,12 +6,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
-
-import avlTree.slpBuilders.SLPBuilder;
 import dataContracts.Product;
+import productEnumerator.ProductEnumerator;
 import serialization.primitives.IIntArraySerializer;
 import serialization.primitives.IntArraySerializer;
-import serialization.products.IProductsSerializer;
 
 //TODO: it is very strange that serialization depends on SLPBuilder.
 public class ProductsSerializer4 implements IProductsSerializer {
@@ -44,12 +42,12 @@ public class ProductsSerializer4 implements IProductsSerializer {
     private static Product[] fromPartialTreeRepresentation(int[] values) {
         ArrayList<Integer> numbers = new ArrayList<>();
         Stack<Integer> stack = new Stack<>();
-        SLPBuilder slpBuilder = new SLPBuilder();
+        ProductEnumerator productEnumerator = new ProductEnumerator();
         for (int i = 0; i < values.length; ++i) {
             if (values[i] < 0) {
                 int value = -values[i];
                 if (value < MAX_SYMBOL){
-                    int number = (int) slpBuilder.append(new Product((char) value));
+                    int number = (int) productEnumerator.append(new Product((char) value));
                     stack.push(number);
                 }
                 else {
@@ -59,12 +57,12 @@ public class ProductsSerializer4 implements IProductsSerializer {
             else {
                 int second = stack.pop();
                 int first = stack.pop();
-                int number = (int) slpBuilder.append(new Product(first, second));
+                int number = (int) productEnumerator.append(new Product(first, second));
                 numbers.add(number);
                 stack.push(number);
             }
         }
-        return slpBuilder.toSLPModel().toNormalForm();
+        return productEnumerator.toSLPModel().toNormalForm();
     }
 
     private static int[] toPartialTreeRepresentation(Product[] products) {
@@ -72,7 +70,6 @@ public class ProductsSerializer4 implements IProductsSerializer {
         ArrayList<Integer> values = new ArrayList<>();
         buildRepresentation(products.length - 1, products, number, values);
         
-        //TODO: check should we copy arrays or we know the length: products.length?
         int[] result = new int[values.size()];
         for (int i = 0; i < result.length; i++) {
             result[i] = values.get(i);

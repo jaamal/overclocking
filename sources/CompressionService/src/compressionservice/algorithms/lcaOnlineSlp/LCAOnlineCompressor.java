@@ -1,12 +1,12 @@
 package compressionservice.algorithms.lcaOnlineSlp;
 
-import avlTree.slpBuilders.SLPBuilder;
 import data.charArray.IReadableCharArray;
 import dataContracts.Product;
+import productEnumerator.ProductEnumerator;
 
 public class LCAOnlineCompressor implements ILCAOnlineCompressor {
-    public SLPBuilder buildSLP(IReadableCharArray text) {
-        SLPBuilder slp = new SLPBuilder();
+    public ProductEnumerator buildSLP(IReadableCharArray text) {
+        ProductEnumerator slp = new ProductEnumerator();
         ICompressingQueue queue = new CompressingQueue(slp);
         for (long i = 0; i < text.length(); i += batchSize) {
             IReadableCharArray batch = text.subArray(i, Math.min(text.length(), i + batchSize));

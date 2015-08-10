@@ -4,7 +4,6 @@ import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import SLPs.ConcurrentSLPExtractor;
-import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.ConcurrentAvlTreeManagerFactory;
@@ -35,6 +34,7 @@ import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.RunParamKeys;
+import serialization.products.ProductsSerializer4;
 
 public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
 

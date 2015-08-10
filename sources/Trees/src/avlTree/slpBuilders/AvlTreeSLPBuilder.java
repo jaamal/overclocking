@@ -22,6 +22,7 @@ import dataContracts.FactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
+import productEnumerator.IProductEnumerator;
 
 public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     private static final Logger log = LogManager.getLogger(AvlTreeSLPBuilder.class);
@@ -46,7 +47,7 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     public SLPModel buildSlp(FactorDef[] factors, IStatistics statistics) {
         TimeCounter timeCounter = TimeCounter.start();
         IAvlTree resultTree = buildAvlTree(factors, statistics);
-        ISLPBuilder slpBuilder = slpExtractor.getSLP(resultTree);
+        IProductEnumerator slpBuilder = slpExtractor.getSLP(resultTree);
         timeCounter.finish();
         resultTree.dispose();
 

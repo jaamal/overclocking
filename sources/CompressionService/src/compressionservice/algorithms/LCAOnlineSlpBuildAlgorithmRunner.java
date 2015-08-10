@@ -5,8 +5,6 @@ import org.apache.log4j.Logger;
 import serialization.products.IProductsSerializer;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
-import avlTree.slpBuilders.ISLPBuilder;
-
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
 
@@ -18,6 +16,7 @@ import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
+import productEnumerator.IProductEnumerator;
 
 public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
@@ -52,7 +51,7 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             logger.info("Source file size is " + source.length());
             TimeCounter timeCounter = TimeCounter.start();
-            ISLPBuilder slpBuilder = lcaOnlineCompressor.buildSLP(source);
+            IProductEnumerator slpBuilder = lcaOnlineCompressor.buildSLP(source);
             timeCounter.finish();
             logger.info(String.format("Finish slpBuilding. Total time is about %d minutes", timeCounter.getMillis() / 60 / 1000));
             

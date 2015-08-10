@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import tests.integration.IntegrationTestBase;
-import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
@@ -22,6 +21,7 @@ import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.Statistics;
+import serialization.products.ProductsSerializer4;
 
 public class AvlSlpBuildTest extends IntegrationTestBase {
 

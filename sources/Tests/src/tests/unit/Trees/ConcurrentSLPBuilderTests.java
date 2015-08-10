@@ -1,15 +1,12 @@
 package tests.unit.Trees;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
-
-import tests.unit.UnitTestBase;
 import avlTree.slpBuilders.ConcurrentSLPBuilder;
-import avlTree.slpBuilders.InvalidProductionRuleException;
 import dataContracts.Product;
 import dataContracts.SLPModel;
 import dataContracts.SLPStatistics;
+import junit.framework.Assert;
+import tests.unit.UnitTestBase;
 
 public class ConcurrentSLPBuilderTests extends UnitTestBase {
 
@@ -21,7 +18,7 @@ public class ConcurrentSLPBuilderTests extends UnitTestBase {
         slpBuilder = new ConcurrentSLPBuilder();
     }
 
-    @Test(expected = InvalidProductionRuleException.class)
+    @Test(expected = RuntimeException.class)
     public void testInvalidProductionRule() {
         slpBuilder.append(new Product('a'));
         slpBuilder.append(new Product(0, 1));

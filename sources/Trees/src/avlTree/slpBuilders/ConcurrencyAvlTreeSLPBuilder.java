@@ -24,6 +24,7 @@ import dataContracts.LZFactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
+import productEnumerator.IProductEnumerator;
 
 public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuilder {
 	private static final Logger log = LogManager.getLogger(AvlTreeSLPBuilder.class);
@@ -58,7 +59,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
         TimeCounter algorithmsTimeCounter = TimeCounter.start();
         IAvlTree resultTree = buildAvlTree(clonedFactorization, statistics);
         TimeCounter minimizationTimeCounter = TimeCounter.start();
-        ISLPBuilder slpBuilder = slpExtractor.getSLP(resultTree);
+        IProductEnumerator slpBuilder = slpExtractor.getSLP(resultTree);
         log.info(String.format("Slp minimization finished during %d ms.", minimizationTimeCounter.finish().toMillis()));
         log.info(String.format("Algorithm finished during %d ms.", algorithmsTimeCounter.finish().toMillis()));
         resultTree.dispose();

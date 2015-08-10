@@ -7,8 +7,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.junit.Test;
-
-import SLPs.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
@@ -36,6 +34,7 @@ import serialization.products.IProductsSerializer;
 import serialization.products.ProductsSerializer;
 import serialization.products.ProductsSerializer2;
 import serialization.products.ProductsSerializer3;
+import serialization.products.ProductsSerializer4;
 import tests.integration.IntegrationTestBase;
 
 public class BuildSLPFromFileTest extends IntegrationTestBase {

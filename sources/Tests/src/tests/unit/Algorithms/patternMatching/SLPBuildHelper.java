@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import patternMatching.fcpm.preprocessing.Product;
 import patternMatching.fcpm.preprocessing.ProductFactory;
 import patternMatching.fcpm.preprocessing.ProductsPreprocessor;
-import SLPs.ProductsSerializer4;
+import serialization.products.ProductsSerializer4;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;

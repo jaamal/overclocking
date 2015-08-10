@@ -7,12 +7,12 @@ import tree.ITree;
 import tree.ITreeNode;
 import avlTree.slpBuilders.ConcurrentSLPBuilder;
 import avlTree.slpBuilders.IParallelExecutor;
-import avlTree.slpBuilders.ISLPBuilder;
 import avlTree.slpBuilders.ParallelExecutor;
 
 import commons.utils.TimeCounter;
 
 import dataContracts.Product;
+import productEnumerator.IProductEnumerator;
 
 public class ConcurrentSLPExtractor implements ISLPExtractor {
     private final int threadCount;
@@ -22,11 +22,11 @@ public class ConcurrentSLPExtractor implements ISLPExtractor {
     }
 
     @Override
-    public <TNode extends ITreeNode> ISLPBuilder getSLP(ITree<TNode> tree) {
+    public <TNode extends ITreeNode> IProductEnumerator getSLP(ITree<TNode> tree) {
         if (tree.isEmpty())
             return new ConcurrentSLPBuilder();
 
-        ISLPBuilder slp = new ConcurrentSLPBuilder();
+        IProductEnumerator slp = new ConcurrentSLPBuilder();
 
         TimeCounter dfsTimeCounter = TimeCounter.start();
         HashMap<Long, ITree<TNode>> forParallel = new HashMap<>();
@@ -50,7 +50,7 @@ public class ConcurrentSLPExtractor implements ISLPExtractor {
                                                HashMap<Long, ITree<TNode>> forParallel,
                                                int count,
                                                IParallelExecutor parallelDfs,
-                                               ISLPBuilder slpBuilder,
+                                               IProductEnumerator slpBuilder,
                                                ConcurrentHashMap<Long, Long> oldNumberToNewNumber) {
         long rootNumber = tree.getRoot().getNumber();
         if (count >= 40 * threadCount) {
@@ -73,7 +73,7 @@ public class ConcurrentSLPExtractor implements ISLPExtractor {
 
     private <TNode extends ITreeNode> Long dfs2(ITree<TNode> tree,
                                                 final ConcurrentHashMap<Long, Long> oldNumberToNewNumber,
-                                                final ISLPBuilder slpBuilder) {
+                                                final IProductEnumerator slpBuilder) {
         TNode rootNode = tree.getRoot();
         long rootNumber = rootNode.getNumber();
         Long newNumber = oldNumberToNewNumber.get(rootNumber);
@@ -96,11 +96,11 @@ public class ConcurrentSLPExtractor implements ISLPExtractor {
     }
 
     private class SubTreeWalker<TNode extends ITreeNode> implements Runnable {
-        private final ISLPBuilder slpBuilder;
+        private final IProductEnumerator slpBuilder;
         private final ConcurrentHashMap<Long, Long> oldNumberToNewNumber;
         private final ITree<TNode> root;
 
-        public SubTreeWalker(ISLPBuilder slpBuilder,
+        public SubTreeWalker(IProductEnumerator slpBuilder,
                              ConcurrentHashMap<Long, Long> oldNumberToNewNumber,
                              ITree<TNode> root) {
             this.slpBuilder = slpBuilder;

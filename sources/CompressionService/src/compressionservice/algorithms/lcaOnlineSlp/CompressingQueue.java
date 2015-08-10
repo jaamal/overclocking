@@ -1,10 +1,10 @@
 package compressionservice.algorithms.lcaOnlineSlp;
 
-import avlTree.slpBuilders.SLPBuilder;
 import dataContracts.Product;
+import productEnumerator.ProductEnumerator;
 
 public class CompressingQueue implements ICompressingQueue {
-    public CompressingQueue(SLPBuilder slp) {
+    public CompressingQueue(ProductEnumerator slp) {
         this.slp = slp;
         queue = new CyclicQueue();
         queue.push(-1);
@@ -57,7 +57,7 @@ public class CompressingQueue implements ICompressingQueue {
         nextQueue.postProcessingRemain();
     }
 
-    private final SLPBuilder slp;
+    private final ProductEnumerator slp;
     private final CyclicQueue queue;
     private CompressingQueue nextQueue;
 

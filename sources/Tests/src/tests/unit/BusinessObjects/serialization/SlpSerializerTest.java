@@ -13,9 +13,9 @@ import serialization.products.IProductsSerializer;
 import serialization.products.ProductsSerializer;
 import serialization.products.ProductsSerializer2;
 import serialization.products.ProductsSerializer3;
+import serialization.products.ProductsSerializer4;
 import serialization.products.SimpleProductsSerializer;
 import tests.unit.UnitTestBase;
-import SLPs.ProductsSerializer4;
 import dataContracts.Product;
 
 public class SlpSerializerTest extends UnitTestBase {

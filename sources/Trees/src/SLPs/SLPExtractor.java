@@ -4,8 +4,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import commons.utils.TimeCounter;
-import avlTree.slpBuilders.SLPBuilder;
 import dataContracts.Product;
+import productEnumerator.ProductEnumerator;
 import tree.ITree;
 import tree.ITreeNode;
 
@@ -16,8 +16,8 @@ public class SLPExtractor implements ISLPExtractor {
     private Logger log = LogManager.getLogger(SLPExtractor.class);
     
     @Override
-    public <TNode extends ITreeNode> SLPBuilder getSLP(ITree<TNode> tree) {
-        SLPBuilder slp = new SLPBuilder();
+    public <TNode extends ITreeNode> ProductEnumerator getSLP(ITree<TNode> tree) {
+        ProductEnumerator slp = new ProductEnumerator();
         if (tree.isEmpty())
             return slp;
         HashMap<Long, Long> used = new HashMap<Long, Long>();
@@ -29,7 +29,7 @@ public class SLPExtractor implements ISLPExtractor {
         return slp;
     }
 
-    private static <TNode extends ITreeNode> long dfs(ITree<TNode> tree, HashMap<Long, Long> used, SLPBuilder slp) {
+    private static <TNode extends ITreeNode> long dfs(ITree<TNode> tree, HashMap<Long, Long> used, ProductEnumerator slp) {
         long rootNumber = tree.getRoot().getNumber();
         Long mapValue = used.get(rootNumber);
         if (mapValue != null)

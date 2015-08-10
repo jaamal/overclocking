@@ -5,9 +5,8 @@ import java.io.ByteArrayOutputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import SLPs.ProductsSerializer4;
 import dataContracts.Product;
+import serialization.products.ProductsSerializer4;
 import tests.unit.UnitTestBase;
 
 public class ProductSerializer4Test extends UnitTestBase {

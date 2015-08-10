@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 
 import serialization.products.IProductsSerializer;
 import SLPs.ISLPExtractor;
-import avlTree.slpBuilders.ISLPBuilder;
 import cartesianTree.ICartesianTree;
 import cartesianTree.ICartesianTreeManager;
 import cartesianTree.ICartesianTreeManagerFactory;
@@ -16,6 +15,7 @@ import dataContracts.SLPModel;
 import dataContracts.SLPStatistics;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
+import productEnumerator.IProductEnumerator;
 
 public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     private static Logger logger = Logger.getLogger(CartesianSlpTreeBuilder.class);
@@ -36,7 +36,7 @@ public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     public SLPModel buildSlp(FactorDef[] factors, IStatistics statistics) {
         TimeCounter timeCounter = TimeCounter.start();
         ICartesianTree resultTree = buildCartesianTree(factors);
-        ISLPBuilder slpBuilder = slpExtractor.getSLP(resultTree);
+        IProductEnumerator slpBuilder = slpExtractor.getSLP(resultTree);
         timeCounter.finish();
         resultTree.dispose();
 

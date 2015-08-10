@@ -1,9 +1,9 @@
 package compressionservice.algorithms.lcaOnlineSlp;
 
-import avlTree.slpBuilders.SLPBuilder;
 import data.charArray.IReadableCharArray;
+import productEnumerator.ProductEnumerator;
 
 public interface ILCAOnlineCompressor
 {
-    SLPBuilder buildSLP(IReadableCharArray text);
+    ProductEnumerator buildSLP(IReadableCharArray text);
 }

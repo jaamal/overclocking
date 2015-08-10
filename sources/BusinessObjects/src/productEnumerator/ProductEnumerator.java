@@ -1,17 +1,16 @@
-package avlTree.slpBuilders;
+package productEnumerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import dataContracts.Product;
 import dataContracts.SLPModel;
 
-public class SLPBuilder implements ISLPBuilder
+public class ProductEnumerator implements IProductEnumerator
 {
     private ArrayList<Product> rules;
     private HashMap<Product, Long> productsIndex;
 
-    public SLPBuilder()
+    public ProductEnumerator()
     {
         productsIndex = new HashMap<>();
         rules = new ArrayList<>();
@@ -26,7 +25,8 @@ public class SLPBuilder implements ISLPBuilder
         } else {
             fromNumber = rules.size();
             if (!product.isTerminal && (product.first >= fromNumber || product.second >= fromNumber))
-                throw new InvalidProductionRuleException(fromNumber, product);
+                throw new RuntimeException(String.format("Product with number %s links on products with greater numbers: %s, %s", 
+                                           fromNumber, product.first, product.second));
 
             productsIndex.put(product, fromNumber);
             rules.add(product);
