@@ -1,7 +1,7 @@
 package tests.integration.Trees.cartesianTree;
 
 import helpers.FactorizationScenarios;
-import serialization.products.ProductsSerializer4;
+import serialization.products.PartialTreeProductsSerializer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class CartesianSLPBuilderTests extends IntegrationTestBase {
     public void test() {
         LZFactorDef[] factors = FactorizationScenarios.generate(200000);
         
-        ICartesianSlpTreeBuilder slpTreeBuilder = new CartesianSlpTreeBuilder(new CartesianTreeManagerFactory(container.get(ISettings.class), DataFactoryType.memory), new SLPExtractor(), new ProductsSerializer4());
+        ICartesianSlpTreeBuilder slpTreeBuilder = new CartesianSlpTreeBuilder(new CartesianTreeManagerFactory(container.get(ISettings.class), DataFactoryType.memory), new SLPExtractor(), new PartialTreeProductsSerializer());
         SLPModel slpModel = slpTreeBuilder.buildSlp(factors, new Statistics());
         String expected = FactorizationScenarios.stringify(factors);
         String actuals = slpModel.toString();

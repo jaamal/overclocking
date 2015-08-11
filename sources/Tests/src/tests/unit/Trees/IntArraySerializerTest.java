@@ -14,25 +14,28 @@ public class IntArraySerializerTest extends UnitTestBase{
 
     @Test
     public void testSerializeAndDeserializeWithNegativeInts() throws Exception {
-        runSerializeAndDeserializeArray(new int[] {-1, -4, 77634, -332, -32});
+        runSerializeAndDeserializeArray(new int[] {-1, -4, 77634, -332, -32}, 31);
     }
     
     @Test
     public void testSerializeAndDeserializeOnlyPositiveInts() throws Exception {
-        runSerializeAndDeserializeArray(new int[] {1, 4, 6766, 77634, 332, 32});
+        runSerializeAndDeserializeArray(new int[] {1, 4, 6766, 77634, 332, 32}, 22);
     }
     
     @Test
     public void testSerializeAndDeserializeRandomArray() throws Exception {
-        runSerializeAndDeserializeArray(TestHelpers.genIntArray(100));
+        runSerializeAndDeserializeArray(TestHelpers.genIntArray(100), -1);
     }
     
-    private static void runSerializeAndDeserializeArray(int[] array) throws Exception {
+    private static void runSerializeAndDeserializeArray(int[] array, int expectedSerializedSize) throws Exception {
         IntArraySerializer intArraySerializer = new IntArraySerializer();
         byte[] serializedArray;
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
             intArraySerializer.serialize(outputStream, array);
             serializedArray = outputStream.toByteArray();
+        }
+        if (expectedSerializedSize > 0) {
+            Assert.assertEquals(expectedSerializedSize, serializedArray.length);
         }
         
         int[] actuals;

@@ -12,15 +12,15 @@ import serialization.primitives.IIntArraySerializer;
 import serialization.primitives.IntArraySerializer;
 
 //TODO: it is very strange that serialization depends on SLPBuilder.
-public class ProductsSerializer4 implements IProductsSerializer {
+public class PartialTreeProductsSerializer implements IProductsSerializer {
     private final IIntArraySerializer intArraySerializer;
     private static final char MAX_SYMBOL = 256;
 
-    public ProductsSerializer4() {
+    public PartialTreeProductsSerializer() {
         this(new IntArraySerializer());
     }
 
-    public ProductsSerializer4(IIntArraySerializer intArraySerializer) {
+    public PartialTreeProductsSerializer(IIntArraySerializer intArraySerializer) {
         this.intArraySerializer = intArraySerializer;
     }
 

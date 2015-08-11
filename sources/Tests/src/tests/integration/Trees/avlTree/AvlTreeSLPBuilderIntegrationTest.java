@@ -1,7 +1,7 @@
 package tests.integration.Trees.avlTree;
 
 import helpers.FactorizationScenarios;
-import serialization.products.ProductsSerializer4;
+import serialization.products.PartialTreeProductsSerializer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ public class AvlTreeSLPBuilderIntegrationTest extends IntegrationTestBase {
         
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.block, AvlSplitPattern.fromFirst);
-        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new ProductsSerializer4());
+        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
         String actuals = builder.buildSlp(factors, new Statistics()).toString();
         String expected = FactorizationScenarios.stringify(factors);
         Assert.assertEquals(expected, actuals);

@@ -51,7 +51,7 @@ public class SuffixArrayBuilder implements ISuffixArrayBuilder
                 int actual = suffixArrayFile.read(position, buffer);
                 final int right = actual / 4;
                 for (int i = 0; i < right; i++)
-                    longArray.set(index++, NumericUtils.fromBytes(buffer, i * 4));
+                    longArray.set(index++, NumericUtils.intFromBytes(buffer, i * 4, 4));
                 position += actual;
             }
 

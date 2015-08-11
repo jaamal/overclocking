@@ -21,7 +21,7 @@ public class IntArraySerializer implements IIntArraySerializer {
             byte[] lenghtsMask = new byte[4];
             byte[][] blockBytes = new byte[4][];
             for (int j = 0; j < 4 && i + j < array.length; ++j) {
-                byte[] buffer = NumericUtils.toBytes(array[i + j]);
+                byte[] buffer = NumericUtils.toFloatingBytes(array[i + j]);
                 lenghtsMask[j] = (byte) buffer.length;
                 blockBytes[j] = buffer;
             }
@@ -34,18 +34,18 @@ public class IntArraySerializer implements IIntArraySerializer {
     }
 
     public int[] deserialize(InputStream stream) throws IOException {
-        byte[] intBuffer = new byte[4];
-        stream.read(intBuffer);
-        int count = NumericUtils.fromBytes(intBuffer);
+        byte[] countBuffer = new byte[4];
+        stream.read(countBuffer);
+        int count = NumericUtils.intFromBytes(countBuffer);
         
         int[] array = new int[count];
         for (int i = 0; i < count; i += 4) {
             byte[] lengthsMask = new byte[4];
             stream.read(lengthsMask);
             for (int j = 0; j < 4 && i + j < count; ++j) {
-                byte[] bytes = new byte[lengthsMask[j]];
-                stream.read(bytes);
-                array[i + j] = NumericUtils.fromBytes(bytes);
+                byte[] intBuffer = new byte[lengthsMask[j]];
+                stream.read(intBuffer);
+                array[i + j] = NumericUtils.intFromFloatingBytes(intBuffer);
             }
         }
         return array;

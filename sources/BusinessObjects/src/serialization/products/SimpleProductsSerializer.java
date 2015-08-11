@@ -21,7 +21,6 @@ public class SimpleProductsSerializer extends AbstractProductsSerializer {
 
     @Override
     public Product deserializeProduct(InputStream stream, int index) throws IOException {
-
         int b = readByte(stream);
         if (b == 0) {
             return new Product(readChar(stream));

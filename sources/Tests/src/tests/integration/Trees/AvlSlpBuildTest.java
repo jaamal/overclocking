@@ -21,7 +21,7 @@ import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.Statistics;
-import serialization.products.ProductsSerializer4;
+import serialization.products.PartialTreeProductsSerializer;
 
 public class AvlSlpBuildTest extends IntegrationTestBase {
 
@@ -30,7 +30,7 @@ public class AvlSlpBuildTest extends IntegrationTestBase {
     {
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.block, AvlSplitPattern.fromFirst);
-        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new ProductsSerializer4());
+        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
         SLPModel slpModel = builder.buildSlp(getFactorization("abacaba"), new Statistics());
         System.out.println(slpModel.calcStats().countRules);
     }

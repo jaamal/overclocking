@@ -12,8 +12,8 @@ import serialization.primitives.DifferenceHeuristicIntArraySerializer;
 import serialization.products.IProductsSerializer;
 import serialization.products.ProductsSerializer;
 import serialization.products.ProductsSerializer2;
-import serialization.products.ProductsSerializer3;
-import serialization.products.ProductsSerializer4;
+import serialization.products.TwoIntProductsSerializer;
+import serialization.products.PartialTreeProductsSerializer;
 import serialization.products.SimpleProductsSerializer;
 import tests.unit.UnitTestBase;
 import dataContracts.Product;
@@ -54,14 +54,14 @@ public class SlpSerializerTest extends UnitTestBase {
     
     @Test
     public void testProductSerializer3() {
-        doTest(abrakadabra, new ProductsSerializer3());
-        doTest(abrakadabra, new ProductsSerializer3(new DifferenceHeuristicIntArraySerializer()));
-        doTest(abrakadabra, new ProductsSerializer3(new DifferenceHeuristicIntArraySerializer(2)));
+        doTest(abrakadabra, new TwoIntProductsSerializer());
+        doTest(abrakadabra, new TwoIntProductsSerializer(new DifferenceHeuristicIntArraySerializer()));
+        doTest(abrakadabra, new TwoIntProductsSerializer(new DifferenceHeuristicIntArraySerializer(2)));
     }
     
     @Test
     public void testProductSerializer4() {
-        doTest(abrakadabra, new ProductsSerializer4());
+        doTest(abrakadabra, new PartialTreeProductsSerializer());
     }
 
     private void doTest(Product[] products, IProductsSerializer serializer) {

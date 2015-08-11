@@ -34,7 +34,7 @@ import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.RunParamKeys;
-import serialization.products.ProductsSerializer4;
+import serialization.products.PartialTreeProductsSerializer;
 
 public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
 
@@ -139,7 +139,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         IAvlTreeManagerFactory avlTreeManagerFactory = new ConcurrentAvlTreeManagerFactory(dataFactoryType);
         IParallelExecutorFactory parallelExecutorFactory = new ParallelExecutorFactory(threadCount);
         ConcurrentSLPExtractor slpExtractor = new ConcurrentSLPExtractor(threadCount);
-        IConcurrencyAvlTreeSLPBuilder concurrencyAvlTreeSLPBuilder = new ConcurrencyAvlTreeSLPBuilder(avlTreeManagerFactory, new AvlTreeSetFactory(avlTreeArrayMerger), parallelExecutorFactory, factorizationIndexer, slpExtractor, new ProductsSerializer4());
+        IConcurrencyAvlTreeSLPBuilder concurrencyAvlTreeSLPBuilder = new ConcurrencyAvlTreeSLPBuilder(avlTreeManagerFactory, new AvlTreeSetFactory(avlTreeArrayMerger), parallelExecutorFactory, factorizationIndexer, slpExtractor, new PartialTreeProductsSerializer());
         return new ConcurrencyAvlSlpBuildAlgorithmRunner(concurrencyAvlTreeSLPBuilder, slpProductsRepository, resourceProvider, 
                 factorsRepositoryFactory, statisticsObjectFactory, sourceId);
     }
@@ -156,7 +156,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(settings, dataFactoryType);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(avlTreeArrayMergerFactory, avlMergePattern, avlSplitPattern);
-        IAvlTreeSLPBuilder avlTreeSLPBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new ProductsSerializer4());
+        IAvlTreeSLPBuilder avlTreeSLPBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
         return new AvlSlpBuildAlgorithmRunner(avlTreeSLPBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, statisticsObjectFactory, sourceId);
     }
 
@@ -167,7 +167,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
         
         CartesianTreeManagerFactory cartesianTreeManagerFactory = new CartesianTreeManagerFactory(settings, dataFactoryType);
-        CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), new ProductsSerializer4());
+        CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
         return new CartesianSlpBuildAlgorithmRunner(cartesianSLPTreeBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, 
                 statisticsObjectFactory, sourceId);
     }
@@ -210,6 +210,6 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         DataFactoryType dataFactoryType = runParams.getOrDefaultEnum(DataFactoryType.class, RunParamKeys.DataFactoryType, defaultDataFactoryType);
         
         return new LCAOnlineSlpBuildAlgorithmRunner(lcaOnlineCompressor, slpProductsRepository, resourceProvider, filesRepository, 
-                statisticsObjectFactory, new ProductsSerializer4(), sourceId, dataFactoryType);
+                statisticsObjectFactory, new PartialTreeProductsSerializer(), sourceId, dataFactoryType);
     }
 }

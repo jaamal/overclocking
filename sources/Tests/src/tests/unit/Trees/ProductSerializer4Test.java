@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import dataContracts.Product;
-import serialization.products.ProductsSerializer4;
+import serialization.products.PartialTreeProductsSerializer;
 import tests.unit.UnitTestBase;
 
 public class ProductSerializer4Test extends UnitTestBase {
@@ -17,7 +17,7 @@ public class ProductSerializer4Test extends UnitTestBase {
                 new Product('a'), new Product('b'), new Product(0, 1), new Product(1, 1),
                 new Product(1, 0), new Product(2, 3), new Product(2, 4), new Product(5, 6),
         };
-        ProductsSerializer4 productsSerializer4 = new ProductsSerializer4();
+        PartialTreeProductsSerializer productsSerializer4 = new PartialTreeProductsSerializer();
         
         byte[] serializedProducts;
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){

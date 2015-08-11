@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import patternMatching.fcpm.preprocessing.Product;
 import patternMatching.fcpm.preprocessing.ProductFactory;
 import patternMatching.fcpm.preprocessing.ProductsPreprocessor;
-import serialization.products.ProductsSerializer4;
+import serialization.products.PartialTreeProductsSerializer;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
@@ -51,7 +51,7 @@ public class SLPBuildHelper {
     public Product[] buildSlp(ISettings settings, String text) {
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(settings, DataFactoryType.memory);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.recursiveBlock, AvlSplitPattern.fromFirst);
-        AvlTreeSLPBuilder avlSlpTreeBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new ProductsSerializer4());
+        AvlTreeSLPBuilder avlSlpTreeBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
         SLPModel slpModel = avlSlpTreeBuilder.buildSlp(getFactorization(settings, text), new Statistics());
         ProductsPreprocessor builder = new ProductsPreprocessor(new ProductFactory());
         return builder.execute(slpModel.toNormalForm());

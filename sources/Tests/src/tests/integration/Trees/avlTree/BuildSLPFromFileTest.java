@@ -33,8 +33,8 @@ import serialization.primitives.IntArraySerializer;
 import serialization.products.IProductsSerializer;
 import serialization.products.ProductsSerializer;
 import serialization.products.ProductsSerializer2;
-import serialization.products.ProductsSerializer3;
-import serialization.products.ProductsSerializer4;
+import serialization.products.TwoIntProductsSerializer;
+import serialization.products.PartialTreeProductsSerializer;
 import tests.integration.IntegrationTestBase;
 
 public class BuildSLPFromFileTest extends IntegrationTestBase {
@@ -56,16 +56,16 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
         System.out.println(String.format("SLP size is %d", products.length));
         serializeSlp(text, products, new ProductsSerializer());
         serializeSlp(text, products, new ProductsSerializer2());
-        serializeSlp(text, products, new ProductsSerializer3(new IntArraySerializer()));
-        serializeSlp(text, products, new ProductsSerializer3(new DifferenceHeuristicIntArraySerializer()));
-        serializeSlp(text, products, new ProductsSerializer3(new DifferenceHeuristicIntArraySerializer(2)));
-        serializeSlp(text, products, new ProductsSerializer3(new DifferenceHeuristicIntArraySerializer(3)));
-        serializeSlp(text, products, new ProductsSerializer3(new DifferenceHeuristicIntArraySerializer(4)));
-        serializeSlp(text, products, new ProductsSerializer4());
-        serializeSlp(text, products, new ProductsSerializer4(new DifferenceHeuristicIntArraySerializer()));
-        serializeSlp(text, products, new ProductsSerializer4(new DifferenceHeuristicIntArraySerializer(2)));
-        serializeSlp(text, products, new ProductsSerializer4(new DifferenceHeuristicIntArraySerializer(3)));
-        serializeSlp(text, products, new ProductsSerializer4(new DifferenceHeuristicIntArraySerializer(4)));
+        serializeSlp(text, products, new TwoIntProductsSerializer(new IntArraySerializer()));
+        serializeSlp(text, products, new TwoIntProductsSerializer(new DifferenceHeuristicIntArraySerializer()));
+        serializeSlp(text, products, new TwoIntProductsSerializer(new DifferenceHeuristicIntArraySerializer(2)));
+        serializeSlp(text, products, new TwoIntProductsSerializer(new DifferenceHeuristicIntArraySerializer(3)));
+        serializeSlp(text, products, new TwoIntProductsSerializer(new DifferenceHeuristicIntArraySerializer(4)));
+        serializeSlp(text, products, new PartialTreeProductsSerializer());
+        serializeSlp(text, products, new PartialTreeProductsSerializer(new DifferenceHeuristicIntArraySerializer()));
+        serializeSlp(text, products, new PartialTreeProductsSerializer(new DifferenceHeuristicIntArraySerializer(2)));
+        serializeSlp(text, products, new PartialTreeProductsSerializer(new DifferenceHeuristicIntArraySerializer(3)));
+        serializeSlp(text, products, new PartialTreeProductsSerializer(new DifferenceHeuristicIntArraySerializer(4)));
     }
 
     private byte[] serializeSlp(String text, Product[] products, IProductsSerializer slpSerializer) throws IOException {
@@ -99,7 +99,7 @@ public class BuildSLPFromFileTest extends IntegrationTestBase {
 
             IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);
             AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.sequential, AvlSplitPattern.fromMerged);
-            AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new ProductsSerializer4());
+            AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
             return builder.buildSlp(factorization.toArray(new FactorDef[0]), new Statistics());
         }
     }

@@ -9,14 +9,14 @@ import java.io.OutputStream;
 
 import dataContracts.Product;
 
-public class ProductsSerializer3 implements IProductsSerializer {
+public class TwoIntProductsSerializer implements IProductsSerializer {
     private final IIntArraySerializer intArraySerializer;
 
-    public ProductsSerializer3() {
+    public TwoIntProductsSerializer() {
         this(new IntArraySerializer());
     }
 
-    public ProductsSerializer3(IIntArraySerializer intArraySerializer){
+    public TwoIntProductsSerializer(IIntArraySerializer intArraySerializer){
         this.intArraySerializer = intArraySerializer;
     }
 
