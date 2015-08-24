@@ -5,10 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import commons.utils.NumericUtils;
+import commons.utils.StreamHelpers;
 /*
  * This class serializes array of integers in the following format:
- *   1. length of array
- *   Each 4 integers joined into single block
+ *   1. length of the array
+ *   Each 4 integers joined into a single block
  *   2.  for each block 
  *   2.1 mask of lengths for each integer in the block
  *   2.2 4 integers
@@ -16,7 +17,7 @@ import commons.utils.NumericUtils;
 public class IntArraySerializer implements IIntArraySerializer {
 
     public void serialize(OutputStream stream, int[] array) throws IOException {
-        stream.write(NumericUtils.toBytes(array.length));
+        StreamHelpers.writeInt(stream, array.length);
         for (int i = 0; i < array.length; i += 4) {
             byte[] lenghtsMask = new byte[4];
             byte[][] blockBytes = new byte[4][];
@@ -34,11 +35,9 @@ public class IntArraySerializer implements IIntArraySerializer {
     }
 
     public int[] deserialize(InputStream stream) throws IOException {
-        byte[] countBuffer = new byte[4];
-        stream.read(countBuffer);
-        int count = NumericUtils.intFromBytes(countBuffer);
-        
+        int count = StreamHelpers.readInt(stream);
         int[] array = new int[count];
+        
         for (int i = 0; i < count; i += 4) {
             byte[] lengthsMask = new byte[4];
             stream.read(lengthsMask);

@@ -3,7 +3,7 @@ package serialization.products;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import commons.utils.StreamHelpers;
 import dataContracts.Product;
 
 public class ProductsSerializer extends AbstractProductsSerializer {
@@ -18,8 +18,8 @@ public class ProductsSerializer extends AbstractProductsSerializer {
             int b = (length1 - 1) * 8 + (length2 - 1);
             if (b >= 254) {
                 stream.write(254);
-                writeInt64(stream, product.first);
-                writeInt64(stream, product.second);
+                StreamHelpers.writeLong(stream, product.first);
+                StreamHelpers.writeLong(stream, product.second);
             } else {
                 stream.write(b);
                 writeLong(stream, product.first);
@@ -44,13 +44,6 @@ public class ProductsSerializer extends AbstractProductsSerializer {
         return length;
     }
 
-    private static void writeInt64(OutputStream stream, long integer) throws IOException {
-        for (int i = 0; i < 8; ++i) {
-            stream.write((byte) (integer & 255));
-            integer >>= 8;
-        }
-    }
-
     private static void writeChar(OutputStream stream, char character) throws IOException {
         for (int i = 0; i < 2; ++i) {
             stream.write(character & 255);
@@ -64,8 +57,8 @@ public class ProductsSerializer extends AbstractProductsSerializer {
         if (b == 255) {
             return new Product(readChar(stream));
         } else if (b == 254) {
-            long first = readLong(stream, 8);
-            long second = readLong(stream, 8);
+            long first = StreamHelpers.readLong(stream);
+            long second = StreamHelpers.readLong(stream);
             return new Product(first, second);
         } else {
             int length1 = b / 8 + 1;

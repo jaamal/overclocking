@@ -62,4 +62,8 @@ public class TestHelpers {
     public static int genInt() {
         return random.nextInt();
     }
+    
+    public static long genLong() {
+        return random.nextLong();
+    }
 }

@@ -36,17 +36,6 @@ public class NumericUtils
         return result;
     }
 
-    public static byte[] toBytes(int value)
-    {
-        byte[] result = new byte[4];
-        for (int idx = 0; idx < 4; idx++)
-        {
-            result[idx] = (byte) (value & 0xFF);
-            value = value >> 8;
-        }
-        return result;
-    }
-    
     public static int intFromFloatingBytes(byte[] buffer)
     {
         return intFromBytes(buffer, 0, buffer.length);
@@ -66,6 +55,17 @@ public class NumericUtils
         }
         byte[] result = new byte[resultLength];
         System.arraycopy(buffer, 0, result, 0, resultLength);
+        return result;
+    }
+    
+    private static byte[] toBytes(int value)
+    {
+        byte[] result = new byte[4];
+        for (int idx = 0; idx < 4; idx++)
+        {
+            result[idx] = (byte) (value & 0xFF);
+            value = value >> 8;
+        }
         return result;
     }
 }

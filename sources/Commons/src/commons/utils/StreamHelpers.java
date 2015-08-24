@@ -12,6 +12,13 @@ public class StreamHelpers
             result |= readByte(stream) << i;
         return result;
     }
+    
+    public static long readLong(InputStream stream) throws IOException {
+        long result = 0;
+        for (int i = 0; i < 64; i += 8)
+            result |= ((long) readByte(stream)) << i;
+        return result;
+    }
 
     //TODO: non obvious method behavior
     private static int readByte(InputStream stream) throws IOException {
@@ -24,6 +31,13 @@ public class StreamHelpers
     public static void writeInt(OutputStream stream, int value) throws IOException {
         for (int i = 0; i < 4; ++i) {
             stream.write(value & 255);
+            value >>= 8;
+        }
+    }
+    
+    public static void writeLong(OutputStream stream, long value) throws IOException {
+        for (int i = 0; i < 8; ++i) {
+            stream.write((byte) (value & 255));
             value >>= 8;
         }
     }
