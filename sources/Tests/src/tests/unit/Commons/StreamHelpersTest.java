@@ -26,6 +26,58 @@ public class StreamHelpersTest extends UnitTestBase
     }
     
     @Test
+    public void readWriteIntsBlock() throws IOException {
+        int[] block = TestHelpers.genIntArray(4);
+        byte[] bytes;
+        
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
+            StreamHelpers.writeIntsBlock(outputStream, block);
+            bytes = outputStream.toByteArray();
+        }
+        
+        int[] actuals;
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
+            actuals = StreamHelpers.readIntsBlock(inputStream);
+        }
+        Assert.assertArrayEquals(block, actuals);
+    }
+    
+    @Test
+    public void testWriteIntsBlockSize() throws IOException {
+        int[] block = new int[] { 1, 2, 3, 4};
+        byte[] bytes;
+        
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
+            StreamHelpers.writeIntsBlock(outputStream, block);
+            bytes = outputStream.toByteArray();
+        }
+
+        Assert.assertEquals(8, bytes.length);
+    }
+    
+    @Test
+    public void readWriteIntsShortBlock() throws IOException {
+        int[] block = TestHelpers.genIntArray(2);
+        byte[] bytes;
+        
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
+            StreamHelpers.writeIntsBlock(outputStream, block);
+            bytes = outputStream.toByteArray();
+        }
+        
+        int[] actuals;
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
+            actuals = StreamHelpers.readIntsBlock(inputStream);
+        }
+        Assert.assertArrayEquals(new int[] { block[0], block[1], 0, 0 }, actuals);
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void writeIntsBlockWithLengthGreaterThan4() throws IOException {
+        StreamHelpers.writeIntsBlock(null, new int[5]);
+    }
+    
+    @Test
     public void testReadWriteLong() throws IOException {
         long[] array = TestHelpers.genLongArray(1024);
         byte[] bytes = convertToBytes(array);

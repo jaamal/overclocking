@@ -13,6 +13,17 @@ import tests.unit.UnitTestBase;
 public class IntArraySerializerTest extends UnitTestBase{
 
     @Test
+    public void testSerializeAndDeserializeEmptyArray() throws Exception {
+        runSerializeAndDeserializeArray(new int[0], 4);
+    }
+    
+    @Test
+    public void testSerializeAndDeserializeShortArray() throws Exception {
+        runSerializeAndDeserializeArray(new int[] { 1, 2, 3 }, 11);
+        runSerializeAndDeserializeArray(new int[] { 1, 2, 3, 4, 5, 6 }, 18);
+    }
+    
+    @Test
     public void testSerializeAndDeserializeWithNegativeInts() throws Exception {
         runSerializeAndDeserializeArray(new int[] {-1, -4, 77634, -332, -32}, 31);
     }

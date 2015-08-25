@@ -31,13 +31,13 @@ public class NumericUtilsTest extends UnitTestBase
     
     @Test
     public void testToBytesSize() {
-        Assert.assertEquals(1, NumericUtils.toFloatingBytes(1).length);
-        Assert.assertEquals(2, NumericUtils.toFloatingBytes(257).length);
-        Assert.assertEquals(4, NumericUtils.toFloatingBytes(Integer.MAX_VALUE).length);
+        Assert.assertEquals(4, NumericUtils.toBytes(1).length);
+        Assert.assertEquals(4, NumericUtils.toBytes(257).length);
+        Assert.assertEquals(4, NumericUtils.toBytes(Integer.MAX_VALUE).length);
     }
     
     private static void doTestIntFromFloatingBytes(byte[] buffer, int expected) {
-        Assert.assertEquals(expected, NumericUtils.intFromFloatingBytes(buffer));
+        Assert.assertEquals(expected, NumericUtils.intFromBytes(buffer, 0, buffer.length));
     }
     
     private static void doTestLong(long value)

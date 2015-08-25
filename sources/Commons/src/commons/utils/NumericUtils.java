@@ -35,30 +35,8 @@ public class NumericUtils
             result = (result << 8) | (((int) buffer[idx]) & 0xFF);
         return result;
     }
-
-    public static int intFromFloatingBytes(byte[] buffer)
-    {
-        return intFromBytes(buffer, 0, buffer.length);
-    }
     
-    //TODO: how to make it faster
-    public static byte[] toFloatingBytes(int value)
-    {
-        if (value == 0)
-            return new byte[] {0};
-        
-        byte[] buffer = toBytes(value);
-        int resultLength = 1;
-        for (int i = 1; i < 4; i++) {
-            if (buffer[i] != 0)
-                resultLength ++;
-        }
-        byte[] result = new byte[resultLength];
-        System.arraycopy(buffer, 0, result, 0, resultLength);
-        return result;
-    }
-    
-    private static byte[] toBytes(int value)
+    public static byte[] toBytes(int value)
     {
         byte[] result = new byte[4];
         for (int idx = 0; idx < 4; idx++)

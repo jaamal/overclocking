@@ -3,8 +3,6 @@ package serialization.primitives;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import commons.utils.NumericUtils;
 import commons.utils.StreamHelpers;
 /*
  * This class serializes array of integers in the following format:
@@ -18,19 +16,20 @@ public class IntArraySerializer implements IIntArraySerializer {
 
     public void serialize(OutputStream stream, int[] array) throws IOException {
         StreamHelpers.writeInt(stream, array.length);
-        for (int i = 0; i < array.length; i += 4) {
-            byte[] lenghtsMask = new byte[4];
-            byte[][] blockBytes = new byte[4][];
-            for (int j = 0; j < 4 && i + j < array.length; ++j) {
-                byte[] buffer = NumericUtils.toFloatingBytes(array[i + j]);
-                lenghtsMask[j] = (byte) buffer.length;
-                blockBytes[j] = buffer;
-            }
-
-            stream.write(lenghtsMask);
-            for (int j = 0; j < 4 && i + j < array.length; ++j)
-                stream.write(blockBytes[j]);
+        
+        int fullBlocksCount = array.length >> 2;
+        for (int i = 0; i < fullBlocksCount; i ++) {
+            int pos = i << 2;
+            StreamHelpers.writeIntsBlock(stream, array[pos], array[pos+1], array[pos+2], array[pos+3]);
         }
+        
+        if (array.length > 0) {
+            int tailLength = array.length - (fullBlocksCount << 2);
+            int[] tail = new int[tailLength];
+            System.arraycopy(array, fullBlocksCount << 2, tail, 0, tailLength);
+            StreamHelpers.writeIntsBlock(stream, tail);
+        }
+        
         stream.flush();
     }
 
@@ -38,15 +37,18 @@ public class IntArraySerializer implements IIntArraySerializer {
         int count = StreamHelpers.readInt(stream);
         int[] array = new int[count];
         
-        for (int i = 0; i < count; i += 4) {
-            byte[] lengthsMask = new byte[4];
-            stream.read(lengthsMask);
-            for (int j = 0; j < 4 && i + j < count; ++j) {
-                byte[] intBuffer = new byte[lengthsMask[j]];
-                stream.read(intBuffer);
-                array[i + j] = NumericUtils.intFromFloatingBytes(intBuffer);
-            }
+        int fullBlocksCount = count >> 2;
+        for (int i = 0; i < fullBlocksCount; i++) {
+            int[] block = StreamHelpers.readIntsBlock(stream);
+            System.arraycopy(block, 0, array, i << 2, 4);
         }
+        
+        int tailLength = count - (fullBlocksCount << 2);
+        if (tailLength > 0) {
+            int[] block = StreamHelpers.readIntsBlock(stream);
+            System.arraycopy(block, 0, array, fullBlocksCount << 2, tailLength);
+        }
+        
         return array;
     }
 }
