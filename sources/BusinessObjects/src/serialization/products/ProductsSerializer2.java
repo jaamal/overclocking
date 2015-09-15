@@ -3,7 +3,7 @@ package serialization.products;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import commons.utils.StreamHelpers;
 import dataContracts.Product;
 
 public class ProductsSerializer2 extends AbstractProductsSerializer {
@@ -12,7 +12,7 @@ public class ProductsSerializer2 extends AbstractProductsSerializer {
     public void serializeProduct(OutputStream stream, int index, Product product) throws IOException {
         if (product.isTerminal) {
             stream.write(255);
-            writeChar(stream, product.symbol);
+            StreamHelpers.writeChar(stream, product.symbol);
         } else {
             if (product.first <= product.second) {
                 long A = product.first;
@@ -37,7 +37,7 @@ public class ProductsSerializer2 extends AbstractProductsSerializer {
             }
         }
     }
-
+    
     private static void encodeRule(OutputStream stream, int caseNumber, long A, long B) throws IOException {
         int length1 = getLength(A);
         int length2 = getLength(B);
@@ -49,35 +49,11 @@ public class ProductsSerializer2 extends AbstractProductsSerializer {
         writeLong(stream, B);
     }
 
-    private static void writeLong(OutputStream stream, long number) throws IOException {
-        do {
-            stream.write((byte) (number & 255));
-            number >>= 8;
-        } while (number != 0);
-    }
-
-    private static int getLength(long number) {
-        int length = 0;
-        do {
-            ++length;
-            number >>= 8;
-        } while (number != 0);
-        return length;
-    }
-
-    private static void writeChar(OutputStream stream, char character) throws IOException {
-        for (int i = 0; i < 2; ++i) {
-            stream.write(character & 255);
-            character >>= 8;
-        }
-    }
-
     @Override
     protected Product deserializeProduct(InputStream stream, int index) throws IOException {
-
         int b = readByte(stream);
         if (b == 255) {
-            return new Product(readChar(stream));
+            return new Product(StreamHelpers.readChar(stream));
         } else {
             int length2 = b % 4 + 1;
             b /= 4;
@@ -125,18 +101,27 @@ public class ProductsSerializer2 extends AbstractProductsSerializer {
             return new Product(first, second);
         }
     }
+    
+    private static int getLength(long number) {
+        int length = 0;
+        do {
+            ++length;
+            number >>= 8;
+        } while (number != 0);
+        return length;
+    }
 
+    private static void writeLong(OutputStream stream, long number) throws IOException {
+        do {
+            stream.write((byte) (number & 255));
+            number >>= 8;
+        } while (number != 0);
+    }
+    
     private static long readLong(InputStream stream, int length) throws IOException {
         long result = 0;
         for (int i = 0; length > 0; i += 8, --length)
             result |= ((long) readByte(stream)) << i;
-        return result;
-    }
-
-    private static char readChar(InputStream stream) throws IOException {
-        char result = 0;
-        for (int i = 0; i < 16; i += 8)
-            result |= readByte(stream) << i;
         return result;
     }
 

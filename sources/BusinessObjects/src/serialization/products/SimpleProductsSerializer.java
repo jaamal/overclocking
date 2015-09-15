@@ -3,7 +3,7 @@ package serialization.products;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import commons.utils.StreamHelpers;
 import dataContracts.Product;
 
 public class SimpleProductsSerializer extends AbstractProductsSerializer {
@@ -11,11 +11,11 @@ public class SimpleProductsSerializer extends AbstractProductsSerializer {
     public void serializeProduct(OutputStream stream, int index, Product product) throws IOException {
         if (product.isTerminal) {
             stream.write(0);
-            writeChar(stream, product.symbol);
+            StreamHelpers.writeChar(stream, product.symbol);
         } else {
             stream.write(255);
-            writeInt64(stream, product.first);
-            writeInt64(stream, product.second);
+            writeLong(stream, product.first);
+            writeLong(stream, product.second);
         }
     }
 
@@ -23,7 +23,7 @@ public class SimpleProductsSerializer extends AbstractProductsSerializer {
     public Product deserializeProduct(InputStream stream, int index) throws IOException {
         int b = readByte(stream);
         if (b == 0) {
-            return new Product(readChar(stream));
+            return new Product(StreamHelpers.readChar(stream));
         } else {
             long first = readLong(stream);
             long second = readLong(stream);
@@ -31,17 +31,10 @@ public class SimpleProductsSerializer extends AbstractProductsSerializer {
         }
     }
 
-    private static void writeInt64(OutputStream stream, long integer) throws IOException {
+    private static void writeLong(OutputStream stream, long value) throws IOException {
         for (int i = 0; i < 8; ++i) {
-            stream.write((byte) (integer & 255));
-            integer >>= 8;
-        }
-    }
-
-    private static void writeChar(OutputStream stream, char character) throws IOException {
-        for (int i = 0; i < 2; ++i) {
-            stream.write(character & 255);
-            character >>= 8;
+            stream.write((byte) (value & 255));
+            value >>= 8;
         }
     }
 
@@ -49,13 +42,6 @@ public class SimpleProductsSerializer extends AbstractProductsSerializer {
         long result = 0;
         for (int i = 0; i < 64; i += 8)
             result |= ((long) readByte(stream)) << i;
-        return result;
-    }
-
-    private static char readChar(InputStream stream) throws IOException {
-        char result = 0;
-        for (int i = 0; i < 16; i += 8)
-            result |= readByte(stream) << i;
         return result;
     }
 

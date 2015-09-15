@@ -8,6 +8,7 @@ public class StreamHelpers
 {
     private final static int MASK = 255;
     private final static int BITS_IN_BYTE = 8;
+    private final static int BITS_IN_CHAR = 16;
     private final static int BITS_IN_INT = 32;
     private final static int BITS_IN_LONG = 64;
     
@@ -85,6 +86,20 @@ public class StreamHelpers
         long result = 0;
         for (int i = 0; i < BITS_IN_LONG; i += BITS_IN_BYTE)
             result |= ((long) readByte(stream)) << i;
+        return result;
+    }
+    
+    public static void writeChar(OutputStream stream, char character) throws IOException {
+        for (int i = 0; i < 2; ++i) {
+            stream.write(character & MASK);
+            character >>= BITS_IN_BYTE;
+        }
+    }
+    
+    public static char readChar(InputStream stream) throws IOException {
+        char result = 0;
+        for (int i = 0; i < BITS_IN_CHAR; i += BITS_IN_BYTE)
+            result |= readByte(stream) << i;
         return result;
     }
 

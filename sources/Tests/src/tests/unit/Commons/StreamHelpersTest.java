@@ -92,6 +92,20 @@ public class StreamHelpersTest extends UnitTestBase
     }
     
     @Test
+    public void testReadWriteChar() throws IOException {
+        char[] array = TestHelpers.genCharArray(1024);
+        byte[] bytes = convertToBytes(array);
+        
+        char[] actuals = new char[1024];
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
+            for (int i = 0; i < actuals.length; i++) {
+                actuals[i] = StreamHelpers.readChar(inputStream);
+            }
+        }
+        Assert.assertArrayEquals(array, actuals);
+    }
+    
+    @Test
     public void testBytesSizeForInt() throws IOException {
         int value = TestHelpers.genInt();
         byte[] actuals = convertToBytes(new int[] { value });
@@ -103,6 +117,13 @@ public class StreamHelpersTest extends UnitTestBase
         long value = TestHelpers.genLong();
         byte[] actuals = convertToBytes(new long[] { value });
         Assert.assertEquals(8, actuals.length);
+    }
+    
+    @Test
+    public void testBytesSizeForChar() throws IOException {
+        char value = TestHelpers.genChar();
+        byte[] actuals = convertToBytes(new char[] { value });
+        Assert.assertEquals(2, actuals.length);
     }
 
     private byte[] convertToBytes(int[] array) throws IOException
@@ -120,6 +141,16 @@ public class StreamHelpersTest extends UnitTestBase
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
             for (int i = 0; i < array.length; i++) {
                 StreamHelpers.writeLong(outputStream, array[i]);
+            }
+            return outputStream.toByteArray();
+        }
+    }
+    
+    private byte[] convertToBytes(char[] array) throws IOException
+    {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
+            for (int i = 0; i < array.length; i++) {
+                StreamHelpers.writeChar(outputStream, array[i]);
             }
             return outputStream.toByteArray();
         }

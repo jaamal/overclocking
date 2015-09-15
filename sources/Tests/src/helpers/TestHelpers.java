@@ -45,6 +45,10 @@ public class TestHelpers {
         return genString(length).toCharArray();
     }
     
+    public static char genChar() {
+        return genString(1).toCharArray()[0];
+    }
+    
     public static AvlTreeNode genAvlTreeNode() {
         return new AvlTreeNode(random.nextLong(), random.nextLong(), random.nextLong(), 
                                random.nextLong(), random.nextLong(), random.nextLong(), 
