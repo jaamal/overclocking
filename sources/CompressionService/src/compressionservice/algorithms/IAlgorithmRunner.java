@@ -4,5 +4,6 @@ import dataContracts.statistics.IStatistics;
 
 public interface IAlgorithmRunner {
     
-    IStatistics run();
+    void run();
+    IStatistics getStats();
 }

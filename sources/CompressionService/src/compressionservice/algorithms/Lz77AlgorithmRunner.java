@@ -28,10 +28,11 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
     private final IResourceProvider resourceProvider;
     private final IFactorIteratorFactory factorIteratorFactory;
 
-    private String sourceId;
-    private String resultId;
-    private DataFactoryType dataFactoryType;
-    private int windowSize;
+    private final String sourceId;
+    private final String resultId;
+    private final DataFactoryType dataFactoryType;
+    private final int windowSize;
+    private IStatistics statistics;
 
     public Lz77AlgorithmRunner(
             IResourceProvider resourceProvider,
@@ -53,7 +54,7 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
     }
 
     @Override
-    public IStatistics run() {
+    public void run() {
         try (IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType)) {
             TimeCounter timeCounter = TimeCounter.start();
 
@@ -66,14 +67,21 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
             }
             timeCounter.finish();
 
-            IStatistics statistics = new Statistics();
+            statistics = new Statistics();
             statistics.putParam(StatisticKeys.SourceLength, String.valueOf(charArray.length()));
             statistics.putParam(StatisticKeys.FactorizationLength, String.valueOf(factors.size()));
             statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(FactorDef.SIZE_IN_BYTES * factors.size()));
             statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
 
             factorsRepotisory.writeAll(resultId, factors.toArray(new FactorDef[0]));
-            return statistics;
         }
+    }
+    
+    @Override
+    public IStatistics getStats()
+    {
+        if (statistics == null)
+            throw new RuntimeException("Statistics is empty since algorithm does not running.");
+        return statistics;
     }
 }

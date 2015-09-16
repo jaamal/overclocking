@@ -12,11 +12,12 @@ import dataContracts.statistics.Statistics;
 
 public class LzwAlgorithmRunner implements IAlgorithmRunner {
     
-    private IResourceProvider resourceProvider;
-    private ILZWFactorsAnalyzer lzwFactorsAnalyzer;
-    private String sourceId;
-    private DataFactoryType dataFactoryType;
-    private String resultId;
+    private final IResourceProvider resourceProvider;
+    private final ILZWFactorsAnalyzer lzwFactorsAnalyzer;
+    private final String sourceId;
+    private final DataFactoryType dataFactoryType;
+    private final String resultId;
+    IStatistics statistics;
     
     public LzwAlgorithmRunner(
             ILZWFactorsAnalyzer lzwFactorsAnalyzer,
@@ -35,18 +36,25 @@ public class LzwAlgorithmRunner implements IAlgorithmRunner {
     
     //TODO: this algorithm only counts number of factors, but doesnt create any factorization
     @Override
-    public IStatistics run() {
+    public void run() {
         try(IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType))
         {
             TimeCounter timeCounter = TimeCounter.start();
             long lzwCodesCount = lzwFactorsAnalyzer.countLZWCodes(charArray);
             timeCounter.finish();
             
-            IStatistics statistics = new Statistics();
+            statistics = new Statistics();
             statistics.putParam(StatisticKeys.SourceLength, String.valueOf(charArray.length()));
             statistics.putParam(StatisticKeys.FactorizationLength, String.valueOf(lzwCodesCount));
             statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            return statistics;
         }
+    }
+    
+    @Override
+    public IStatistics getStats()
+    {
+        if (statistics == null)
+            throw new RuntimeException("Statistics is empty since algorithm does not running.");
+        return statistics;
     }
 }

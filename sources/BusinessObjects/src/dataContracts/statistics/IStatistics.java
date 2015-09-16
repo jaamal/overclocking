@@ -2,6 +2,7 @@ package dataContracts.statistics;
 
 import java.util.Map;
 
+//TODO rename to metrics
 public interface IStatistics {
     void putParam(StatisticKeys key, String value);
     void putParam(StatisticKeys key, int value);

@@ -22,13 +22,14 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
     private static Logger logger = Logger.getLogger(LCAOnlineSlpBuildAlgorithmRunner.class);
 
-    private ILCAOnlineCompressor lcaOnlineCompressor;
-    private ISlpProductsRepository slpProductsRepository;
-    private IResourceProvider resourceProvider;
-    private String sourceId;
-    private String resultId;
-    private DataFactoryType dataFactoryType;
+    private final ILCAOnlineCompressor lcaOnlineCompressor;
+    private final ISlpProductsRepository slpProductsRepository;
+    private final IResourceProvider resourceProvider;
     private final IProductsSerializer productsSerializer;
+    private final String sourceId;
+    private final String resultId;
+    private final DataFactoryType dataFactoryType;
+    IStatistics statistics;
 
     public LCAOnlineSlpBuildAlgorithmRunner(
             ILCAOnlineCompressor lcaOnlineCompressor,
@@ -50,7 +51,7 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     }
 
     @Override
-    public IStatistics run() {
+    public void run() {
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             logger.info("Source file size is " + source.length());
             TimeCounter timeCounter = TimeCounter.start();
@@ -59,13 +60,20 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
             logger.info(String.format("Finish slpBuilding. Total time is about %d minutes", timeCounter.getMillis() / 60 / 1000));
             
             SLPModel slpModel = slpBuilder.toSLPModel();
-            IStatistics statisitcs = new Statistics();
-            statisitcs.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            slpModel.appendStats(statisitcs, productsSerializer);
+            statistics = new Statistics();
+            statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
+            slpModel.appendStats(statistics, productsSerializer);
 
             Product[] products = slpModel.toNormalForm();
             slpProductsRepository.writeAll(resultId, products);
-            return statisitcs;
         }
+    }
+    
+    @Override
+    public IStatistics getStats()
+    {
+        if (statistics == null)
+            throw new RuntimeException("Statistics is empty since algorithm does not running.");
+        return statistics;
     }
 }

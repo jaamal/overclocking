@@ -2,20 +2,15 @@ package compressionservice.runner;
 
 import java.time.Duration;
 import java.util.UUID;
-
 import org.apache.log4j.Logger;
-
-import storage.statistics.IStatisticsRepository;
-
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.IAlgorithmRunner;
 import compressionservice.algorithms.IAlgorithmRunnersFactory;
 import compressionservice.runner.parameters.IRunParams;
 import compressionservice.runner.state.ITaskOperationalLog;
-
-import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.RunParamKeys;
+import storage.statistics.IStatisticsRepository;
 
 public class Worker implements IWorker
 {
@@ -67,9 +62,9 @@ public class Worker implements IWorker
             runParams.put(RunParamKeys.ResultId, resultId);
             IAlgorithmRunner algorithmRunner = algorithmRunnersFactory.create(runParams);
             TimeCounter timeCounter = TimeCounter.start();
-            IStatistics statistics = algorithmRunner.run();
+            algorithmRunner.run();
             Duration duration = timeCounter.finish();
-            statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), statistics.toMap()));
+            statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), algorithmRunner.getStats().toMap()));
             
             operationalLog.append(requestId, sourceId, String.format("End processing. Duration: %s.", duration));
         } catch (Exception e) {

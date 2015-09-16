@@ -12,11 +12,12 @@ import dataContracts.statistics.Statistics;
 
 public class AvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
 
-    private IAvlTreeSLPBuilder avlTreeSLPBuilder;
-    private ISlpProductsRepository slpProductsRepository;
-    private IResourceProvider resourceProvider;
-    private String sourceId;
-    private String resultId;
+    private final IAvlTreeSLPBuilder avlTreeSLPBuilder;
+    private final ISlpProductsRepository slpProductsRepository;
+    private final IResourceProvider resourceProvider;
+    private final String sourceId;
+    private final String resultId;
+    private IStatistics statistics;
 
     public AvlSlpBuildAlgorithmRunner(
             IAvlTreeSLPBuilder avlTreeSLPBuilder,
@@ -35,14 +36,21 @@ public class AvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     }
 
     @Override
-    public IStatistics run() {
+    public void run() {
         FactorDef[] factorization = resourceProvider.getFactorization(sourceId);
-        IStatistics statistics = new Statistics();
+        statistics = new Statistics();
 
         SLPModel slpModel = avlTreeSLPBuilder.buildSlp(factorization, statistics);
         
         Product[] products = slpModel.toNormalForm();
         slpProductsRepository.writeAll(resultId, products);
+    }
+    
+    @Override
+    public IStatistics getStats()
+    {
+        if (statistics == null)
+            throw new RuntimeException("Statistics is empty since algorithm does not running.");
         return statistics;
     }
 }
