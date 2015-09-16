@@ -29,6 +29,7 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
     private final IFactorIteratorFactory factorIteratorFactory;
 
     private String sourceId;
+    private String resultId;
     private DataFactoryType dataFactoryType;
     private int windowSize;
 
@@ -39,18 +40,20 @@ public class Lz77AlgorithmRunner implements IAlgorithmRunner {
             IFactorIteratorFactory factorIteratorFactory,
             IStatisticsObjectFactory statisticsObjectFactory,
             String sourceId, 
+            String resultId,
             DataFactoryType dataFactoryType,
             int windowSize) {
         this.resourceProvider = resourceProvider;
         this.factorIteratorFactory = factorIteratorFactory;
         this.sourceId = sourceId;
+        this.resultId = resultId;
         this.dataFactoryType = dataFactoryType;
         this.windowSize = windowSize;
         this.factorsRepotisory = factorsRepository;
     }
 
     @Override
-    public IStatistics run(String resultId) {
+    public IStatistics run() {
         try (IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType)) {
             TimeCounter timeCounter = TimeCounter.start();
 

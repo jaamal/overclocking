@@ -28,6 +28,7 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
     private final IFactorIteratorFactory factorIteratorFactory;
     private final IFactorsRepository factorsRepository;
     private String sourceId;
+    private String resultId;
     private DataFactoryType dataFactoryType;
 
     public LzInfAlgorithmRunner(
@@ -37,16 +38,18 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
             IFactorsRepository factorsRepository,
             IStatisticsObjectFactory statisticsObjectFactory,
             String sourceId,
+            String resultId,
             DataFactoryType dataFactoryType) {
         this.resourceProvider = resourceProvider;
         this.factorIteratorFactory = factorIteratorFactory;
         this.factorsRepository = factorsRepository;
         this.sourceId = sourceId;
+        this.resultId = resultId;
         this.dataFactoryType = dataFactoryType;
     }
 
     @Override
-    public IStatistics run(String resultId) {
+    public IStatistics run() {
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             TimeCounter timeCounter = TimeCounter.start();
             ArrayList<FactorDef> factors = new ArrayList<>();

@@ -16,6 +16,7 @@ public class CartesianSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
     private String sourceId;
+    private String resultId;
 
     public CartesianSlpBuildAlgorithmRunner(
             ICartesianSlpTreeBuilder cartesianSLPTreeBuilder,
@@ -23,16 +24,18 @@ public class CartesianSlpBuildAlgorithmRunner implements IAlgorithmRunner {
             IResourceProvider resourceProvider, 
             IFactorsRepositoryFactory factorsRepositoryFactory, 
             IStatisticsObjectFactory statisticsObjectFactory,
-            String sourceId)
+            String sourceId,
+            String resultId)
     {
         this.cartesianSLPTreeBuilder = cartesianSLPTreeBuilder;
         this.slpProductsRepository = slpProductsRepository;
         this.resourceProvider = resourceProvider;
         this.sourceId = sourceId;
+        this.resultId = resultId;
     }
 
     @Override
-    public IStatistics run(String resultId) {
+    public IStatistics run() {
         FactorDef[] factorization = resourceProvider.getFactorization(sourceId);
         IStatistics statistics = new Statistics();
 

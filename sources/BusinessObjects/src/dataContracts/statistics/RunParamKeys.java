@@ -2,6 +2,8 @@ package dataContracts.statistics;
 
 public enum RunParamKeys
 {
+    SourceId,
+    ResultId,
     AlgorithmType,
     AvlMergePattern,
     AvlSplitPattern,
@@ -9,6 +11,5 @@ public enum RunParamKeys
     WorkingDirectory,
     ThreadCount,
     MemoryMappedBatchSize,
-    SourceId,
     WindowSize
 }

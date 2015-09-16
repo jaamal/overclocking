@@ -16,6 +16,7 @@ public class LzwAlgorithmRunner implements IAlgorithmRunner {
     private ILZWFactorsAnalyzer lzwFactorsAnalyzer;
     private String sourceId;
     private DataFactoryType dataFactoryType;
+    private String resultId;
     
     public LzwAlgorithmRunner(
             ILZWFactorsAnalyzer lzwFactorsAnalyzer,
@@ -23,16 +24,18 @@ public class LzwAlgorithmRunner implements IAlgorithmRunner {
             IFilesRepository filesRepository, 
             IStatisticsObjectFactory statisticsObjectFactory,
             String sourceId, 
+            String resultId,
             DataFactoryType dataFactoryType) {
         this.lzwFactorsAnalyzer = lzwFactorsAnalyzer;
         this.resourceProvider = resourceProvider;
         this.sourceId = sourceId;
+        this.resultId = resultId;
         this.dataFactoryType = dataFactoryType;
     }
     
     //TODO: this algorithm only counts number of factors, but doesnt create any factorization
     @Override
-    public IStatistics run(String resultId) {
+    public IStatistics run() {
         try(IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType))
         {
             TimeCounter timeCounter = TimeCounter.start();

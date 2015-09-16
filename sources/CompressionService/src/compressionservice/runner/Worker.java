@@ -64,9 +64,10 @@ public class Worker implements IWorker
                 return;
             }
 
+            runParams.put(RunParamKeys.ResultId, resultId);
             IAlgorithmRunner algorithmRunner = algorithmRunnersFactory.create(runParams);
             TimeCounter timeCounter = TimeCounter.start();
-            IStatistics statistics = algorithmRunner.run(resultId);
+            IStatistics statistics = algorithmRunner.run();
             Duration duration = timeCounter.finish();
             statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), statistics.toMap()));
             

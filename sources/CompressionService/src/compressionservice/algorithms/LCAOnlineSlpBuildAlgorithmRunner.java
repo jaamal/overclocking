@@ -26,6 +26,7 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
     private ISlpProductsRepository slpProductsRepository;
     private IResourceProvider resourceProvider;
     private String sourceId;
+    private String resultId;
     private DataFactoryType dataFactoryType;
     private final IProductsSerializer productsSerializer;
 
@@ -37,17 +38,19 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
             IStatisticsObjectFactory statisticsObjectFactory,
             IProductsSerializer productsSerializer,
             String sourceId,
+            String resultId,
             DataFactoryType dataFactoryType) {
         this.lcaOnlineCompressor = lcaOnlineCompressor;
         this.slpProductsRepository = slpProductsRepository;
         this.resourceProvider = resourceProvider;
         this.productsSerializer = productsSerializer;
         this.sourceId = sourceId;
+        this.resultId = resultId;
         this.dataFactoryType = dataFactoryType;
     }
 
     @Override
-    public IStatistics run(String resultId) {
+    public IStatistics run() {
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             logger.info("Source file size is " + source.length());
             TimeCounter timeCounter = TimeCounter.start();
