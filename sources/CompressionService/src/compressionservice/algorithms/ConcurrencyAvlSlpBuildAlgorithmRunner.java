@@ -3,6 +3,7 @@ package compressionservice.algorithms;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.IConcurrencyAvlTreeSLPBuilder;
+import dataContracts.AlgorithmType;
 import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.SLPModel;
@@ -10,7 +11,7 @@ import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.Statistics;
 
-public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
+public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithm {
     
     private final IConcurrencyAvlTreeSLPBuilder avlTreeSLPBuilder;
     private final ISlpProductsRepository slpProductsRepository;
@@ -51,5 +52,11 @@ public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithmRunner {
         if (statistics == null)
             throw new RuntimeException("Statistics is empty since algorithm does not running.");
         return statistics;
+    }
+
+    @Override
+    public AlgorithmType getType()
+    {
+        return AlgorithmType.avlSlpConcurrent;
     }
 }

@@ -2,13 +2,14 @@ package compressionservice.algorithms;
 
 import org.apache.log4j.Logger;
 
-import serialization.products.IProductsSerializer;
+import serialization.products.IProductSerializationHeuristic;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
 
 import data.charArray.IReadableCharArray;
+import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.Product;
 import dataContracts.SLPModel;
@@ -18,14 +19,14 @@ import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
 import productEnumerator.IProductEnumerator;
 
-public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
+public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithm {
 
     private static Logger logger = Logger.getLogger(LCAOnlineSlpBuildAlgorithmRunner.class);
 
     private final ILCAOnlineCompressor lcaOnlineCompressor;
     private final ISlpProductsRepository slpProductsRepository;
     private final IResourceProvider resourceProvider;
-    private final IProductsSerializer productsSerializer;
+    private final IProductSerializationHeuristic productsSerializer;
     private final String sourceId;
     private final String resultId;
     private final DataFactoryType dataFactoryType;
@@ -37,7 +38,7 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
             IResourceProvider resourceProvider,
             IFilesRepository filesRepository,
             IStatisticsObjectFactory statisticsObjectFactory,
-            IProductsSerializer productsSerializer,
+            IProductSerializationHeuristic productsSerializer,
             String sourceId,
             String resultId,
             DataFactoryType dataFactoryType) {
@@ -75,5 +76,11 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithmRunner {
         if (statistics == null)
             throw new RuntimeException("Statistics is empty since algorithm does not running.");
         return statistics;
+    }
+
+    @Override
+    public AlgorithmType getType()
+    {
+        return AlgorithmType.lcaOnlineSlp;
     }
 }

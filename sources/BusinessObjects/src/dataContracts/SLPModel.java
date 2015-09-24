@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import serialization.products.IProductsSerializer;
+import serialization.products.IProductSerializationHeuristic;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
 
@@ -53,7 +53,7 @@ public class SLPModel
         return sortedProducts;
     }
     
-    public void appendStats(IStatistics to, IProductsSerializer productsSerializer) {
+    public void appendStats(IStatistics to, IProductSerializationHeuristic productsSerializer) {
         SLPStatistics stats = calcStats();
         to.putParam(StatisticKeys.SlpWidth, stats.length);
         to.putParam(StatisticKeys.SlpHeight, stats.height);

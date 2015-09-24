@@ -4,13 +4,14 @@ import storage.filesRepository.IFilesRepository;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.lzw.ILZWFactorsAnalyzer;
 import data.charArray.IReadableCharArray;
+import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
 
-public class LzwAlgorithmRunner implements IAlgorithmRunner {
+public class LzwAlgorithmRunner implements IAlgorithm {
     
     private final IResourceProvider resourceProvider;
     private final ILZWFactorsAnalyzer lzwFactorsAnalyzer;
@@ -56,5 +57,11 @@ public class LzwAlgorithmRunner implements IAlgorithmRunner {
         if (statistics == null)
             throw new RuntimeException("Statistics is empty since algorithm does not running.");
         return statistics;
+    }
+
+    @Override
+    public AlgorithmType getType()
+    {
+        return AlgorithmType.lzw;
     }
 }

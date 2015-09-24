@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import commons.utils.StreamHelpers;
 import dataContracts.Product;
 
-public class ProductsSerializer2 extends AbstractProductsSerializer {
+public class DifferenceSerializationHeuristic extends AbstractSerializationHeuristic {
 
     @Override
     public void serializeProduct(OutputStream stream, int index, Product product) throws IOException {
@@ -100,6 +100,12 @@ public class ProductsSerializer2 extends AbstractProductsSerializer {
             }
             return new Product(first, second);
         }
+    }
+    
+    @Override
+    public byte getSerializerId()
+    {
+        return 3;
     }
     
     private static int getLength(long number) {

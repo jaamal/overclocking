@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import commons.utils.StreamHelpers;
 import dataContracts.Product;
 
-public class ProductsSerializer extends AbstractProductsSerializer {
+public class SimpleSerializationHeuristic extends AbstractSerializationHeuristic {
     @Override
     public void serializeProduct(OutputStream stream, int index, Product product) throws IOException {
         if (product.isTerminal) {
@@ -44,6 +44,12 @@ public class ProductsSerializer extends AbstractProductsSerializer {
             long second = readLong(stream, length2);
             return new Product(first, second);
         }
+    }
+    
+    @Override
+    public byte getSerializerId()
+    {
+        return 2;
     }
     
     private static int getLength(long number) {

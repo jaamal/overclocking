@@ -5,7 +5,7 @@ import helpers.FactorizationScenarios;
 import org.junit.Assert;
 import org.junit.Test;
 
-import serialization.products.IProductsSerializer;
+import serialization.products.IProductSerializationHeuristic;
 import serialization.products.PartialTreeProductsSerializer;
 import tests.integration.IntegrationTestBase;
 import SLPs.ConcurrentSLPExtractor;
@@ -31,7 +31,7 @@ public class ConcurrencyAvlTreeSLPBuilderIntegrationTest extends IntegrationTest
         container.bindInstance(IAvlTreeManagerFactory.class, new ConcurrentAvlTreeManagerFactory(DataFactoryType.memory));
         container.bindInstance(IParallelExecutorFactory.class, new ParallelExecutorFactory(4));
         container.bindInstance(ISLPExtractor.class, new ConcurrentSLPExtractor(4));
-        container.bindInstance(IProductsSerializer.class, new PartialTreeProductsSerializer());
+        container.bindInstance(IProductSerializationHeuristic.class, new PartialTreeProductsSerializer());
 
         System.out.println("Generating factorization.");
         LZFactorDef[] factors = FactorizationScenarios.generate(30000000);

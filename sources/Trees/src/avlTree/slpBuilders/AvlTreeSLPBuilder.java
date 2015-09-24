@@ -3,7 +3,7 @@ package avlTree.slpBuilders;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import serialization.products.IProductsSerializer;
+import serialization.products.IProductSerializationHeuristic;
 import SLPs.ISLPExtractor;
 import avlTree.IAvlTree;
 import avlTree.IAvlTreeManager;
@@ -30,13 +30,13 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     private IAvlTreeManagerFactory avlTreeManagerFactory;
     private IAvlTreeBufferFactory avlTreeBufferFactory;
     private final ISLPExtractor slpExtractor;
-    private IProductsSerializer productsSerializer;
+    private IProductSerializationHeuristic productsSerializer;
 
     public AvlTreeSLPBuilder(
             IAvlTreeManagerFactory avlTreeManagerFactory,
             IAvlTreeBufferFactory avlTreeBufferFactory,
             ISLPExtractor slpExtractor,
-            IProductsSerializer productsSerializer) {
+            IProductSerializationHeuristic productsSerializer) {
         this.avlTreeManagerFactory = avlTreeManagerFactory;
         this.avlTreeBufferFactory = avlTreeBufferFactory;
         this.slpExtractor = slpExtractor;

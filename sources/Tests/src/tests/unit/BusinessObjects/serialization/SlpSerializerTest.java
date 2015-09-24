@@ -8,18 +8,16 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import serialization.primitives.DifferenceHeuristicIntArraySerializer;
-import serialization.products.IProductsSerializer;
-import serialization.products.ProductsSerializer;
-import serialization.products.ProductsSerializer2;
-import serialization.products.TwoIntProductsSerializer;
+import serialization.products.IProductSerializationHeuristic;
+import serialization.products.SimpleSerializationHeuristic;
+import serialization.products.DifferenceSerializationHeuristic;
 import serialization.products.PartialTreeProductsSerializer;
-import serialization.products.SimpleProductsSerializer;
+import serialization.products.NaiveSerializationHeuristic;
 import tests.unit.UnitTestBase;
 import dataContracts.Product;
 
 public class SlpSerializerTest extends UnitTestBase {
-    private SimpleProductsSerializer simpleSlpSerializer;
+    private NaiveSerializationHeuristic simpleSlpSerializer;
     
     public final static Product[] abrakadabra = new Product[]{
         new Product('a'), //0
@@ -39,24 +37,17 @@ public class SlpSerializerTest extends UnitTestBase {
     @Override
     public void setUp() {
         super.setUp();
-        simpleSlpSerializer = new SimpleProductsSerializer();
+        simpleSlpSerializer = new NaiveSerializationHeuristic();
     }
 
     @Test
     public void testProductSerializer() {
-        doTest(abrakadabra, new ProductsSerializer());
+        doTest(abrakadabra, new SimpleSerializationHeuristic());
     }
     
     @Test
     public void testProductSerializer2() {
-        doTest(abrakadabra, new ProductsSerializer2());
-    }
-    
-    @Test
-    public void testProductSerializer3() {
-        doTest(abrakadabra, new TwoIntProductsSerializer());
-        doTest(abrakadabra, new TwoIntProductsSerializer(new DifferenceHeuristicIntArraySerializer()));
-        doTest(abrakadabra, new TwoIntProductsSerializer(new DifferenceHeuristicIntArraySerializer(2)));
+        doTest(abrakadabra, new DifferenceSerializationHeuristic());
     }
     
     @Test
@@ -64,13 +55,13 @@ public class SlpSerializerTest extends UnitTestBase {
         doTest(abrakadabra, new PartialTreeProductsSerializer());
     }
 
-    private void doTest(Product[] products, IProductsSerializer serializer) {
+    private void doTest(Product[] products, IProductSerializationHeuristic serializer) {
         int compactBytesCount = checkSerializer(serializer, products);
         int simpleBytesCount = checkSerializer(simpleSlpSerializer, products);
         System.out.println(String.format("Compaction ratio is %f", ((double) compactBytesCount) / simpleBytesCount));
     }
 
-    private int checkSerializer(IProductsSerializer slpSerializer, Product[] products) {
+    private int checkSerializer(IProductSerializationHeuristic slpSerializer, Product[] products) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             slpSerializer.serialize(outputStream, products);
             byte[] bytes = outputStream.toByteArray();

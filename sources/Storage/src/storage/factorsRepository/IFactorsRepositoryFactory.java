@@ -1,7 +1,9 @@
 package storage.factorsRepository;
 
+import dataContracts.AlgorithmType;
 
 public interface IFactorsRepositoryFactory {
     IFactorsRepository getLZRepository();
-    IFactorsRepository getLZ77Repository();
+    
+    IFactorsRepository find(AlgorithmType algorithmType);
 }

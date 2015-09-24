@@ -4,12 +4,15 @@ import java.time.Duration;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import commons.utils.TimeCounter;
-import compressionservice.algorithms.IAlgorithmRunner;
+import compressionservice.algorithms.IAlgorithm;
 import compressionservice.algorithms.IAlgorithmRunnersFactory;
+import compressionservice.algorithms.ICompressionAlgorithm;
 import compressionservice.runner.parameters.IRunParams;
 import compressionservice.runner.state.ITaskOperationalLog;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.RunParamKeys;
+import storage.factorsRepository.IFactorsRepository;
+import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.statistics.IStatisticsRepository;
 
 public class Worker implements IWorker
@@ -20,15 +23,18 @@ public class Worker implements IWorker
     private IStatisticsRepository statisticsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
     private ITaskOperationalLog operationalLog;
+    private IFactorsRepositoryFactory factorsRepositoryFactory;
 
     public Worker(
             IAlgorithmRunnersFactory algorithmRunnersFactory,
             IStatisticsRepository statisticsRepository,
             IStatisticsObjectFactory statisticsObjectFactory,
+            IFactorsRepositoryFactory factorsRepositoryFactory,
             ITaskOperationalLog operationalLog) {
         this.algorithmRunnersFactory = algorithmRunnersFactory;
         this.statisticsRepository = statisticsRepository;
         this.statisticsObjectFactory = statisticsObjectFactory;
+        this.factorsRepositoryFactory = factorsRepositoryFactory;
         this.operationalLog = operationalLog;
     }
     
@@ -60,11 +66,14 @@ public class Worker implements IWorker
             }
 
             runParams.put(RunParamKeys.ResultId, resultId);
-            IAlgorithmRunner algorithmRunner = algorithmRunnersFactory.create(runParams);
-            TimeCounter timeCounter = TimeCounter.start();
-            algorithmRunner.run();
-            Duration duration = timeCounter.finish();
-            statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), algorithmRunner.getStats().toMap()));
+            IAlgorithm algorithm = algorithmRunnersFactory.create(runParams);
+            Duration duration;
+            if (algorithm instanceof ICompressionAlgorithm) {
+                duration = runCompressionAlgorithm(sourceId, runParams, (ICompressionAlgorithm) algorithm);
+            }
+            else {
+                duration = runAlgorithm(sourceId, runParams, algorithm);
+            }
             
             operationalLog.append(requestId, sourceId, String.format("End processing. Duration: %s.", duration));
         } catch (Exception e) {
@@ -73,5 +82,29 @@ public class Worker implements IWorker
             logger.error(message, e);
         }
         System.gc();
+    }
+    
+    private Duration runCompressionAlgorithm(String sourceId, IRunParams runParams, ICompressionAlgorithm compressionAlgorithm) {
+        String resultId = runParams.getHashId();
+        TimeCounter timeCounter = TimeCounter.start();
+        compressionAlgorithm.run();
+        Duration duration = timeCounter.finish();
+        statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), compressionAlgorithm.getStats().toMap()));
+        if (compressionAlgorithm.supportFactorization()) {
+            IFactorsRepository factorsRepository = factorsRepositoryFactory.find(compressionAlgorithm.getType());
+            if (factorsRepository != null) {
+                factorsRepository.writeAll(resultId, compressionAlgorithm.getFactorization());
+            }
+        }
+        return duration;
+    }
+    
+    private Duration runAlgorithm(String sourceId, IRunParams runParams, IAlgorithm algorithm) {
+        String resultId = runParams.getHashId();
+        TimeCounter timeCounter = TimeCounter.start();
+        algorithm.run();
+        Duration duration = timeCounter.finish();
+        statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), algorithm.getStats().toMap()));
+        return duration;
     }
 }

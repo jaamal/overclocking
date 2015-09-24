@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import serialization.products.IProductsSerializer;
+import serialization.products.IProductSerializationHeuristic;
 import SLPs.ISLPExtractor;
 import avlTree.IAvlTree;
 import avlTree.IAvlTreeManager;
@@ -34,7 +34,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 	private final IParallelExecutorFactory parallelExecutorFactory;
 	private final IFactorizationIndexer factorizationIndexer;
     private final ISLPExtractor slpExtractor;
-    private IProductsSerializer productsSerializer;
+    private IProductSerializationHeuristic productsSerializer;
 
     public ConcurrencyAvlTreeSLPBuilder(
             IAvlTreeManagerFactory avlTreeManagerFactory,
@@ -42,7 +42,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
     		IParallelExecutorFactory parallelExecutorFactory,
             IFactorizationIndexer factorizationIndexer,
             ISLPExtractor slpExtractor,
-            IProductsSerializer productsSerializer) {
+            IProductSerializationHeuristic productsSerializer) {
         this.avlTreeManagerFactory = avlTreeManagerFactory;
         this.avlTreeSetFactory = avlTreeSetFactory;
 		this.parallelExecutorFactory = parallelExecutorFactory;

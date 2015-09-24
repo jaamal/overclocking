@@ -34,6 +34,7 @@ import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.RunParamKeys;
+import serialization.factors.FactorSerializer;
 import serialization.products.PartialTreeProductsSerializer;
 
 public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
@@ -96,7 +97,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
     }
     
     @Override
-    public IAlgorithmRunner create(IRunParams runParams) {
+    public IAlgorithm create(IRunParams runParams) {
         AlgorithmType algorithmType = runParams.getEnum(AlgorithmType.class, RunParamKeys.AlgorithmType);
         String sourceId = runParams.get(RunParamKeys.SourceId);
         String resultId = runParams.get(RunParamKeys.ResultId);
@@ -121,7 +122,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
                 return createLZWRunner(sourceId, resultId, dataFactoryType, runParams);
             }
             case lz77: {
-                return createLZ77Runner(sourceId, resultId, dataFactoryType, runParams);
+                return createLZ77Runner(sourceId, dataFactoryType, runParams);
             }
             case lzInf: {
                 return createLZInfRunner(sourceId, resultId, dataFactoryType, runParams);
@@ -131,7 +132,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         }
     }
 
-    private IAlgorithmRunner createAvlSlpConcurrent(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
+    private IAlgorithm createAvlSlpConcurrent(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
         final AvlMergePattern defaultAvlMergePattern = AvlMergePattern.sequential;
         AvlMergePattern avlMergePattern = runParams.getOrDefaultEnum(AvlMergePattern.class, RunParamKeys.AvlMergePattern, defaultAvlMergePattern);
         final int defaultThreadCount = 4;
@@ -146,7 +147,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
                 factorsRepositoryFactory, statisticsObjectFactory, sourceId, resultId);
     }
 
-    private IAlgorithmRunner createAvlSlpRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
+    private IAlgorithm createAvlSlpRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
         final AvlMergePattern defaultAvlMergePattern = AvlMergePattern.block;
         final AvlSplitPattern defaultAvlSplitPattern = AvlSplitPattern.fromMerged;
 
@@ -160,32 +161,31 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
                 factorsRepositoryFactory, statisticsObjectFactory, sourceId, resultId);
     }
 
-    private IAlgorithmRunner createCartesianSlpRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
+    private IAlgorithm createCartesianSlpRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
         CartesianTreeManagerFactory cartesianTreeManagerFactory = new CartesianTreeManagerFactory(settings, dataFactoryType);
         CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
         return new CartesianSlpBuildAlgorithmRunner(cartesianSLPTreeBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, 
                 statisticsObjectFactory, sourceId, resultId);
     }
     
-    private IAlgorithmRunner createLZ77Runner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
+    private IAlgorithm createLZ77Runner(String sourceId, DataFactoryType dataFactoryType, IRunParams runParams) {
         final int defaultWindowSize = 32 * 1024;
         int windowSize = runParams.getOrDefaultInt(RunParamKeys.WindowSize, defaultWindowSize);
         
-        return new Lz77AlgorithmRunner(resourceProvider, filesRepository, factorsRepositoryFactory.getLZ77Repository(), factorIteratorFactory, 
-                statisticsObjectFactory, sourceId, resultId, dataFactoryType, windowSize);
+        return new Lz77AlgorithmRunner(resourceProvider, factorIteratorFactory, new FactorSerializer(), sourceId, dataFactoryType, windowSize);
     }
     
-    private IAlgorithmRunner createLZInfRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
+    private IAlgorithm createLZInfRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
         return new LzInfAlgorithmRunner(resourceProvider, filesRepository, factorIteratorFactory, factorsRepositoryFactory.getLZRepository(), 
                  statisticsObjectFactory, sourceId, resultId, dataFactoryType);
     }
     
-    private IAlgorithmRunner createLZWRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
+    private IAlgorithm createLZWRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
         return new LzwAlgorithmRunner(lzwFactorsAnalyzer, resourceProvider, filesRepository, statisticsObjectFactory, 
                 sourceId, resultId, dataFactoryType);
     }
     
-    private IAlgorithmRunner createLCAOnlineRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
+    private IAlgorithm createLCAOnlineRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
         return new LCAOnlineSlpBuildAlgorithmRunner(lcaOnlineCompressor, slpProductsRepository, resourceProvider, filesRepository, 
                 statisticsObjectFactory, new PartialTreeProductsSerializer(), sourceId, resultId, dataFactoryType);
     }

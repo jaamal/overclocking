@@ -2,7 +2,7 @@ package cartesianTree.slpBuilders;
 
 import org.apache.log4j.Logger;
 
-import serialization.products.IProductsSerializer;
+import serialization.products.IProductSerializationHeuristic;
 import SLPs.ISLPExtractor;
 import cartesianTree.ICartesianTree;
 import cartesianTree.ICartesianTreeManager;
@@ -21,12 +21,12 @@ public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     private static Logger logger = Logger.getLogger(CartesianSlpTreeBuilder.class);
     private ICartesianTreeManagerFactory treeManagerFactory;
     private final ISLPExtractor slpExtractor;
-    private final IProductsSerializer productsSerializer;
+    private final IProductSerializationHeuristic productsSerializer;
 
     public CartesianSlpTreeBuilder(
             ICartesianTreeManagerFactory treeManagerFactory,
             ISLPExtractor slpExtractor,
-            IProductsSerializer productsSerializer) {
+            IProductSerializationHeuristic productsSerializer) {
         this.treeManagerFactory = treeManagerFactory;
         this.slpExtractor = slpExtractor;
         this.productsSerializer = productsSerializer;

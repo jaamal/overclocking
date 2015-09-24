@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import commons.utils.StreamHelpers;
 import dataContracts.Product;
 
-public class SimpleProductsSerializer extends AbstractProductsSerializer {
+public class NaiveSerializationHeuristic extends AbstractSerializationHeuristic {
     @Override
     public void serializeProduct(OutputStream stream, int index, Product product) throws IOException {
         if (product.isTerminal) {
@@ -14,8 +14,8 @@ public class SimpleProductsSerializer extends AbstractProductsSerializer {
             StreamHelpers.writeChar(stream, product.symbol);
         } else {
             stream.write(255);
-            writeLong(stream, product.first);
-            writeLong(stream, product.second);
+            StreamHelpers.writeLong(stream, product.first);
+            StreamHelpers.writeLong(stream, product.second);
         }
     }
 
@@ -25,24 +25,10 @@ public class SimpleProductsSerializer extends AbstractProductsSerializer {
         if (b == 0) {
             return new Product(StreamHelpers.readChar(stream));
         } else {
-            long first = readLong(stream);
-            long second = readLong(stream);
+            long first = StreamHelpers.readLong(stream);
+            long second = StreamHelpers.readLong(stream);
             return new Product(first, second);
         }
-    }
-
-    private static void writeLong(OutputStream stream, long value) throws IOException {
-        for (int i = 0; i < 8; ++i) {
-            stream.write((byte) (value & 255));
-            value >>= 8;
-        }
-    }
-
-    private static long readLong(InputStream stream) throws IOException {
-        long result = 0;
-        for (int i = 0; i < 64; i += 8)
-            result |= ((long) readByte(stream)) << i;
-        return result;
     }
 
     private static int readByte(InputStream stream) throws IOException {
@@ -50,5 +36,11 @@ public class SimpleProductsSerializer extends AbstractProductsSerializer {
         if (result == -1)
             throw new IOException("Try to read from empty stream!");
         return result;
+    }
+
+    @Override
+    public byte getSerializerId()
+    {
+        return 1;
     }
 }

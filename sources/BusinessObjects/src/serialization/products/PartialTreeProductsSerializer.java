@@ -11,8 +11,7 @@ import productEnumerator.ProductEnumerator;
 import serialization.primitives.IIntArraySerializer;
 import serialization.primitives.IntArraySerializer;
 
-//TODO: it is very strange that serialization depends on SLPBuilder.
-public class PartialTreeProductsSerializer implements IProductsSerializer {
+public class PartialTreeProductsSerializer implements IProductSerializationHeuristic {
     private final IIntArraySerializer intArraySerializer;
     private static final char MAX_SYMBOL = 256;
 
@@ -20,7 +19,11 @@ public class PartialTreeProductsSerializer implements IProductsSerializer {
         this(new IntArraySerializer());
     }
 
-    public PartialTreeProductsSerializer(IIntArraySerializer intArraySerializer) {
+    public static PartialTreeProductsSerializer create(IIntArraySerializer intArraySerializer) {
+        return new PartialTreeProductsSerializer(intArraySerializer);
+    }
+    
+    private PartialTreeProductsSerializer(IIntArraySerializer intArraySerializer) {
         this.intArraySerializer = intArraySerializer;
     }
 
@@ -37,6 +40,12 @@ public class PartialTreeProductsSerializer implements IProductsSerializer {
     public Product[] deserialize(InputStream stream) throws IOException {
         int[] values = intArraySerializer.deserialize(stream);
         return fromPartialTreeRepresentation(values);
+    }
+    
+    @Override
+    public byte getSerializerId()
+    {
+        return 4;
     }
 
     private static Product[] fromPartialTreeRepresentation(int[] values) {

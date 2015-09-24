@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import commons.utils.StreamHelpers;
 import dataContracts.Product;
 
-public abstract class AbstractProductsSerializer implements IProductsSerializer {
+public abstract class AbstractSerializationHeuristic implements IProductSerializationHeuristic {
     
     protected abstract void serializeProduct(OutputStream stream, int index, Product product) throws IOException;
     protected abstract Product deserializeProduct(InputStream stream, int index) throws IOException;

@@ -6,7 +6,8 @@ import java.io.OutputStream;
 
 import dataContracts.Product;
 
-public interface IProductsSerializer {
+public interface IProductSerializationHeuristic {
+    byte getSerializerId();
     void serialize(OutputStream stream, Product[] products) throws IOException;
     Product[] deserialize(InputStream stream) throws IOException;
 }

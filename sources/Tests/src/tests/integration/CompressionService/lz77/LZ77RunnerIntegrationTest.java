@@ -38,7 +38,7 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         container.get(ISchemeInitializer.class).setUpCluster();
         
         staisticsRepository = container.get(IStatisticsRepository.class);
-        factorsRepository = container.get(IFactorsRepositoryFactory.class).getLZ77Repository();
+        factorsRepository = container.get(IFactorsRepositoryFactory.class).find(AlgorithmType.lz77);
         runParamsFactory = container.get(IRunParamsFactory.class);
         worker = container.get(IWorker.class);
     }

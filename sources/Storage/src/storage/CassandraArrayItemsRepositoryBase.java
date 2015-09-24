@@ -64,7 +64,18 @@ public abstract class CassandraArrayItemsRepositoryBase<T> implements IArrayItem
     @Override
     public void writeAll(String statisticId, T[] items){
         CassandraArrayItemsWriter<T> writer = new CassandraArrayItemsWriter<T>(serializer, keyspace, columnFamily, statisticId, rowListDone);
-        writer.addAll(items);
+        for (int i = 0; i < items.length; i++){
+            writer.add(items[i]);
+        }
+        writer.done();
+    }
+    
+    @Override
+    public void writeAll(String statisticId, List<T> items){
+        CassandraArrayItemsWriter<T> writer = new CassandraArrayItemsWriter<T>(serializer, keyspace, columnFamily, statisticId, rowListDone);
+        for (T item : items) {
+            writer.add(item);
+        }
         writer.done();
     }
 

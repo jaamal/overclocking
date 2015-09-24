@@ -13,6 +13,7 @@ import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 
 import data.charArray.IReadableCharArray;
+import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.IStatistics;
@@ -20,7 +21,7 @@ import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
 
-public class LzInfAlgorithmRunner implements IAlgorithmRunner {
+public class LzInfAlgorithmRunner implements IAlgorithm {
 
     private static Logger logger = LogManager.getLogger(LzInfAlgorithmRunner.class);
 
@@ -83,6 +84,12 @@ public class LzInfAlgorithmRunner implements IAlgorithmRunner {
         if (statistics == null)
             throw new RuntimeException("Statistics is empty since algorithm does not running.");
         return statistics;
+    }
+
+    @Override
+    public AlgorithmType getType()
+    {
+        return AlgorithmType.lzInf;
     }
 }
 

@@ -1,5 +1,6 @@
 package storage.factorsRepository;
 
+import dataContracts.AlgorithmType;
 import serialization.ISerializer;
 import storage.cassandraClient.ICassandraConnectionFactory;
 
@@ -19,8 +20,16 @@ public class FactorsRepositoryFactory implements IFactorsRepositoryFactory {
     }
 
     @Override
-    public IFactorsRepository getLZ77Repository() {
-        return lz77FactorsRepository;
+    public IFactorsRepository find(AlgorithmType algorithmType)
+    {
+        switch (algorithmType) {
+            case lz77:
+                return lz77FactorsRepository;
+            case lzInf:
+                return lzFactorsRepository;
+            default:
+                return null;
+        }
     }
 
 }
