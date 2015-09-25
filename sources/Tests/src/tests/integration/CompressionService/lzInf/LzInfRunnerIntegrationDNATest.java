@@ -37,7 +37,7 @@ public class LzInfRunnerIntegrationDNATest extends StorageTestBase
         
         container.get(ISchemeInitializer.class).setUpCluster();
         statisticsRepository = container.get(IStatisticsRepository.class);
-        factorsRepository = container.get(IFactorsRepositoryFactory.class).getLZRepository();
+        factorsRepository = container.get(IFactorsRepositoryFactory.class).find(AlgorithmType.lzInf);
         runParamsFactory = container.get(IRunParamsFactory.class);
         worker = container.get(IWorker.class);
     }

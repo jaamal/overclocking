@@ -67,12 +67,15 @@ public class Worker implements IWorker
 
             runParams.put(RunParamKeys.ResultId, resultId);
             IAlgorithm algorithm = algorithmRunnersFactory.create(runParams);
-            Duration duration;
+            TimeCounter timeCounter = TimeCounter.start();
+            algorithm.run();
+            Duration duration = timeCounter.finish();
+
             if (algorithm instanceof ICompressionAlgorithm) {
-                duration = runCompressionAlgorithm(sourceId, runParams, (ICompressionAlgorithm) algorithm);
+                postprocessRun(sourceId, runParams, (ICompressionAlgorithm) algorithm);
             }
             else {
-                duration = runAlgorithm(sourceId, runParams, algorithm);
+                postprocessRun(sourceId, runParams, algorithm);
             }
             
             operationalLog.append(requestId, sourceId, String.format("End processing. Duration: %s.", duration));
@@ -84,11 +87,8 @@ public class Worker implements IWorker
         System.gc();
     }
     
-    private Duration runCompressionAlgorithm(String sourceId, IRunParams runParams, ICompressionAlgorithm compressionAlgorithm) {
+    private void postprocessRun(String sourceId, IRunParams runParams, ICompressionAlgorithm compressionAlgorithm) {
         String resultId = runParams.getHashId();
-        TimeCounter timeCounter = TimeCounter.start();
-        compressionAlgorithm.run();
-        Duration duration = timeCounter.finish();
         statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), compressionAlgorithm.getStats().toMap()));
         if (compressionAlgorithm.supportFactorization()) {
             IFactorsRepository factorsRepository = factorsRepositoryFactory.find(compressionAlgorithm.getType());
@@ -96,15 +96,9 @@ public class Worker implements IWorker
                 factorsRepository.writeAll(resultId, compressionAlgorithm.getFactorization());
             }
         }
-        return duration;
     }
     
-    private Duration runAlgorithm(String sourceId, IRunParams runParams, IAlgorithm algorithm) {
-        String resultId = runParams.getHashId();
-        TimeCounter timeCounter = TimeCounter.start();
-        algorithm.run();
-        Duration duration = timeCounter.finish();
-        statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), algorithm.getStats().toMap()));
-        return duration;
+    private void postprocessRun(String sourceId, IRunParams runParams, IAlgorithm algorithm) {
+        statisticsRepository.write(sourceId, statisticsObjectFactory.create(runParams.getHashId(), runParams.toMap(), algorithm.getStats().toMap()));
     }
 }

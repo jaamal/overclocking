@@ -36,7 +36,7 @@ public class StatsExporter implements IStatsExporter {
             statisticsConverter.append(stats);
         }
         
-        IFactorsRepository lzFactorsRepository = factorsRepositoryFactory.getLZRepository();
+        IFactorsRepository lzFactorsRepository = factorsRepositoryFactory.find(AlgorithmType.lzInf);
         Iterable<String> factorizationIds = lzFactorsRepository.getDoneStatisticIds();
         for (String factorizationId : factorizationIds) {
             StatisticsObject[] stats = statisticsRepository.readAll(factorizationId);

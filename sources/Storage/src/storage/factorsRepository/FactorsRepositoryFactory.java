@@ -13,11 +13,6 @@ public class FactorsRepositoryFactory implements IFactorsRepositoryFactory {
         lzFactorsRepository = new LZFactorsRepository(serializer, cassandraConnectionFactory);
         lz77FactorsRepository = new LZ77FactorsRepository(serializer, cassandraConnectionFactory);
     }
-    
-    @Override
-    public IFactorsRepository getLZRepository() {
-        return lzFactorsRepository;
-    }
 
     @Override
     public IFactorsRepository find(AlgorithmType algorithmType)

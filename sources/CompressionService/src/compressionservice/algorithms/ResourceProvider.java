@@ -15,6 +15,7 @@ import storage.filesRepository.IFilesRepository;
 import data.IDataFactory;
 import data.charArray.IReadableCharArray;
 import data.filters.IFileFilter;
+import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.files.FileMetadata;
@@ -35,7 +36,7 @@ public class ResourceProvider implements IResourceProvider {
         this.dataFactory = dataFactory;
         this.filesRepository = filesRepository;
         this.fileFilter = fileFilter;
-        factorsRepository = factorsRepositoryFactory.getLZRepository();
+        factorsRepository = factorsRepositoryFactory.find(AlgorithmType.lzInf);
     }
     
     @Override

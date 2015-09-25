@@ -9,27 +9,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import org.junit.Test;
-
+import dataContracts.AlgorithmType;
+import dataContracts.AvlMergePattern;
+import dataContracts.AvlSplitPattern;
+import dataContracts.DataFactoryType;
+import dataContracts.files.FileMetadata;
+import dataContracts.statistics.RunParamKeys;
+import dataContracts.statistics.StatisticKeys;
+import dataContracts.statistics.StatisticsObject;
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.LZ77FactorsRepository;
 import storage.factorsRepository.LZFactorsRepository;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.SlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
-import dataContracts.AlgorithmType;
-import dataContracts.AvlMergePattern;
-import dataContracts.AvlSplitPattern;
-import dataContracts.DataFactoryType;
-import dataContracts.FactorDef;
-import dataContracts.files.FileMetadata;
-import dataContracts.statistics.RunParamKeys;
-import dataContracts.statistics.StatisticKeys;
-import dataContracts.statistics.StatisticsObject;
 
 public class ReadStatisticsFromProductionTest extends ProductionTestBase {
     private IStatisticsRepository statisticsRepository;
@@ -66,40 +62,7 @@ public class ReadStatisticsFromProductionTest extends ProductionTestBase {
     }
 
     @Test
-    public void testCalculateFactorizationByteSize() {
-        String[] fileIds = fileRepository.getFileIds().toArray(new String[0]);;
-        System.out.println(String.format("Total file count %d", fileIds.length));
-        HashMap<String, StatisticsObject[]> statsBySourceId = statisticsRepository.readAll(fileIds);
-        for (Map.Entry<String, StatisticsObject[]> entry : statsBySourceId.entrySet()) {
-            String fileId = entry.getKey();
-            for (StatisticsObject obj : entry.getValue()) {
-                String algorithmKey = getAlgorithmKey(obj.runningParameters);
-                System.out.println(String.format("fileId %s, algorithmKey '%s', statisticsId %s", fileId, algorithmKey, obj.getId()));
-
-                if (obj.statistics.containsKey(StatisticKeys.FactorizationByteSize)) {
-                    System.out.println("Skipped");
-                    continue;
-                }
-                if (algorithmKey.equals(Algorithms.LZ77InMemory.key)) {
-                    List<FactorDef> factors = lz77FactorsRepository.readAll(obj.getId());
-                    long byteSize = FactorDef.SIZE_IN_BYTES * factors.size();
-                    obj.statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
-                    statisticsRepository.write(fileId, obj);
-                } else if (algorithmKey.equals(Algorithms.LZInfInMemory.key)) {
-                    List<FactorDef> factors = factorsRepository.readAll(obj.getId());
-                    long byteSize = FactorDef.SIZE_IN_BYTES * factors.size();
-                    obj.statistics.put(StatisticKeys.FactorizationByteSize, String.valueOf(byteSize));
-                    statisticsRepository.write(fileId, obj);
-                } else
-                    System.out.println("Skipped");
-            }
-        }
-    }
-
-
-    @Test
     public void test() {
-
         String[] fileIds = fileRepository.getFileIds().toArray(new String[0]);;
         System.out.println(String.format("Total file count %d", fileIds.length));
         HashMap<String, StatisticsObject[]> statsBySourceId = statisticsRepository.readAll(fileIds);

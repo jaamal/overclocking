@@ -1,8 +1,5 @@
 package compressionservice.algorithms;
 
-import storage.factorsRepository.IFactorsRepositoryFactory;
-import storage.filesRepository.IFilesRepository;
-import storage.slpProductsRepository.ISlpProductsRepository;
 import SLPs.ConcurrentSLPExtractor;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
@@ -21,21 +18,22 @@ import avlTree.slpBuilders.ParallelExecutorFactory;
 import avlTree.treeSets.AvlTreeSetFactory;
 import cartesianTree.CartesianTreeManagerFactory;
 import cartesianTree.slpBuilders.CartesianSlpTreeBuilder;
-
 import commons.settings.ISettings;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
 import compressionservice.algorithms.lzw.ILZWFactorsAnalyzer;
 import compressionservice.runner.parameters.IRunParams;
-
 import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.RunParamKeys;
-import serialization.factors.FactorSerializer;
+import serialization.factors.IFactorSerializer;
 import serialization.products.PartialTreeProductsSerializer;
+import storage.factorsRepository.IFactorsRepositoryFactory;
+import storage.filesRepository.IFilesRepository;
+import storage.slpProductsRepository.ISlpProductsRepository;
 
 public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
 
@@ -50,6 +48,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
     private ILZWFactorsAnalyzer lzwFactorsAnalyzer;
     private IFactorIteratorFactory factorIteratorFactory;
     private IStatisticsObjectFactory statisticsObjectFactory;
+    private IFactorSerializer factorSerializer;
 
     public AlgorithmRunnersFactory(
             ISettings settings,
@@ -62,7 +61,8 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
             IFilesRepository filesRepository,
             ILZWFactorsAnalyzer lzwFactorsAnalyzer,
             IFactorIteratorFactory factorIteratorFactory,
-            IStatisticsObjectFactory statisticsObjectFactory) {
+            IStatisticsObjectFactory statisticsObjectFactory,
+            IFactorSerializer factorSerializer) {
         this.settings = settings;
         this.avlTreeArrayMergerFactory = avlTreeArrayMergerFactory;
         this.slpProductsRepository = slpProductsRepository;
@@ -74,6 +74,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         this.lzwFactorsAnalyzer = lzwFactorsAnalyzer;
         this.factorIteratorFactory = factorIteratorFactory;
         this.statisticsObjectFactory = statisticsObjectFactory;
+        this.factorSerializer = factorSerializer;
     }
 
     @Override
@@ -83,7 +84,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
             case avlSlpConcurrent: 
             case avlSlp:
             case cartesianSlp: {
-                return factorsRepositoryFactory.getLZRepository().getDoneStatisticIds();
+                return factorsRepositoryFactory.find(AlgorithmType.lzInf).getDoneStatisticIds();
             }
             case lzw: 
             case lz77: 
@@ -125,7 +126,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
                 return createLZ77Runner(sourceId, dataFactoryType, runParams);
             }
             case lzInf: {
-                return createLZInfRunner(sourceId, resultId, dataFactoryType, runParams);
+                return createLZInfRunner(sourceId, dataFactoryType, runParams);
             }
             default:
                 throw new RuntimeException(String.format("Algorithm of type %s is not supported", algorithmType));
@@ -172,12 +173,11 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         final int defaultWindowSize = 32 * 1024;
         int windowSize = runParams.getOrDefaultInt(RunParamKeys.WindowSize, defaultWindowSize);
         
-        return new Lz77AlgorithmRunner(resourceProvider, factorIteratorFactory, new FactorSerializer(), sourceId, dataFactoryType, windowSize);
+        return new Lz77AlgorithmRunner(resourceProvider, factorIteratorFactory, factorSerializer, sourceId, dataFactoryType, windowSize);
     }
     
-    private IAlgorithm createLZInfRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
-        return new LzInfAlgorithmRunner(resourceProvider, filesRepository, factorIteratorFactory, factorsRepositoryFactory.getLZRepository(), 
-                 statisticsObjectFactory, sourceId, resultId, dataFactoryType);
+    private IAlgorithm createLZInfRunner(String sourceId, DataFactoryType dataFactoryType, IRunParams runParams) {
+        return new LzInfAlgorithmRunner(resourceProvider, factorIteratorFactory, factorSerializer, sourceId, dataFactoryType);
     }
     
     private IAlgorithm createLZWRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {

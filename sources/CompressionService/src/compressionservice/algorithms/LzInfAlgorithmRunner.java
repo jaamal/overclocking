@@ -1,67 +1,61 @@
 package compressionservice.algorithms;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-
-import storage.factorsRepository.IFactorsRepository;
-import storage.filesRepository.IFilesRepository;
-
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.factorization.IFactorIterator;
 import compressionservice.algorithms.factorization.IFactorIteratorFactory;
-
 import data.charArray.IReadableCharArray;
 import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.IStatistics;
-import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
+import serialization.factors.IFactorSerializer;
 
-public class LzInfAlgorithmRunner implements IAlgorithm {
+public class LzInfAlgorithmRunner extends Algorithm implements ICompressionAlgorithm {
 
     private static Logger logger = LogManager.getLogger(LzInfAlgorithmRunner.class);
 
     private final IResourceProvider resourceProvider;
     private final IFactorIteratorFactory factorIteratorFactory;
-    private final IFactorsRepository factorsRepository;
+    private final IFactorSerializer factorSerializer;
     private final String sourceId;
-    private final String resultId;
     private final DataFactoryType dataFactoryType;
     IStatistics statistics;
+    ArrayList<FactorDef> factorization;
 
     public LzInfAlgorithmRunner(
             IResourceProvider resourceProvider,
-            IFilesRepository filesRepository,
             IFactorIteratorFactory factorIteratorFactory,
-            IFactorsRepository factorsRepository,
-            IStatisticsObjectFactory statisticsObjectFactory,
+            IFactorSerializer factorSerializer,
             String sourceId,
-            String resultId,
             DataFactoryType dataFactoryType) {
         this.resourceProvider = resourceProvider;
         this.factorIteratorFactory = factorIteratorFactory;
-        this.factorsRepository = factorsRepository;
+        this.factorSerializer = factorSerializer;
         this.sourceId = sourceId;
-        this.resultId = resultId;
         this.dataFactoryType = dataFactoryType;
     }
-
+    
     @Override
-    public void run() {
+    protected void runInternal()
+    {
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             TimeCounter timeCounter = TimeCounter.start();
-            ArrayList<FactorDef> factors = new ArrayList<>();
+            factorization = new ArrayList<>();
             try (IFactorIterator factorIterator = factorIteratorFactory.createInfiniteIterator(source, dataFactoryType)) {
                 while (factorIterator.any()) {
-                    if (factors.size() % 10000 == 0)
-                        logger.info(String.format("Produced %d factors", factors.size()));
+                    if (factorization.size() % 10000 == 0)
+                        logger.info(String.format("Produced %d factors", factorization.size()));
 
                     FactorDef factor = factorIterator.next();
-                    factors.add(factor);
+                    factorization.add(factor);
                 }
             } catch (Exception e) {
                 logger.error(String.format("Fail to run lzInf algorithm."), e);
@@ -70,19 +64,16 @@ public class LzInfAlgorithmRunner implements IAlgorithm {
 
             statistics = new Statistics();
             statistics.putParam(StatisticKeys.SourceLength, String.valueOf(source.length()));
-            statistics.putParam(StatisticKeys.FactorizationLength, String.valueOf(factors.size()));
+            statistics.putParam(StatisticKeys.FactorizationLength, String.valueOf(factorization.size()));
             statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(FactorDef.SIZE_IN_BYTES * factors.size()));
-
-            factorsRepository.writeAll(resultId, factors.toArray(new FactorDef[0]));
+            statistics.putParam(StatisticKeys.FactorizationByteSize, String.valueOf(factorSerializer.calcSizeInBytes(factorization)));
         }
     }
-    
+
     @Override
     public IStatistics getStats()
     {
-        if (statistics == null)
-            throw new RuntimeException("Statistics is empty since algorithm does not running.");
+        checkIsFinished();
         return statistics;
     }
 
@@ -90,6 +81,33 @@ public class LzInfAlgorithmRunner implements IAlgorithm {
     public AlgorithmType getType()
     {
         return AlgorithmType.lzInf;
+    }
+
+    @Override
+    public byte[] getCompressedRepresentation()
+    {
+        checkIsFinished();
+        
+        try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            factorSerializer.serialize(stream, factorization.toArray(new FactorDef[0]));
+            return stream.toByteArray();
+        }
+        catch (IOException ex) {
+            throw new RuntimeException("Fail to serialize factorization.", ex);
+        }
+    }
+
+    @Override
+    public boolean supportFactorization()
+    {
+        return true;
+    }
+
+    @Override
+    public List<FactorDef> getFactorization()
+    {
+        checkIsFinished();
+        return factorization;
     }
 }
 
