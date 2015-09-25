@@ -1,11 +1,7 @@
 package tests.integration.Trees.cartesianTree;
 
-import helpers.FactorizationScenarios;
-import serialization.products.PartialTreeProductsSerializer;
 import org.junit.Assert;
 import org.junit.Test;
-
-import tests.integration.IntegrationTestBase;
 import SLPs.SLPExtractor;
 import cartesianTree.CartesianTreeManagerFactory;
 import cartesianTree.slpBuilders.CartesianSlpTreeBuilder;
@@ -15,6 +11,9 @@ import dataContracts.DataFactoryType;
 import dataContracts.LZFactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.Statistics;
+import helpers.FactorizationScenarios;
+import serialization.products.IProductSerializer;
+import tests.integration.IntegrationTestBase;
 
 public class CartesianSLPBuilderTests extends IntegrationTestBase {
 
@@ -22,7 +21,8 @@ public class CartesianSLPBuilderTests extends IntegrationTestBase {
     public void test() {
         LZFactorDef[] factors = FactorizationScenarios.generate(200000);
         
-        ICartesianSlpTreeBuilder slpTreeBuilder = new CartesianSlpTreeBuilder(new CartesianTreeManagerFactory(container.get(ISettings.class), DataFactoryType.memory), new SLPExtractor(), new PartialTreeProductsSerializer());
+        IProductSerializer productSerializer = container.get(IProductSerializer.class);
+        ICartesianSlpTreeBuilder slpTreeBuilder = new CartesianSlpTreeBuilder(new CartesianTreeManagerFactory(container.get(ISettings.class), DataFactoryType.memory), new SLPExtractor(), productSerializer);
         SLPModel slpModel = slpTreeBuilder.buildSlp(factors, new Statistics());
         String expected = FactorizationScenarios.stringify(factors);
         String actuals = slpModel.toString();

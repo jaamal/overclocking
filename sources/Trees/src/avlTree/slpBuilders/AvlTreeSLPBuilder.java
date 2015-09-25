@@ -2,8 +2,6 @@ package avlTree.slpBuilders;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-
-import serialization.products.IProductSerializationHeuristic;
 import SLPs.ISLPExtractor;
 import avlTree.IAvlTree;
 import avlTree.IAvlTreeManager;
@@ -15,14 +13,13 @@ import avlTree.helpers.IAvlTreeArrayMergeCounter;
 import avlTree.helpers.IRebalancingCounter;
 import avlTree.helpers.NodesCacheStatisticsCounter;
 import avlTree.helpers.RebalancingCounter;
-
 import commons.utils.TimeCounter;
-
 import dataContracts.FactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
 import productEnumerator.IProductEnumerator;
+import serialization.products.IProductSerializer;
 
 public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     private static final Logger log = LogManager.getLogger(AvlTreeSLPBuilder.class);
@@ -30,13 +27,13 @@ public class AvlTreeSLPBuilder implements IAvlTreeSLPBuilder {
     private IAvlTreeManagerFactory avlTreeManagerFactory;
     private IAvlTreeBufferFactory avlTreeBufferFactory;
     private final ISLPExtractor slpExtractor;
-    private IProductSerializationHeuristic productsSerializer;
+    private IProductSerializer productsSerializer;
 
     public AvlTreeSLPBuilder(
             IAvlTreeManagerFactory avlTreeManagerFactory,
             IAvlTreeBufferFactory avlTreeBufferFactory,
             ISLPExtractor slpExtractor,
-            IProductSerializationHeuristic productsSerializer) {
+            IProductSerializer productsSerializer) {
         this.avlTreeManagerFactory = avlTreeManagerFactory;
         this.avlTreeBufferFactory = avlTreeBufferFactory;
         this.slpExtractor = slpExtractor;

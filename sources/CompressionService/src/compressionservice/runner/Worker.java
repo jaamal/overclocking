@@ -6,13 +6,15 @@ import org.apache.log4j.Logger;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.IAlgorithm;
 import compressionservice.algorithms.IAlgorithmsFactory;
-import compressionservice.algorithms.ICompressionAlgorithm;
+import compressionservice.algorithms.IFactorizationCompressionAlgorithm;
+import compressionservice.algorithms.ISlpCompressionAlgorithm;
 import compressionservice.runner.parameters.IRunParams;
 import compressionservice.runner.state.ITaskOperationalLog;
 import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.RunParamKeys;
 import storage.factorsRepository.IFactorsRepository;
 import storage.factorsRepository.IFactorsRepositoryFactory;
+import storage.slpProductsRepository.ISlpProductsRepository;
 import storage.statistics.IStatisticsRepository;
 
 public class Worker implements IWorker
@@ -24,17 +26,20 @@ public class Worker implements IWorker
     private IStatisticsObjectFactory statisticsObjectFactory;
     private ITaskOperationalLog operationalLog;
     private IFactorsRepositoryFactory factorsRepositoryFactory;
+    private ISlpProductsRepository slpProductsRepository;
 
     public Worker(
             IAlgorithmsFactory algorithmRunnersFactory,
             IStatisticsRepository statisticsRepository,
             IStatisticsObjectFactory statisticsObjectFactory,
             IFactorsRepositoryFactory factorsRepositoryFactory,
+            ISlpProductsRepository slpProductsRepository,
             ITaskOperationalLog operationalLog) {
         this.algorithmRunnersFactory = algorithmRunnersFactory;
         this.statisticsRepository = statisticsRepository;
         this.statisticsObjectFactory = statisticsObjectFactory;
         this.factorsRepositoryFactory = factorsRepositoryFactory;
+        this.slpProductsRepository = slpProductsRepository;
         this.operationalLog = operationalLog;
     }
     
@@ -71,8 +76,11 @@ public class Worker implements IWorker
             algorithm.run();
             Duration duration = timeCounter.finish();
 
-            if (algorithm instanceof ICompressionAlgorithm) {
-                postprocessRun(sourceId, runParams, (ICompressionAlgorithm) algorithm);
+            if (algorithm instanceof IFactorizationCompressionAlgorithm) {
+                postprocessRun(sourceId, runParams, (IFactorizationCompressionAlgorithm) algorithm);
+            }
+            if (algorithm instanceof ISlpCompressionAlgorithm) {
+                postprocessRun(sourceId, runParams, (ISlpCompressionAlgorithm) algorithm);
             }
             else {
                 postprocessRun(sourceId, runParams, algorithm);
@@ -87,15 +95,21 @@ public class Worker implements IWorker
         System.gc();
     }
     
-    private void postprocessRun(String sourceId, IRunParams runParams, ICompressionAlgorithm compressionAlgorithm) {
+    private void postprocessRun(String sourceId, IRunParams runParams, IFactorizationCompressionAlgorithm algorithm) {
         String resultId = runParams.getHashId();
-        statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), compressionAlgorithm.getStats().toMap()));
-        if (compressionAlgorithm.supportFactorization()) {
-            IFactorsRepository factorsRepository = factorsRepositoryFactory.find(compressionAlgorithm.getType());
+        statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), algorithm.getStats().toMap()));
+        if (algorithm.supportFactorization()) {
+            IFactorsRepository factorsRepository = factorsRepositoryFactory.find(algorithm.getType());
             if (factorsRepository != null) {
-                factorsRepository.writeAll(resultId, compressionAlgorithm.getFactorization());
+                factorsRepository.writeAll(resultId, algorithm.getFactorization());
             }
         }
+    }
+    
+    private void postprocessRun(String sourceId, IRunParams runParams, ISlpCompressionAlgorithm algorithm) {
+        String resultId = runParams.getHashId();
+        statisticsRepository.write(sourceId, statisticsObjectFactory.create(resultId, runParams.toMap(), algorithm.getStats().toMap()));
+        slpProductsRepository.writeAll(resultId, algorithm.getSlp());
     }
     
     private void postprocessRun(String sourceId, IRunParams runParams, IAlgorithm algorithm) {

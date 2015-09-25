@@ -53,4 +53,32 @@ public class ProductSerializer implements IProductSerializer
 
         return heuristic.deserialize(stream);
     }
+    
+    @Override
+    public long calcSizeInBytes(Product[] products)
+    {
+        try {
+            IProductSerializationHeuristic optimalHeuristic = null;
+            return chooseOptimalHeuristic(products, optimalHeuristic);
+        }
+        catch (IOException ex) {
+            throw new RuntimeException("Fail to calculate products size.", ex);
+        }
+    }
+    
+    private long chooseOptimalHeuristic(Product[] products, IProductSerializationHeuristic optimalHeuristic) throws IOException {
+        long minSerializedSize = Long.MAX_VALUE;
+        for (int i = 0; i < heuristics.length; i++) {
+            long currentSerializedSize;
+            try (LengthCalculatorOutputStream fakeOutputStream = new LengthCalculatorOutputStream()) {
+                heuristics[i].serialize(fakeOutputStream, products);
+                currentSerializedSize = fakeOutputStream.getLengthInBytes();
+            }
+            if (currentSerializedSize < minSerializedSize) {
+                minSerializedSize = currentSerializedSize;
+                optimalHeuristic = heuristics[i];
+            }
+        }
+        return minSerializedSize;
+    }
 }

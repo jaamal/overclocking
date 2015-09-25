@@ -1,15 +1,12 @@
 package dataContracts;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-
-import serialization.products.IProductSerializationHeuristic;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
+import serialization.products.IProductSerializer;
 
 //TODO: test this class
 //TODO: verify name of class
@@ -53,19 +50,13 @@ public class SLPModel
         return sortedProducts;
     }
     
-    public void appendStats(IStatistics to, IProductSerializationHeuristic productsSerializer) {
+    public void appendStats(IStatistics to, IProductSerializer productsSerializer) {
         SLPStatistics stats = calcStats();
         to.putParam(StatisticKeys.SlpWidth, stats.length);
         to.putParam(StatisticKeys.SlpHeight, stats.height);
         to.putParam(StatisticKeys.SlpCountRules, stats.countRules);
-        
         Product[] products = toNormalForm();
-        try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-            productsSerializer.serialize(stream, products);
-            to.putParam(StatisticKeys.SlpByteSize, stream.size());
-        } catch (IOException e) {
-            throw new RuntimeException("Fail to serialize products.", e);
-        }
+        to.putParam(StatisticKeys.SlpByteSize, productsSerializer.calcSizeInBytes(products));
     }
     
     public SLPStatistics calcStats() {

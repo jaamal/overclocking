@@ -1,12 +1,10 @@
 package compressionservice.algorithms;
 
-import java.util.List;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.lzw.ILZWFactorsAnalyzer;
 import data.charArray.IReadableCharArray;
 import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
-import dataContracts.FactorDef;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
@@ -64,17 +62,5 @@ public class LzwAlgorithm extends Algorithm implements ICompressionAlgorithm {
     {
         // TODO Implement factorization
         return new byte[0];
-    }
-
-    @Override
-    public boolean supportFactorization()
-    {
-        return false;
-    }
-
-    @Override
-    public List<FactorDef> getFactorization()
-    {
-        return null;
     }
 }

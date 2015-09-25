@@ -29,7 +29,7 @@ import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.statistics.RunParamKeys;
 import serialization.factors.IFactorSerializer;
-import serialization.products.PartialTreeProductsSerializer;
+import serialization.products.IProductSerializer;
 import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
@@ -47,6 +47,7 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
     private ILZWFactorsAnalyzer lzwFactorsAnalyzer;
     private IFactorIteratorFactory factorIteratorFactory;
     private IFactorSerializer factorSerializer;
+    private IProductSerializer productSerializer;
 
     public AlgorithmsFactory(
             ISettings settings,
@@ -59,7 +60,8 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
             IFilesRepository filesRepository,
             ILZWFactorsAnalyzer lzwFactorsAnalyzer,
             IFactorIteratorFactory factorIteratorFactory,
-            IFactorSerializer factorSerializer) {
+            IFactorSerializer factorSerializer,
+            IProductSerializer productSerializer) {
         this.settings = settings;
         this.avlTreeArrayMergerFactory = avlTreeArrayMergerFactory;
         this.slpProductsRepository = slpProductsRepository;
@@ -71,6 +73,7 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
         this.lzwFactorsAnalyzer = lzwFactorsAnalyzer;
         this.factorIteratorFactory = factorIteratorFactory;
         this.factorSerializer = factorSerializer;
+        this.productSerializer = productSerializer;
     }
 
     @Override
@@ -113,7 +116,7 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
                 return createCartesianSlpRunner(sourceId, resultId, dataFactoryType, runParams);
             }
             case lcaOnlineSlp: {
-                return createLCAOnlineRunner(sourceId, resultId, dataFactoryType, runParams);
+                return createLCAOnlineRunner(sourceId, dataFactoryType, runParams);
             }
             case lzw: {
                 return createLZWRunner(sourceId, dataFactoryType, runParams);
@@ -139,7 +142,7 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
         IAvlTreeManagerFactory avlTreeManagerFactory = new ConcurrentAvlTreeManagerFactory(dataFactoryType);
         IParallelExecutorFactory parallelExecutorFactory = new ParallelExecutorFactory(threadCount);
         ConcurrentSLPExtractor slpExtractor = new ConcurrentSLPExtractor(threadCount);
-        IConcurrencyAvlTreeSLPBuilder concurrencyAvlTreeSLPBuilder = new ConcurrencyAvlTreeSLPBuilder(avlTreeManagerFactory, new AvlTreeSetFactory(avlTreeArrayMerger), parallelExecutorFactory, factorizationIndexer, slpExtractor, new PartialTreeProductsSerializer());
+        IConcurrencyAvlTreeSLPBuilder concurrencyAvlTreeSLPBuilder = new ConcurrencyAvlTreeSLPBuilder(avlTreeManagerFactory, new AvlTreeSetFactory(avlTreeArrayMerger), parallelExecutorFactory, factorizationIndexer, slpExtractor, productSerializer);
         return new ConcurrencyAvlSlpBuildAlgorithmRunner(concurrencyAvlTreeSLPBuilder, slpProductsRepository, resourceProvider, sourceId, resultId);
     }
 
@@ -152,13 +155,13 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
         
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(settings, dataFactoryType);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(avlTreeArrayMergerFactory, avlMergePattern, avlSplitPattern);
-        IAvlTreeSLPBuilder avlTreeSLPBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
+        IAvlTreeSLPBuilder avlTreeSLPBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), productSerializer);
         return new AvlSlpBuildAlgorithmRunner(avlTreeSLPBuilder, slpProductsRepository, resourceProvider, sourceId, resultId);
     }
 
     private IAlgorithm createCartesianSlpRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
         CartesianTreeManagerFactory cartesianTreeManagerFactory = new CartesianTreeManagerFactory(settings, dataFactoryType);
-        CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
+        CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), productSerializer);
         return new CartesianSlpBuildAlgorithmRunner(cartesianSLPTreeBuilder, slpProductsRepository, resourceProvider, sourceId, resultId);
     }
     
@@ -177,8 +180,7 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
         return new LzwAlgorithm(lzwFactorsAnalyzer, resourceProvider, sourceId, dataFactoryType);
     }
     
-    private IAlgorithm createLCAOnlineRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
-        return new LCAOnlineSlpBuildAlgorithmRunner(lcaOnlineCompressor, slpProductsRepository, resourceProvider, 
-                new PartialTreeProductsSerializer(), sourceId, resultId, dataFactoryType);
+    private IAlgorithm createLCAOnlineRunner(String sourceId, DataFactoryType dataFactoryType, IRunParams runParams) {
+        return new LCAOnlineAlgorithm(lcaOnlineCompressor, resourceProvider, productSerializer, sourceId, dataFactoryType);
     }
 }

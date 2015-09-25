@@ -18,7 +18,7 @@ import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
 import serialization.factors.IFactorSerializer;
 
-public class LzInfAlgorithm extends Algorithm implements ICompressionAlgorithm {
+public class LzInfAlgorithm extends Algorithm implements IFactorizationCompressionAlgorithm {
 
     private static Logger logger = LogManager.getLogger(LzInfAlgorithm.class);
 

@@ -19,7 +19,7 @@ import dataContracts.FactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.Statistics;
 import overclocking.jrobocontainer.container.IContainer;
-import serialization.products.PartialTreeProductsSerializer;
+import serialization.products.IProductSerializer;
 
 public class SlpScenarios
 {
@@ -40,7 +40,8 @@ public class SlpScenarios
 
             IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);
             AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.sequential, AvlSplitPattern.fromMerged);
-            AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
+            IProductSerializer productSerializer = container.get(IProductSerializer.class);
+            AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), productSerializer);
             return builder.buildSlp(factorization.toArray(new FactorDef[0]), new Statistics());
         }
     }

@@ -1,32 +1,29 @@
 package cartesianTree.slpBuilders;
 
 import org.apache.log4j.Logger;
-
-import serialization.products.IProductSerializationHeuristic;
 import SLPs.ISLPExtractor;
 import cartesianTree.ICartesianTree;
 import cartesianTree.ICartesianTreeManager;
 import cartesianTree.ICartesianTreeManagerFactory;
-
 import commons.utils.TimeCounter;
-
 import dataContracts.FactorDef;
 import dataContracts.SLPModel;
 import dataContracts.SLPStatistics;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
 import productEnumerator.IProductEnumerator;
+import serialization.products.IProductSerializer;
 
 public class CartesianSlpTreeBuilder implements ICartesianSlpTreeBuilder {
     private static Logger logger = Logger.getLogger(CartesianSlpTreeBuilder.class);
     private ICartesianTreeManagerFactory treeManagerFactory;
     private final ISLPExtractor slpExtractor;
-    private final IProductSerializationHeuristic productsSerializer;
+    private final IProductSerializer productsSerializer;
 
     public CartesianSlpTreeBuilder(
             ICartesianTreeManagerFactory treeManagerFactory,
             ISLPExtractor slpExtractor,
-            IProductSerializationHeuristic productsSerializer) {
+            IProductSerializer productsSerializer) {
         this.treeManagerFactory = treeManagerFactory;
         this.slpExtractor = slpExtractor;
         this.productsSerializer = productsSerializer;

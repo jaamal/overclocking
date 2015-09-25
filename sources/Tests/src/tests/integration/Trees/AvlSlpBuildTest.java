@@ -1,10 +1,7 @@
 package tests.integration.Trees;
 
 import java.util.ArrayList;
-
 import org.junit.Test;
-
-import tests.integration.IntegrationTestBase;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
@@ -21,7 +18,8 @@ import dataContracts.DataFactoryType;
 import dataContracts.FactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.Statistics;
-import serialization.products.PartialTreeProductsSerializer;
+import serialization.products.IProductSerializer;
+import tests.integration.IntegrationTestBase;
 
 public class AvlSlpBuildTest extends IntegrationTestBase {
 
@@ -30,7 +28,8 @@ public class AvlSlpBuildTest extends IntegrationTestBase {
     {
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.block, AvlSplitPattern.fromFirst);
-        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
+        IProductSerializer productSerializer = container.get(IProductSerializer.class);
+        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), productSerializer);
         SLPModel slpModel = builder.buildSlp(getFactorization("abacaba"), new Statistics());
         System.out.println(slpModel.calcStats().countRules);
     }

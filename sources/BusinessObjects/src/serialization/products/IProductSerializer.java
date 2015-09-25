@@ -9,4 +9,5 @@ public interface IProductSerializer
 {
     void serialize(OutputStream stream, Product[] products) throws IOException;
     Product[] deserialize(InputStream stream) throws IOException;
+    long calcSizeInBytes(Product[] products);
 }

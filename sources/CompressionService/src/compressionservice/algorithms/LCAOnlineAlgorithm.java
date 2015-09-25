@@ -1,5 +1,7 @@
 package compressionservice.algorithms;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import org.apache.log4j.Logger;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
@@ -12,63 +14,54 @@ import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
 import productEnumerator.IProductEnumerator;
-import serialization.products.IProductSerializationHeuristic;
-import storage.slpProductsRepository.ISlpProductsRepository;
+import serialization.products.IProductSerializer;
 
-public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithm {
+public class LCAOnlineAlgorithm extends Algorithm implements ISlpCompressionAlgorithm {
 
-    private static Logger logger = Logger.getLogger(LCAOnlineSlpBuildAlgorithmRunner.class);
+    private static Logger logger = Logger.getLogger(LCAOnlineAlgorithm.class);
 
     private final ILCAOnlineCompressor lcaOnlineCompressor;
-    private final ISlpProductsRepository slpProductsRepository;
     private final IResourceProvider resourceProvider;
-    private final IProductSerializationHeuristic productsSerializer;
+    private final IProductSerializer productsSerializer;
     private final String sourceId;
-    private final String resultId;
     private final DataFactoryType dataFactoryType;
     IStatistics statistics;
+    SLPModel slpModel;
 
-    public LCAOnlineSlpBuildAlgorithmRunner(
+    public LCAOnlineAlgorithm(
             ILCAOnlineCompressor lcaOnlineCompressor,
-            ISlpProductsRepository slpProductsRepository,
             IResourceProvider resourceProvider,
-            IProductSerializationHeuristic productsSerializer,
+            IProductSerializer productsSerializer,
             String sourceId,
-            String resultId,
             DataFactoryType dataFactoryType) {
         this.lcaOnlineCompressor = lcaOnlineCompressor;
-        this.slpProductsRepository = slpProductsRepository;
         this.resourceProvider = resourceProvider;
         this.productsSerializer = productsSerializer;
         this.sourceId = sourceId;
-        this.resultId = resultId;
         this.dataFactoryType = dataFactoryType;
     }
 
     @Override
-    public void run() {
+    protected void runInternal()
+    {
         try (IReadableCharArray source = resourceProvider.getText(sourceId, dataFactoryType)) {
             logger.info("Source file size is " + source.length());
             TimeCounter timeCounter = TimeCounter.start();
-            IProductEnumerator slpBuilder = lcaOnlineCompressor.buildSLP(source);
+            IProductEnumerator productEnumerator = lcaOnlineCompressor.buildSLP(source);
             timeCounter.finish();
             logger.info(String.format("Finish slpBuilding. Total time is about %d minutes", timeCounter.getMillis() / 60 / 1000));
             
-            SLPModel slpModel = slpBuilder.toSLPModel();
+            slpModel = productEnumerator.toSLPModel();
             statistics = new Statistics();
             statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
             slpModel.appendStats(statistics, productsSerializer);
-
-            Product[] products = slpModel.toNormalForm();
-            slpProductsRepository.writeAll(resultId, products);
         }
     }
     
     @Override
     public IStatistics getStats()
     {
-        if (statistics == null)
-            throw new RuntimeException("Statistics is empty since algorithm does not running.");
+         checkIsFinished();
         return statistics;
     }
 
@@ -76,5 +69,25 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithm {
     public AlgorithmType getType()
     {
         return AlgorithmType.lcaOnlineSlp;
+    }
+
+    @Override
+    public byte[] getCompressedRepresentation()
+    {
+        checkIsFinished();
+        try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            productsSerializer.serialize(stream, getSlp());
+            return stream.toByteArray();
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Fail to build slp compressed representation", e);
+        }
+    }
+
+    @Override
+    public Product[] getSlp()
+    {
+        checkIsFinished();
+        return slpModel.toNormalForm();
     }
 }

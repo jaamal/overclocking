@@ -1,11 +1,8 @@
 package avlTree.slpBuilders;
 
 import java.util.List;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-
-import serialization.products.IProductSerializationHeuristic;
 import SLPs.ISLPExtractor;
 import avlTree.IAvlTree;
 import avlTree.IAvlTreeManager;
@@ -16,15 +13,14 @@ import avlTree.helpers.IAvlTreeArrayMergeCounter;
 import avlTree.helpers.IRebalancingCounter;
 import avlTree.treeSets.IAvlTreeSet;
 import avlTree.treeSets.IAvlTreeSetFactory;
-
 import commons.utils.TimeCounter;
-
 import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.StatisticKeys;
 import productEnumerator.IProductEnumerator;
+import serialization.products.IProductSerializer;
 
 public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuilder {
 	private static final Logger log = LogManager.getLogger(AvlTreeSLPBuilder.class);
@@ -34,7 +30,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
 	private final IParallelExecutorFactory parallelExecutorFactory;
 	private final IFactorizationIndexer factorizationIndexer;
     private final ISLPExtractor slpExtractor;
-    private IProductSerializationHeuristic productsSerializer;
+    private IProductSerializer productsSerializer;
 
     public ConcurrencyAvlTreeSLPBuilder(
             IAvlTreeManagerFactory avlTreeManagerFactory,
@@ -42,7 +38,7 @@ public class ConcurrencyAvlTreeSLPBuilder implements IConcurrencyAvlTreeSLPBuild
     		IParallelExecutorFactory parallelExecutorFactory,
             IFactorizationIndexer factorizationIndexer,
             ISLPExtractor slpExtractor,
-            IProductSerializationHeuristic productsSerializer) {
+            IProductSerializer productsSerializer) {
         this.avlTreeManagerFactory = avlTreeManagerFactory;
         this.avlTreeSetFactory = avlTreeSetFactory;
 		this.parallelExecutorFactory = parallelExecutorFactory;

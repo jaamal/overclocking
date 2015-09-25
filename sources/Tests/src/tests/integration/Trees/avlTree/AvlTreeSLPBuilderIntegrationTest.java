@@ -1,11 +1,7 @@
 package tests.integration.Trees.avlTree;
 
-import helpers.FactorizationScenarios;
-import serialization.products.PartialTreeProductsSerializer;
 import org.junit.Assert;
 import org.junit.Test;
-
-import tests.integration.IntegrationTestBase;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
@@ -18,6 +14,9 @@ import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
 import dataContracts.LZFactorDef;
 import dataContracts.statistics.Statistics;
+import helpers.FactorizationScenarios;
+import serialization.products.IProductSerializer;
+import tests.integration.IntegrationTestBase;
 
 public class AvlTreeSLPBuilderIntegrationTest extends IntegrationTestBase {
 
@@ -27,7 +26,8 @@ public class AvlTreeSLPBuilderIntegrationTest extends IntegrationTestBase {
         
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(container.get(ISettings.class), DataFactoryType.file);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.block, AvlSplitPattern.fromFirst);
-        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
+        IProductSerializer productSerializer = container.get(IProductSerializer.class);
+        AvlTreeSLPBuilder builder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), productSerializer);
         String actuals = builder.buildSlp(factors, new Statistics()).toString();
         String expected = FactorizationScenarios.stringify(factors);
         Assert.assertEquals(expected, actuals);

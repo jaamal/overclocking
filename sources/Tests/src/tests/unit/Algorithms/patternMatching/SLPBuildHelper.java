@@ -1,15 +1,9 @@
 package tests.unit.Algorithms.patternMatching;
 
 import java.util.ArrayList;
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-
-import patternMatching.fcpm.preprocessing.Product;
-import patternMatching.fcpm.preprocessing.ProductFactory;
-import patternMatching.fcpm.preprocessing.ProductsPreprocessor;
-import serialization.products.PartialTreeProductsSerializer;
 import SLPs.SLPExtractor;
 import avlTree.AvlTreeManagerFactory;
 import avlTree.IAvlTreeManagerFactory;
@@ -37,12 +31,20 @@ import dataContracts.FactorDef;
 import dataContracts.LZFactorDef;
 import dataContracts.SLPModel;
 import dataContracts.statistics.Statistics;
+import patternMatching.fcpm.preprocessing.Product;
+import patternMatching.fcpm.preprocessing.ProductFactory;
+import patternMatching.fcpm.preprocessing.ProductsPreprocessor;
+import serialization.products.IProductSerializer;
 
 public class SLPBuildHelper {
     private IDataFactory dataFactory;
+    private IProductSerializer productSerializer;
 
-    public SLPBuildHelper(IDataFactory dataFactory) {
+    public SLPBuildHelper(
+            IDataFactory dataFactory,
+            IProductSerializer productSerializer) {
         this.dataFactory = dataFactory;
+        this.productSerializer = productSerializer;
 
         BasicConfigurator.configure();
         Logger.getRootLogger().setLevel(Level.OFF);
@@ -51,7 +53,7 @@ public class SLPBuildHelper {
     public Product[] buildSlp(ISettings settings, String text) {
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(settings, DataFactoryType.memory);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(new AvlTreeArrayMergerFactory(), AvlMergePattern.recursiveBlock, AvlSplitPattern.fromFirst);
-        AvlTreeSLPBuilder avlSlpTreeBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
+        AvlTreeSLPBuilder avlSlpTreeBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), productSerializer);
         SLPModel slpModel = avlSlpTreeBuilder.buildSlp(getFactorization(settings, text), new Statistics());
         ProductsPreprocessor builder = new ProductsPreprocessor(new ProductFactory());
         return builder.execute(slpModel.toNormalForm());
