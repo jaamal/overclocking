@@ -22,7 +22,7 @@ public class LCAOnlineAlgorithm extends Algorithm implements ISlpCompressionAlgo
 
     private final ILCAOnlineCompressor lcaOnlineCompressor;
     private final IResourceProvider resourceProvider;
-    private final IProductSerializer productsSerializer;
+    private final IProductSerializer productSerializer;
     private final String sourceId;
     private final DataFactoryType dataFactoryType;
     IStatistics statistics;
@@ -36,7 +36,7 @@ public class LCAOnlineAlgorithm extends Algorithm implements ISlpCompressionAlgo
             DataFactoryType dataFactoryType) {
         this.lcaOnlineCompressor = lcaOnlineCompressor;
         this.resourceProvider = resourceProvider;
-        this.productsSerializer = productsSerializer;
+        this.productSerializer = productsSerializer;
         this.sourceId = sourceId;
         this.dataFactoryType = dataFactoryType;
     }
@@ -54,7 +54,7 @@ public class LCAOnlineAlgorithm extends Algorithm implements ISlpCompressionAlgo
             slpModel = productEnumerator.toSLPModel();
             statistics = new Statistics();
             statistics.putParam(StatisticKeys.RunningTime, String.valueOf(timeCounter.getMillis()));
-            slpModel.appendStats(statistics, productsSerializer);
+            slpModel.appendStats(statistics, productSerializer);
         }
     }
     
@@ -76,7 +76,7 @@ public class LCAOnlineAlgorithm extends Algorithm implements ISlpCompressionAlgo
     {
         checkIsFinished();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-            productsSerializer.serialize(stream, getSlp());
+            productSerializer.serialize(stream, getSlp());
             return stream.toByteArray();
         }
         catch (IOException e) {

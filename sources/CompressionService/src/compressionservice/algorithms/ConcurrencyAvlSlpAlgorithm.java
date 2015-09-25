@@ -1,5 +1,7 @@
 package compressionservice.algorithms;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import avlTree.slpBuilders.IConcurrencyAvlTreeSLPBuilder;
 import dataContracts.AlgorithmType;
 import dataContracts.FactorDef;
@@ -7,39 +9,33 @@ import dataContracts.Product;
 import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
 import dataContracts.statistics.Statistics;
-import storage.slpProductsRepository.ISlpProductsRepository;
+import serialization.products.IProductSerializer;
 
-public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithm {
+public class ConcurrencyAvlSlpAlgorithm extends Algorithm implements ISlpCompressionAlgorithm {
     
     private final IConcurrencyAvlTreeSLPBuilder avlTreeSLPBuilder;
-    private final ISlpProductsRepository slpProductsRepository;
     private final IResourceProvider resourceProvider;
+    private final IProductSerializer productSerializer;
     private final String sourceId;
-    private final String resultId;
     private IStatistics statistics;
+    SLPModel slpModel;
 
-    public ConcurrencyAvlSlpBuildAlgorithmRunner(
+    public ConcurrencyAvlSlpAlgorithm(
             IConcurrencyAvlTreeSLPBuilder avlTreeSLPBuilder,
-            ISlpProductsRepository slpProductsRepository,
             IResourceProvider resourceProvider,
-            String sourceId,
-            String resultId) {
+            IProductSerializer productSerializer,
+            String sourceId) {
         this.avlTreeSLPBuilder = avlTreeSLPBuilder;
-        this.slpProductsRepository = slpProductsRepository;
         this.resourceProvider = resourceProvider;
+        this.productSerializer = productSerializer;
         this.sourceId = sourceId;
-        this.resultId = resultId;
     }
 
     @Override
-    public void run() {
+    protected void runInternal() {
         FactorDef[] factorization = resourceProvider.getFactorization(sourceId);
         statistics = new Statistics();
-
-        SLPModel slpModel = avlTreeSLPBuilder.buildSlp(factorization, statistics);
-
-        Product[] products = slpModel.toNormalForm();
-        slpProductsRepository.writeAll(resultId, products);
+        slpModel = avlTreeSLPBuilder.buildSlp(factorization, statistics);
     }
 
     @Override
@@ -54,5 +50,25 @@ public class ConcurrencyAvlSlpBuildAlgorithmRunner implements IAlgorithm {
     public AlgorithmType getType()
     {
         return AlgorithmType.avlSlpConcurrent;
+    }
+
+    @Override
+    public byte[] getCompressedRepresentation()
+    {
+        checkIsFinished();
+        try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            productSerializer.serialize(stream, getSlp());
+            return stream.toByteArray();
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Fail to build slp compressed representation", e);
+        }
+    }
+
+    @Override
+    public Product[] getSlp()
+    {
+        checkIsFinished();
+        return slpModel.toNormalForm();
     }
 }
