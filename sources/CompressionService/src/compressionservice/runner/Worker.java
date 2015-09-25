@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.apache.log4j.Logger;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.IAlgorithm;
-import compressionservice.algorithms.IAlgorithmRunnersFactory;
+import compressionservice.algorithms.IAlgorithmsFactory;
 import compressionservice.algorithms.ICompressionAlgorithm;
 import compressionservice.runner.parameters.IRunParams;
 import compressionservice.runner.state.ITaskOperationalLog;
@@ -19,14 +19,14 @@ public class Worker implements IWorker
 {
     private static Logger logger = Logger.getLogger(Worker.class);
     
-    private IAlgorithmRunnersFactory algorithmRunnersFactory;
+    private IAlgorithmsFactory algorithmRunnersFactory;
     private IStatisticsRepository statisticsRepository;
     private IStatisticsObjectFactory statisticsObjectFactory;
     private ITaskOperationalLog operationalLog;
     private IFactorsRepositoryFactory factorsRepositoryFactory;
 
     public Worker(
-            IAlgorithmRunnersFactory algorithmRunnersFactory,
+            IAlgorithmsFactory algorithmRunnersFactory,
             IStatisticsRepository statisticsRepository,
             IStatisticsObjectFactory statisticsObjectFactory,
             IFactorsRepositoryFactory factorsRepositoryFactory,

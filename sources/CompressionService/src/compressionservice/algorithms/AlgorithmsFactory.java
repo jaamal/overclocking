@@ -35,7 +35,7 @@ import storage.factorsRepository.IFactorsRepositoryFactory;
 import storage.filesRepository.IFilesRepository;
 import storage.slpProductsRepository.ISlpProductsRepository;
 
-public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
+public class AlgorithmsFactory implements IAlgorithmsFactory {
 
     private ISettings settings;
     private final IAvlTreeArrayMergerFactory avlTreeArrayMergerFactory;
@@ -50,7 +50,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
     private IStatisticsObjectFactory statisticsObjectFactory;
     private IFactorSerializer factorSerializer;
 
-    public AlgorithmRunnersFactory(
+    public AlgorithmsFactory(
             ISettings settings,
             IAvlTreeArrayMergerFactory avlTreeArrayMergerFactory,
             ISlpProductsRepository slpProductsRepository,
@@ -120,7 +120,7 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
                 return createLCAOnlineRunner(sourceId, resultId, dataFactoryType, runParams);
             }
             case lzw: {
-                return createLZWRunner(sourceId, resultId, dataFactoryType, runParams);
+                return createLZWRunner(sourceId, dataFactoryType, runParams);
             }
             case lz77: {
                 return createLZ77Runner(sourceId, dataFactoryType, runParams);
@@ -173,16 +173,15 @@ public class AlgorithmRunnersFactory implements IAlgorithmRunnersFactory {
         final int defaultWindowSize = 32 * 1024;
         int windowSize = runParams.getOrDefaultInt(RunParamKeys.WindowSize, defaultWindowSize);
         
-        return new Lz77AlgorithmRunner(resourceProvider, factorIteratorFactory, factorSerializer, sourceId, dataFactoryType, windowSize);
+        return new Lz77Algorithm(resourceProvider, factorIteratorFactory, factorSerializer, sourceId, dataFactoryType, windowSize);
     }
     
     private IAlgorithm createLZInfRunner(String sourceId, DataFactoryType dataFactoryType, IRunParams runParams) {
-        return new LzInfAlgorithmRunner(resourceProvider, factorIteratorFactory, factorSerializer, sourceId, dataFactoryType);
+        return new LzInfAlgorithm(resourceProvider, factorIteratorFactory, factorSerializer, sourceId, dataFactoryType);
     }
     
-    private IAlgorithm createLZWRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
-        return new LzwAlgorithmRunner(lzwFactorsAnalyzer, resourceProvider, filesRepository, statisticsObjectFactory, 
-                sourceId, resultId, dataFactoryType);
+    private IAlgorithm createLZWRunner(String sourceId, DataFactoryType dataFactoryType, IRunParams runParams) {
+        return new LzwAlgorithm(lzwFactorsAnalyzer, resourceProvider, sourceId, dataFactoryType);
     }
     
     private IAlgorithm createLCAOnlineRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {

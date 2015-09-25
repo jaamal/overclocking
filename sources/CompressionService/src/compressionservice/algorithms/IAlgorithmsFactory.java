@@ -2,7 +2,7 @@ package compressionservice.algorithms;
 
 import compressionservice.runner.parameters.IRunParams;
 
-public interface IAlgorithmRunnersFactory {
+public interface IAlgorithmsFactory {
     IAlgorithm create(IRunParams runParams);
     
     //TODO: ugly method

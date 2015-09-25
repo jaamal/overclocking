@@ -1,43 +1,38 @@
 package compressionservice.algorithms;
 
-import storage.filesRepository.IFilesRepository;
+import java.util.List;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.lzw.ILZWFactorsAnalyzer;
 import data.charArray.IReadableCharArray;
 import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
+import dataContracts.FactorDef;
 import dataContracts.statistics.IStatistics;
-import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
 
-public class LzwAlgorithmRunner implements IAlgorithm {
+public class LzwAlgorithm extends Algorithm implements ICompressionAlgorithm {
     
     private final IResourceProvider resourceProvider;
     private final ILZWFactorsAnalyzer lzwFactorsAnalyzer;
     private final String sourceId;
     private final DataFactoryType dataFactoryType;
-    private final String resultId;
     IStatistics statistics;
     
-    public LzwAlgorithmRunner(
+    public LzwAlgorithm(
             ILZWFactorsAnalyzer lzwFactorsAnalyzer,
             IResourceProvider resourceProvider,
-            IFilesRepository filesRepository, 
-            IStatisticsObjectFactory statisticsObjectFactory,
             String sourceId, 
-            String resultId,
             DataFactoryType dataFactoryType) {
         this.lzwFactorsAnalyzer = lzwFactorsAnalyzer;
         this.resourceProvider = resourceProvider;
         this.sourceId = sourceId;
-        this.resultId = resultId;
         this.dataFactoryType = dataFactoryType;
     }
     
-    //TODO: this algorithm only counts number of factors, but doesnt create any factorization
     @Override
-    public void run() {
+    protected void runInternal()
+    {
         try(IReadableCharArray charArray = resourceProvider.getText(sourceId, dataFactoryType))
         {
             TimeCounter timeCounter = TimeCounter.start();
@@ -54,8 +49,7 @@ public class LzwAlgorithmRunner implements IAlgorithm {
     @Override
     public IStatistics getStats()
     {
-        if (statistics == null)
-            throw new RuntimeException("Statistics is empty since algorithm does not running.");
+        checkIsFinished();
         return statistics;
     }
 
@@ -63,5 +57,24 @@ public class LzwAlgorithmRunner implements IAlgorithm {
     public AlgorithmType getType()
     {
         return AlgorithmType.lzw;
+    }
+
+    @Override
+    public byte[] getCompressedRepresentation()
+    {
+        // TODO Implement factorization
+        return new byte[0];
+    }
+
+    @Override
+    public boolean supportFactorization()
+    {
+        return false;
+    }
+
+    @Override
+    public List<FactorDef> getFactorization()
+    {
+        return null;
     }
 }
