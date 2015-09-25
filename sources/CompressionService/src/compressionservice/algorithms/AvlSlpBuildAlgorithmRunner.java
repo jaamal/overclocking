@@ -1,15 +1,13 @@
 package compressionservice.algorithms;
 
-import storage.factorsRepository.IFactorsRepositoryFactory;
-import storage.slpProductsRepository.ISlpProductsRepository;
 import avlTree.slpBuilders.IAvlTreeSLPBuilder;
 import dataContracts.AlgorithmType;
 import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
-import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.Statistics;
+import storage.slpProductsRepository.ISlpProductsRepository;
 
 public class AvlSlpBuildAlgorithmRunner implements IAlgorithm {
 
@@ -24,8 +22,6 @@ public class AvlSlpBuildAlgorithmRunner implements IAlgorithm {
             IAvlTreeSLPBuilder avlTreeSLPBuilder,
             ISlpProductsRepository slpProductsRepository,
             IResourceProvider resourceProvider,
-            IFactorsRepositoryFactory factorsRepositoryFactory,
-            IStatisticsObjectFactory statisticsObjectFactory,
             String sourceId,
             String resultId)
     {

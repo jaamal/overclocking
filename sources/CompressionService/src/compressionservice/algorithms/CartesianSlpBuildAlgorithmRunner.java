@@ -1,15 +1,13 @@
 package compressionservice.algorithms;
 
-import storage.factorsRepository.IFactorsRepositoryFactory;
-import storage.slpProductsRepository.ISlpProductsRepository;
 import cartesianTree.slpBuilders.ICartesianSlpTreeBuilder;
 import dataContracts.AlgorithmType;
 import dataContracts.FactorDef;
 import dataContracts.Product;
 import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
-import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.Statistics;
+import storage.slpProductsRepository.ISlpProductsRepository;
 
 public class CartesianSlpBuildAlgorithmRunner implements IAlgorithm {
 
@@ -23,9 +21,7 @@ public class CartesianSlpBuildAlgorithmRunner implements IAlgorithm {
     public CartesianSlpBuildAlgorithmRunner(
             ICartesianSlpTreeBuilder cartesianSLPTreeBuilder,
             ISlpProductsRepository slpProductsRepository,
-            IResourceProvider resourceProvider, 
-            IFactorsRepositoryFactory factorsRepositoryFactory, 
-            IStatisticsObjectFactory statisticsObjectFactory,
+            IResourceProvider resourceProvider,
             String sourceId,
             String resultId)
     {

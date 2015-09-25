@@ -27,7 +27,6 @@ import dataContracts.AlgorithmType;
 import dataContracts.AvlMergePattern;
 import dataContracts.AvlSplitPattern;
 import dataContracts.DataFactoryType;
-import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.RunParamKeys;
 import serialization.factors.IFactorSerializer;
 import serialization.products.PartialTreeProductsSerializer;
@@ -47,7 +46,6 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
     private IFilesRepository filesRepository;
     private ILZWFactorsAnalyzer lzwFactorsAnalyzer;
     private IFactorIteratorFactory factorIteratorFactory;
-    private IStatisticsObjectFactory statisticsObjectFactory;
     private IFactorSerializer factorSerializer;
 
     public AlgorithmsFactory(
@@ -61,7 +59,6 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
             IFilesRepository filesRepository,
             ILZWFactorsAnalyzer lzwFactorsAnalyzer,
             IFactorIteratorFactory factorIteratorFactory,
-            IStatisticsObjectFactory statisticsObjectFactory,
             IFactorSerializer factorSerializer) {
         this.settings = settings;
         this.avlTreeArrayMergerFactory = avlTreeArrayMergerFactory;
@@ -73,7 +70,6 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
         this.filesRepository = filesRepository;
         this.lzwFactorsAnalyzer = lzwFactorsAnalyzer;
         this.factorIteratorFactory = factorIteratorFactory;
-        this.statisticsObjectFactory = statisticsObjectFactory;
         this.factorSerializer = factorSerializer;
     }
 
@@ -144,8 +140,7 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
         IParallelExecutorFactory parallelExecutorFactory = new ParallelExecutorFactory(threadCount);
         ConcurrentSLPExtractor slpExtractor = new ConcurrentSLPExtractor(threadCount);
         IConcurrencyAvlTreeSLPBuilder concurrencyAvlTreeSLPBuilder = new ConcurrencyAvlTreeSLPBuilder(avlTreeManagerFactory, new AvlTreeSetFactory(avlTreeArrayMerger), parallelExecutorFactory, factorizationIndexer, slpExtractor, new PartialTreeProductsSerializer());
-        return new ConcurrencyAvlSlpBuildAlgorithmRunner(concurrencyAvlTreeSLPBuilder, slpProductsRepository, resourceProvider, 
-                factorsRepositoryFactory, statisticsObjectFactory, sourceId, resultId);
+        return new ConcurrencyAvlSlpBuildAlgorithmRunner(concurrencyAvlTreeSLPBuilder, slpProductsRepository, resourceProvider, sourceId, resultId);
     }
 
     private IAlgorithm createAvlSlpRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
@@ -158,15 +153,13 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
         IAvlTreeManagerFactory avlTreeManagerFactory = new AvlTreeManagerFactory(settings, dataFactoryType);
         AvlTreeBufferFactory avlTreeBufferFactory = new AvlTreeBufferFactory(avlTreeArrayMergerFactory, avlMergePattern, avlSplitPattern);
         IAvlTreeSLPBuilder avlTreeSLPBuilder = new AvlTreeSLPBuilder(avlTreeManagerFactory, avlTreeBufferFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
-        return new AvlSlpBuildAlgorithmRunner(avlTreeSLPBuilder, slpProductsRepository, resourceProvider, 
-                factorsRepositoryFactory, statisticsObjectFactory, sourceId, resultId);
+        return new AvlSlpBuildAlgorithmRunner(avlTreeSLPBuilder, slpProductsRepository, resourceProvider, sourceId, resultId);
     }
 
     private IAlgorithm createCartesianSlpRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
         CartesianTreeManagerFactory cartesianTreeManagerFactory = new CartesianTreeManagerFactory(settings, dataFactoryType);
         CartesianSlpTreeBuilder cartesianSLPTreeBuilder = new CartesianSlpTreeBuilder(cartesianTreeManagerFactory, new SLPExtractor(), new PartialTreeProductsSerializer());
-        return new CartesianSlpBuildAlgorithmRunner(cartesianSLPTreeBuilder, slpProductsRepository, resourceProvider, factorsRepositoryFactory, 
-                statisticsObjectFactory, sourceId, resultId);
+        return new CartesianSlpBuildAlgorithmRunner(cartesianSLPTreeBuilder, slpProductsRepository, resourceProvider, sourceId, resultId);
     }
     
     private IAlgorithm createLZ77Runner(String sourceId, DataFactoryType dataFactoryType, IRunParams runParams) {
@@ -185,7 +178,7 @@ public class AlgorithmsFactory implements IAlgorithmsFactory {
     }
     
     private IAlgorithm createLCAOnlineRunner(String sourceId, String resultId, DataFactoryType dataFactoryType, IRunParams runParams) {
-        return new LCAOnlineSlpBuildAlgorithmRunner(lcaOnlineCompressor, slpProductsRepository, resourceProvider, filesRepository, 
-                statisticsObjectFactory, new PartialTreeProductsSerializer(), sourceId, resultId, dataFactoryType);
+        return new LCAOnlineSlpBuildAlgorithmRunner(lcaOnlineCompressor, slpProductsRepository, resourceProvider, 
+                new PartialTreeProductsSerializer(), sourceId, resultId, dataFactoryType);
     }
 }

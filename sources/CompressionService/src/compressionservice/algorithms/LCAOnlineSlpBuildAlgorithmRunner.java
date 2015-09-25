@@ -1,23 +1,19 @@
 package compressionservice.algorithms;
 
 import org.apache.log4j.Logger;
-
-import serialization.products.IProductSerializationHeuristic;
-import storage.filesRepository.IFilesRepository;
-import storage.slpProductsRepository.ISlpProductsRepository;
 import commons.utils.TimeCounter;
 import compressionservice.algorithms.lcaOnlineSlp.ILCAOnlineCompressor;
-
 import data.charArray.IReadableCharArray;
 import dataContracts.AlgorithmType;
 import dataContracts.DataFactoryType;
 import dataContracts.Product;
 import dataContracts.SLPModel;
 import dataContracts.statistics.IStatistics;
-import dataContracts.statistics.IStatisticsObjectFactory;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.Statistics;
 import productEnumerator.IProductEnumerator;
+import serialization.products.IProductSerializationHeuristic;
+import storage.slpProductsRepository.ISlpProductsRepository;
 
 public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithm {
 
@@ -36,8 +32,6 @@ public class LCAOnlineSlpBuildAlgorithmRunner implements IAlgorithm {
             ILCAOnlineCompressor lcaOnlineCompressor,
             ISlpProductsRepository slpProductsRepository,
             IResourceProvider resourceProvider,
-            IFilesRepository filesRepository,
-            IStatisticsObjectFactory statisticsObjectFactory,
             IProductSerializationHeuristic productsSerializer,
             String sourceId,
             String resultId,
