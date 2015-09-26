@@ -6,27 +6,23 @@ import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 
 public class Searcher implements ISearcher
 {
-
+    @Override
     public IEdge search(String text, INode node, int position)
     {
-        char needCharacter = text.charAt(position);
-        if (node.getEdges().containsKey(needCharacter))
-            return node.getEdges().get(needCharacter);
-        return null;
+        return node.findEdge(text.charAt(position));
     }
-
 
     @Override
     public IBeginPlace searchEnd(IEdge edge, int numberOfChar, IBeginPlaceFactory beginPlaceFactory)
     {
         if (edge == null)
             return null;
-        if (edge.beginNode().getSuffixLink() == null && edge.beginNode().getFatherEdge() != null)
+        if (edge.fromNode().getSuffixLink() == null && edge.fromNode().getFatherEdge() != null)
         {
-            INode node = edge.beginNode();
+            INode node = edge.fromNode();
             IEdge newEdge = node.getFatherEdge();
-            return beginPlaceFactory.create(newEdge.beginNode(), newEdge.beginPosition(), newEdge.endPosition());
+            return beginPlaceFactory.create(newEdge.fromNode(), newEdge.fromPosition(), newEdge.toPosition());
         }
-        return beginPlaceFactory.create(edge.beginNode(), edge.beginPosition(), edge.beginPosition() + numberOfChar);
+        return beginPlaceFactory.create(edge.fromNode(), edge.fromPosition(), edge.fromPosition() + numberOfChar);
     }
 }

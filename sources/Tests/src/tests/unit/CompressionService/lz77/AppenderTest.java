@@ -44,10 +44,10 @@ public class AppenderTest extends UnitTestBase
 
         expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
-        expect(mockEdge.beginPosition()).andReturn(6).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(6).anyTimes();
         expect(mockInsertPlace.getPosition()).andReturn(2).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(8).anyTimes();
-        expect(mockEdge.endNode()).andReturn(null).anyTimes();
+        expect(mockEdge.toPosition()).andReturn(8).anyTimes();
+        expect(mockEdge.toNode()).andReturn(null).anyTimes();
 
         replayAll();
 
@@ -69,10 +69,10 @@ public class AppenderTest extends UnitTestBase
 
         expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
-        expect(mockEdge.beginPosition()).andReturn(6).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(6).anyTimes();
         expect(mockInsertPlace.getPosition()).andReturn(2).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(8).anyTimes();
-        expect(mockEdge.endNode()).andReturn(mockNode).anyTimes();
+        expect(mockEdge.toPosition()).andReturn(8).anyTimes();
+        expect(mockEdge.toNode()).andReturn(mockNode).anyTimes();
         expect(mockSearcher.search("texttext", mockNode, 4)).andReturn(null).anyTimes();
         expect(mockEdgeFactory.createLeaf(4, mockNode, 1)).andReturn(mockNewEdge).anyTimes();
         mockNode.addEdge('t', mockNewEdge);
@@ -97,10 +97,10 @@ public class AppenderTest extends UnitTestBase
 
         expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
-        expect(mockEdge.beginPosition()).andReturn(6).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(6).anyTimes();
         expect(mockInsertPlace.getPosition()).andReturn(2).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(8).anyTimes();
-        expect(mockEdge.endNode()).andReturn(mockNode).anyTimes();
+        expect(mockEdge.toPosition()).andReturn(8).anyTimes();
+        expect(mockEdge.toNode()).andReturn(mockNode).anyTimes();
         expect(mockSearcher.search("texttext", mockNode, 9)).andReturn(mockNewEdge).anyTimes();
 
         replayAll();
@@ -126,12 +126,12 @@ public class AppenderTest extends UnitTestBase
 
         expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
-        expect(mockEdge.beginPosition()).andReturn(6).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(6).anyTimes();
         expect(mockEdge.getNumber()).andReturn(1).anyTimes();
         expect(mockInsertPlace.getPosition()).andReturn(2).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(9).anyTimes();
-        expect(mockEdge.beginNode()).andReturn(mockBeginNode).anyTimes();
-        expect(mockNodeFactory.create(1)).andReturn(mockNodeNew);
+        expect(mockEdge.toPosition()).andReturn(9).anyTimes();
+        expect(mockEdge.fromNode()).andReturn(mockBeginNode).anyTimes();
+        expect(mockNodeFactory.create()).andReturn(mockNodeNew);
         expect(mockEdgeFactory.createEdge(6, mockBeginNode, 8, mockNodeNew, 1)).andReturn(mockNewEdge1).anyTimes();
         expect(mockEdgeFactory.create(mockEdge, 9, mockNodeNew, 1)).andReturn(mockNewEdge2).anyTimes();
         mockNodeNew.setFatherEdge(mockNewEdge1);
@@ -159,8 +159,8 @@ public class AppenderTest extends UnitTestBase
 
         expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
-        expect(mockEdge.beginPosition()).andReturn(0).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(2).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(0).anyTimes();
+        expect(mockEdge.toPosition()).andReturn(2).anyTimes();
         expect(mockInsertPlace.getPosition()).andReturn(0).anyTimes();
 
         replayAll();

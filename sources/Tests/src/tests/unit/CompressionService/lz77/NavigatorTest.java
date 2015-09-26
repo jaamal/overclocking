@@ -45,8 +45,8 @@ public class NavigatorTest extends UnitTestBase
         expect(mockNode.getFatherEdge()).andReturn(null).anyTimes();
         expect(mockSearcherFactory.create()).andReturn(mockSearcher);
         expect(mockSearcher.search("text", mockNode, 0)).andReturn(mockEdge);
-        expect(mockEdge.beginPosition()).andReturn(0).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(2).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(0).anyTimes();
+        expect(mockEdge.toPosition()).andReturn(2).anyTimes();
         expect(mockInsertPlaceFactory.create(mockNode, mockEdge, 1)).andReturn(mockInsertPlace);
 
         replayAll();
@@ -72,8 +72,8 @@ public class NavigatorTest extends UnitTestBase
         expect(mockBeginPlace.endPosition()).andReturn(3).anyTimes();
         expect(mockSearcherFactory.create()).andReturn(mockSearcher);
         expect(mockSearcher.search("text", mockNode, 1)).andReturn(mockEdge);
-        expect(mockEdge.beginPosition()).andReturn(1).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(4).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(1).anyTimes();
+        expect(mockEdge.toPosition()).andReturn(4).anyTimes();
         expect(mockInsertPlaceFactory.create(mockNode, mockEdge, 2)).andReturn(mockInsertPlace);
 
         replayAll();

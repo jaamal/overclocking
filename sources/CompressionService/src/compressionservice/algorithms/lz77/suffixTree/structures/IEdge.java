@@ -2,15 +2,13 @@ package compressionservice.algorithms.lz77.suffixTree.structures;
 
 public interface IEdge
 {
-    public int beginPosition();
+    public int fromPosition();
 
-    public int endPosition();
+    public int toPosition();
 
-    public INode beginNode();
+    public INode fromNode();
 
-    public INode endNode();
+    public INode toNode();
 
     public int getNumber();
-
-    public void setNumber(int number);
 }

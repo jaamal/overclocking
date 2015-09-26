@@ -18,25 +18,25 @@ public class Edge implements IEdge
     }
 
     @Override
-    public int beginPosition()
+    public int fromPosition()
     {
         return this.beginPosition;
     }
 
     @Override
-    public int endPosition()
+    public int toPosition()
     {
         return this.endPosition;
     }
 
     @Override
-    public INode beginNode()
+    public INode fromNode()
     {
         return this.beginNode;
     }
 
     @Override
-    public INode endNode()
+    public INode toNode()
     {
         return this.endNode;
     }
@@ -46,12 +46,4 @@ public class Edge implements IEdge
     {
         return this.number;
     }
-
-    @Override
-    public void setNumber(int number)
-    {
-        this.number = number;
-    }
-
-
 }

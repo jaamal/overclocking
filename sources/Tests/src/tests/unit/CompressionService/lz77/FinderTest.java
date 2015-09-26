@@ -67,9 +67,9 @@ public class FinderTest extends UnitTestBase
         IEdge mockEdge = newMock(IEdge.class);
 
         expect(mockFindingSearcher.search(this.text, this.string, mockNode, 0)).andReturn(mockEdge);
-        expect(mockEdge.beginPosition()).andReturn(0).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(3).anyTimes();
-        expect(mockEdge.endNode()).andReturn(null).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(0).anyTimes();
+        expect(mockEdge.toPosition()).andReturn(3).anyTimes();
+        expect(mockEdge.toNode()).andReturn(null).anyTimes();
         expect(mockEdge.getNumber()).andReturn(0).anyTimes();
 
         replayAll();
@@ -87,14 +87,14 @@ public class FinderTest extends UnitTestBase
         IEdge[] mockEdges = new IEdge[]{newMock(IEdge.class), newMock(IEdge.class)};
 
         expect(mockFindingSearcher.search(this.text, this.string, mockNodes[0], 0)).andReturn(mockEdges[0]);
-        expect(mockEdges[0].beginPosition()).andReturn(1).anyTimes();
-        expect(mockEdges[0].endPosition()).andReturn(2).anyTimes();
-        expect(mockEdges[0].endNode()).andReturn(mockNodes[1]).anyTimes();
+        expect(mockEdges[0].fromPosition()).andReturn(1).anyTimes();
+        expect(mockEdges[0].toPosition()).andReturn(2).anyTimes();
+        expect(mockEdges[0].toNode()).andReturn(mockNodes[1]).anyTimes();
         expect(mockEdges[0].getNumber()).andReturn(1).anyTimes();
         expect(mockFindingSearcher.search(this.text, this.string, mockNodes[1], 2)).andReturn(mockEdges[1]);
-        expect(mockEdges[1].beginPosition()).andReturn(3).anyTimes();
-        expect(mockEdges[1].endPosition()).andReturn(5).anyTimes();
-        expect(mockEdges[1].endNode()).andReturn(null).anyTimes();
+        expect(mockEdges[1].fromPosition()).andReturn(3).anyTimes();
+        expect(mockEdges[1].toPosition()).andReturn(5).anyTimes();
+        expect(mockEdges[1].toNode()).andReturn(null).anyTimes();
         expect(mockEdges[1].getNumber()).andReturn(1).anyTimes();
 
         replayAll();
@@ -112,14 +112,14 @@ public class FinderTest extends UnitTestBase
         IEdge[] mockEdges = new IEdge[]{newMock(IEdge.class), newMock(IEdge.class)};
 
         expect(mockFindingSearcher.search(this.text, this.string, mockNodes[0], 0)).andReturn(mockEdges[0]);
-        expect(mockEdges[0].beginPosition()).andReturn(1).anyTimes();
-        expect(mockEdges[0].endPosition()).andReturn(2).anyTimes();
-        expect(mockEdges[0].endNode()).andReturn(mockNodes[1]).anyTimes();
+        expect(mockEdges[0].fromPosition()).andReturn(1).anyTimes();
+        expect(mockEdges[0].toPosition()).andReturn(2).anyTimes();
+        expect(mockEdges[0].toNode()).andReturn(mockNodes[1]).anyTimes();
         expect(mockEdges[0].getNumber()).andReturn(1).anyTimes();
         expect(mockFindingSearcher.search(this.text, this.string, mockNodes[1], 2)).andReturn(mockEdges[1]);
-        expect(mockEdges[1].beginPosition()).andReturn(3).anyTimes();
-        expect(mockEdges[1].endPosition()).andReturn(5).anyTimes();
-        expect(mockEdges[1].endNode()).andReturn(mockNodes[2]).anyTimes();
+        expect(mockEdges[1].fromPosition()).andReturn(3).anyTimes();
+        expect(mockEdges[1].toPosition()).andReturn(5).anyTimes();
+        expect(mockEdges[1].toNode()).andReturn(mockNodes[2]).anyTimes();
         expect(mockEdges[1].getNumber()).andReturn(1).anyTimes();
 
         replayAll();

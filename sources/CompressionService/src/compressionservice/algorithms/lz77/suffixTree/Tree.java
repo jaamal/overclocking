@@ -74,7 +74,7 @@ public class Tree implements ITree
 
     private void createTree()
     {
-        this.root = this.nodeFactory.create(0);
+        this.root = this.nodeFactory.create();
         this.firstLeaf = this.edgeFactory.createLeaf(0, root, 0);
         this.root.addEdge(text.charAt(0), this.firstLeaf);
 
@@ -94,7 +94,7 @@ public class Tree implements ITree
 
         for (; this.phaseIndex < this.text.length() - 1; ++this.phaseIndex)
         {
-            IBeginPlace beginPlace = this.beginPlaceFactory.create(this.firstLeaf.beginNode(), this.firstLeaf.beginPosition(), this.phaseIndex);
+            IBeginPlace beginPlace = this.beginPlaceFactory.create(this.firstLeaf.fromNode(), this.firstLeaf.fromPosition(), this.phaseIndex);
             ISuffixPlace suffixPlace = this.suffixPlaceFactory.create(-1, this.root);
             boolean isImplicitExtension = false;
 
@@ -111,8 +111,8 @@ public class Tree implements ITree
             Leaf.changeEndPosition(this.phaseIndex + 1);
             isImplicitExtension = this.appender.isImplicitExtension();
             this.extension = isImplicitExtension ? extensionIndex - 2 : this.phaseIndex;
-            while (this.firstLeaf.endNode() != null)
-                this.firstLeaf = this.searcher.search(this.text, this.firstLeaf.endNode(), this.firstLeaf.endPosition() + 1);
+            while (this.firstLeaf.toNode() != null)
+                this.firstLeaf = this.searcher.search(this.text, this.firstLeaf.toNode(), this.firstLeaf.toPosition() + 1);
         }
     }
 

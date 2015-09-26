@@ -23,9 +23,9 @@ public class EdgeFactory implements IEdgeFactory
     @Override
     public IEdge create(IEdge fatherEdge, int beginPosition, INode beginNode, int number)
     {
-        return fatherEdge.endNode() == null 
+        return fatherEdge.toNode() == null 
                 ? new Leaf(beginPosition, beginNode, number) 
-                : new Edge(beginPosition, beginNode, fatherEdge.endPosition(), fatherEdge.endNode(), number);
+                : new Edge(beginPosition, beginNode, fatherEdge.toPosition(), fatherEdge.toNode(), number);
     }
 
 }

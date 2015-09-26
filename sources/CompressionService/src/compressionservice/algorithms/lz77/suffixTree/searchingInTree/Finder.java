@@ -35,10 +35,10 @@ public class Finder implements IFinder
 
         while (stringIndex < this.string.length() && textIndex < this.text.length())
         {
-            if (textIndex + edge.beginPosition() > edge.endPosition())
+            if (textIndex + edge.fromPosition() > edge.toPosition())
             {
                 position = edge.getNumber();
-                edge = this.findingSearcher.search(this.text, this.string, edge.endNode(), stringIndex);
+                edge = this.findingSearcher.search(this.text, this.string, edge.toNode(), stringIndex);
                 textIndex = 0;
             }
             if (edge == null)
@@ -46,23 +46,23 @@ public class Finder implements IFinder
 
             position = edge.getNumber();
             while (
-                    textIndex + edge.beginPosition() < this.text.length() &&
-                            textIndex + edge.beginPosition() <= edge.endPosition() &&
+                    textIndex + edge.fromPosition() < this.text.length() &&
+                            textIndex + edge.fromPosition() <= edge.toPosition() &&
                             stringIndex < this.string.length() &&
-                            this.text.charAt(textIndex + edge.beginPosition()) == this.string.get(stringIndex))
+                            this.text.charAt(textIndex + edge.fromPosition()) == this.string.get(stringIndex))
             {
                 ++textIndex;
                 ++stringIndex;
             }
 
-            if (textIndex + edge.beginPosition() == edge.endPosition() + 1 && edge.endNode() == null)
+            if (textIndex + edge.fromPosition() == edge.toPosition() + 1 && edge.toNode() == null)
                 return Location.create(position, stringIndex);
 
             if (
-                    textIndex + edge.beginPosition() < this.text.length() &&
-                            textIndex + edge.beginPosition() < edge.endPosition() + 1 &&
+                    textIndex + edge.fromPosition() < this.text.length() &&
+                            textIndex + edge.fromPosition() < edge.toPosition() + 1 &&
                             stringIndex < this.string.length() &&
-                            this.text.charAt(textIndex + edge.beginPosition()) != this.string.get(stringIndex))
+                            this.text.charAt(textIndex + edge.fromPosition()) != this.string.get(stringIndex))
                 return Location.create(position, stringIndex);
         }
         return Location.create(position, stringIndex);

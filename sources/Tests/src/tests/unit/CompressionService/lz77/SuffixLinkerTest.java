@@ -38,7 +38,7 @@ public class SuffixLinkerTest extends UnitTestBase
         expect(mockSuffixPlace.extension()).andReturn(1).anyTimes();
         expect(mockSuffixPlace.getNode()).andReturn(mockNode).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
-        expect(mockEdge.endNode()).andReturn(mockNewNode).anyTimes();
+        expect(mockEdge.toNode()).andReturn(mockNewNode).anyTimes();
         mockNode.setSuffixLink(mockNewNode);
 
         replayAll();
@@ -82,8 +82,8 @@ public class SuffixLinkerTest extends UnitTestBase
         expect(mockInsertPlace.getNode()).andReturn(mockNewNode).anyTimes();
         expect(mockNewNode.getFatherEdge()).andReturn(mockEdge2).anyTimes();
         expect(mockNewNode2.getFatherEdge()).andReturn(mockEdge).anyTimes();
-        expect(mockEdge.beginPosition()).andReturn(2).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(2).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(2).anyTimes();
+        expect(mockEdge.toPosition()).andReturn(2).anyTimes();
         expect(mockNewNode2.getSuffixLink()).andReturn(mockNewNode).anyTimes();
         expect(mockSuffixPlaceFactory.create(2, mockNewNode2)).andReturn(mockSuffixPlace);
 

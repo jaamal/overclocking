@@ -6,9 +6,9 @@ import compressionservice.algorithms.lz77.suffixTree.structures.Node;
 public class NodeFactory implements INodeFactory
 {
     @Override
-    public INode create(int number)
+    public INode create()
     {
-        return new Node(number);
+        return new Node();
     }
 
 }

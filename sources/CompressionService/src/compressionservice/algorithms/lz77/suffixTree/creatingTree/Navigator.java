@@ -38,14 +38,14 @@ public class Navigator implements INavigator
         }
         ISearcher searcher = this.searcherFactory.create();
         edge = searcher.search(this.text, node, begin);
-        while (end - begin > edge.endPosition() - edge.beginPosition())
+        while (end - begin > edge.toPosition() - edge.fromPosition())
         {
-            begin += edge.endPosition() - edge.beginPosition() + 1;
-            node = edge.endNode();
+            begin += edge.toPosition() - edge.fromPosition() + 1;
+            node = edge.toNode();
             edge = searcher.search(this.text, node, begin);
         }
         int index = 0;
-        while (begin + index < end && this.text.charAt(begin + index) == this.text.charAt(edge.beginPosition() + index))
+        while (begin + index < end && this.text.charAt(begin + index) == this.text.charAt(edge.fromPosition() + index))
             ++index;
         return this.insertPlaceFactory.create(node, edge, index);
     }

@@ -26,35 +26,35 @@ public class Appender implements IAppender
     {
         this.isExtension = false;
         ISearcher searcher = this.searcherFactory.create();
-        if (insertPlace.getEdge().beginPosition() + insertPlace.getPosition() == insertPlace.getEdge().endPosition())
+        if (insertPlace.getEdge().fromPosition() + insertPlace.getPosition() == insertPlace.getEdge().toPosition())
         {
-            if (insertPlace.getEdge().endNode() != null)
+            if (insertPlace.getEdge().toNode() != null)
             {
-                IEdge edge = searcher.search(text, insertPlace.getEdge().endNode(), numberOfChar);
+                IEdge edge = searcher.search(text, insertPlace.getEdge().toNode(), numberOfChar);
                 if (edge == null)
-                    insertPlace.getEdge().endNode().addEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, insertPlace.getEdge().endNode(), edgeNumber));
+                    insertPlace.getEdge().toNode().addEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, insertPlace.getEdge().toNode(), edgeNumber));
                 else
                     this.isExtension = true;
             }
             return null;
         }
 
-        if (insertPlace.getEdge().beginPosition() + insertPlace.getPosition() < insertPlace.getEdge().endPosition()
-                && text.charAt(insertPlace.getEdge().beginPosition() + insertPlace.getPosition() + 1) != text.charAt(numberOfChar))
+        if (insertPlace.getEdge().fromPosition() + insertPlace.getPosition() < insertPlace.getEdge().toPosition()
+                && text.charAt(insertPlace.getEdge().fromPosition() + insertPlace.getPosition() + 1) != text.charAt(numberOfChar))
         {
 
-            INode node = this.nodeFactory.create(insertPlace.getEdge().getNumber());
-            IEdge newEdge = this.edgeFactory.createEdge(insertPlace.getEdge().beginPosition(), insertPlace.getEdge().beginNode(), insertPlace
-                    .getEdge().beginPosition()
+            INode node = this.nodeFactory.create();
+            IEdge newEdge = this.edgeFactory.createEdge(insertPlace.getEdge().fromPosition(), insertPlace.getEdge().fromNode(), insertPlace
+                    .getEdge().fromPosition()
                     + insertPlace.getPosition(), node, insertPlace.getEdge().getNumber());
-            IEdge edge = this.edgeFactory.create(insertPlace.getEdge(), insertPlace.getEdge().beginPosition() + insertPlace.getPosition() + 1, node,
+            IEdge edge = this.edgeFactory.create(insertPlace.getEdge(), insertPlace.getEdge().fromPosition() + insertPlace.getPosition() + 1, node,
                     insertPlace.getEdge().getNumber());
 
             node.setFatherEdge(newEdge);
-            node.addEdge(text.charAt(insertPlace.getEdge().beginPosition() + insertPlace.getPosition() + 1), edge);
+            node.addEdge(text.charAt(insertPlace.getEdge().fromPosition() + insertPlace.getPosition() + 1), edge);
             node.addEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, node, edgeNumber));
 
-            insertPlace.getEdge().beginNode().changeEdge(text.charAt(insertPlace.getEdge().beginPosition()), newEdge);
+            insertPlace.getEdge().fromNode().changeEdge(text.charAt(insertPlace.getEdge().fromPosition()), newEdge);
             insertPlace.changeEdge(newEdge);
             return node;
         }

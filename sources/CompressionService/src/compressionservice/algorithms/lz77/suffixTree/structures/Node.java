@@ -8,11 +8,10 @@ public class Node implements INode
     private INode suffixLink;
     private IEdge fatherEdge;
 
-    public Node(int number)
+    public Node()
     {
         this.edges = new HashMap<Character, IEdge>();
     }
-
 
     @Override
     public void addEdge(char symbol, IEdge edge)
@@ -21,9 +20,11 @@ public class Node implements INode
     }
 
     @Override
-    public HashMap<Character, IEdge> getEdges()
+    public IEdge findEdge(char symbol)
     {
-        return this.edges;
+        return edges.containsKey(symbol) 
+                ? edges.get(symbol) 
+                : null;
     }
 
     @Override
@@ -55,11 +56,5 @@ public class Node implements INode
     public void setFatherEdge(IEdge fatherEdge)
     {
         this.fatherEdge = fatherEdge;
-    }
-
-    @Override
-    public int getNumberOfEdges()
-    {
-        return this.edges.size();
     }
 }

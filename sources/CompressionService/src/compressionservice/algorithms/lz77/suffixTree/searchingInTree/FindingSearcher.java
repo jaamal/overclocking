@@ -8,11 +8,8 @@ public class FindingSearcher implements IFindingSearcher
 {
     public IEdge search(String text, IReadableCharArray string, INode node, int position)
     {
-        char needCharacter = string.get(position);
         if (node == null)
             return null;
-        if (node.getEdges().containsKey(needCharacter))
-            return node.getEdges().get(needCharacter);
-        return null;
+        return node.findEdge(string.get(position));
     }
 }

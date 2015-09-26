@@ -20,25 +20,25 @@ public class Leaf implements IEdge
     }
 
     @Override
-    public int beginPosition()
+    public int fromPosition()
     {
         return this.beginPosition;
     }
 
     @Override
-    public int endPosition()
+    public int toPosition()
     {
         return Leaf.endPosition;
     }
 
     @Override
-    public INode beginNode()
+    public INode fromNode()
     {
         return this.beginNode;
     }
 
     @Override
-    public INode endNode()
+    public INode toNode()
     {
         return null;
     }
@@ -48,12 +48,4 @@ public class Leaf implements IEdge
     {
         return this.number;
     }
-
-    @Override
-    public void setNumber(int number)
-    {
-        this.number = number;
-    }
-
-
 }

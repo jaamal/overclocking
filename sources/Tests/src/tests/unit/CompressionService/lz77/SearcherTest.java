@@ -36,12 +36,12 @@ public class SearcherTest extends UnitTestBase
         INode mockNodeNew1 = newMock(INode.class);
         IBeginPlace mockBeginPlace = newMock(IBeginPlace.class);
 
-        expect(mockEdge.beginNode()).andReturn(mockNode).anyTimes();
+        expect(mockEdge.fromNode()).andReturn(mockNode).anyTimes();
         expect(mockNode.getSuffixLink()).andReturn(null).anyTimes();
         expect(mockNode.getFatherEdge()).andReturn(mockNewEdge).anyTimes();
-        expect(mockNewEdge.beginNode()).andReturn(mockNodeNew1).anyTimes();
-        expect(mockNewEdge.beginPosition()).andReturn(1).anyTimes();
-        expect(mockNewEdge.endPosition()).andReturn(2).anyTimes();
+        expect(mockNewEdge.fromNode()).andReturn(mockNodeNew1).anyTimes();
+        expect(mockNewEdge.fromPosition()).andReturn(1).anyTimes();
+        expect(mockNewEdge.toPosition()).andReturn(2).anyTimes();
         expect(mockBeginPlaceFactory.create(mockNodeNew1, 1, 2)).andReturn(mockBeginPlace);
 
         replayAll();
@@ -57,11 +57,11 @@ public class SearcherTest extends UnitTestBase
         INode mockNodeNew2 = newMock(INode.class);
         IBeginPlace mockBeginPlace = newMock(IBeginPlace.class);
 
-        expect(mockEdge.beginNode()).andReturn(mockNode).anyTimes();
+        expect(mockEdge.fromNode()).andReturn(mockNode).anyTimes();
         expect(mockNode.getSuffixLink()).andReturn(mockNodeNew2).anyTimes();
         expect(mockNode.getFatherEdge()).andReturn(null).anyTimes();
-        expect(mockEdge.beginPosition()).andReturn(1).anyTimes();
-        expect(mockEdge.endPosition()).andReturn(2).anyTimes();
+        expect(mockEdge.fromPosition()).andReturn(1).anyTimes();
+        expect(mockEdge.toPosition()).andReturn(2).anyTimes();
         expect(mockBeginPlaceFactory.create(mockNode, 1, 2)).andReturn(mockBeginPlace).anyTimes();
 
         replayAll();
