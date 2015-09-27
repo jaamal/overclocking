@@ -75,7 +75,7 @@ public class AppenderTest extends UnitTestBase
         expect(mockEdge.toNode()).andReturn(mockNode).anyTimes();
         expect(mockSearcher.search("texttext", mockNode, 4)).andReturn(null).anyTimes();
         expect(mockEdgeFactory.createLeaf(4, mockNode, 1)).andReturn(mockNewEdge).anyTimes();
-        mockNode.addEdge('t', mockNewEdge);
+        mockNode.putEdge('t', mockNewEdge);
 
         replayAll();
 
@@ -136,9 +136,9 @@ public class AppenderTest extends UnitTestBase
         expect(mockEdgeFactory.create(mockEdge, 9, mockNodeNew, 1)).andReturn(mockNewEdge2).anyTimes();
         mockNodeNew.setFatherEdge(mockNewEdge1);
         expect(mockEdgeFactory.createLeaf(10, mockNodeNew, 1)).andReturn(mockLeaf).anyTimes();
-        mockNodeNew.addEdge('e', mockLeaf);
-        mockNodeNew.addEdge('w', mockNewEdge2);
-        mockBeginNode.changeEdge('x', mockNewEdge1);
+        mockNodeNew.putEdge('e', mockLeaf);
+        mockNodeNew.putEdge('w', mockNewEdge2);
+        mockBeginNode.putEdge('x', mockNewEdge1);
         mockInsertPlace.changeEdge(mockNewEdge1);
 
         replayAll();
@@ -182,7 +182,7 @@ public class AppenderTest extends UnitTestBase
         expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockSearcher.search("text", mockRoot, 2)).andReturn(null).anyTimes();
         expect(mockEdgeFactory.createLeaf(2, mockRoot, 2)).andReturn(mockEdge).anyTimes();
-        mockRoot.addEdge('x', mockEdge);
+        mockRoot.putEdge('x', mockEdge);
 
         replayAll();
 

@@ -14,7 +14,7 @@ public class Node implements INode
     }
 
     @Override
-    public void addEdge(char symbol, IEdge edge)
+    public void putEdge(char symbol, IEdge edge)
     {
         this.edges.put(symbol, edge);
     }
@@ -43,13 +43,6 @@ public class Node implements INode
     public IEdge getFatherEdge()
     {
         return this.fatherEdge;
-    }
-
-    @Override
-    public void changeEdge(char symbol, IEdge newEdge)
-    {
-        this.edges.remove(symbol);
-        this.edges.put(symbol, newEdge);
     }
 
     @Override

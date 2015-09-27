@@ -76,7 +76,7 @@ public class Tree implements ITree
     {
         this.root = this.nodeFactory.create();
         this.firstLeaf = this.edgeFactory.createLeaf(0, root, 0);
-        this.root.addEdge(text.charAt(0), this.firstLeaf);
+        this.root.putEdge(text.charAt(0), this.firstLeaf);
 
         this.searcher = this.searcherFactory.create();
 

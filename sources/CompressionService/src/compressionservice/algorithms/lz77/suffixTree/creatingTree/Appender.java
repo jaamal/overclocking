@@ -32,7 +32,7 @@ public class Appender implements IAppender
             {
                 IEdge edge = searcher.search(text, insertPlace.getEdge().toNode(), numberOfChar);
                 if (edge == null)
-                    insertPlace.getEdge().toNode().addEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, insertPlace.getEdge().toNode(), edgeNumber));
+                    insertPlace.getEdge().toNode().putEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, insertPlace.getEdge().toNode(), edgeNumber));
                 else
                     this.isExtension = true;
             }
@@ -51,10 +51,10 @@ public class Appender implements IAppender
                     insertPlace.getEdge().getNumber());
 
             node.setFatherEdge(newEdge);
-            node.addEdge(text.charAt(insertPlace.getEdge().fromPosition() + insertPlace.getPosition() + 1), edge);
-            node.addEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, node, edgeNumber));
+            node.putEdge(text.charAt(insertPlace.getEdge().fromPosition() + insertPlace.getPosition() + 1), edge);
+            node.putEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, node, edgeNumber));
 
-            insertPlace.getEdge().fromNode().changeEdge(text.charAt(insertPlace.getEdge().fromPosition()), newEdge);
+            insertPlace.getEdge().fromNode().putEdge(text.charAt(insertPlace.getEdge().fromPosition()), newEdge);
             insertPlace.changeEdge(newEdge);
             return node;
         }
@@ -70,7 +70,7 @@ public class Appender implements IAppender
         ISearcher searcher = this.searcherFactory.create();
         IEdge edge = searcher.search(text, node, numberOfChar);
         if (edge == null)
-            node.addEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, node, numberOfChar));
+            node.putEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, node, numberOfChar));
         else
             this.isExtension = true;
     }

@@ -31,12 +31,4 @@ public class SuffixLinker implements ISuffixLinker
         }
         return suffixPlace;
     }
-
-    @Override
-    public void createSuffixLink(INode node, INode root, int currentIndex)
-    {
-        if (node != null)
-            node.setSuffixLink(root);
-    }
-
 }
