@@ -1,21 +1,18 @@
 package compressionservice.algorithms.lz77.suffixTree.creatingTree;
 
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IIInsertPlaceFactory;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 
 public class Navigator implements INavigator
 {
     private IIInsertPlaceFactory insertPlaceFactory;
-    private ISearcherFactory searcherFactory;
     private String text;
 
-    public Navigator(String text, IIInsertPlaceFactory insertPlaceFactory, ISearcherFactory searcherFactory)
+    public Navigator(String text, IIInsertPlaceFactory insertPlaceFactory)
     {
         this.text = text;
         this.insertPlaceFactory = insertPlaceFactory;
-        this.searcherFactory = searcherFactory;
     }
 
     @Override
@@ -36,13 +33,13 @@ public class Navigator implements INavigator
             begin = beginPlace.beginPosition();
             end = beginPlace.endPosition();
         }
-        ISearcher searcher = this.searcherFactory.create();
-        edge = searcher.search(this.text, node, begin);
+
+        edge = node.findEdge(text.charAt(begin));
         while (end - begin > edge.toPosition() - edge.fromPosition())
         {
             begin += edge.toPosition() - edge.fromPosition() + 1;
             node = edge.toNode();
-            edge = searcher.search(this.text, node, begin);
+            edge = node.findEdge(text.charAt(begin));
         }
         int index = 0;
         while (begin + index < end && this.text.charAt(begin + index) == this.text.charAt(edge.fromPosition() + index))

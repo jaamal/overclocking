@@ -9,9 +9,8 @@ public class AppenderFactory implements IAppenderFactory
 {
 
     @Override
-    public IAppender create(ISearcherFactory searcherFactory,
-                            IEdgeFactory edgeFactory, INodeFactory nodeFactory)
+    public IAppender create(IEdgeFactory edgeFactory, INodeFactory nodeFactory)
     {
-        return new Appender(searcherFactory, edgeFactory, nodeFactory);
+        return new Appender(edgeFactory, nodeFactory);
     }
 }

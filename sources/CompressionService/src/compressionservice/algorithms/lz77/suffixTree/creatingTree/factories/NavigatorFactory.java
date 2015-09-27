@@ -6,9 +6,9 @@ import compressionservice.algorithms.lz77.suffixTree.creatingTree.Navigator;
 public class NavigatorFactory implements INavigatorFactory
 {
     @Override
-    public INavigator create(String text, IIInsertPlaceFactory insertPlaceFactory, ISearcherFactory searcherFactory)
+    public INavigator create(String text, IIInsertPlaceFactory insertPlaceFactory)
     {
-        return new Navigator(text, insertPlaceFactory, searcherFactory);
+        return new Navigator(text, insertPlaceFactory);
     }
 
 }

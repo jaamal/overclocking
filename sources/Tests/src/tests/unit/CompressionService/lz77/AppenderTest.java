@@ -2,13 +2,9 @@ package tests.unit.CompressionService.lz77;
 
 import static junit.framework.Assert.assertEquals;
 import static org.easymock.EasyMock.expect;
-
 import org.junit.Test;
-
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.Appender;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.IInsertPlace;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.ISearcher;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
@@ -18,7 +14,6 @@ import tests.unit.UnitTestBase;
 public class AppenderTest extends UnitTestBase
 {
     private Appender appender;
-    private ISearcherFactory mockSearcherFactory;
     private IEdgeFactory mockEdgeFactory;
     private INodeFactory mockNodeFactory;
     private IInsertPlace mockInsertPlace;
@@ -28,21 +23,18 @@ public class AppenderTest extends UnitTestBase
     public void setUp()
     {
         super.setUp();
-        this.mockSearcherFactory = newMock(ISearcherFactory.class);
         this.mockEdgeFactory = newMock(IEdgeFactory.class);
         this.mockNodeFactory = newMock(INodeFactory.class);
-        this.appender = new Appender(mockSearcherFactory, mockEdgeFactory, mockNodeFactory);
+        this.appender = new Appender(mockEdgeFactory, mockNodeFactory);
     }
 
     @Test
     public void testAddSymbolNotCreateLeaf()
     {
-        ISearcher mockSearcher = newMock(ISearcher.class);
         IEdge mockEdge = newMock(IEdge.class);
 
         mockInsertPlace = newMock(IInsertPlace.class);
 
-        expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
         expect(mockEdge.fromPosition()).andReturn(6).anyTimes();
         expect(mockInsertPlace.getPosition()).andReturn(2).anyTimes();
@@ -60,20 +52,18 @@ public class AppenderTest extends UnitTestBase
     @Test
     public void testAddSymbolCreateLeaf()
     {
-        ISearcher mockSearcher = newMock(ISearcher.class);
         IEdge mockEdge = newMock(IEdge.class);
         INode mockNode = newMock(INode.class);
         IEdge mockNewEdge = newMock(IEdge.class);
 
         mockInsertPlace = newMock(IInsertPlace.class);
 
-        expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
         expect(mockEdge.fromPosition()).andReturn(6).anyTimes();
         expect(mockInsertPlace.getPosition()).andReturn(2).anyTimes();
         expect(mockEdge.toPosition()).andReturn(8).anyTimes();
         expect(mockEdge.toNode()).andReturn(mockNode).anyTimes();
-        expect(mockSearcher.search("texttext", mockNode, 4)).andReturn(null).anyTimes();
+        expect(mockNode.findEdge('t')).andReturn(null);
         expect(mockEdgeFactory.createLeaf(4, mockNode, 1)).andReturn(mockNewEdge).anyTimes();
         mockNode.putEdge('t', mockNewEdge);
 
@@ -88,24 +78,22 @@ public class AppenderTest extends UnitTestBase
     @Test
     public void testAddSymbolImplicitExtension()
     {
-        ISearcher mockSearcher = newMock(ISearcher.class);
         IEdge mockEdge = newMock(IEdge.class);
         INode mockNode = newMock(INode.class);
         IEdge mockNewEdge = newMock(IEdge.class);
 
         mockInsertPlace = newMock(IInsertPlace.class);
 
-        expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
         expect(mockEdge.fromPosition()).andReturn(6).anyTimes();
         expect(mockInsertPlace.getPosition()).andReturn(2).anyTimes();
         expect(mockEdge.toPosition()).andReturn(8).anyTimes();
         expect(mockEdge.toNode()).andReturn(mockNode).anyTimes();
-        expect(mockSearcher.search("texttext", mockNode, 9)).andReturn(mockNewEdge).anyTimes();
+        expect(mockNode.findEdge('s')).andReturn(mockNewEdge);
 
         replayAll();
 
-        INode node = appender.append("texttext", mockInsertPlace, 9, 1);
+        INode node = appender.append("texttextss", mockInsertPlace, 9, 1);
 
         assertEquals(null, node);
         assertEquals(true, appender.isImplicitExtension());
@@ -114,7 +102,6 @@ public class AppenderTest extends UnitTestBase
     @Test
     public void testAddNode()
     {
-        ISearcher mockSearcher = newMock(ISearcher.class);
         IEdge mockEdge = newMock(IEdge.class);
         INode mockNodeNew = newMock(INode.class);
         INode mockBeginNode = newMock(INode.class);
@@ -124,7 +111,6 @@ public class AppenderTest extends UnitTestBase
 
         mockInsertPlace = newMock(IInsertPlace.class);
 
-        expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
         expect(mockEdge.fromPosition()).andReturn(6).anyTimes();
         expect(mockEdge.getNumber()).andReturn(1).anyTimes();
@@ -152,12 +138,10 @@ public class AppenderTest extends UnitTestBase
     @Test
     public void testDoNothing()
     {
-        ISearcher mockSearcher = newMock(ISearcher.class);
         IEdge mockEdge = newMock(IEdge.class);
 
         mockInsertPlace = newMock(IInsertPlace.class);
 
-        expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
         expect(mockInsertPlace.getEdge()).andReturn(mockEdge).anyTimes();
         expect(mockEdge.fromPosition()).andReturn(0).anyTimes();
         expect(mockEdge.toPosition()).andReturn(2).anyTimes();
@@ -174,13 +158,10 @@ public class AppenderTest extends UnitTestBase
     @Test
     public void testAppendNodeAdd()
     {
-        ISearcher mockSearcher = newMock(ISearcher.class);
         IEdge mockEdge = newMock(IEdge.class);
-
         mockRoot = newMock(INode.class);
 
-        expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
-        expect(mockSearcher.search("text", mockRoot, 2)).andReturn(null).anyTimes();
+        expect(mockRoot.findEdge('x')).andReturn(null);
         expect(mockEdgeFactory.createLeaf(2, mockRoot, 2)).andReturn(mockEdge).anyTimes();
         mockRoot.putEdge('x', mockEdge);
 
@@ -194,18 +175,15 @@ public class AppenderTest extends UnitTestBase
     @Test
     public void testAppendNodeNotAdd()
     {
-        ISearcher mockSearcher = newMock(ISearcher.class);
         IEdge edge = newMock(IEdge.class);
 
         mockRoot = newMock(INode.class);
 
-        expect(mockSearcherFactory.create()).andReturn(mockSearcher).anyTimes();
-        expect(mockSearcher.search("text", mockRoot, 2)).andReturn(edge).anyTimes();
+        expect(mockRoot.findEdge('x')).andReturn(edge);
 
         replayAll();
 
         appender.append("text", mockRoot, 2);
-
         assertEquals(true, appender.isImplicitExtension());
     }
 }

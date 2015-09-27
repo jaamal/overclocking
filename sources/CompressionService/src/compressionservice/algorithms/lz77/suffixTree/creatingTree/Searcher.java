@@ -7,12 +7,6 @@ import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 public class Searcher implements ISearcher
 {
     @Override
-    public IEdge search(String text, INode node, int position)
-    {
-        return node.findEdge(text.charAt(position));
-    }
-
-    @Override
     public IBeginPlace searchEnd(IEdge edge, int numberOfChar, IBeginPlaceFactory beginPlaceFactory)
     {
         if (edge == null)

@@ -6,5 +6,5 @@ import compressionservice.algorithms.lz77.suffixTree.structures.factories.INodeF
 
 public interface IAppenderFactory
 {
-    IAppender create(ISearcherFactory searcherFactory, IEdgeFactory edgeFactory, INodeFactory nodeFactory);
+    IAppender create(IEdgeFactory edgeFactory, INodeFactory nodeFactory);
 }

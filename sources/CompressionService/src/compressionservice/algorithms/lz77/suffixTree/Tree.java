@@ -81,7 +81,7 @@ public class Tree implements ITree
         this.searcher = this.searcherFactory.create();
 
         this.suffixLinker = this.suffixLinkerFactory.create(this.suffixPlaceFactory);
-        this.appender = this.appenderFactory.create(this.searcherFactory, this.edgeFactory, this.nodeFactory);
+        this.appender = this.appenderFactory.create(this.edgeFactory, this.nodeFactory);
 
         append(this.emptyString);
     }
@@ -90,7 +90,7 @@ public class Tree implements ITree
     public void append(String string)
     {
         this.text += string;
-        this.navigator = this.navigatorFactory.create(this.text, this.insertPlaceFactory, this.searcherFactory);
+        this.navigator = this.navigatorFactory.create(this.text, this.insertPlaceFactory);
 
         for (; this.phaseIndex < this.text.length() - 1; ++this.phaseIndex)
         {
@@ -112,7 +112,7 @@ public class Tree implements ITree
             isImplicitExtension = this.appender.isImplicitExtension();
             this.extension = isImplicitExtension ? extensionIndex - 2 : this.phaseIndex;
             while (this.firstLeaf.toNode() != null)
-                this.firstLeaf = this.searcher.search(this.text, this.firstLeaf.toNode(), this.firstLeaf.toPosition() + 1);
+                this.firstLeaf = firstLeaf.toNode().findEdge(text.charAt(this.firstLeaf.toPosition() + 1));
         }
     }
 

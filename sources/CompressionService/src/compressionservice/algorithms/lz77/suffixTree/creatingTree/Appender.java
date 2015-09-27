@@ -1,6 +1,5 @@
 package compressionservice.algorithms.lz77.suffixTree.creatingTree;
 
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
@@ -8,14 +7,12 @@ import compressionservice.algorithms.lz77.suffixTree.structures.factories.INodeF
 
 public class Appender implements IAppender
 {
-    private ISearcherFactory searcherFactory;
     private IEdgeFactory edgeFactory;
     private INodeFactory nodeFactory;
     private boolean isExtension;
 
-    public Appender(ISearcherFactory searcherFactory, IEdgeFactory edgeFactory, INodeFactory nodeFactory)
+    public Appender(IEdgeFactory edgeFactory, INodeFactory nodeFactory)
     {
-        this.searcherFactory = searcherFactory;
         this.edgeFactory = edgeFactory;
         this.nodeFactory = nodeFactory;
         this.isExtension = false;
@@ -25,12 +22,11 @@ public class Appender implements IAppender
     public INode append(String text, IInsertPlace insertPlace, int numberOfChar, int edgeNumber)
     {
         this.isExtension = false;
-        ISearcher searcher = this.searcherFactory.create();
         if (insertPlace.getEdge().fromPosition() + insertPlace.getPosition() == insertPlace.getEdge().toPosition())
         {
             if (insertPlace.getEdge().toNode() != null)
             {
-                IEdge edge = searcher.search(text, insertPlace.getEdge().toNode(), numberOfChar);
+                IEdge edge = insertPlace.getEdge().toNode().findEdge(text.charAt(numberOfChar));
                 if (edge == null)
                     insertPlace.getEdge().toNode().putEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, insertPlace.getEdge().toNode(), edgeNumber));
                 else
@@ -67,8 +63,7 @@ public class Appender implements IAppender
     public void append(String text, INode node, int numberOfChar)
     {
         this.isExtension = false;
-        ISearcher searcher = this.searcherFactory.create();
-        IEdge edge = searcher.search(text, node, numberOfChar);
+        IEdge edge = node.findEdge(text.charAt(numberOfChar));
         if (edge == null)
             node.putEdge(text.charAt(numberOfChar), this.edgeFactory.createLeaf(numberOfChar, node, numberOfChar));
         else
