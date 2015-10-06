@@ -4,8 +4,8 @@ import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.Appe
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.BeginPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IAppenderFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IBeginPlaceFactory;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IIInsertPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IInsertPlaceFactory;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.InsertPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.INavigatorFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixLinkerFactory;
@@ -31,7 +31,7 @@ public class FactoriesImpl implements IFactories
     private INavigatorFactory navigatorFactory;
     private IAppenderFactory appenderFactory;
     private IBeginPlaceFactory beginPlaceFactory;
-    private IIInsertPlaceFactory insertPlaceFactory;
+    private IInsertPlaceFactory insertPlaceFactory;
     private ISearcherFactory searcherFactory;
     private ISuffixLinkerFactory suffixLinkerFactory;
     private ISuffixPlaceFactory suffixPlaceFactory;
@@ -45,7 +45,7 @@ public class FactoriesImpl implements IFactories
         this.navigatorFactory = new NavigatorFactory();
         this.appenderFactory = new AppenderFactory();
         this.beginPlaceFactory = new BeginPlaceFactory();
-        this.insertPlaceFactory = new IInsertPlaceFactory();
+        this.insertPlaceFactory = new InsertPlaceFactory();
         this.searcherFactory = new SearcherFactory();
         this.suffixLinkerFactory = new SuffixLinkerFactory();
         this.suffixPlaceFactory = new SuffixPlaceFactory();
@@ -84,7 +84,7 @@ public class FactoriesImpl implements IFactories
     }
 
     @Override
-    public IIInsertPlaceFactory getInsertPlaceFactory()
+    public IInsertPlaceFactory getInsertPlaceFactory()
     {
         return this.insertPlaceFactory;
     }

@@ -1,15 +1,15 @@
 package compressionservice.algorithms.lz77.suffixTree.creatingTree;
 
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IIInsertPlaceFactory;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IInsertPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 
 public class Navigator implements INavigator
 {
-    private IIInsertPlaceFactory insertPlaceFactory;
+    private IInsertPlaceFactory insertPlaceFactory;
     private String text;
 
-    public Navigator(String text, IIInsertPlaceFactory insertPlaceFactory)
+    public Navigator(String text, IInsertPlaceFactory insertPlaceFactory)
     {
         this.text = text;
         this.insertPlaceFactory = insertPlaceFactory;

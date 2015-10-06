@@ -2,7 +2,7 @@ package compressionservice.algorithms.lz77.suffixTree.structures;
 
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IAppenderFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IBeginPlaceFactory;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IIInsertPlaceFactory;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IInsertPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.INavigatorFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixLinkerFactory;
@@ -24,7 +24,7 @@ public interface IFactories
 
     IBeginPlaceFactory getBeginPlaceFactory();
 
-    IIInsertPlaceFactory getInsertPlaceFactory();
+    IInsertPlaceFactory getInsertPlaceFactory();
 
     ISearcherFactory getSearcherFactory();
 

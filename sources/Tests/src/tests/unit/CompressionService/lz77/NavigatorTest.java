@@ -5,7 +5,7 @@ import org.junit.Test;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.IBeginPlace;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.IInsertPlace;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.Navigator;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IIInsertPlaceFactory;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IInsertPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import junit.framework.Assert;
@@ -13,7 +13,7 @@ import tests.unit.UnitTestBase;
 
 public class NavigatorTest extends UnitTestBase
 {
-    private IIInsertPlaceFactory mockInsertPlaceFactory;
+    private IInsertPlaceFactory mockInsertPlaceFactory;
     private Navigator navigator;
     private String text;
 
@@ -21,7 +21,7 @@ public class NavigatorTest extends UnitTestBase
     public void setUp()
     {
         super.setUp();
-        this.mockInsertPlaceFactory = newMock(IIInsertPlaceFactory.class);
+        this.mockInsertPlaceFactory = newMock(IInsertPlaceFactory.class);
         this.text = "text";
         this.navigator = new Navigator(this.text, this.mockInsertPlaceFactory);
     }

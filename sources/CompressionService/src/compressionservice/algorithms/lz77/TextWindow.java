@@ -1,9 +1,9 @@
 package compressionservice.algorithms.lz77;
 
 import compressionservice.algorithms.lz77.suffixTree.ISuffixTree;
-import compressionservice.algorithms.lz77.suffixTree.SuffixTree;
+import compressionservice.algorithms.lz77.suffixTree.ISuffixTreeBuilder;
+import compressionservice.algorithms.lz77.suffixTree.SuffixTreeBuilder;
 import compressionservice.algorithms.lz77.suffixTree.structures.FactoriesImpl;
-import compressionservice.algorithms.lz77.suffixTree.structures.IFactories;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
 import data.charArray.IReadableCharArray;
 
@@ -13,15 +13,14 @@ public class TextWindow implements ITextWindow
     private String text;
     private long globalTextPosition;
     private ISuffixTree tree;
-    private IFactories factories;
+    private final ISuffixTreeBuilder suffixTreeBuilder;
 
-    private TextWindow(int size)
+    private TextWindow(int size, ISuffixTreeBuilder suffixTreeBuilder)
     {
         this.size = size;
+        this.suffixTreeBuilder = suffixTreeBuilder;
         text = "";
         globalTextPosition = 0;
-
-        factories = new FactoriesImpl();
     }
 
     @Override
@@ -46,7 +45,7 @@ public class TextWindow implements ITextWindow
                 globalTextPosition += length;
                 this.text = this.text.substring(length) + text;
             }
-            tree = new SuffixTree(this.text, factories);
+            tree = suffixTreeBuilder.build(this.text);
         }
         else
         {
@@ -54,7 +53,7 @@ public class TextWindow implements ITextWindow
             if (tree != null)
                 tree.append(text);
             else
-                tree = new SuffixTree(this.text, factories);
+                tree = suffixTreeBuilder.build(this.text);;
         }
     }
 
@@ -72,7 +71,8 @@ public class TextWindow implements ITextWindow
         return size;
     }
     
+    //TODO: remove factory method since it creates container abstractions
     public static TextWindow create(int size){
-        return new TextWindow(size);
+        return new TextWindow(size, new SuffixTreeBuilder(new FactoriesImpl()));
     }
 }
