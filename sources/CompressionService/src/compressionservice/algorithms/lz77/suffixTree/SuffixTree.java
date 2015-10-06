@@ -7,12 +7,9 @@ import compressionservice.algorithms.lz77.suffixTree.creatingTree.INavigator;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.ISearcher;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.ISuffixLinker;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.ISuffixPlace;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IAppenderFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IBeginPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IIInsertPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.INavigatorFactory;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixLinkerFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.IFinder;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories.IFinderFactory;
@@ -26,7 +23,7 @@ import compressionservice.algorithms.lz77.suffixTree.structures.factories.IEdgeF
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.INodeFactory;
 import data.charArray.IReadableCharArray;
 
-public class Tree implements ITree
+public class SuffixTree implements ISuffixTree
 {
     private INode root;
     private IEdge firstLeaf;
@@ -34,11 +31,8 @@ public class Tree implements ITree
     private INodeFactory nodeFactory;
     private final IEdgeFactory edgeFactory;
     private final INavigatorFactory navigatorFactory;
-    private final IAppenderFactory appenderFactory;
     private final IBeginPlaceFactory beginPlaceFactory;
     private final IIInsertPlaceFactory insertPlaceFactory;
-    private final ISearcherFactory searcherFactory;
-    private final ISuffixLinkerFactory suffixLinkerFactory;
     private final ISuffixPlaceFactory suffixPlaceFactory;
     private final IFindingSearcherFactory findingSearcherFactory;
     private final IFinderFactory finderFactory;
@@ -51,17 +45,17 @@ public class Tree implements ITree
     private IAppender appender;
     private final String emptyString = "";
 
-    public Tree(String text, IFactories factories)
+    public SuffixTree(String text, IFactories factories)
     {
         this.nodeFactory = factories.getNodeFactory();
         this.edgeFactory = factories.getEdgeFactory();
-        this.navigatorFactory = factories.getNavigatorFactory();
-        this.appenderFactory = factories.getAppenderFactory();
+        this.suffixPlaceFactory = factories.getSuffixPlaceFactory();
         this.beginPlaceFactory = factories.getBeginPlaceFactory();
         this.insertPlaceFactory = factories.getInsertPlaceFactory();
-        this.searcherFactory = factories.getSearcherFactory();
-        this.suffixLinkerFactory = factories.getSuffixLinkerFactory();
-        this.suffixPlaceFactory = factories.getSuffixPlaceFactory();
+        this.navigatorFactory = factories.getNavigatorFactory();
+        this.searcher = factories.getSearcherFactory().create();
+        this.suffixLinker = factories.getSuffixLinkerFactory().create(this.suffixPlaceFactory);
+        this.appender = factories.getAppenderFactory().create(this.edgeFactory, this.nodeFactory);
         this.finderFactory = factories.getFinderFactory();
         this.findingSearcherFactory = factories.getFindingSearcherFactory();
 
@@ -77,11 +71,6 @@ public class Tree implements ITree
         this.root = this.nodeFactory.create();
         this.firstLeaf = this.edgeFactory.createLeaf(0, root, 0);
         this.root.putEdge(text.charAt(0), this.firstLeaf);
-
-        this.searcher = this.searcherFactory.create();
-
-        this.suffixLinker = this.suffixLinkerFactory.create(this.suffixPlaceFactory);
-        this.appender = this.appenderFactory.create(this.edgeFactory, this.nodeFactory);
 
         append(this.emptyString);
     }
@@ -117,7 +106,7 @@ public class Tree implements ITree
     }
 
     @Override
-    public Location stringInformation(IReadableCharArray string)
+    public Location search(IReadableCharArray string)
     {
         IFinder finder = this.finderFactory.create(this.text, string, this.findingSearcherFactory.create());
         return finder.search(this.root);

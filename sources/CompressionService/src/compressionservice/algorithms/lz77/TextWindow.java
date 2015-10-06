@@ -1,7 +1,7 @@
 package compressionservice.algorithms.lz77;
 
-import compressionservice.algorithms.lz77.suffixTree.ITree;
-import compressionservice.algorithms.lz77.suffixTree.Tree;
+import compressionservice.algorithms.lz77.suffixTree.ISuffixTree;
+import compressionservice.algorithms.lz77.suffixTree.SuffixTree;
 import compressionservice.algorithms.lz77.suffixTree.structures.FactoriesImpl;
 import compressionservice.algorithms.lz77.suffixTree.structures.IFactories;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
@@ -12,7 +12,7 @@ public class TextWindow implements ITextWindow
     private final int size;
     private String text;
     private long globalTextPosition;
-    private ITree tree;
+    private ISuffixTree tree;
     private IFactories factories;
 
     private TextWindow(int size)
@@ -43,7 +43,7 @@ public class TextWindow implements ITextWindow
                 this.globalTextPosition += length;
                 this.text = this.text.substring(length) + text;
             }
-            this.tree = new Tree(this.text, this.factories);
+            this.tree = new SuffixTree(this.text, this.factories);
         }
         else if (text != null && text.length() > 0)
         {
@@ -51,7 +51,7 @@ public class TextWindow implements ITextWindow
             if (this.tree != null)
                 this.tree.append(text);
             else
-                this.tree = new Tree(this.text, this.factories);
+                this.tree = new SuffixTree(this.text, this.factories);
         }
     }
 
@@ -60,7 +60,7 @@ public class TextWindow implements ITextWindow
     {
         if (this.text == null || this.text.length() == 0)
             return Location.create(0, 0);
-        Location localLocation = tree.stringInformation(charArray);
+        Location localLocation = tree.search(charArray);
         return Location.create(localLocation.beginPosition + globalTextPosition, localLocation.length);
     }
     
