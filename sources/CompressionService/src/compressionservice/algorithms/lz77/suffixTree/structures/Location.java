@@ -2,12 +2,19 @@ package compressionservice.algorithms.lz77.suffixTree.structures;
 
 public class Location
 {
+    public final static Location EMPTY = create(0, 0);
     public final long beginPosition;
     public final long length;
     
     private Location(long beginPosition, long length){
         this.beginPosition = beginPosition;
         this.length = length;
+    }
+    
+    public Location shiftRight(long delta) {
+        if (delta < 0)
+            throw new RuntimeException(String.format("Fail to shift location on negative delta %s.", delta));
+        return new Location(beginPosition + delta, length);
     }
 
     public static Location create(long beginPosition, long length) {
