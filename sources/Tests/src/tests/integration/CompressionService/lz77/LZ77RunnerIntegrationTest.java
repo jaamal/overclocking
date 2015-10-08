@@ -1,20 +1,11 @@
 package tests.integration.CompressionService.lz77;
 
 import static junit.framework.Assert.assertEquals;
-import helpers.FactorizationScenarios;
-import helpers.FileHelpers;
-
 import java.nio.charset.Charset;
 import java.util.UUID;
-
 import org.junit.Test;
-
-import storage.KeySpaces;
-import storage.cassandraClient.ISchemeInitializer;
-import storage.factorsRepository.IFactorsRepository;
-import storage.factorsRepository.IFactorsRepositoryFactory;
-import storage.statistics.IStatisticsRepository;
-import tests.integration.StorageTestBase;
+import compressionservice.algorithms.lz77.suffixTree.ISuffixTree;
+import compressionservice.algorithms.lz77.suffixTree.ISuffixTreeBuilder;
 import compressionservice.runner.IWorker;
 import compressionservice.runner.parameters.IRunParamsFactory;
 import dataContracts.AlgorithmType;
@@ -22,6 +13,14 @@ import dataContracts.ContentType;
 import dataContracts.FactorDef;
 import dataContracts.statistics.StatisticKeys;
 import dataContracts.statistics.StatisticsObject;
+import helpers.FactorizationScenarios;
+import helpers.FileHelpers;
+import storage.KeySpaces;
+import storage.cassandraClient.ISchemeInitializer;
+import storage.factorsRepository.IFactorsRepository;
+import storage.factorsRepository.IFactorsRepositoryFactory;
+import storage.statistics.IStatisticsRepository;
+import tests.integration.StorageTestBase;
 
 public class LZ77RunnerIntegrationTest extends StorageTestBase
 {
@@ -87,6 +86,12 @@ public class LZ77RunnerIntegrationTest extends StorageTestBase
         assertEquals(1, actuals.length);
         assertEquals("7165", actuals[0].statistics.get(StatisticKeys.FactorizationLength));
         assertEquals("51359", actuals[0].statistics.get(StatisticKeys.SourceLength));
+    }
+    
+    @Test
+    public void testSuffixTree() {
+        ISuffixTree suffixTree = container.get(ISuffixTreeBuilder.class).build("abrakadabra");
+        int x = 1;
     }
 
     private void checkFactorization(String statsId, String filePath) {

@@ -3,6 +3,7 @@ package compressionservice.algorithms.lz77;
 import compressionservice.algorithms.lz77.suffixTree.ISuffixTree;
 import compressionservice.algorithms.lz77.suffixTree.ISuffixTreeBuilder;
 import compressionservice.algorithms.lz77.suffixTree.SuffixTreeBuilder;
+import compressionservice.algorithms.lz77.suffixTree.searchingInTree.Finder;
 import compressionservice.algorithms.lz77.suffixTree.structures.FactoriesImpl;
 import compressionservice.algorithms.lz77.suffixTree.structures.Location;
 import data.charArray.IReadableCharArray;
@@ -73,6 +74,6 @@ public class TextWindow implements ITextWindow
     
     //TODO: remove factory method since it creates container abstractions
     public static TextWindow create(int size){
-        return new TextWindow(size, new SuffixTreeBuilder(new FactoriesImpl()));
+        return new TextWindow(size, new SuffixTreeBuilder(new FactoriesImpl(), new Finder()));
     }
 }

@@ -5,19 +5,15 @@ import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.Begi
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IAppenderFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IBeginPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IInsertPlaceFactory;
-import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.InsertPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.INavigatorFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixLinkerFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixPlaceFactory;
+import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.InsertPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.NavigatorFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.SearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.SuffixLinkerFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.SuffixPlaceFactory;
-import compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories.FinderFactory;
-import compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories.FindingSearcherFactory;
-import compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories.IFinderFactory;
-import compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories.IFindingSearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.EdgeFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.INodeFactory;
@@ -35,8 +31,6 @@ public class FactoriesImpl implements IFactories
     private ISearcherFactory searcherFactory;
     private ISuffixLinkerFactory suffixLinkerFactory;
     private ISuffixPlaceFactory suffixPlaceFactory;
-    private IFinderFactory finderFactory;
-    private IFindingSearcherFactory findingSearcherFactory;
 
     public FactoriesImpl()
     {
@@ -49,8 +43,6 @@ public class FactoriesImpl implements IFactories
         this.searcherFactory = new SearcherFactory();
         this.suffixLinkerFactory = new SuffixLinkerFactory();
         this.suffixPlaceFactory = new SuffixPlaceFactory();
-        this.finderFactory = new FinderFactory();
-        this.findingSearcherFactory = new FindingSearcherFactory();
     }
 
     @Override
@@ -105,17 +97,5 @@ public class FactoriesImpl implements IFactories
     public ISuffixPlaceFactory getSuffixPlaceFactory()
     {
         return this.suffixPlaceFactory;
-    }
-
-    @Override
-    public IFinderFactory getFinderFactory()
-    {
-        return this.finderFactory;
-    }
-
-    @Override
-    public IFindingSearcherFactory getFindingSearcherFactory()
-    {
-        return this.findingSearcherFactory;
     }
 }

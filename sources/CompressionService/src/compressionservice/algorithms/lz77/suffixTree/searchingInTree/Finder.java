@@ -7,25 +7,16 @@ import data.charArray.IReadableCharArray;
 
 public class Finder implements IFinder
 {
-    private String text;
-
-    private IReadableCharArray string;
-    private final IFindingSearcher findingSearcher;
-
-    public Finder(String text, IReadableCharArray string, IFindingSearcher findingSearcher)
-    {
-        this.text = text;
-        this.string = string;
-        this.findingSearcher = findingSearcher;
-    }
-
     @Override
-    public Location search(INode root)
+    public Location search(INode root, String text, IReadableCharArray pattern)
     {
-        if (this.text.length() == 0 || this.string.length() == 0)
+        if (text.length() == 0 || pattern.length() == 0)
             return Location.create(0, 0);
 
-        IEdge edge = this.findingSearcher.search(this.text, this.string, root, 0);
+        if (root == null)
+            return null;
+        
+        IEdge edge = root.findEdge(pattern.get(0));
         if (edge == null)
             return Location.create(0, 0);
 
@@ -33,12 +24,14 @@ public class Finder implements IFinder
         int textIndex = 0;
         int position = 0;
 
-        while (stringIndex < this.string.length() && textIndex < this.text.length())
+        while (stringIndex < pattern.length() && textIndex < text.length())
         {
             if (textIndex + edge.fromPosition() > edge.toPosition())
             {
                 position = edge.getNumber();
-                edge = this.findingSearcher.search(this.text, this.string, edge.toNode(), stringIndex);
+                edge = edge.toNode() == null 
+                        ? null 
+                        : edge.toNode().findEdge(pattern.get(stringIndex));
                 textIndex = 0;
             }
             if (edge == null)
@@ -46,10 +39,10 @@ public class Finder implements IFinder
 
             position = edge.getNumber();
             while (
-                    textIndex + edge.fromPosition() < this.text.length() &&
+                    textIndex + edge.fromPosition() < text.length() &&
                             textIndex + edge.fromPosition() <= edge.toPosition() &&
-                            stringIndex < this.string.length() &&
-                            this.text.charAt(textIndex + edge.fromPosition()) == this.string.get(stringIndex))
+                            stringIndex < pattern.length() &&
+                            text.charAt(textIndex + edge.fromPosition()) == pattern.get(stringIndex))
             {
                 ++textIndex;
                 ++stringIndex;
@@ -59,10 +52,10 @@ public class Finder implements IFinder
                 return Location.create(position, stringIndex);
 
             if (
-                    textIndex + edge.fromPosition() < this.text.length() &&
+                    textIndex + edge.fromPosition() < text.length() &&
                             textIndex + edge.fromPosition() < edge.toPosition() + 1 &&
-                            stringIndex < this.string.length() &&
-                            this.text.charAt(textIndex + edge.fromPosition()) != this.string.get(stringIndex))
+                            stringIndex < pattern.length() &&
+                            text.charAt(textIndex + edge.fromPosition()) != pattern.get(stringIndex))
                 return Location.create(position, stringIndex);
         }
         return Location.create(position, stringIndex);

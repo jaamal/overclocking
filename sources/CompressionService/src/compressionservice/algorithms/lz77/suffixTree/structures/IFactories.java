@@ -7,8 +7,6 @@ import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.INav
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixLinkerFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixPlaceFactory;
-import compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories.IFinderFactory;
-import compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories.IFindingSearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.IEdgeFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.factories.INodeFactory;
 
@@ -31,8 +29,4 @@ public interface IFactories
     ISuffixLinkerFactory getSuffixLinkerFactory();
 
     ISuffixPlaceFactory getSuffixPlaceFactory();
-
-    IFinderFactory getFinderFactory();
-
-    IFindingSearcherFactory getFindingSearcherFactory();
 }

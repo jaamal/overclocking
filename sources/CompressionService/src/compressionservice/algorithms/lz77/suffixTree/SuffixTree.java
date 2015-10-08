@@ -12,8 +12,6 @@ import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.IIns
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.INavigatorFactory;
 import compressionservice.algorithms.lz77.suffixTree.creatingTree.factories.ISuffixPlaceFactory;
 import compressionservice.algorithms.lz77.suffixTree.searchingInTree.IFinder;
-import compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories.IFinderFactory;
-import compressionservice.algorithms.lz77.suffixTree.searchingInTree.factories.IFindingSearcherFactory;
 import compressionservice.algorithms.lz77.suffixTree.structures.IEdge;
 import compressionservice.algorithms.lz77.suffixTree.structures.INode;
 import compressionservice.algorithms.lz77.suffixTree.structures.Leaf;
@@ -30,8 +28,7 @@ public class SuffixTree implements ISuffixTree
     private final IBeginPlaceFactory beginPlaceFactory;
     private final IInsertPlaceFactory insertPlaceFactory;
     private final ISuffixPlaceFactory suffixPlaceFactory;
-    private final IFindingSearcherFactory findingSearcherFactory;
-    private final IFinderFactory finderFactory;
+    private final IFinder finder;
     private final ISuffixLinker suffixLinker;
     private final IAppender appender;
     private final ISearcher searcher;
@@ -53,8 +50,7 @@ public class SuffixTree implements ISuffixTree
             ISearcher searcher,
             ISuffixLinker suffixLinker,
             IAppender appender,
-            IFinderFactory finderFactory,
-            IFindingSearcherFactory findingSearcherFactory)
+            IFinder finder)
     {
         this.nodeFactory = nodeFactory;
         this.edgeFactory = edgeFactory;
@@ -65,8 +61,7 @@ public class SuffixTree implements ISuffixTree
         this.searcher = searcher;
         this.suffixLinker = suffixLinker;
         this.appender = appender;
-        this.finderFactory = finderFactory;
-        this.findingSearcherFactory = findingSearcherFactory;
+        this.finder = finder;
 
         this.text = "";
         this.phaseIndex = 0;
@@ -115,8 +110,7 @@ public class SuffixTree implements ISuffixTree
     @Override
     public Location search(IReadableCharArray string)
     {
-        IFinder finder = finderFactory.create(text, string, findingSearcherFactory.create());
-        return finder.search(root);
+        return finder.search(root, text, string);
     }
 
 }
