@@ -14,66 +14,91 @@ public class SuffixTreeBuilder implements ISuffixTreeBuilder
         for (int i = 0; i < text.length(); i++) {
             extendSuffix(text.substring(i), symbol);
         }
-        
-        if (root.findEdge(symbol) == null) {
-            root.addEdge(Edge.create(String.valueOf(symbol), new Node()));
-        }
-        else {
-            Edge edge = root.findEdge(symbol);
-            if (edge.label.length() > 1) {
-                Node middleNode = new Node();
-                middleNode.addEdge(Edge.create(edge.label.substring(1), edge.to));
-                Edge prefixEdge = Edge.create(String.valueOf(symbol), middleNode);
-                root.changeEdge(edge, prefixEdge);
-            }
-        }
+        extendSuffix("", symbol);
         
         text += symbol;
     }
     
     private void extendSuffix(String suffix, char symbol) {
-        int suffixCurrentPosition = 0;
-        Node currentNode = root;
-        
-        while (suffixCurrentPosition < suffix.length()) {
-            Edge edge = currentNode.findEdge(suffix.charAt(suffixCurrentPosition));
-            if (edge == null)
-                throw new RuntimeException(String.format("We expect to read suffix %s but it was not found at tree.", suffix));
-            
-            if (edge.label.length() == suffix.length() - suffixCurrentPosition) {
-                if (edge.to.isLeaf()) {
-                    edge.extendLabel(symbol);
-                }
-                else {
-                    currentNode = edge.to;
-                    edge = currentNode.findEdge(symbol);
-                    if (edge == null) {
-                        currentNode.addEdge(Edge.create(String.valueOf(symbol), new Node()));
-                    }
-                }
-                return;
-            }
-            else if (edge.label.length() < suffix.length() - suffixCurrentPosition) {
-                suffixCurrentPosition += edge.label.length();
-                currentNode = edge.to;
+        MovementResult movementResult = move(root, suffix);
+        if (movementResult.currentNode.isLeaf()) {
+            if (movementResult.lastPassedEdge == null) {
+                movementResult.currentNode.addEdge(Edge.create(String.valueOf(symbol), new Node()));
             }
             else {
-                if (edge.label.charAt(suffix.length() - suffixCurrentPosition) != symbol) {
-                    Node middleNode = new Node();
-                    middleNode.addEdge(Edge.create(String.valueOf(symbol), new Node()));
-                    middleNode.addEdge(Edge.create(edge.label.substring(suffix.length() - suffixCurrentPosition), edge.to));
-                    Edge prefixEdge = Edge.create(edge.label.substring(0, suffix.length() - suffixCurrentPosition), middleNode);
-                    currentNode.changeEdge(edge, prefixEdge);
-                }
-                return;
+                movementResult.lastPassedEdge.extendLabel(symbol);
             }
         }
+        else {
+            if (movementResult.suffixTailLength == 0) {
+                Edge edge = movementResult.currentNode.findEdge(symbol);
+                if (edge == null) {
+                    movementResult.currentNode.addEdge(Edge.create(String.valueOf(symbol), new Node()));
+                } else {
+                    if (edge.label.length() > 1) {
+                        Node middleNode = new Node();
+                        middleNode.addEdge(Edge.create(edge.label.substring(1), edge.to));
+                        Edge prefixEdge = Edge.create(String.valueOf(symbol), middleNode);
+                        movementResult.currentNode.changeEdge(edge, prefixEdge);
+                    }
+                }
+            }
+            else {
+                Edge edge = movementResult.currentNode.findEdge(suffix.charAt(suffix.length() - movementResult.suffixTailLength));
+                if (edge.label.charAt(movementResult.suffixTailLength) != symbol) {
+                    Node middleNode = new Node();
+                    middleNode.addEdge(Edge.create(String.valueOf(symbol), new Node()));
+                    middleNode.addEdge(Edge.create(edge.label.substring(movementResult.suffixTailLength), edge.to));
+                    Edge prefixEdge = Edge.create(edge.label.substring(0, movementResult.suffixTailLength), middleNode);
+                    movementResult.currentNode.changeEdge(edge, prefixEdge);
+                }
+            }
+        }
+    }
+    
+    private MovementResult move(Node from, String suffix) {
+        if (suffix == null || suffix.length() == 0)
+            return new MovementResult(from, null, suffix.length());
         
+        int suffixCurrentPosition = 0;
+        Node currentNode = from;
+        Edge lastPassedEdge = null;
+        
+        while (!currentNode.isLeaf() && suffixCurrentPosition < suffix.length()) {
+            lastPassedEdge = currentNode.findEdge(suffix.charAt(suffixCurrentPosition));
+            if (lastPassedEdge == null)
+                throw new RuntimeException(String.format("We expect to read suffix %s but it was not found at tree.", suffix));
+
+            if (lastPassedEdge.label.length() <= suffix.length() - suffixCurrentPosition) {
+                suffixCurrentPosition += lastPassedEdge.label.length();
+                currentNode = lastPassedEdge.to;
+            }
+            else {
+                break;
+            }
+        }
+        return new MovementResult(currentNode, lastPassedEdge, suffix.length() - suffixCurrentPosition);
     }
 
     @Override
     public ISuffixTree toSuffixTree()
     {
         return new SuffixTree(root);
+    }
+    
+    private class MovementResult {
+        
+        public final Node currentNode;
+        public final Edge lastPassedEdge;
+        public final int suffixTailLength;
+        
+        public MovementResult(
+                Node currentNode,
+                Edge lastPassedEdge,
+                int suffixTailLength) {
+            this.currentNode = currentNode;
+            this.lastPassedEdge = lastPassedEdge;
+            this.suffixTailLength = suffixTailLength;
+        }
     }
 }
