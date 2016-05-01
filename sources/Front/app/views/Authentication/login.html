@@ -1,7 +1,0 @@
-#{if flash.error}
-<h1>${flash.error}</h1>
-#{/if}
-
-<form action="@{Authentication.authenticate()}" method="POST">
-    <input type="submit" value="Login with Google Account" />
-</form>

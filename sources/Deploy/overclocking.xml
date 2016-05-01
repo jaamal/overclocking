@@ -38,15 +38,6 @@
       <param name="proj.entry" value="statisticsservice.EntryPoint"/>
     </antcall>
     
-    <antcall target="compile">
-      <param name="proj.name" value="Front"/>
-      <param name="proj.bin.dir" value="${ov.root.dir}/Front/eclipse/classes"/>
-      <param name="proj.src.dir" value="${ov.root.dir}/Front/app"/>
-    </antcall>
-    <antcall target="deploy.proj">
-      <param name="proj.name" value="Front"/>
-    </antcall>
-    
     <echo message="Deploy finished."/>
   </target>
 

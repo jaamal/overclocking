@@ -22,15 +22,10 @@ public abstract class ProductionTestBase extends TestBase {
         super.setUp();
 
         container = new Container(new TestsClassPathLoaderConfiguration());
-        ISettings applicationSettings = Settings.Load(Paths.get("conf", "productionApplication.settings").toAbsolutePath().toString());
+        ISettings applicationSettings = Settings.Load(Paths.get("conf", "application.settings").toAbsolutePath().toString());
         container.bindInstance(ISettings.class, applicationSettings);
         container.bindInstance(IContainer.class, container);
     }
-
-//    @Test
-//    public void InitCassandraSchemeTest() {
-//        container.get(ISchemeInitializer.class).setUpCluster();
-//    }
 
     private class TestsClassPathLoaderConfiguration implements IClassPathScannerConfiguration {
         @Override
