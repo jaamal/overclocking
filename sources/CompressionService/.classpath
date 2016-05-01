@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/jetty-http-9.0.4.v20130625.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/jetty-io-9.0.4.v20130625.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/jetty-server-9.0.4.v20130625.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/jetty-util-9.0.4.v20130625.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/http/servlet-api-3.0.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/bcel-5.2.jar"/>
+	<classpathentry kind="src" output="target/classes" path="src">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/ov.jrobocontainer.jar" sourcepath="/Container"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Commons"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/BusinessObjects"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Storage"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Trees"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-cassandra-1.56.44.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-core-1.56.44.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-entity-mapper-1.56.44.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-recipes-1.56.44.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-thrift-1.56.44.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/commons-lang-2.6.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/joda-time-2.1.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/slf4j-log4j12-1.6.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/HttpService"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Storage"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BusinessObjects"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Commons"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Trees"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

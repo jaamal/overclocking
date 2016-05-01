@@ -54,11 +54,7 @@ public class Configurator
         public boolean acceptsJar(String arg0)
         {
             boolean result = "dev".equals(runProfile) ? arg0.startsWith("ov.") : true;
-            if (result)
-                logger.info(String.format("jar %s accepted.", arg0));
-            else
-                logger.info(String.format("jar %s rejected.", arg0));
-
+            logger.info(String.format("jar %s %s.", arg0, result ? "accepted" : "rejected"));
             return result;
         }
 
