@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/bcel-5.2.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/commons-io-2.4.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/test/asm-all-3.1.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/test/cglib-2.2.2.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/test/cpsuite-1.2.5.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/test/easymock-3.1.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/test/junit-4.8.2.jar" sourcepath="/mnt/Breath/workspace/jrobo-container-master/Container/src/overclocking/jrobocontainer"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/test/objenesis-1.2.jar"/>
+	<classpathentry kind="src" output="target/classes" path="src">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/Algorithms"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BusinessObjects"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Commons"/>
@@ -18,18 +13,20 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/StatisticsService"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Storage"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Trees"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/play/gson-2.2.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/guava-13.0.1.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/apache-cassandra-1.2.11.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/apache-cassandra-thrift-1.2.11.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/persistence-api-1.0.2.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-cassandra-1.56.44.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-core-1.56.44.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-entity-mapper-1.56.44.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-recipes-1.56.44.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/astyanax-thrift-1.56.44.jar"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/high-scale-lib-1.1.2.jar"/>
 	<classpathentry kind="lib" path="/Deploy/assemblies/ext/cassandra/libthrift-0.7.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Container"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

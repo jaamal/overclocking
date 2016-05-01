@@ -1,14 +1,14 @@
 # ignore eclipse metadata folder 
 /.metadata
 /.recommenders
+**/.settings
 
 # ignore all binaries and logs
 **/bin
+**/target
 **.log
 
 # ignore all deploy generated files
 /Deploy/assemblies/ov
 /Deploy/temp
 /WorkingDirectory
-/Front/eclipse/classes
-/Front/play
