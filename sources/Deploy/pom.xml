@@ -26,6 +26,6 @@
   	<module>../HttpService</module>
   	<module>../CompressionService</module>
   	<module>../StatisticsService</module>
-  	<module>../Tests</module>
+  	
   </modules>
 </project>

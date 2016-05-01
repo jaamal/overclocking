@@ -61,6 +61,22 @@
     	<groupId>org.apache.httpcomponents</groupId>
     	<artifactId>httpclient</artifactId>
     </dependency>
+    <dependency>
+        <groupId>overclocking.BusinessObjects</groupId>
+        <artifactId>ov.BusinessObjects</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>overclocking.Commons</groupId>
+        <artifactId>ov.Commons</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>overclocking.Storage</groupId>
+        <artifactId>ov.Storage</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>overclocking.HttpService</groupId>
+        <artifactId>ov.HttpService</artifactId>
+    </dependency>
   </dependencies>
   <dependencyManagement>
     <dependencies>
@@ -113,11 +129,31 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         <version>2.4</version>
-    </dependency>
+        </dependency>
         <dependency>
         	<groupId>org.apache.httpcomponents</groupId>
         	<artifactId>httpclient</artifactId>
         	<version>4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>overclocking.BusinessObjects</groupId>
+            <artifactId>ov.BusinessObjects</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>overclocking.Commons</groupId>
+            <artifactId>ov.Commons</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>overclocking.Storage</groupId>
+            <artifactId>ov.Storage</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>overclocking.HttpService</groupId>
+            <artifactId>ov.HttpService</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
   </dependencyManagement>

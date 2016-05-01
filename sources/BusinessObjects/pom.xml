@@ -33,6 +33,10 @@
   		<groupId>javax.persistence</groupId>
   		<artifactId>persistence-api</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>overclocking.Commons</groupId>
+  		<artifactId>ov.Commons</artifactId>
+  	</dependency>
   </dependencies>
   <dependencyManagement>
   	<dependencies>
@@ -55,6 +59,11 @@
   			<groupId>javax.persistence</groupId>
   			<artifactId>persistence-api</artifactId>
   			<version>1.0.2</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>overclocking.Commons</groupId>
+  			<artifactId>ov.Commons</artifactId>
+  			<version>1.0.0</version>
   		</dependency>
   	</dependencies>
   </dependencyManagement>
