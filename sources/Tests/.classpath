@@ -27,6 +27,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Deploy/assemblies/ext/ov.jrobocontainer.jar" sourcepath="/Container"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Container"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

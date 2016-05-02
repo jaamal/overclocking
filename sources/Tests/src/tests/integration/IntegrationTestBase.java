@@ -37,8 +37,7 @@ public class IntegrationTestBase extends TestBase {
 
         @Override
         public String getClassPaths() {
-            //return Paths.get(System.getProperty("user.dir")).getParent().toString();
-            return Paths.get(System.getProperty("user.dir")).toString();
+            return Paths.get(System.getProperty("user.dir")).getParent().toString();
         }
     }
 }

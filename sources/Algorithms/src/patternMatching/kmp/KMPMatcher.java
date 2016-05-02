@@ -1,7 +1,6 @@
 package patternMatching.kmp;
 
 import patternMatching.IPatternMatcher;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class KMPMatcher implements IPatternMatcher
 {
@@ -47,7 +46,7 @@ public class KMPMatcher implements IPatternMatcher
 
     public int count()
     {
-        throw new NotImplementedException();
+        throw new RuntimeException("Method not impplemented.");
     }
 
     @Override

@@ -85,6 +85,10 @@
         <groupId>overclocking.StatisticsService</groupId>
         <artifactId>ov.StatisticsService</artifactId>
     </dependency>
+    <dependency>
+    	<groupId>jrobocontainer</groupId>
+    	<artifactId>ov.jrobocontainer</artifactId>
+    </dependency>
   </dependencies>
   <dependencyManagement>
     <dependencies>
@@ -172,6 +176,11 @@
             <groupId>overclocking.StatisticsService</groupId>
             <artifactId>ov.StatisticsService</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>jrobocontainer</groupId>
+        	<artifactId>ov.jrobocontainer</artifactId>
+        	<version>1</version>
         </dependency>
     </dependencies>
   </dependencyManagement>
