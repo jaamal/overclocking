@@ -16,46 +16,46 @@
     </plugins>
   </build>
   <dependencies>
-  	<dependency>
-  		<groupId>javax.persistence</groupId>
-  		<artifactId>persistence-api</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.google.guava</groupId>
-  		<artifactId>guava</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>overclocking.BusinessObjects</groupId>
-  		<artifactId>ov.BusinessObjects</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>overclocking.Commons</groupId>
-  		<artifactId>ov.Commons</artifactId>
-  	</dependency>
+    <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>persistence-api</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>overclocking.BusinessObjects</groupId>
+        <artifactId>ov.BusinessObjects</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>overclocking.Commons</groupId>
+        <artifactId>ov.Commons</artifactId>
+    </dependency>
   </dependencies>
   <dependencyManagement>
-  	<dependencies>
-  		<dependency>
-  			<groupId>javax.persistence</groupId>
-  			<artifactId>persistence-api</artifactId>
-  			<version>1.0.2</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>com.google.guava</groupId>
-  			<artifactId>guava</artifactId>
-  			<version>18.0</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>overclocking.BusinessObjects</groupId>
-  			<artifactId>ov.BusinessObjects</artifactId>
-  			<version>1.0.0</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>overclocking.Commons</groupId>
-  			<artifactId>ov.Commons</artifactId>
-  			<version>1.0.0</version>
-  		</dependency>
-  	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>overclocking.BusinessObjects</groupId>
+            <artifactId>ov.BusinessObjects</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>overclocking.Commons</groupId>
+            <artifactId>ov.Commons</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
   </dependencyManagement>
   <version>1.0.0</version>
 </project>

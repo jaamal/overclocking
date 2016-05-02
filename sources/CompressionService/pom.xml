@@ -141,20 +141,20 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-	        <groupId>overclocking.Storage</groupId>
-	        <artifactId>ov.Storage</artifactId>
+            <groupId>overclocking.Storage</groupId>
+            <artifactId>ov.Storage</artifactId>
             <version>1.0.0</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>overclocking.Trees</groupId>
-	        <artifactId>ov.Trees</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>overclocking.Trees</groupId>
+            <artifactId>ov.Trees</artifactId>
             <version>1.0.0</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>overclocking.HttpService</groupId>
-	        <artifactId>ov.HttpService</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>overclocking.HttpService</groupId>
+            <artifactId>ov.HttpService</artifactId>
             <version>1.0.0</version>
-	    </dependency>
+        </dependency>
     </dependencies>
   </dependencyManagement>
 </project>

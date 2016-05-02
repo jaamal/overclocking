@@ -42,16 +42,16 @@
         <artifactId>persistence-api</artifactId>
     </dependency>
     <dependency>
-    	<groupId>junit</groupId>
-    	<artifactId>junit</artifactId>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
     </dependency>
     <dependency>
-    	<groupId>org.easymock</groupId>
-    	<artifactId>easymock</artifactId>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymock</artifactId>
     </dependency>
     <dependency>
-    	<groupId>io.takari.junit</groupId>
-    	<artifactId>takari-cpsuite</artifactId>
+        <groupId>io.takari.junit</groupId>
+        <artifactId>takari-cpsuite</artifactId>
     </dependency>
     <dependency>
         <groupId>overclocking.BusinessObjects</groupId>
@@ -86,8 +86,8 @@
         <artifactId>ov.StatisticsService</artifactId>
     </dependency>
     <dependency>
-    	<groupId>jrobocontainer</groupId>
-    	<artifactId>ov.jrobocontainer</artifactId>
+        <groupId>jrobocontainer</groupId>
+        <artifactId>ov.jrobocontainer</artifactId>
     </dependency>
   </dependencies>
   <dependencyManagement>
@@ -103,11 +103,11 @@
             <version>18.0</version>
         </dependency>
         <dependency>
-	      <groupId>org.apache.bcel</groupId>
-	      <artifactId>bcel</artifactId>
-	      <version>5.2</version>
-	    </dependency>
-	    <dependency>
+          <groupId>org.apache.bcel</groupId>
+          <artifactId>bcel</artifactId>
+          <version>5.2</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.4</version>
@@ -123,19 +123,19 @@
             <version>1.0.2</version>
         </dependency>
         <dependency>
-        	<groupId>junit</groupId>
-        	<artifactId>junit</artifactId>
-        	<version>4.12</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
         </dependency>
         <dependency>
-        	<groupId>org.easymock</groupId>
-        	<artifactId>easymock</artifactId>
-        	<version>3.0</version>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.0</version>
         </dependency>
         <dependency>
-        	<groupId>io.takari.junit</groupId>
-        	<artifactId>takari-cpsuite</artifactId>
-        	<version>1.2.7</version>
+            <groupId>io.takari.junit</groupId>
+            <artifactId>takari-cpsuite</artifactId>
+            <version>1.2.7</version>
         </dependency>
         <dependency>
             <groupId>overclocking.BusinessObjects</groupId>
@@ -178,9 +178,9 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-        	<groupId>jrobocontainer</groupId>
-        	<artifactId>ov.jrobocontainer</artifactId>
-        	<version>1</version>
+            <groupId>jrobocontainer</groupId>
+            <artifactId>ov.jrobocontainer</artifactId>
+            <version>1</version>
         </dependency>
     </dependencies>
   </dependencyManagement>

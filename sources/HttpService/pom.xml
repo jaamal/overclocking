@@ -17,34 +17,34 @@
     </plugins>
   </build>
   <dependencies>
-  	<dependency>
-  		<groupId>org.apache.bcel</groupId>
-  		<artifactId>bcel</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>log4j</groupId>
-  		<artifactId>log4j</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>javax.servlet</groupId>
-  		<artifactId>javax.servlet-api</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.eclipse.jetty</groupId>
-  		<artifactId>jetty-server</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.eclipse.jetty</groupId>
-  		<artifactId>jetty-io</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.eclipse.jetty</groupId>
-  		<artifactId>jetty-util</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.eclipse.jetty</groupId>
-  		<artifactId>jetty-http</artifactId>
-  	</dependency>
+    <dependency>
+        <groupId>org.apache.bcel</groupId>
+        <artifactId>bcel</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-io</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-util</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-http</artifactId>
+    </dependency>
     <dependency>
         <groupId>overclocking.BusinessObjects</groupId>
         <artifactId>ov.BusinessObjects</artifactId>
@@ -55,43 +55,43 @@
     </dependency>
   </dependencies>
   <dependencyManagement>
-  	<dependencies>
-  		<dependency>
-  			<groupId>org.apache.bcel</groupId>
-  			<artifactId>bcel</artifactId>
-  			<version>5.2</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>log4j</groupId>
-  			<artifactId>log4j</artifactId>
-  			<version>1.2.17</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>javax.servlet</groupId>
-  			<artifactId>javax.servlet-api</artifactId>
-  			<version>3.0.1</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>org.eclipse.jetty</groupId>
-  			<artifactId>jetty-server</artifactId>
-  			<version>9.2.0.M1</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>org.eclipse.jetty</groupId>
-  			<artifactId>jetty-io</artifactId>
-  			<version>9.2.0.M1</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>org.eclipse.jetty</groupId>
-  			<artifactId>jetty-util</artifactId>
-  			<version>9.2.0.M1</version>
-  		</dependency>
-  		<dependency>
-  			<groupId>org.eclipse.jetty</groupId>
-  			<artifactId>jetty-http</artifactId>
-  			<version>9.2.0.M1</version>
-  		</dependency>
-  		<dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.bcel</groupId>
+            <artifactId>bcel</artifactId>
+            <version>5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.2.0.M1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-io</artifactId>
+            <version>9.2.0.M1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>9.2.0.M1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-http</artifactId>
+            <version>9.2.0.M1</version>
+        </dependency>
+        <dependency>
             <groupId>overclocking.BusinessObjects</groupId>
             <artifactId>ov.BusinessObjects</artifactId>
             <version>1.0.0</version>
@@ -101,6 +101,6 @@
             <artifactId>ov.Commons</artifactId>
             <version>1.0.0</version>
         </dependency>
-  	</dependencies>
+    </dependencies>
   </dependencyManagement>
 </project>
