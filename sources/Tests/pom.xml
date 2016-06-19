@@ -89,6 +89,10 @@
         <groupId>jrobocontainer</groupId>
         <artifactId>ov.jrobocontainer</artifactId>
     </dependency>
+    <dependency>
+    	<groupId>commons-net</groupId>
+    	<artifactId>commons-net</artifactId>
+    </dependency>
   </dependencies>
   <dependencyManagement>
     <dependencies>
@@ -181,6 +185,11 @@
             <groupId>jrobocontainer</groupId>
             <artifactId>ov.jrobocontainer</artifactId>
             <version>1</version>
+        </dependency>
+        <dependency>
+        	<groupId>commons-net</groupId>
+        	<artifactId>commons-net</artifactId>
+        	<version>3.3</version>
         </dependency>
     </dependencies>
   </dependencyManagement>

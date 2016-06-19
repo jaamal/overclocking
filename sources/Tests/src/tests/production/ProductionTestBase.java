@@ -1,16 +1,13 @@
 package tests.production;
 
 import java.nio.file.Paths;
-
 import org.junit.Before;
-
+import commons.settings.ISettings;
+import commons.settings.Settings;
 import overclocking.jrobocontainer.classpathscanning.IClassPathScannerConfiguration;
 import overclocking.jrobocontainer.container.Container;
 import overclocking.jrobocontainer.container.IContainer;
 import tests.TestBase;
-
-import commons.settings.ISettings;
-import commons.settings.Settings;
 
 public abstract class ProductionTestBase extends TestBase {
 

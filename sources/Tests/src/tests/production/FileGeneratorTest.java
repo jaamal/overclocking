@@ -4,14 +4,16 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.Random;
 
 public class FileGeneratorTest extends ProductionTestBase {
 
     @Test
     public void generateRandomFiles() throws IOException {
-        for (int i = 1; i <= 25; ++i) {
-            File file = new File(String.format("D:\\overclocking\\Random\\random_%dMb.txt", i));
+        for (int i = 1; i <= 50; ++i) {
+            String filePath = Paths.get(FilesConsts.randomFolderPath, String.format("random_%dMb.txt", i)).toString();
+            File file = new File(filePath);
             if (file.exists())
                 Assert.assertTrue(file.delete());
             Assert.assertTrue(file.createNewFile());
